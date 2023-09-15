@@ -103,6 +103,12 @@
     <Filter Include="01.Utiltiy\04.Component\09.Camera">
       <UniqueIdentifier>{914bfac7-bfca-467b-8c41-8be38d4d6f0a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utiltiy\01.Managers\LevelManager">
+      <UniqueIdentifier>{da26101b-b96a-4e1f-bda4-a436441cd5b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utiltiy\01.Managers\ObjectManager">
+      <UniqueIdentifier>{efa8cf04-88a3-436d-9b7d-2be308ea95d9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -126,10 +132,10 @@
     <ClInclude Include="..\Public\Timer.h">
       <Filter>00.System\00.Timer</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Timer_Manager.h">
+    <ClInclude Include="..\Public\TimerManager.h">
       <Filter>00.System\00.Timer\Manager</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Graphic_Device.h">
+    <ClInclude Include="..\Public\GraphicDevice.h">
       <Filter>00.System\01.Device\Graphic</Filter>
     </ClInclude>
     <ClInclude Include="..\public\GameInstance.h">
@@ -138,14 +144,8 @@
     <ClInclude Include="..\public\Level.h">
       <Filter>01.Utiltiy\02.Level</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\LevelManager.h">
-      <Filter>01.Utiltiy\02.Level\Manager</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\GameObject.h">
       <Filter>01.Utiltiy\03.GameObjects</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\ObjectManager.h">
-      <Filter>01.Utiltiy\03.GameObjects\Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Layer.h">
       <Filter>01.Utiltiy\03.GameObjects\Manager\Layer</Filter>
@@ -153,7 +153,7 @@
     <ClInclude Include="..\public\Renderer.h">
       <Filter>01.Utiltiy\04.Component\07.Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Component_Manager.h">
+    <ClInclude Include="..\public\ComponentManager.h">
       <Filter>01.Utiltiy\01.Managers\ComponentManager</Filter>
     </ClInclude>
     <ClInclude Include="..\public\VIBuffer.h">
@@ -168,7 +168,7 @@
     <ClInclude Include="..\public\Texture.h">
       <Filter>01.Utiltiy\04.Component\08.Texture</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Transform.h">
+    <ClInclude Include="..\Public\TransformEx.h">
       <Filter>01.Utiltiy\04.Component\01.Transform</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ColliderAABB.h">
@@ -210,7 +210,7 @@
     <ClInclude Include="..\Public\Utils.h">
       <Filter>98.Utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\TransformEx.h">
+    <ClInclude Include="..\Public\TransformBurger.h">
       <Filter>01.Utiltiy\04.Component\01.Transform</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Engine_Enum.h">
@@ -225,6 +225,12 @@
     <ClInclude Include="..\Public\Camera.h">
       <Filter>01.Utiltiy\04.Component\09.Camera</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\LevelManager.h">
+      <Filter>01.Utiltiy\01.Managers\LevelManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ObjectManager.h">
+      <Filter>01.Utiltiy\01.Managers\ObjectManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -233,10 +239,10 @@
     <ClCompile Include="..\Private\Timer.cpp">
       <Filter>00.System\00.Timer</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Timer_Manager.cpp">
+    <ClCompile Include="..\Private\TimerManager.cpp">
       <Filter>00.System\00.Timer\Manager</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Graphic_Device.cpp">
+    <ClCompile Include="..\Private\GraphicDevice.cpp">
       <Filter>00.System\01.Device\Graphic</Filter>
     </ClCompile>
     <ClCompile Include="..\private\GameInstance.cpp">
@@ -245,14 +251,8 @@
     <ClCompile Include="..\private\Level.cpp">
       <Filter>01.Utiltiy\02.Level</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\LevelManager.cpp">
-      <Filter>01.Utiltiy\02.Level\Manager</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\GameObject.cpp">
       <Filter>01.Utiltiy\03.GameObjects</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\ObjectManager.cpp">
-      <Filter>01.Utiltiy\03.GameObjects\Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Layer.cpp">
       <Filter>01.Utiltiy\03.GameObjects\Manager\Layer</Filter>
@@ -260,7 +260,7 @@
     <ClCompile Include="..\private\Renderer.cpp">
       <Filter>01.Utiltiy\04.Component\07.Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Component_Manager.cpp">
+    <ClCompile Include="..\private\ComponentManager.cpp">
       <Filter>01.Utiltiy\01.Managers\ComponentManager</Filter>
     </ClCompile>
     <ClCompile Include="..\private\VIBuffer.cpp">
@@ -275,7 +275,7 @@
     <ClCompile Include="..\private\Texture.cpp">
       <Filter>01.Utiltiy\04.Component\08.Texture</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Transform.cpp">
+    <ClCompile Include="..\Private\TransformEx.cpp">
       <Filter>01.Utiltiy\04.Component\01.Transform</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ColliderAABB.cpp">
@@ -320,7 +320,7 @@
     <ClCompile Include="..\Private\Engine_Struct.cpp">
       <Filter>99.Defines</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\TransformEx.cpp">
+    <ClCompile Include="..\Private\TransformBurger.cpp">
       <Filter>01.Utiltiy\04.Component\01.Transform</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ColliderCylinder.cpp">
@@ -331,6 +331,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Camera.cpp">
       <Filter>01.Utiltiy\04.Component\09.Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\LevelManager.cpp">
+      <Filter>01.Utiltiy\01.Managers\LevelManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\ObjectManager.cpp">
+      <Filter>01.Utiltiy\01.Managers\ObjectManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

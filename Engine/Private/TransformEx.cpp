@@ -1,111 +1,150 @@
-#include "..\Public\TransformEx.h"
+#include "TransformEx.h"
 
 CTransformEx::CTransformEx(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CComponent(pDevice, pContext, ComponentType::Transform)
+	: Super(pDevice, pContext, ComponentType::Transform)
 {
 }
 
 CTransformEx::CTransformEx(const CTransformEx& rhs)
-	: CComponent(rhs)
+	: Super(rhs)
+	, m_vLocalScale(rhs.m_vLocalScale)
+	, m_vLocalRotation(rhs.m_vLocalRotation)
+	, m_vLocalPosition(rhs.m_vLocalPosition)
+	, m_matLocal(rhs.m_matLocal)
+	, m_matWorld(rhs.m_matLocal)
+	, m_vScale(rhs.m_vScale)
+	, m_vRotation(rhs.m_vRotation)
+	, m_vPosition(rhs.m_vPosition)
 {
-}
-
-void CTransformEx::Set_State(STATE eState, _fvector vState)
-{
-	_matrix		StateMatrix;
-
-	StateMatrix = XMLoadFloat4x4(&m_WorldMatrix);
-
-	StateMatrix.r[eState] = vState;
-
-	XMStoreFloat4x4(&m_WorldMatrix, StateMatrix);
 }
 
 HRESULT CTransformEx::Initialize_Prototype()
 {
-	/* XMFloat4x4 -> XMMatrix*/
-	/*XMLoadFloat4x4(&m_WorldMatrix);*/
-
-	/* XMMatrix -> XMFloat4x4*/
-	XMStoreFloat4x4(&m_WorldMatrix, XMMatrixIdentity());
-
-	/*_float3	vTmp;
-	_vector		vTmp1;
-
-	vTmp1 = XMLoadFloat3(&vTmp);
-
-	XMStoreFloat3(&vTmp, vTmp1);*/
+	m_vLocalScale = { 1.f, 1.f, 1.f };
+	m_vLocalRotation = { 0.f, 0.f, 0.f };
+	m_vLocalPosition = { 0.f, 0.f, 0.f };
+	m_matLocal = Matrix::Identity;
+	m_matWorld = Matrix::Identity;
 
 	return S_OK;
 }
 
 HRESULT CTransformEx::Initialize(void* pArg)
 {
-	if (nullptr != pArg)
-	{
-		TRANSFORM_DESC	TransformDesc;
-
-		memmove(&TransformDesc, pArg, sizeof TransformDesc);
-
-		m_fSpeedPerSec = TransformDesc.fSpeedPerSec;
-		m_fRotationRadianPerSec = TransformDesc.fRotationRadianPerSec;
-	}
-
+	//if (nullptr != pArg)
+	//
+	
 	return S_OK;
 }
 
-void CTransformEx::Go_Straight(_float fTimeDelta)
-{
-	/* vLook : 현재 내가 바라보는 방향 + z스케일정보를 가지낟. */
-	/* vLook의 길이(크기)를 내가 원하는 초당 움직여하는 속도로 변경하자. */
-	_vector		vLook = Get_State(STATE_LOOK);
-
-	_vector		vPosition = Get_State(STATE_POSITION);
-
-	/* vLook을 정규화(길이1)하고 원하는 길이(초당속도)를 곱한다. */
-	vPosition += XMVector3Normalize(vLook) * m_fSpeedPerSec * fTimeDelta;
-
-	Set_State(STATE_POSITION, vPosition);
-}
-
-void CTransformEx::Go_Backward(_float fTimeDelta)
-{
-	_vector		vLook = Get_State(STATE_LOOK);
-
-	_vector		vPosition = Get_State(STATE_POSITION);
-
-	vPosition -= XMVector3Normalize(vLook) * m_fSpeedPerSec * fTimeDelta;
-
-	Set_State(STATE_POSITION, vPosition);
-}
-
-void CTransformEx::Go_Left(_float fTimeDelta)
-{
-	_vector		vRight = Get_State(STATE_RIGHT);
-
-	_vector		vPosition = Get_State(STATE_POSITION);
-
-	vPosition -= XMVector3Normalize(vRight) * m_fSpeedPerSec * fTimeDelta;
-
-	Set_State(STATE_POSITION, vPosition);
-}
-
-void CTransformEx::Go_Right(_float fTimeDelta)
-{
-	_vector		vRight = Get_State(STATE_RIGHT);
-
-	_vector		vPosition = Get_State(STATE_POSITION);
-
-	vPosition += XMVector3Normalize(vRight) * m_fSpeedPerSec * fTimeDelta;
-
-	Set_State(STATE_POSITION, vPosition);
-}
-
-void CTransformEx::Fix_Rotation(_fvector vAxis, _float fRadian)
+void CTransformEx::Tick(_float fTimeDelta)
 {
 }
 
-void CTransformEx::Turn(_fvector vAxis, _float fTimeDelta)
+void CTransformEx::LateTick(_float fTimeDelta)
+{
+}
+
+Vec3 CTransformEx::ToEulerAngles(Quaternion q)
+{
+	Vec3 angles;
+
+	// roll (x-axis rotation)
+	_float sinr_cosp = 2.f * (q.w * q.x + q.y * q.z);
+	_float cosr_cosp = 1.f - 2.f * (q.x * q.x + q.y * q.y);
+	angles.x = std::atan2(sinr_cosp, cosr_cosp);
+
+	// pitch (y-axis rotation)
+	_float sinp = std::sqrt(1.f + 2.f * (q.w * q.y - q.x * q.z));
+	_float cosp = std::sqrt(1.f - 2.f * (q.w * q.y - q.x * q.z));
+	angles.y = 2.f * std::atan2(sinp, cosp) - 3.14159265f / 2.f;
+
+	// yaw (z-axis rotation)
+	_float siny_cosp = 2.f * (q.w * q.z + q.x * q.y);
+	_float cosy_cosp = 1.f - 2.f * (q.y * q.y + q.z * q.z);
+	angles.z = std::atan2(siny_cosp, cosy_cosp);
+
+	return angles;
+}
+
+void CTransformEx::UpdateTransform()
+{
+	Matrix matScale = Matrix::CreateScale(m_vLocalScale);
+	Matrix matRotation = Matrix::CreateRotationX(m_vLocalRotation.x);
+	matRotation *= Matrix::CreateRotationY(m_vLocalRotation.y);
+	matRotation *= Matrix::CreateRotationZ(m_vLocalRotation.z);
+	Matrix matTranslation = Matrix::CreateTranslation(m_vLocalPosition);
+
+	m_matLocal = matScale * matRotation * matTranslation;
+
+	if (HasParent())
+	{
+		m_matWorld = m_matLocal * m_pParent->GetWorldMatrix();
+	}
+	else
+	{
+		m_matWorld = m_matLocal;
+	}
+
+	Quaternion quat;
+	m_matWorld.Decompose(m_vScale, quat, m_vPosition);
+	m_vRotation = ToEulerAngles(quat);
+
+	// Children
+	for (CTransformEx*& child : m_vecChildren)
+		child->UpdateTransform();
+}
+
+void CTransformEx::SetScale(const Vec3& worldScale)
+{
+	if (HasParent())
+	{
+		Vec3 parentScale = m_pParent->GetScale();
+		Vec3 scale = worldScale;
+		scale.x /= parentScale.x;
+		scale.y /= parentScale.y;
+		scale.z /= parentScale.z;
+		SetLocalScale(scale);
+	}
+	else
+	{
+		SetLocalScale(worldScale);
+	}
+}
+
+void CTransformEx::SetRotation(const Vec3& worldRotation)
+{
+	if (HasParent())
+	{
+		Matrix inverseMatrix = m_pParent->GetWorldMatrix().Invert();
+
+		Vec3 rotation;
+		rotation.TransformNormal(worldRotation, inverseMatrix);
+
+		SetLocalRotation(rotation);
+	}
+	else
+		SetLocalRotation(worldRotation);
+}
+
+void CTransformEx::SetPosition(const Vec3& worldPosition)
+{
+	if (HasParent())
+	{
+		Matrix worldToParentLocalMatrix = m_pParent->GetWorldMatrix().Invert();
+
+		Vec3 position;
+		position.Transform(worldPosition, worldToParentLocalMatrix);
+
+		SetLocalPosition(position);
+	}
+	else
+	{
+		SetLocalPosition(worldPosition);
+	}
+}
+
+void CTransformEx::DebugRender()
 {
 }
 
@@ -115,7 +154,7 @@ CTransformEx* CTransformEx::Create(ID3D11Device* pDevice, ID3D11DeviceContext* p
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CTransform");
+		MSG_BOX("Failed to Created : CTransformEx");
 		Safe_Release(pInstance);
 	}
 
@@ -128,10 +167,9 @@ CComponent* CTransformEx::Clone(void* pArg)
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CTransformEx");
+		MSG_BOX("Failed To Cloned : CTransformEx");
 		Safe_Release(pInstance);
 	}
-
 	return pInstance;
 }
 

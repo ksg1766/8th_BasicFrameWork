@@ -52,8 +52,8 @@ private:
 
 	map<LAYERTAG, class CLayer*>* pCurrentLevelLayers;//
 
-
-	
+public:
+	virtual void Free() override;
 };
 
 END

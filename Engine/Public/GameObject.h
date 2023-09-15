@@ -30,7 +30,7 @@ public:
 	virtual HRESULT			Render();
 
 	CComponent*				GetFixedComponent(ComponentType type) const;
-	CTransform*				GetTransform() const;
+	CTransformEx*			GetTransform() const;
 	CVIBuffer*				GetBuffer() const;
 	CRigidBody*				GetRigidBody() const;
 	//CCamera*				GetCamera();
@@ -43,7 +43,7 @@ public:
 	//CLight*				GetLight();
 	//CTerrain*				GetTerrain();
 
-	CTransform*				GetOrAddTransform(_uint iLevelIndex);
+	CTransformEx*			GetOrAddTransform(_uint iLevelIndex);
 	_bool					IsDead() const					{ return m_IsDead; }
 	void					SetDeadState(_bool bDead)	{ m_IsDead = bDead; }
 

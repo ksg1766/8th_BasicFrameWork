@@ -1,8 +1,8 @@
-#include "..\public\Graphic_Device.h"
+#include "..\public\GraphicDevice.h"
 
-IMPLEMENT_SINGLETON(CGraphic_Device)
+IMPLEMENT_SINGLETON(CGraphicDevice)
 
-CGraphic_Device::CGraphic_Device()
+CGraphicDevice::CGraphicDevice()
 	: m_pDevice(nullptr)
 	, m_pDeviceContext(nullptr)
 {	
@@ -14,7 +14,7 @@ CGraphic_Device::CGraphic_Device()
 
 }
 
-HRESULT CGraphic_Device::Ready_Graphic_Device(HWND hWnd, GRAPHIC_DESC::WINMODE eWinMode, _uint iWinCX, _uint iWinCY, ID3D11Device** ppDeviceOut, ID3D11DeviceContext** ppDeviceContextOut)
+HRESULT CGraphicDevice::Ready_GraphicDevice(HWND hWnd, GRAPHIC_DESC::WINMODE eWinMode, _uint iWinCX, _uint iWinCY, ID3D11Device** ppDeviceOut, ID3D11DeviceContext** ppDeviceContextOut)
 {
 	_uint		iFlag = 0;
 
@@ -69,7 +69,7 @@ HRESULT CGraphic_Device::Ready_Graphic_Device(HWND hWnd, GRAPHIC_DESC::WINMODE e
 	return S_OK;
 }
 
-HRESULT CGraphic_Device::Clear_BackBuffer_View(_float4 vClearColor)
+HRESULT CGraphicDevice::Clear_BackBuffer_View(_float4 vClearColor)
 {
 	if (nullptr == m_pDeviceContext)
 		return E_FAIL;
@@ -84,7 +84,7 @@ HRESULT CGraphic_Device::Clear_BackBuffer_View(_float4 vClearColor)
  	return S_OK;
 }
 
-HRESULT CGraphic_Device::Clear_DepthStencil_View()
+HRESULT CGraphicDevice::Clear_DepthStencil_View()
 {
 	if (nullptr == m_pDeviceContext)
 		return E_FAIL;
@@ -94,7 +94,7 @@ HRESULT CGraphic_Device::Clear_DepthStencil_View()
 	return S_OK;
 }
 
-HRESULT CGraphic_Device::Present()
+HRESULT CGraphicDevice::Present()
 {
 	if (nullptr == m_pSwapChain)
 		return E_FAIL;
@@ -107,7 +107,7 @@ HRESULT CGraphic_Device::Present()
 }
 
 
-HRESULT CGraphic_Device::Ready_SwapChain(HWND hWnd, GRAPHIC_DESC::WINMODE eWinMode, _uint iWinCX, _uint iWinCY)
+HRESULT CGraphicDevice::Ready_SwapChain(HWND hWnd, GRAPHIC_DESC::WINMODE eWinMode, _uint iWinCX, _uint iWinCY)
 {
 	IDXGIDevice*			pDevice = nullptr;
 	m_pDevice->QueryInterface(__uuidof(IDXGIDevice), (void**)&pDevice);
@@ -157,7 +157,7 @@ HRESULT CGraphic_Device::Ready_SwapChain(HWND hWnd, GRAPHIC_DESC::WINMODE eWinMo
 }
 
 
-HRESULT CGraphic_Device::Ready_BackBufferRenderTargetView()
+HRESULT CGraphicDevice::Ready_BackBufferRenderTargetView()
 {
 	if (nullptr == m_pDevice)
 		return E_FAIL;
@@ -182,7 +182,7 @@ HRESULT CGraphic_Device::Ready_BackBufferRenderTargetView()
 	return S_OK;
 }
 
-HRESULT CGraphic_Device::Ready_DepthStencilRenderTargetView(_uint iWinCX, _uint iWinCY)
+HRESULT CGraphicDevice::Ready_DepthStencilRenderTargetView(_uint iWinCX, _uint iWinCY)
 {
 	if (nullptr == m_pDevice)
 		return E_FAIL;
@@ -221,7 +221,7 @@ HRESULT CGraphic_Device::Ready_DepthStencilRenderTargetView(_uint iWinCX, _uint 
 	return S_OK;
 }
 
-void CGraphic_Device::Free()
+void CGraphicDevice::Free()
 {
 	Safe_Release(m_pSwapChain);
 	Safe_Release(m_pDepthStencilView);

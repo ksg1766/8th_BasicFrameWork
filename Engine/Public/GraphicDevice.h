@@ -4,17 +4,17 @@
 
 BEGIN(Engine)
 
-class CGraphic_Device final : public CBase
+class CGraphicDevice final : public CBase
 {
-	DECLARE_SINGLETON(CGraphic_Device)
+	DECLARE_SINGLETON(CGraphicDevice)
 
 private:
-	CGraphic_Device();
-	virtual ~CGraphic_Device() = default;
+	CGraphicDevice();
+	virtual ~CGraphicDevice() = default;
 
 public:
 	/* 그래픽 디바이스의 초기화. */
-	HRESULT Ready_Graphic_Device(HWND hWnd, GRAPHIC_DESC::WINMODE eWinMode,
+	HRESULT Ready_GraphicDevice(HWND hWnd, GRAPHIC_DESC::WINMODE eWinMode,
 		_uint iWinCX, _uint iWinCY, _Inout_ ID3D11Device** ppDevice,
 		_Inout_ ID3D11DeviceContext** ppDeviceContextOut);
 

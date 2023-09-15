@@ -344,3 +344,8 @@ void CCollisionManager::MakeCollisionDescStatic(OUT COLLISION_DESC& descLeft, CR
 	/*descLeft.pOther = rObj;
 	descLeft.vResultVelocity = -dynamic_cast<CRigidDynamic*>(lObj->GetRigidBody())->GetLinearVelocity();*/
 }
+
+void CCollisionManager::Free()
+{
+	__super::Free();
+}

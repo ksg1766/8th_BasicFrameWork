@@ -1,6 +1,6 @@
 #pragma once
 #include "Base.h"
-#include "Transform.h"
+#include "TransformEx.h"
 
 BEGIN(Engine)
 
@@ -27,7 +27,7 @@ public:
 
 private:
     CQuadTreeNode*  BuildQuadTree(Vec3 vCenter, Vec3 vHalfWidth, _int iDepthLimit = 5);
-    void            AddObjectInNode(CTransform* pTransform, CQuadTreeNode* const pNode);
+    void            AddObjectInNode(CTransformEx* pTransform, CQuadTreeNode* const pNode);
 
     void            Update_Frustum();
     void	        FrustumCull(CQuadTreeNode* pNode);

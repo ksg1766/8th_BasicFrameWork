@@ -1,13 +1,13 @@
-#include "..\Public\Component_Manager.h"
+#include "..\Public\ComponentManager.h"
 
-IMPLEMENT_SINGLETON(CComponent_Manager)
+IMPLEMENT_SINGLETON(CComponentManager)
 
-CComponent_Manager::CComponent_Manager()
+CComponentManager::CComponentManager()
 {
 
 }
 
-HRESULT CComponent_Manager::Reserve_Manager(_uint iNumLevels)
+HRESULT CComponentManager::Reserve_Manager(_uint iNumLevels)
 {
 	if (nullptr != m_pPrototypes)
 		return E_FAIL;
@@ -19,7 +19,7 @@ HRESULT CComponent_Manager::Reserve_Manager(_uint iNumLevels)
 	return S_OK;
 }
 
-HRESULT CComponent_Manager::Add_Prototype(_uint iLevelIndex, const wstring& strPrototypeTag, CComponent * pPrototype)
+HRESULT CComponentManager::Add_Prototype(_uint iLevelIndex, const wstring& strPrototypeTag, CComponent * pPrototype)
 {
 	if (nullptr == m_pPrototypes || 
 		nullptr != Find_Prototype(iLevelIndex, strPrototypeTag))
@@ -30,7 +30,7 @@ HRESULT CComponent_Manager::Add_Prototype(_uint iLevelIndex, const wstring& strP
 	return S_OK;
 }
 
-CComponent * CComponent_Manager::Clone_Component(_uint iLevelIndex, const wstring& strPrototypeTag, void * pArg)
+CComponent * CComponentManager::Clone_Component(_uint iLevelIndex, const wstring& strPrototypeTag, void * pArg)
 {
 	CComponent*		pPrototype = Find_Prototype(iLevelIndex, strPrototypeTag);
 	if (nullptr == pPrototype)
@@ -43,7 +43,7 @@ CComponent * CComponent_Manager::Clone_Component(_uint iLevelIndex, const wstrin
 	return pComponent;
 }
 
-CComponent * CComponent_Manager::Find_Prototype(_uint iLevelIndex, const wstring& strPrototypeTag)
+CComponent * CComponentManager::Find_Prototype(_uint iLevelIndex, const wstring& strPrototypeTag)
 {
 	if (iLevelIndex >= m_iNumLevels)
 		return nullptr;
@@ -56,7 +56,7 @@ CComponent * CComponent_Manager::Find_Prototype(_uint iLevelIndex, const wstring
 	return iter->second;	
 }
 
-void CComponent_Manager::Free()
+void CComponentManager::Free()
 {
 	__super::Free();
 

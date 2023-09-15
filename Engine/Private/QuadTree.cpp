@@ -125,7 +125,7 @@ void CQuadTree::FrustumCull(CQuadTreeNode* pNode)
             FrustumCull(vecChildren[i]);
 }
 
-void CQuadTree::AddObjectInNode(CTransform* pTransform, CQuadTreeNode* const pNode)
+void CQuadTree::AddObjectInNode(CTransformEx* pTransform, CQuadTreeNode* const pNode)
 {
     Vec3 vTransformCenter = pTransform->GetPosition();
     Vec3 vNodeCenter = pNode->GetPosition();

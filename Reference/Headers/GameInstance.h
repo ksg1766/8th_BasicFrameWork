@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Component_Manager.h"
-#include "Transform.h"
+#include "ComponentManager.h"
+#include "TransformEx.h"
 #include "MonoBehaviour.h"
 #include "RigidBodyBase.h"
 
@@ -43,11 +43,11 @@ public: /* For.Component_Manager */
 	class CComponent* Clone_Component(_uint iLevelIndex, const wstring& strPrototypeTag, void* pArg = nullptr);
 
 private:
-	class CTimer_Manager*			m_pTimer_Manager = { nullptr };
-	class CGraphic_Device*			m_pGraphic_Device = { nullptr };
-	class CLevelManager*			m_pLevel_Manager = { nullptr };
-	class CObjectManager*			m_pObject_Manager = { nullptr };
-	class CComponent_Manager*		m_pComponent_Manager = { nullptr };
+	class CTimerManager*			m_pTimerManager = { nullptr };
+	class CGraphicDevice*			m_pGraphicDevice = { nullptr };
+	class CLevelManager*			m_pLevelManager = { nullptr };
+	class CObjectManager*			m_pObjectManager = { nullptr };
+	class CComponentManager*		m_pComponentManager = { nullptr };
 
 public:
 	static void Release_Engine();

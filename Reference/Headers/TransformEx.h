@@ -3,17 +3,9 @@
 
 BEGIN(Engine)
 
-class ENGINE_DLL CTransformEx :
-    public CComponent
+class ENGINE_DLL CTransformEx final : public CComponent
 {
-public:
-	enum STATE { STATE_RIGHT, STATE_UP, STATE_LOOK, STATE_POSITION, STATE_END };
-
-	typedef struct tagTransformDesc
-	{
-		_float		fSpeedPerSec = { 0.f };
-		_float		fRotationRadianPerSec = { 0.0f };
-	}TRANSFORM_DESC;
+	using Super = CComponent;
 
 private:
 	CTransformEx(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -21,50 +13,70 @@ private:
 	virtual ~CTransformEx() = default;
 
 public:
-	Vec3 Get_State(STATE eState) {
-		return XMLoadFloat4((_float4*)&m_WorldMatrix.m[eState][0]);
-	}
+	virtual HRESULT Initialize_Prototype()				override;
+	virtual HRESULT Initialize(void* pArg)				override;	// Start
 
-	Matrix Get_WorldMatrix() const {
-		return XMLoadFloat4x4(&m_WorldMatrix);
-	}
+	virtual void	Tick(_float fTimeDelta)				override;
+	virtual void	LateTick(_float fTimeDelta)			override;
+	//virtual HRESULT FixedUpdate(_float fTimeDelta)	override;
 
-	Matrix Get_WorldFloat4x4() const {
-		return m_WorldMatrix;
-	}
+	virtual void	DebugRender()						override;
 
-	Matrix Get_WorldFloat4x4_TP() const {
-		Matrix	WorldMatrix;
-		XMStoreFloat4x4(&WorldMatrix, XMMatrixTranspose(Get_WorldMatrix()));
-		return WorldMatrix;
-	}
+	void UpdateTransform();
 
-	Matrix Get_WorldMatrixInverse() const {
-		return XMMatrixInverse(nullptr, Get_WorldMatrix());
-	}
+	static Vec3 ToEulerAngles(Quaternion q);
 
-	void Set_State(STATE eState, _fvector vState);
+	// Local
+	Vec3 GetLocalScale() { return m_vLocalScale; }
+	void SetLocalScale(const Vec3& localScale) { m_vLocalScale = localScale; UpdateTransform(); }
+	Vec3 GetLocalRotation() { return m_vLocalRotation; }
+	void SetLocalRotation(const Vec3& localRotation) { m_vLocalRotation = localRotation; UpdateTransform(); }
+	Vec3 GetLocalPosition() { return m_vLocalRotation; }
+	void SetLocalPosition(const Vec3& localPosition) { m_vLocalRotation = localPosition; UpdateTransform(); }
 
-public:
-	virtual HRESULT Initialize_Prototype();
-	virtual HRESULT Initialize(void* pArg);
+	// World
+	Vec3 GetScale() { return m_vScale; }
+	void SetScale(const Vec3& scale);
+	Vec3 GetRotation() { return m_vRotation; }
+	void SetRotation(const Vec3& rotation);
+	Vec3 GetPosition() { return m_vPosition; }
+	void SetPosition(const Vec3& position);
 
-public:
-	void Go_Straight(_float fTimeDelta);
-	void Go_Backward(_float fTimeDelta);
-	void Go_Left(_float fTimeDelta);
-	void Go_Right(_float fTimeDelta);
-	void Fix_Rotation(_fvector vAxis, _float fRadian);
-	void Turn(_fvector vAxis, _float fTimeDelta);
+	Vec3 GetRight() { return m_matWorld.Right(); }
+	Vec3 GetUp() { return m_matWorld.Up(); }
+	Vec3 GetLook() { return m_matWorld.Backward(); }
+
+	Matrix GetWorldMatrix() { return m_matWorld; }
+
+	// °èÃþ °ü°è
+	bool HasParent() { return m_pParent != nullptr; }
+	
+	CTransformEx* GetParent() { return m_pParent; }
+	void SetParent(CTransformEx* parent) { m_pParent = parent; }
+
+	const vector<CTransformEx*>& GetChildren() { return m_vecChildren; }
+	void AddChild(CTransformEx* child) { m_vecChildren.push_back(child); }
 
 private:
-	_float4x4			m_WorldMatrix;
-	_float				m_fSpeedPerSec = { 0.0f };
-	_float				m_fRotationRadianPerSec = { 0.0f };
+	Vec3 m_vLocalScale = { 1.f, 1.f, 1.f }; 
+	Vec3 m_vLocalRotation = { 0.f, 0.f, 0.f };
+	Vec3 m_vLocalPosition = { 0.f, 0.f, 0.f };
+
+	// Cache
+	Matrix m_matLocal = Matrix::Identity;
+	Matrix m_matWorld = Matrix::Identity;
+	
+	Vec3 m_vScale;
+	Vec3 m_vRotation;
+	Vec3 m_vPosition;
+
+private:
+	CTransformEx* m_pParent;
+	vector<CTransformEx*> m_vecChildren;
 
 public:
 	static CTransformEx* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	virtual CComponent* Clone(void* pArg) override;
+	virtual CComponent* Clone(void* pArg) override;	// Awake
 	virtual void Free() override;
 };
 

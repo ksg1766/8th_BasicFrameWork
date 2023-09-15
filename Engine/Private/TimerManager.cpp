@@ -1,13 +1,13 @@
-#include "../Public/Timer_Manager.h"
+#include "../Public/TimerManager.h"
 #include "Timer.h"
 
-IMPLEMENT_SINGLETON(CTimer_Manager)
+IMPLEMENT_SINGLETON(CTimerManager)
 
-CTimer_Manager::CTimer_Manager()
+CTimerManager::CTimerManager()
 {
 }
 
-_float CTimer_Manager::Compute_TimeDelta(const wstring & strTimerTag)
+_float CTimerManager::Compute_TimeDelta(const wstring & strTimerTag)
 {
 	CTimer*		pTimer = Find_Timer(strTimerTag);
 
@@ -18,7 +18,7 @@ _float CTimer_Manager::Compute_TimeDelta(const wstring & strTimerTag)
 	return pTimer->Compute_TimeDelta();	
 }
 
-HRESULT CTimer_Manager::Add_Timer(const wstring& strTimerTag)
+HRESULT CTimerManager::Add_Timer(const wstring& strTimerTag)
 {
 	/* map은 중복된 키를 허용하지 않느다.*/
 	CTimer*		pTimer = Find_Timer(strTimerTag);
@@ -35,7 +35,7 @@ HRESULT CTimer_Manager::Add_Timer(const wstring& strTimerTag)
 
 
 
-CTimer * CTimer_Manager::Find_Timer(const wstring& strTimerTag) const
+CTimer * CTimerManager::Find_Timer(const wstring& strTimerTag) const
 {
 	/* 맵에서 제공해주는 Find함수는 이진탐색을 수행한다. */
 	auto	iter = m_Timers.find(strTimerTag);
@@ -46,7 +46,7 @@ CTimer * CTimer_Manager::Find_Timer(const wstring& strTimerTag) const
 	return iter->second;
 }
 
-void CTimer_Manager::Free(void)
+void CTimerManager::Free(void)
 {
 	__super::Free();
 

@@ -10,13 +10,13 @@
 
 BEGIN(Engine)
 
-class CComponent_Manager final : public CBase
+class CComponentManager final : public CBase
 {
-	DECLARE_SINGLETON(CComponent_Manager)
+	DECLARE_SINGLETON(CComponentManager)
 
 private:
-	CComponent_Manager();
-	virtual ~CComponent_Manager() = default;
+	CComponentManager();
+	virtual ~CComponentManager() = default;
 
 public:
 	HRESULT Reserve_Manager(_uint iNumLevels);

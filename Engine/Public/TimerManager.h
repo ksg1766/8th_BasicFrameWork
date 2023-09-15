@@ -4,13 +4,13 @@
 
 BEGIN(Engine)
 
-class CTimer_Manager : public CBase
+class CTimerManager : public CBase
 {
-	DECLARE_SINGLETON(CTimer_Manager)
+	DECLARE_SINGLETON(CTimerManager)
 
 private:
-	CTimer_Manager();
-	virtual ~CTimer_Manager() = default;
+	CTimerManager();
+	virtual ~CTimerManager() = default;
 
 public:
 	/* 타임델타를 얻어온다. */

@@ -5,7 +5,7 @@
 BEGIN(Engine)
 
 class CGameObject;
-class CTransform;
+class CTransformEx;
 
 enum class ComponentType : uint8
 {
@@ -53,7 +53,7 @@ public:
 	ComponentType	GetType() const { return m_eType; }
 
 	CGameObject* GetGameObject() const;
-	CTransform* GetTransform() const;
+	CTransformEx* GetTransform() const;
 
 protected:
 	ID3D11Device*			m_pDevice = { nullptr };
