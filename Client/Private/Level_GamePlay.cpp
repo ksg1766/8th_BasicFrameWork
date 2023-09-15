@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "..\Public\Level_GamePlay.h"
+#include "ImGUIManager.h"
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)

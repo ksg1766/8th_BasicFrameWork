@@ -46,7 +46,8 @@ private:
 	void	MakeCollisionDescStatic(OUT COLLISION_DESC& descLeft, CRigidBody* lRigid, CRigidBody* rRigid, const _float fTimeDelta);
 
 private:
-	map<ULONGLONG, _bool> m_mapColInfo;
+	//map<ULONGLONG, _bool> m_mapColInfo;
+	unordered_map<ULONGLONG, _bool> m_mapColInfo;
 	_uint	m_arrCheck[(_uint)LAYERTAG::LAYER_END];
 	_bool	m_arrSorted[(_uint)LAYERTAG::LAYER_END];
 

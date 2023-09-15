@@ -34,6 +34,15 @@
     <Filter Include="97.ShaderFiles">
       <UniqueIdentifier>{a631185a-1555-4b19-8534-272c809d77b7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Levels\02.GameTool">
+      <UniqueIdentifier>{0ddb6f36-aab9-4683-8131-d89aef354c4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\02.GameTool\ImGUIManager">
+      <UniqueIdentifier>{8c7126cb-5386-45ee-a1ae-8f8ea4d71673}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\02.GameTool\ImGUI">
+      <UniqueIdentifier>{0750d5ff-76a3-4d8d-b06d-a7f58ab341ea}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -72,6 +81,36 @@
     <ClInclude Include="..\public\BackGround.h">
       <Filter>02.GameObjects\BackGround</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Level_GameTool.h">
+      <Filter>01.Levels\02.GameTool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ImGUIManager.h">
+      <Filter>01.Levels\02.GameTool\ImGUIManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ImGUI\imconfig.h">
+      <Filter>01.Levels\02.GameTool\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ImGUI\imgui.h">
+      <Filter>01.Levels\02.GameTool\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ImGUI\imgui_impl_dx11.h">
+      <Filter>01.Levels\02.GameTool\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ImGUI\imgui_impl_win32.h">
+      <Filter>01.Levels\02.GameTool\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ImGUI\imgui_internal.h">
+      <Filter>01.Levels\02.GameTool\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ImGUI\imstb_rectpack.h">
+      <Filter>01.Levels\02.GameTool\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ImGUI\imstb_textedit.h">
+      <Filter>01.Levels\02.GameTool\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ImGUI\imstb_truetype.h">
+      <Filter>01.Levels\02.GameTool\ImGUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -97,6 +136,33 @@
     </ClCompile>
     <ClCompile Include="..\private\BackGround.cpp">
       <Filter>02.GameObjects\BackGround</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_GameTool.cpp">
+      <Filter>01.Levels\02.GameTool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ImGUIManager.cpp">
+      <Filter>01.Levels\02.GameTool\ImGUIManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\ImGUI\imgui.cpp">
+      <Filter>01.Levels\02.GameTool\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\ImGUI\imgui_demo.cpp">
+      <Filter>01.Levels\02.GameTool\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\ImGUI\imgui_draw.cpp">
+      <Filter>01.Levels\02.GameTool\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\ImGUI\imgui_impl_dx11.cpp">
+      <Filter>01.Levels\02.GameTool\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\ImGUI\imgui_impl_win32.cpp">
+      <Filter>01.Levels\02.GameTool\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\ImGUI\imgui_tables.cpp">
+      <Filter>01.Levels\02.GameTool\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\ImGUI\imgui_widgets.cpp">
+      <Filter>01.Levels\02.GameTool\ImGUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -84,7 +84,8 @@ void CCollisionManager::CheckDynamicCollision(LAYERTAG eLayerLeft, LAYERTAG eLay
 		m_arrSorted[(_uint)eLayerRight] = true;
 	}
 
-	map<ULONGLONG, bool>::iterator iter;
+	unordered_map<ULONGLONG, bool>::iterator iter;
+	//map<ULONGLONG, bool>::iterator iter;
 
 	for (auto& iterL : vecLeft)
 	{
@@ -200,8 +201,9 @@ void CCollisionManager::CheckStaticCollision(LAYERTAG eDynamicLayer, const _floa
 	vector<CGameObject*>& vecLeft = (*pCurrentLevelLayers)[eDynamicLayer]->GetGameObjects();
 	
 	CQuadTree* pQuadTreeInstance = CQuadTree::GetInstance();
-
-	map<ULONGLONG, bool>::iterator iter;
+	
+	unordered_map<ULONGLONG, bool>::iterator iter;
+	//map<ULONGLONG, bool>::iterator iter;
 
 	for (auto& iterL : vecLeft)
 	{

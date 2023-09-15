@@ -4,7 +4,7 @@
 #include <d3d11.h>
 
 #include "SimpleMath.h"
-#include <DirectXMath.h>
+//#include <DirectXMath.h>
 #include <d3dcompiler.h>
 #include <Effect11\d3dx11effect.h>
 #include <DirectXTK\DDSTextureLoader.h>
@@ -40,7 +40,7 @@ using namespace SimpleMath;
 #ifndef DBG_NEW 
 
 #define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ ) 
-#define new DBG_NEW 
+//#define new DBG_NEW 
 
 #endif
 

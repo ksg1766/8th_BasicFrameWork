@@ -115,9 +115,6 @@ void CRigidDynamic::KineticUpdate(const _float fTimeDelta)
 	_float fAngularResistance = m_fAngularDrag * fTimeDelta;
 	_float fLinearResistance = m_fDrag * fTimeDelta;
 
-	// Friction - Collider에서 처리 해야 할 듯
-	//_float fFrictionForce(마찰력) = m_fFriction(마찰 계수) * -9.81f * fTimeDelta * ;	// (수직 항력 계산 필요)
-
 	(fAngularResistance < 1.f) ? (m_vAngularVelocity = m_vAngularVelocity * (1.f - fAngularResistance)) : (m_vAngularVelocity = Vec3::Zero);
 	(fLinearResistance < 1.f) ? (m_vLinearVelocity = m_vLinearVelocity * (1.f - fLinearResistance)) : (m_vLinearVelocity = Vec3::Zero);
 
