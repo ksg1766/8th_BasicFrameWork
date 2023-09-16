@@ -1,6 +1,8 @@
 #pragma once
 #include "Engine_Defines.h"
 
+BEGIN(Engine)
+
 enum FileMode : uint8
 {
 	Write,
@@ -53,3 +55,4 @@ private:
 	HANDLE _handle = INVALID_HANDLE_VALUE;
 };
 
+END

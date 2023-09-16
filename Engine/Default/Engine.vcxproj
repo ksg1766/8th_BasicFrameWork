@@ -111,7 +111,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d11.lib;Effects11d.lib;DirectXTKd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;dinput8.lib;dxguid.lib;Effects11d.lib;DirectXTKd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>../ThirdPartyLib/</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
@@ -176,6 +176,7 @@ call Copy.bat</Command>
     <ClInclude Include="..\public\ComponentManager.h" />
     <ClInclude Include="..\Public\Engine_Enum.h" />
     <ClInclude Include="..\Public\FileUtils.h" />
+    <ClInclude Include="..\Public\InputDevice.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\Public\TransformBurger.h" />
     <ClInclude Include="..\Public\Engine_Defines.h" />
@@ -219,6 +220,7 @@ call Copy.bat</Command>
     <ClCompile Include="..\private\Component.cpp" />
     <ClCompile Include="..\private\ComponentManager.cpp" />
     <ClCompile Include="..\Private\FileUtils.cpp" />
+    <ClCompile Include="..\Private\InputDevice.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\Private\TransformBurger.cpp" />
     <ClCompile Include="..\Private\Engine_Struct.cpp" />

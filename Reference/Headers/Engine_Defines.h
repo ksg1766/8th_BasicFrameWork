@@ -3,8 +3,10 @@
 #pragma warning (disable : 4251)
 #include <d3d11.h>
 
+#define DIRECTINPUT_VERSION	0x0800
+#include <dinput.h>
+
 #include "SimpleMath.h"
-//#include <DirectXMath.h>
 #include <d3dcompiler.h>
 #include <Effect11\d3dx11effect.h>
 #include <DirectXTK\DDSTextureLoader.h>

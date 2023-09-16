@@ -30,6 +30,13 @@ void CCollisionManager::LateTick_Collision(const _float fTimeDelta)
 	}
 }
 
+HRESULT CCollisionManager::Reserve_Manager(_uint iNumLevels)
+{
+	Reset();
+
+	return S_OK;
+}
+
 void CCollisionManager::CheckGroup(LAYERTAG eLeft, LAYERTAG eRight)
 {
 	_uint iRow = (_uint)eLeft;

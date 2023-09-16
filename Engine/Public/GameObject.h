@@ -15,6 +15,7 @@ class CRigidBody;
 
 class ENGINE_DLL CGameObject abstract : public CBase
 {
+	using Super = CBase;
 protected:
 	/* 원형을 생성할 때 */
 	CGameObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

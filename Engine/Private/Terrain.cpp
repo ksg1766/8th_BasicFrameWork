@@ -1,4 +1,5 @@
 #include "..\Public\Terrain.h"
+#include "FileUtils.h"
 
 CTerrain::CTerrain(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: Super(pDevice, pContext)
@@ -27,21 +28,20 @@ HRESULT CTerrain::Initialize(void * pArg)
 
 HRESULT CTerrain::InitializeWithHeightMap(const wstring& strHeightMapPath)
 {
-	/* 받아온 하이트맵 이미지의 정보를 읽어오자. */
-	_ulong		dwByte = 0;
-	HANDLE		hFile = CreateFile(strHeightMapPath.c_str(), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	FileUtils* file = new FileUtils;
+	file->Open(strHeightMapPath, FileMode::Read);
+
 	BITMAPFILEHEADER		fh;
 	BITMAPINFOHEADER		ih;
-
-	ReadFile(hFile, &fh, sizeof(fh), &dwByte, nullptr);
-	ReadFile(hFile, &ih, sizeof(ih), &dwByte, nullptr);
+	fh = file->Read<BITMAPFILEHEADER>();
+	ih = file->Read<BITMAPINFOHEADER>();
 
 	_ulong* pPixel = { nullptr };
 	pPixel = new _ulong[ih.biWidth * ih.biHeight];
 
-	ReadFile(hFile, pPixel, sizeof(_ulong) * ih.biWidth * ih.biHeight, &dwByte, nullptr);
+	file->Read((void**)&pPixel, sizeof(_ulong) * ih.biWidth * ih.biHeight);
 
-	CloseHandle(hFile);
+	Safe_Delete(file);
 
 	m_iNumVerticesX = ih.biWidth;
 	m_iNumVerticesZ = ih.biHeight;
@@ -201,5 +201,5 @@ CComponent * CTerrain::Clone(void * pArg)
 
 void CTerrain::Free()
 {
-
+	Super::Free();
 }

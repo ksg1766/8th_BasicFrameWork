@@ -14,6 +14,7 @@ BEGIN(Client)
 
 class CBackGround final : public CGameObject
 {
+	using Super = CGameObject;
 protected:
 	/* 원형을 생성할 때 */
 	CBackGround(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

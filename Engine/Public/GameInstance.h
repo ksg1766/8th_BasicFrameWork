@@ -20,7 +20,7 @@ private:
 	virtual ~CGameInstance() = default;
 
 public: /* For.GameInstance */
-	HRESULT Initialize_Engine(_uint iNumLevels, const GRAPHIC_DESC& GraphicDesc, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext);
+	HRESULT Initialize_Engine(_uint iNumLevels, const GRAPHIC_DESC& GraphicDesc, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext, _In_ HINSTANCE hInst);
 	void Tick(_float fTimeDelta);
 	void DebugRender();
 
@@ -49,9 +49,11 @@ public: /* For.Component_Manager */
 private:
 	class CTimerManager*			m_pTimerManager = { nullptr };
 	class CGraphicDevice*			m_pGraphicDevice = { nullptr };
+	class CInputDevice*				m_pInputDevice = { nullptr };
 	class CLevelManager*			m_pLevelManager = { nullptr };
 	class CObjectManager*			m_pObjectManager = { nullptr };
 	class CComponentManager*		m_pComponentManager = { nullptr };
+	class CCollisionManager*		m_pCollisionManager = { nullptr };
 
 public:
 	static void Release_Engine();

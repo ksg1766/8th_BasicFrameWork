@@ -240,6 +240,9 @@
     <ClInclude Include="..\public\GameObject.h">
       <Filter>01.Utiltiy\03.GameObjects\00.GameObjectBase</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\InputDevice.h">
+      <Filter>00.System\01.Device\Input</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -352,6 +355,9 @@
     </ClCompile>
     <ClCompile Include="..\private\GameObject.cpp">
       <Filter>01.Utiltiy\03.GameObjects\00.GameObjectBase</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\InputDevice.cpp">
+      <Filter>00.System\01.Device\Input</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -133,7 +133,7 @@ HRESULT CGameObject::AddComponent(_uint iLevelIndex, ComponentType type, const w
 
 void CGameObject::Free()
 {
-	__super::Free();
+	Super::Free();
 
 	for (auto& iter : m_arrComponents)
 		Safe_Release(iter);

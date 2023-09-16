@@ -26,9 +26,10 @@ private:
 	virtual ~CCollisionManager() = default;
 
 public:
-	void LateTick_Collision(const _float fTimeDelta);
+	void	LateTick_Collision(const _float fTimeDelta);
 
 public:
+	HRESULT Reserve_Manager(_uint iNumLevels);
 	//map<ULONGLONG, _bool>& GetMapColInfo() { return m_mapColInfo; }
 	//void SetMapColInfo(ULONGLONG ID, _bool bCollision) { m_mapColInfo[ID] = bCollision; }
 	
@@ -48,8 +49,8 @@ private:
 private:
 	//map<ULONGLONG, _bool> m_mapColInfo;
 	unordered_map<ULONGLONG, _bool> m_mapColInfo;
-	_uint	m_arrCheck[(_uint)LAYERTAG::LAYER_END];
-	_bool	m_arrSorted[(_uint)LAYERTAG::LAYER_END];
+	_uint	m_arrCheck[(_uint)LAYERTAG::LAYER_END] = { 0 };
+	_bool	m_arrSorted[(_uint)LAYERTAG::LAYER_END] = { 0 };
 
 	map<LAYERTAG, class CLayer*>* pCurrentLevelLayers;//
 

@@ -1,33 +1,44 @@
 #include "..\Public\GameInstance.h"
 #include "TimerManager.h"
 #include "GraphicDevice.h"
+#include "InputDevice.h"
 #include "LevelManager.h"
 #include "ObjectManager.h"
+#include "CollisionManager.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
 CGameInstance::CGameInstance()
 	: m_pTimerManager(CTimerManager::GetInstance())
 	, m_pGraphicDevice(CGraphicDevice::GetInstance())
+	, m_pInputDevice(CInputDevice::GetInstance())
 	, m_pLevelManager(CLevelManager::GetInstance())
 	, m_pObjectManager(CObjectManager::GetInstance())
 	, m_pComponentManager(CComponentManager::GetInstance())
+	, m_pCollisionManager(CCollisionManager::GetInstance())
 {
 	Safe_AddRef(m_pComponentManager);
 	Safe_AddRef(m_pObjectManager);
 	Safe_AddRef(m_pLevelManager);
 	Safe_AddRef(m_pGraphicDevice);
+	Safe_AddRef(m_pInputDevice);
 	Safe_AddRef(m_pTimerManager);
+	Safe_AddRef(m_pCollisionManager);
 }
 
-HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, const GRAPHIC_DESC& GraphicDesc, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext)
+HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, const GRAPHIC_DESC& GraphicDesc, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext, _In_ HINSTANCE hInst)
 {
 	/* 그래픽디바이스 초기화 처리. */
 	if (FAILED(m_pGraphicDevice->Ready_GraphicDevice(GraphicDesc.hWnd, GraphicDesc.eWinMode, GraphicDesc.iWinSizeX, GraphicDesc.iWinSizeY, ppDevice, ppContext)))
 		return E_FAIL;
 
 	/* 사운드디바이스 초기화 처리. */
+
+
 	/* 입력디바이스 초기화 처리. */
+	if (FAILED(m_pInputDevice->Initialize(hInst, GraphicDesc.hWnd)))
+		return E_FAIL;
+
 
 	/* 오브젝트 매니져의 예약 처리. */
 	if (FAILED(m_pObjectManager->Reserve_Manager(iNumLevels)))
@@ -35,6 +46,10 @@ HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, const GRAPHIC_DESC& G
 
 	/* 컴포넌트 매니져의 예약 처리. */
 	if (FAILED(m_pComponentManager->Reserve_Manager(iNumLevels)))
+		return E_FAIL;
+
+	/* 콜리전 매니져의 예약 처리. */
+	if (FAILED(m_pCollisionManager->Reserve_Manager(iNumLevels)))
 		return E_FAIL;
 
 	return S_OK;
