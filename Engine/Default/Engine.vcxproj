@@ -103,16 +103,16 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;ENGINE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;NOMINMAX;_USRDLL;ENGINE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../Public/;../Public/ImGUI</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Public/;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d11.lib;dinput8.lib;dxguid.lib;Effects11d.lib;DirectXTKd.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>../ThirdPartyLib/</AdditionalLibraryDirectories>
+      <AdditionalDependencies>d3d11.lib;dinput8.lib;dxguid.lib;Effects11d.lib;DirectXTKd.lib;assimp-vc143-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../ThirdPartyLib</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>cd /d $(SolutionDir)
@@ -164,6 +164,7 @@ call Copy.bat</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Public\AsTypes.h" />
     <ClInclude Include="..\public\Base.h" />
     <ClInclude Include="..\Public\Camera.h" />
     <ClInclude Include="..\Public\ColliderAABB.h" />
@@ -177,7 +178,9 @@ call Copy.bat</Command>
     <ClInclude Include="..\Public\Engine_Enum.h" />
     <ClInclude Include="..\Public\FileUtils.h" />
     <ClInclude Include="..\Public\InputDevice.h" />
+    <ClInclude Include="..\Public\ModelConverter.h" />
     <ClInclude Include="..\Public\Terrain.h" />
+    <ClInclude Include="..\Public\tinyxml2.h" />
     <ClInclude Include="..\Public\TransformBurger.h" />
     <ClInclude Include="..\Public\Engine_Defines.h" />
     <ClInclude Include="..\Public\Engine_Function.h" />
@@ -221,7 +224,9 @@ call Copy.bat</Command>
     <ClCompile Include="..\private\ComponentManager.cpp" />
     <ClCompile Include="..\Private\FileUtils.cpp" />
     <ClCompile Include="..\Private\InputDevice.cpp" />
+    <ClCompile Include="..\Private\ModelConverter.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
+    <ClCompile Include="..\Private\tinyxml2.cpp" />
     <ClCompile Include="..\Private\TransformBurger.cpp" />
     <ClCompile Include="..\Private\Engine_Struct.cpp" />
     <ClCompile Include="..\private\GameInstance.cpp" />

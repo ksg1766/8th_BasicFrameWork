@@ -1,6 +1,8 @@
 #pragma once
 #include "Engine_Defines.h"
 
+BEGIN(Engine)
+
 class Utils
 {
 public:
@@ -14,3 +16,4 @@ public:
 	static string ToString(wstring value);
 };
 
+END

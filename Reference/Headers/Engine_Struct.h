@@ -34,6 +34,16 @@ namespace Engine
 
 	}VTXNORTEX;
 
+	typedef struct tagVertexAnimModel
+	{
+		XMFLOAT3		vPosition;
+		XMFLOAT3		vNormal;
+		XMFLOAT2		vTexture;
+		XMFLOAT3		vTangent;
+		XMUINT4			vBlendIndex; /* 이 정점에 영향을 주는 뼈의 인덱스 네개. */
+		XMFLOAT4		vBlendWeight; /* 영향르 주고 있는 각 뼈대의 영향 비율 */
+	}VTXANIMMODEL;
+
 	typedef struct tagCollision
 	{
 		class CRigidBody* pOther;

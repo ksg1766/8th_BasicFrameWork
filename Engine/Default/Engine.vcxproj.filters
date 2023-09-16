@@ -243,6 +243,15 @@
     <ClInclude Include="..\Public\InputDevice.h">
       <Filter>00.System\01.Device\Input</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\ModelConverter.h">
+      <Filter>98.Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AsTypes.h">
+      <Filter>98.Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\tinyxml2.h">
+      <Filter>98.Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -358,6 +367,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\InputDevice.cpp">
       <Filter>00.System\01.Device\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ModelConverter.cpp">
+      <Filter>98.Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\tinyxml2.cpp">
+      <Filter>98.Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

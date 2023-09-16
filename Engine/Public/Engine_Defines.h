@@ -1,19 +1,30 @@
 #pragma once
 
 #pragma warning (disable : 4251)
+
+// WIN
+#include <windows.h>
+#include <assert.h>
+#include <optional>
+
 #include <d3d11.h>
+#include <wrl.h>
+#include <d3dcompiler.h>
+
+#include "SimpleMath.h"
+#include <d3dcompiler.h>
+#include <Effect11/d3dx11effect.h>
+#include <DirectXTK/DDSTextureLoader.h>
+#include <DirectXTK/WICTextureLoader.h>
 
 #define DIRECTINPUT_VERSION	0x0800
 #include <dinput.h>
 
-#include "SimpleMath.h"
-#include <d3dcompiler.h>
-#include <Effect11\d3dx11effect.h>
-#include <DirectXTK\DDSTextureLoader.h>
-#include <DirectXTK\WICTextureLoader.h>
 using namespace DirectX;
+using namespace Microsoft::WRL;
 using namespace SimpleMath;
 
+#include <memory>
 #include <array>
 #include <iostream>
 #include <vector> /* 배열 */
@@ -21,6 +32,14 @@ using namespace SimpleMath;
 #include <map> /* 이진트리 */
 #include <unordered_map> /* 해시테이블 */
 #include <algorithm>
+//
+#include <typeinfo>
+
+#include <process.h>
+
+#include <Assimp/scene.h>
+#include <Assimp/Importer.hpp>
+#include <Assimp/postprocess.h>
 
 #include "Engine_Typedef.h"
 #include "Engine_Enum.h"
@@ -28,12 +47,13 @@ using namespace SimpleMath;
 #include "Engine_Struct.h"
 #include "Engine_Function.h"
 
-// WIN
-#include <windows.h>
-#include <assert.h>
-#include <optional>
+// Libs
+#pragma comment(lib, "d3dcompiler.lib")
+
 
 #ifdef _DEBUG
+
+//#pragma comment(lib, "Assimp/assimp-vc143-mtd.lib")
 
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
