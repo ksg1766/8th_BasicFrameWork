@@ -57,6 +57,9 @@ _int CLoader::Loading()
 	case LEVEL_GAMEPLAY:
 		hr = Loading_For_Level_GamePlay();
 		break;
+	case LEVEL_GAMETOOL:
+		hr = Loading_For_Level_GameTool();
+		break;
 	}
 
 	if (FAILED(hr))
@@ -115,6 +118,26 @@ HRESULT CLoader::Loading_For_Level_GamePlay()
 	/* For.Shader */
 	m_strLoading = TEXT("셰이더를 로딩 중 입니다.");
 	
+
+	m_strLoading = TEXT("로딩 끝.");
+	m_isFinished = true;
+
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_For_Level_GameTool()
+{
+	/* For.Texture */
+	m_strLoading = TEXT("텍스쳐를 로딩 중 입니다.");
+
+
+	/* For.Mesh */
+	m_strLoading = TEXT("메시를 로딩 중 입니다.");
+
+
+	/* For.Shader */
+	m_strLoading = TEXT("셰이더를 로딩 중 입니다.");
+
 
 	m_strLoading = TEXT("로딩 끝.");
 	m_isFinished = true;

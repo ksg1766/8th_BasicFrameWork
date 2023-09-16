@@ -38,6 +38,15 @@ void CLayer::LateTick(_float fTimeDelta)
 	}
 }
 
+void CLayer::DebugRender()
+{
+	for (auto& pGameObject : m_GameObjects)
+	{
+		if (nullptr != pGameObject)
+			pGameObject->DebugRender();
+	}
+}
+
 CLayer * CLayer::Create()
 {
 	CLayer*	pInstance = new CLayer();

@@ -10,13 +10,17 @@ CLevel_GameTool::CLevel_GameTool(ID3D11Device * pDevice, ID3D11DeviceContext * p
 HRESULT CLevel_GameTool::Initialize()
 { 
 	CImGUIManager::GetInstance()->Initialize(m_pDevice, m_pContext);
-
+	
 	return S_OK;
 }
 
 HRESULT CLevel_GameTool::Tick(_float fTimeDelta)
 {
 	// UI
+	if (!m_IsImGUIReady)
+		m_IsImGUIReady = true;
+	
+	CImGUIManager::GetInstance()->Tick();
 	Test();
 
 	return S_OK;
@@ -26,9 +30,13 @@ HRESULT CLevel_GameTool::LateTick(_float fTimeDelta)
 {
 	SetWindowText(g_hWnd, TEXT("게임 툴 레벨입니다."));
 
+	return S_OK;
+}
 
-
-	CImGUIManager::GetInstance()->Render();
+HRESULT CLevel_GameTool::DebugRender()
+{
+	if(m_IsImGUIReady)
+		CImGUIManager::GetInstance()->Render();
 
 	return S_OK;
 }
@@ -59,17 +67,6 @@ void CLevel_GameTool::Test()
 		ImGui::Text("counter = %d", counter);
 
 		//ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
-		ImGui::End();
-	}
-
-	// Rookiss
-	{
-		ImGui::Begin("KSG", nullptr, 
-			ImGuiWindowFlags_NoTitleBar |
-			ImGuiWindowFlags_NoMove);
-
-		ImGui::Text("KSG Hello ImGui!");
-
 		ImGui::End();
 	}
 

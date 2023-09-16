@@ -27,6 +27,7 @@ public:
 	virtual HRESULT			Initialize(void* pArg);
 	virtual void			Tick(_float fTimeDelta);
 	virtual void			LateTick(_float fTimeDelta);
+	virtual void			DebugRender();
 	virtual HRESULT			Render();
 
 	CComponent*				GetFixedComponent(ComponentType type) const;

@@ -109,6 +109,9 @@
     <Filter Include="01.Utiltiy\01.Managers\ObjectManager">
       <UniqueIdentifier>{efa8cf04-88a3-436d-9b7d-2be308ea95d9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utiltiy\04.Component\10.Terrain">
+      <UniqueIdentifier>{cb0ac57e-8a23-43c2-b320-cafdcb56cc29}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -231,6 +234,9 @@
     <ClInclude Include="..\public\ObjectManager.h">
       <Filter>01.Utiltiy\01.Managers\ObjectManager</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Terrain.h">
+      <Filter>01.Utiltiy\04.Component\10.Terrain</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -337,6 +343,9 @@
     </ClCompile>
     <ClCompile Include="..\private\ObjectManager.cpp">
       <Filter>01.Utiltiy\01.Managers\ObjectManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Terrain.cpp">
+      <Filter>01.Utiltiy\04.Component\10.Terrain</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

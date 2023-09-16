@@ -49,6 +49,12 @@ void CGameInstance::Tick(_float fTimeDelta)
 	m_pLevelManager->LateTick(fTimeDelta);
 }
 
+void CGameInstance::DebugRender()
+{
+	// m_pObjectManager->DebugRender();
+	m_pLevelManager->DebugRender();
+}
+
 void CGameInstance::Clear(_uint iLevelIndex)
 {
 	m_pObjectManager->Clear(iLevelIndex);
@@ -90,6 +96,7 @@ HRESULT CGameInstance::Present()
 {
 	if (nullptr == m_pGraphicDevice)
 		return E_FAIL;
+
 	return m_pGraphicDevice->Present();
 }
 

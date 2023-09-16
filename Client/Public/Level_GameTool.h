@@ -15,10 +15,12 @@ public:
 	virtual HRESULT Initialize() override;
 	virtual HRESULT Tick(const _float fTimeDelta) override;
 	virtual HRESULT LateTick(const _float fTimeDelta) override;
+	virtual HRESULT	DebugRender() override;
 
 	void			Test();
 
 private:
+	_bool	m_IsImGUIReady = false;
 	_bool	show_demo_window = true;
 	_bool	show_another_window = false;
 	Vec4	clear_color = Vec4(0.f);

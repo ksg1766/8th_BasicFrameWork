@@ -24,6 +24,14 @@ void CLevelManager::LateTick(_float fTimeDelta)
 	m_pCurrentLevel->LateTick(fTimeDelta);
 }
 
+void CLevelManager::DebugRender()
+{
+	if (nullptr == m_pCurrentLevel)
+		return;
+
+	m_pCurrentLevel->DebugRender();
+}
+
 HRESULT CLevelManager::Open_Level(_uint iLevelIndex, CLevel * pNewLevel)
 {
 	if (nullptr != m_pCurrentLevel)

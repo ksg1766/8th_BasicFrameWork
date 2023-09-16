@@ -44,7 +44,8 @@ private:
 private:
 	HRESULT Loading_For_Level_Logo();
 	HRESULT Loading_For_Level_GamePlay();
-	
+	HRESULT Loading_For_Level_GameTool();
+
 
 public:
 	static CLoader* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVELID eNextLevel);

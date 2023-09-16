@@ -175,6 +175,7 @@ call Copy.bat</Command>
     <ClInclude Include="..\public\Component.h" />
     <ClInclude Include="..\public\ComponentManager.h" />
     <ClInclude Include="..\Public\Engine_Enum.h" />
+    <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\Public\TransformBurger.h" />
     <ClInclude Include="..\Public\Engine_Defines.h" />
     <ClInclude Include="..\Public\Engine_Function.h" />
@@ -216,6 +217,7 @@ call Copy.bat</Command>
     <ClCompile Include="..\Private\CollisionManager.cpp" />
     <ClCompile Include="..\private\Component.cpp" />
     <ClCompile Include="..\private\ComponentManager.cpp" />
+    <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\Private\TransformBurger.cpp" />
     <ClCompile Include="..\Private\Engine_Struct.cpp" />
     <ClCompile Include="..\private\GameInstance.cpp" />

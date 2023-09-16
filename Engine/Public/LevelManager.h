@@ -21,6 +21,7 @@ private:
 public:
 	void Tick(_float fTimeDelta);
 	void LateTick(_float fTimeDelta);
+	void DebugRender();
 
 public:
 	HRESULT Open_Level(_uint iLevelIndex, class CLevel* pNewLevel);

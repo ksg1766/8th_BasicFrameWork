@@ -86,6 +86,17 @@ void CObjectManager::LateTick(_float fTimeDelta)
 	}
 }
 
+void CObjectManager::DebugRender()
+{
+	for (size_t i = 0; i < m_iNumLevels; i++)
+	{
+		for (auto& Pair : m_pLayers[i])
+		{
+			Pair.second->DebugRender();
+		}
+	}
+}
+
 void CObjectManager::Clear(_uint iLevelIndex)
 {
 	for (auto& Pair : m_pLayers[iLevelIndex])

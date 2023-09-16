@@ -17,6 +17,7 @@ public:
 	HRESULT Add_GameObject(class CGameObject* pGameObject);
 	void Tick(_float fTimeDelta);
 	void LateTick(_float fTimeDelta);
+	void DebugRender();
 
 	vector<class CGameObject*>& GetGameObjects() { return m_GameObjects; }
 

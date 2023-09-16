@@ -19,6 +19,7 @@ private:
 public:
 	void Tick(_float fTimeDelta);
 	void LateTick(_float fTimeDelta);
+	void DebugRender();
 	void Clear(_uint iLevelIndex);
 
 	HRESULT Reserve_Manager(_uint iNumLevels);
