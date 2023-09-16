@@ -3,6 +3,8 @@
 
 #include "GameInstance.h"
 #include "BackGround.h"
+//
+#include "BasicTerrain.h"
 
 CLoader::CLoader(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: m_pDevice(pDevice)
@@ -107,17 +109,30 @@ HRESULT CLoader::Loading_For_Level_Logo()
 
 HRESULT CLoader::Loading_For_Level_GamePlay()
 {
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
 	/* For.Texture */
 	m_strLoading = TEXT("텍스쳐를 로딩 중 입니다.");
-	
+	/* For.Prototype_Component_Texture_Terrain*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Terrain"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Tile0.jpg")))))
+		return E_FAIL;
 
 	/* For.Mesh */
 	m_strLoading = TEXT("메시를 로딩 중 입니다.");
-	
 
 	/* For.Shader */
 	m_strLoading = TEXT("셰이더를 로딩 중 입니다.");
-	
+
+	/* For.GameObject */
+	m_strLoading = TEXT("객체원형을 로딩 중 입니다.");
+
+	/* For.Prototype_GameObject_Terrain*/
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BasicTerrain"), CBasicTerrain::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
 
 	m_strLoading = TEXT("로딩 끝.");
 	m_isFinished = true;
@@ -127,17 +142,30 @@ HRESULT CLoader::Loading_For_Level_GamePlay()
 
 HRESULT CLoader::Loading_For_Level_GameTool()
 {
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
 	/* For.Texture */
 	m_strLoading = TEXT("텍스쳐를 로딩 중 입니다.");
-
+	/* For.Prototype_Component_Texture_Terrain*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMETOOL, TEXT("Prototype_Component_Texture_Terrain"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Tile0.jpg")))))
+		return E_FAIL;
 
 	/* For.Mesh */
 	m_strLoading = TEXT("메시를 로딩 중 입니다.");
 
-
 	/* For.Shader */
 	m_strLoading = TEXT("셰이더를 로딩 중 입니다.");
 
+	/* For.GameObject */
+	m_strLoading = TEXT("객체원형을 로딩 중 입니다.");
+
+	/* For.Prototype_GameObject_Terrain*/
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BasicTerrain"), CBasicTerrain::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
 
 	m_strLoading = TEXT("로딩 끝.");
 	m_isFinished = true;

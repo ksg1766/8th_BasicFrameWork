@@ -10,6 +10,7 @@ namespace Engine
 		UI,
 		PLAYER,
 		GROUND,
+		TERRAIN,
 		WALL,
 		TRIGGER,
 		INTERACTABLE,

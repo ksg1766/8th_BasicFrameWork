@@ -57,6 +57,8 @@ public:
 	const vector<CTransformEx*>& GetChildren() { return m_vecChildren; }
 	void AddChild(CTransformEx* child) { m_vecChildren.push_back(child); }
 
+	HRESULT Bind_ShaderResources(class CShader* pShader, const char* pConstantName);
+
 private:
 	Vec3 m_vLocalScale = { 1.f, 1.f, 1.f }; 
 	Vec3 m_vLocalRotation = { 0.f, 0.f, 0.f };

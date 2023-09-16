@@ -7,6 +7,7 @@ BEGIN(Client)
 
 class CLevel_GameTool final : public CLevel
 {
+	using Super = CLevel;
 private:
 	CLevel_GameTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual ~CLevel_GameTool() = default;
@@ -17,7 +18,10 @@ public:
 	virtual HRESULT LateTick(const _float fTimeDelta) override;
 	virtual HRESULT	DebugRender() override;
 
-	void			Test();
+	void			Demo();
+
+private:
+	HRESULT Ready_Layer_Terrain(const LAYERTAG& eLayerTag);
 
 private:
 	_bool	m_IsImGUIReady = false;

@@ -43,6 +43,9 @@
     <Filter Include="01.Levels\02.GameTool\ImGUI">
       <UniqueIdentifier>{0750d5ff-76a3-4d8d-b06d-a7f58ab341ea}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\BasicTerrain">
+      <UniqueIdentifier>{eb9b11a4-c3c9-4f3b-a50d-cbb0f833a983}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -111,6 +114,9 @@
     <ClInclude Include="..\Public\ImGUI\imstb_truetype.h">
       <Filter>01.Levels\02.GameTool\ImGUI</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\BasicTerrain.h">
+      <Filter>02.GameObjects\BasicTerrain</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -164,6 +170,9 @@
     <ClCompile Include="..\Public\ImGUI\imgui_widgets.cpp">
       <Filter>01.Levels\02.GameTool\ImGUI</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\BasicTerrain.cpp">
+      <Filter>02.GameObjects\BasicTerrain</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -180,6 +189,9 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

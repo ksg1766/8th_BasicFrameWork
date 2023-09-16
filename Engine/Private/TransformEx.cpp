@@ -1,4 +1,5 @@
 #include "TransformEx.h"
+#include "Shader.h"
 
 CTransformEx::CTransformEx(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: Super(pDevice, pContext, ComponentType::Transform)
@@ -142,6 +143,11 @@ void CTransformEx::SetPosition(const Vec3& worldPosition)
 	{
 		SetLocalPosition(worldPosition);
 	}
+}
+
+HRESULT CTransformEx::Bind_ShaderResources(CShader* pShader, const char* pConstantName)
+{
+	return pShader->Bind_Matrix(pConstantName, &m_matWorld);
 }
 
 void CTransformEx::DebugRender()

@@ -2,6 +2,8 @@
 #include "..\Public\Level_GameTool.h"
 #include "ImGUIManager.h"
 
+#include "GameInstance.h"
+
 CLevel_GameTool::CLevel_GameTool(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
 {
@@ -11,6 +13,9 @@ HRESULT CLevel_GameTool::Initialize()
 { 
 	CImGUIManager::GetInstance()->Initialize(m_pDevice, m_pContext);
 	
+ 	if (FAILED(Ready_Layer_Terrain(LAYERTAG::TERRAIN)))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -21,7 +26,7 @@ HRESULT CLevel_GameTool::Tick(_float fTimeDelta)
 		m_IsImGUIReady = true;
 	
 	CImGUIManager::GetInstance()->Tick();
-	Test();
+	Demo();
 
 	return S_OK;
 }
@@ -41,7 +46,21 @@ HRESULT CLevel_GameTool::DebugRender()
 	return S_OK;
 }
 
-void CLevel_GameTool::Test()
+HRESULT CLevel_GameTool::Ready_Layer_Terrain(const LAYERTAG& eLayerTag)
+{
+	/* 원형객체를 복제하여 사본객체를 생성하고 레이어에 추가한다. */
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMETOOL, eLayerTag, TEXT("Prototype_GameObject_BasicTerrain"))))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
+
+	return S_OK;
+}
+
+void CLevel_GameTool::Demo()
 {
 	// 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
 	if (show_demo_window)
@@ -96,7 +115,7 @@ CLevel_GameTool* CLevel_GameTool::Create(ID3D11Device * pDevice, ID3D11DeviceCon
 
 void CLevel_GameTool::Free()
 {
-	__super::Free();
+	Super::Free();
 
 
 }

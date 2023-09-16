@@ -18,12 +18,21 @@ namespace Engine
 		XMFLOAT3		vPosition;
 		XMFLOAT2		vTexcoord;
 
-		static const unsigned int				iNumElements = 2;
+		static const _uint				iNumElements = 2;
 		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
 
 	}VTXPOSTEX;
 
-	
+	typedef struct ENGINE_DLL tagVertex_Position_Normal_Texcoord
+	{
+		XMFLOAT3		vPosition;
+		XMFLOAT3		vNormal;
+		XMFLOAT2		vTexcoord;
+
+		static const _uint				iNumElements = 3;
+		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
+
+	}VTXNORTEX;
 
 	typedef struct tagCollision
 	{

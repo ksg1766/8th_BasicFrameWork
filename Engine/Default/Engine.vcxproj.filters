@@ -43,12 +43,6 @@
     <Filter Include="01.Utiltiy\03.GameObjects">
       <UniqueIdentifier>{68ba6cd0-6b14-4dc9-9336-cec267f20f0d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utiltiy\03.GameObjects\Manager">
-      <UniqueIdentifier>{e5b6768b-8e62-4930-8c6b-a6f1199ff91f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utiltiy\03.GameObjects\Manager\Layer">
-      <UniqueIdentifier>{8c2666f7-7eb6-4c1f-98fa-b493cdf2443c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Utiltiy\04.Component">
       <UniqueIdentifier>{2f7b0f55-c192-41e7-bb1e-3795db1aeefc}</UniqueIdentifier>
     </Filter>
@@ -112,6 +106,12 @@
     <Filter Include="01.Utiltiy\04.Component\10.Terrain">
       <UniqueIdentifier>{cb0ac57e-8a23-43c2-b320-cafdcb56cc29}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utiltiy\03.GameObjects\00.GameObjectBase">
+      <UniqueIdentifier>{1a55ebbe-d440-49e8-95f0-945ed6ad9330}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utiltiy\03.GameObjects\Layer">
+      <UniqueIdentifier>{8c2666f7-7eb6-4c1f-98fa-b493cdf2443c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -147,11 +147,8 @@
     <ClInclude Include="..\public\Level.h">
       <Filter>01.Utiltiy\02.Level</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\GameObject.h">
-      <Filter>01.Utiltiy\03.GameObjects</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Layer.h">
-      <Filter>01.Utiltiy\03.GameObjects\Manager\Layer</Filter>
+      <Filter>01.Utiltiy\03.GameObjects\Layer</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Renderer.h">
       <Filter>01.Utiltiy\04.Component\07.Renderer</Filter>
@@ -237,6 +234,12 @@
     <ClInclude Include="..\Public\Terrain.h">
       <Filter>01.Utiltiy\04.Component\10.Terrain</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\FileUtils.h">
+      <Filter>98.Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\GameObject.h">
+      <Filter>01.Utiltiy\03.GameObjects\00.GameObjectBase</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -257,11 +260,8 @@
     <ClCompile Include="..\private\Level.cpp">
       <Filter>01.Utiltiy\02.Level</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\GameObject.cpp">
-      <Filter>01.Utiltiy\03.GameObjects</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Layer.cpp">
-      <Filter>01.Utiltiy\03.GameObjects\Manager\Layer</Filter>
+      <Filter>01.Utiltiy\03.GameObjects\Layer</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Renderer.cpp">
       <Filter>01.Utiltiy\04.Component\07.Renderer</Filter>
@@ -346,6 +346,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Terrain.cpp">
       <Filter>01.Utiltiy\04.Component\10.Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\FileUtils.cpp">
+      <Filter>98.Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\GameObject.cpp">
+      <Filter>01.Utiltiy\03.GameObjects\00.GameObjectBase</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
