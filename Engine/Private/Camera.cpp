@@ -10,9 +10,22 @@ CCamera::CCamera(const CCamera& rhs)
 {
 }
 
+HRESULT CCamera::Initialize_Prototype()
+{
+	return E_NOTIMPL;
+}
+
 HRESULT CCamera::Initialize(void* pArg)
 {
     return S_OK;
+}
+
+void CCamera::Tick(_float fTimeDelta)
+{
+}
+
+void CCamera::LateTick(_float fTimeDelta)
+{
 }
 
 CCamera* CCamera::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

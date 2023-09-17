@@ -13,7 +13,15 @@ private:
     virtual ~CCamera() = default;
 
 public:
-    HRESULT Initialize(void* pArg) override;
+    virtual HRESULT Initialize_Prototype()      override;
+    virtual HRESULT Initialize(void* pArg)      override;
+    virtual void Tick(_float fTimeDelta)        override;
+    virtual void LateTick(_float fTimeDelta)    override;
+
+private:
+
+
+public:
     static CCamera* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
     virtual CComponent* Clone(void* pArg) override;
     virtual void Free() override;
