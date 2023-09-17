@@ -31,8 +31,8 @@ private:
 public:
 	virtual HRESULT Initialize_Prototype()		override;
 	virtual HRESULT Initialize(void* pArg)		override;
-	virtual void	Tick(const _float fTimeDelta)		override;
-	virtual void	LateTick(const _float fTimeDelta)	override;
+	virtual void	Tick(const _float& fTimeDelta)		override;
+	virtual void	LateTick(const _float& fTimeDelta)	override;
 	virtual void	DebugRender()				override;
 
 public:
@@ -76,10 +76,10 @@ public:
 #pragma endregion Collision
 
 private:
-	void	KineticUpdate(_float fTimeDelta);
-	void	KinematicUpdate(_float fTimeDelta);
+	void	KineticUpdate(const _float& fTimeDelta);
+	void	KinematicUpdate(const _float& fTimeDelta);
 
-	void	UpdateTransform(_float fTimeDelta);
+	void	UpdateTransform(const _float& fTimeDelta);
 
 	void	Sleep()		{ ClearNetPower(); m_IsSleeping = true;	}
 	void	WakeUp()	{ m_IsSleeping = false; }

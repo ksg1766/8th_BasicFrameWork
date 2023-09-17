@@ -77,7 +77,7 @@ HRESULT CRigidDynamic::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CRigidDynamic::Tick(_float fTimeDelta)	// FixedUpdate 처럼 동작하기 위해 RigidBody의 업데이트를 가장 우선 호출해야 함.
+void CRigidDynamic::Tick(const _float& fTimeDelta)	// FixedUpdate 처럼 동작하기 위해 RigidBody의 업데이트를 가장 우선 호출해야 함.
 {
 	if (m_IsSleeping)
 		return;
@@ -94,7 +94,7 @@ void CRigidDynamic::Tick(_float fTimeDelta)	// FixedUpdate 처럼 동작하기 위해 Ri
 		KineticUpdate(fTimeDelta);
 }
 
-void CRigidDynamic::LateTick(const _float fTimeDelta)
+void CRigidDynamic::LateTick(const _float& fTimeDelta)
 {
 	// Collision
 
@@ -104,7 +104,7 @@ void CRigidDynamic::DebugRender()
 {
 }
 
-void CRigidDynamic::KineticUpdate(const _float fTimeDelta)
+void CRigidDynamic::KineticUpdate(const _float& fTimeDelta)
 {
 	if (m_UseGravity)
 		m_vLinearVelocity.y += -9.81f * fTimeDelta;
@@ -131,7 +131,7 @@ void CRigidDynamic::KineticUpdate(const _float fTimeDelta)
 	UpdateTransform(fTimeDelta);
 }
 
-void CRigidDynamic::KinematicUpdate(_float fTimeDelta)
+void CRigidDynamic::KinematicUpdate(const _float& fTimeDelta)
 {
 	UpdateTransform(fTimeDelta);
 
@@ -139,7 +139,7 @@ void CRigidDynamic::KinematicUpdate(_float fTimeDelta)
 	ClearTorque(ForceMode::VELOCITY_CHANGE);
 }
 
-void CRigidDynamic::UpdateTransform(_float fTimeDelta)
+void CRigidDynamic::UpdateTransform(const _float& fTimeDelta)
 {
 	CTransformEx* pTransform = GetTransform();
 

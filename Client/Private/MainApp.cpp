@@ -2,6 +2,7 @@
 #include "..\Public\MainApp.h"
 
 #include "GameInstance.h"
+#include "EventManager.h"
 #include "Level_Loading.h"
 
 CMainApp::CMainApp()	
@@ -56,7 +57,7 @@ HRESULT CMainApp::Initialize()
 	return S_OK;
 }
 
-void CMainApp::Tick(_float fTimeDelta)
+void CMainApp::Tick(const _float& fTimeDelta)
 {
 	/* 게임내에 존재하는 여러 객체들의 갱신. */
 	/* 레벨의 갱신 */
@@ -74,6 +75,8 @@ HRESULT CMainApp::Render()
 	m_pGameInstance->DebugRender();
 	/* 초기화한 장면에 객체들을 그린다. */
 	m_pGameInstance->Present();
+
+	CEventManager::GetInstance()->LastTick();
 
 	return S_OK;
 }

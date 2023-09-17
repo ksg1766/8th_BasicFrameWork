@@ -23,11 +23,11 @@ HRESULT CRigidStatic::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CRigidStatic::Tick(_float fTimeDelta)
+void CRigidStatic::Tick(const _float& fTimeDelta)
 {
 }
 
-void CRigidStatic::LateTick(_float fTimeDelta)
+void CRigidStatic::LateTick(const _float& fTimeDelta)
 {
 }
 

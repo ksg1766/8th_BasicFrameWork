@@ -51,20 +51,20 @@ HRESULT CObjectManager::Add_GameObject(_uint iLevelIndex, const LAYERTAG& eLayer
 	{
 		/* 레이어를 만들자. */
 		pLayer = CLayer::Create();
-
+		pLayer->SetLayerTag(eLayerTag);
 		/* 레이어에 객체를 추가하자. */
-		pLayer->Add_GameObject(pGameObject);
+		pLayer->Add_GameObject(pGameObject, eLayerTag);
 
 		/* 생성한 레이어를 iLevelIndex용 레이어로 추가하였다. */
 		m_pLayers[iLevelIndex].emplace(eLayerTag, pLayer);
 	}
 	else /* 추가하고자 하는 레이어가 있었다. */
-		pLayer->Add_GameObject(pGameObject);
+		pLayer->Add_GameObject(pGameObject, eLayerTag);
 
 	return S_OK;
 }
 
-void CObjectManager::Tick(_float fTimeDelta)
+void CObjectManager::Tick(const _float& fTimeDelta)
 {
 	for (size_t i = 0; i < m_iNumLevels; i++)
 	{
@@ -75,7 +75,7 @@ void CObjectManager::Tick(_float fTimeDelta)
 	}
 }
 
-void CObjectManager::LateTick(_float fTimeDelta)
+void CObjectManager::LateTick(const _float& fTimeDelta)
 {
 	for (size_t i = 0; i < m_iNumLevels; i++)
 	{

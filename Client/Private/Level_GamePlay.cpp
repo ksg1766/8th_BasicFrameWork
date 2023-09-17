@@ -12,12 +12,12 @@ HRESULT CLevel_GamePlay::Initialize()
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Tick(_float fTimeDelta)
+HRESULT CLevel_GamePlay::Tick(const _float& fTimeDelta)
 {
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::LateTick(_float fTimeDelta)
+HRESULT CLevel_GamePlay::LateTick(const _float& fTimeDelta)
 {
 	SetWindowText(g_hWnd, TEXT("게임플레이 레벨입니다."));
 	return S_OK;

@@ -10,11 +10,12 @@ HRESULT CLayer::Initialize()
 	return S_OK;
 }
 
-HRESULT CLayer::Add_GameObject(CGameObject* pGameObject)
+HRESULT CLayer::Add_GameObject(CGameObject* pGameObject, const LAYERTAG& eLayerTag)
 {
 	if (nullptr == pGameObject)
 		return E_FAIL;
 
+	pGameObject->SetLayerTag(m_eLayerTag);
 	m_GameObjects.push_back(pGameObject);
 
 	return S_OK;

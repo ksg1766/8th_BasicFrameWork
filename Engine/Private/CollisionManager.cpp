@@ -14,7 +14,7 @@ CCollisionManager::CCollisionManager()
 {
 }
 
-void CCollisionManager::LateTick_Collision(const _float fTimeDelta)
+void CCollisionManager::LateTick_Collision(const _float& fTimeDelta)
 {
 	::ZeroMemory(m_arrSorted, (_uint)LAYERTAG::LAYER_END * sizeof(_bool));
 
@@ -91,8 +91,7 @@ void CCollisionManager::CheckDynamicCollision(LAYERTAG eLayerLeft, LAYERTAG eLay
 		m_arrSorted[(_uint)eLayerRight] = true;
 	}
 
-	unordered_map<ULONGLONG, bool>::iterator iter;
-	//map<ULONGLONG, bool>::iterator iter;
+	map<ULONGLONG, _bool>::iterator iter;
 
 	for (auto& iterL : vecLeft)
 	{
@@ -209,8 +208,7 @@ void CCollisionManager::CheckStaticCollision(LAYERTAG eDynamicLayer, const _floa
 	
 	CQuadTree* pQuadTreeInstance = CQuadTree::GetInstance();
 	
-	unordered_map<ULONGLONG, bool>::iterator iter;
-	//map<ULONGLONG, bool>::iterator iter;
+	map<ULONGLONG, _bool>::iterator iter;
 
 	for (auto& iterL : vecLeft)
 	{
@@ -322,7 +320,7 @@ _bool CCollisionManager::CompareMinZ(_float& fLeftMinZ, _float& fRightMinZ)
 	return true;
 }
 
-void CCollisionManager::MakeCollisionDesc(OUT COLLISION_DESC& descLeft, OUT COLLISION_DESC& descRight, CRigidBody* lRigid, CRigidBody* rRigid, const _float fTimeDelta)
+void CCollisionManager::MakeCollisionDesc(OUT COLLISION_DESC& descLeft, OUT COLLISION_DESC& descRight, CRigidBody* lRigid, CRigidBody* rRigid, const _float& fTimeDelta)
 {
 	descLeft.pOther = rRigid;
 	descLeft.fTimeDelta = fTimeDelta;
@@ -345,7 +343,7 @@ void CCollisionManager::MakeCollisionDesc(OUT COLLISION_DESC& descLeft, OUT COLL
 	descRight.vResultVelocity = (2.f * vVelocityL - (1.f - 1.f / fMassRatio) * vVelocityR) / (1.f + 1.f / fMassRatio);*/
 }
 
-void CCollisionManager::MakeCollisionDescStatic(OUT COLLISION_DESC& descLeft, CRigidBody* lRigid, CRigidBody* rRigid, const _float fTimeDelta)
+void CCollisionManager::MakeCollisionDescStatic(OUT COLLISION_DESC& descLeft, CRigidBody* lRigid, CRigidBody* rRigid, const _float& fTimeDelta)
 {
 	descLeft.pOther = rRigid;
 	descLeft.fTimeDelta = fTimeDelta;

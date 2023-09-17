@@ -23,28 +23,28 @@ protected:
 	virtual ~CRigidBody() = default;
 
 public:
-	virtual HRESULT Initialize_Prototype()		override;
-	virtual HRESULT Initialize(void* pArg)		override;
-	//virtual HRESULT FixedUpdate(_float fTimeDelta)	PURE;
-	virtual void	Tick(_float fTimeDelta)		override;
-	virtual void	LateTick(_float fTimeDelta)	override;
-	virtual void	DebugRender()				override;
+	virtual HRESULT		Initialize_Prototype()				override;
+	virtual HRESULT		Initialize(void* pArg)				override;
+	//virtual HRESULT	FixedUpdate(const _float& fTimeDelta)	PURE;
+	virtual void		Tick(const _float& fTimeDelta)		override;
+	virtual void		LateTick(const _float& fTimeDelta)	override;
+	virtual void		DebugRender()						override;
 
-	RigidBodyType&	GetRigidBodyType()			{ return m_eRigidBodyType; }
-	CSphereCollider*& GetSphereCollider()		{ return m_pSphereCollider; }
-	CCollider*&		GetBoxCollider()			{ return m_pBoxCollider; }
+	RigidBodyType&		GetRigidBodyType()		{ return m_eRigidBodyType; }
+	CSphereCollider*&	GetSphereCollider()		{ return m_pSphereCollider; }
+	CCollider*&			GetBoxCollider()		{ return m_pBoxCollider; }
 	/*CCollider*		GetCollider(ColliderType eColliderType) { return m_arrColliderGroup[(_uint)eColliderType]; }*/
 
 public:
 	// 충돌 상대가 RigidDynamic && Kinetic일 때 상대의 OnCollision도 호출
-	virtual	void	OnCollisionEnter(const COLLISION_DESC& desc)PURE;
-	virtual	void	OnCollisionStay(const COLLISION_DESC& desc)	PURE;
-	virtual	void	OnCollisionExit(const COLLISION_DESC& desc)	PURE;
+	virtual	void		OnCollisionEnter(const COLLISION_DESC& desc)PURE;
+	virtual	void		OnCollisionStay(const COLLISION_DESC& desc)	PURE;
+	virtual	void		OnCollisionExit(const COLLISION_DESC& desc)	PURE;
 
 protected:
-	RigidBodyType	m_eRigidBodyType;
-	CSphereCollider* m_pSphereCollider = nullptr;	// 아직 안함
-	CCollider*		m_pBoxCollider = nullptr;	// 아직 안함
+	RigidBodyType		m_eRigidBodyType;
+	CSphereCollider*	m_pSphereCollider = nullptr;	// 아직 안함
+	CCollider*			m_pBoxCollider = nullptr;	// 아직 안함
 	//array<CCollider*, 2>	m_arrColliderGroup;
 
 public:

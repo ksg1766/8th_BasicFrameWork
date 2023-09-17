@@ -50,7 +50,7 @@ private:
 public:
 	/* 내 게임의 시작. */
 	HRESULT Initialize();
-	void Tick(_float fTimeDelta);
+	void Tick(const _float& fTimeDelta);
 	HRESULT Render();
 
 private:

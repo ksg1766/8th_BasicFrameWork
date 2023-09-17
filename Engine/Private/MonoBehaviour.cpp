@@ -6,6 +6,11 @@ CMonoBehaviour::CMonoBehaviour(ID3D11Device* pDevice, ID3D11DeviceContext* pCont
 
 }
 
+CMonoBehaviour::CMonoBehaviour(const CMonoBehaviour& rhs)
+	:Super(rhs)
+{
+}
+
 HRESULT CMonoBehaviour::Initialize_Prototype()
 {
 	return E_NOTIMPL;
@@ -16,11 +21,11 @@ HRESULT CMonoBehaviour::Initialize(void* pArg)
 	return E_NOTIMPL;
 }
 
-void CMonoBehaviour::Tick(_float fTimeDelta)
+void CMonoBehaviour::Tick(const _float& fTimeDelta)
 {
 }
 
-void CMonoBehaviour::LateTick(_float fTimeDelta)
+void CMonoBehaviour::LateTick(const _float& fTimeDelta)
 {
 }
 

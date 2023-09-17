@@ -17,12 +17,12 @@ HRESULT CLevel_Logo::Initialize()
 	return S_OK;
 }
 
-HRESULT CLevel_Logo::Tick(_float fTimeDelta)
+HRESULT CLevel_Logo::Tick(const _float& fTimeDelta)
 {
 	return S_OK;
 }
 
-HRESULT CLevel_Logo::LateTick(_float fTimeDelta)
+HRESULT CLevel_Logo::LateTick(const _float& fTimeDelta)
 {
 	SetWindowText(g_hWnd, TEXT("로고레벨입니다."));
 

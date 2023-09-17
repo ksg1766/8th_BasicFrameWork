@@ -5,6 +5,7 @@ CGameObject::CGameObject(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: m_pDevice(pDevice)
 	, m_pContext(pContext)
 	, m_IsDead(false)
+	, m_eLayerTag(LAYERTAG::LAYER_END)
 {
 	Safe_AddRef(m_pDevice);
 	Safe_AddRef(m_pContext);
@@ -14,6 +15,7 @@ CGameObject::CGameObject(const CGameObject & rhs)
 	: m_pDevice(rhs.m_pDevice)
 	, m_pContext(rhs.m_pContext)
 	, m_IsDead(rhs.m_IsDead)
+	, m_eLayerTag(rhs.m_eLayerTag)
 {
 	Safe_AddRef(m_pDevice);
 	Safe_AddRef(m_pContext);
@@ -29,11 +31,11 @@ HRESULT CGameObject::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CGameObject::Tick(_float fTimeDelta)
+void CGameObject::Tick(const _float& fTimeDelta)
 {
 }
 
-void CGameObject::LateTick(_float fTimeDelta)
+void CGameObject::LateTick(const _float& fTimeDelta)
 {
 }
 
@@ -58,7 +60,7 @@ CRigidBody* CGameObject::GetRigidBody() const
 	return static_cast<CRigidBody*>(pComponent);
 }
 
-CVIBuffer* CGameObject::GetBuffer() const
+CVIBuffer* const CGameObject::GetBuffer() const
 {
 	CComponent* pComponent = GetFixedComponent(ComponentType::Buffer);
 	return static_cast<CVIBuffer*>(pComponent);
@@ -92,7 +94,7 @@ CTransformEx* CGameObject::GetOrAddTransform(_uint iLevelIndex)
 	return GetTransform();
 }
 
-CComponent* CGameObject::GetFixedComponent(ComponentType type) const
+CComponent* CGameObject::GetFixedComponent(const ComponentType& type) const
 {
 	uint8 index = static_cast<uint8>(type);
 	assert(index < FIXED_COMPONENT_COUNT);

@@ -19,8 +19,8 @@ private:
 	virtual ~CLevelManager() = default;
 
 public:
-	void Tick(_float fTimeDelta);
-	void LateTick(_float fTimeDelta);
+	void Tick(const _float& fTimeDelta);
+	void LateTick(const _float& fTimeDelta);
 	void DebugRender();
 
 public:

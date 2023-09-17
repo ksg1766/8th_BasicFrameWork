@@ -25,11 +25,11 @@ HRESULT CBasicTerrain::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CBasicTerrain::Tick(_float fTimeDelta)
+void CBasicTerrain::Tick(const _float& fTimeDelta)
 {
 }
 
-void CBasicTerrain::LateTick(_float fTimeDelta)
+void CBasicTerrain::LateTick(const _float& fTimeDelta)
 {
 	GetRenderer()->Add_RenderGroup(CRenderer::RG_NONBLEND, this);
 }

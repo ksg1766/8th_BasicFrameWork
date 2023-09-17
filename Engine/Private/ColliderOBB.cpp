@@ -26,11 +26,11 @@ HRESULT COBBCollider::Initialize(void* pArg)
 	return S_OK;
 }
 
-void COBBCollider::Tick(_float fTimeDelta)
+void COBBCollider::Tick(const _float& fTimeDelta)
 {
 }
 
-void COBBCollider::LateTick(_float fTimeDelta)
+void COBBCollider::LateTick(const _float& fTimeDelta)
 {
 }
 

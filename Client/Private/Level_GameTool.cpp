@@ -19,7 +19,7 @@ HRESULT CLevel_GameTool::Initialize()
 	return S_OK;
 }
 
-HRESULT CLevel_GameTool::Tick(_float fTimeDelta)
+HRESULT CLevel_GameTool::Tick(const _float& fTimeDelta)
 {
 	// UI
 	if (!m_IsImGUIReady)
@@ -31,7 +31,7 @@ HRESULT CLevel_GameTool::Tick(_float fTimeDelta)
 	return S_OK;
 }
 
-HRESULT CLevel_GameTool::LateTick(_float fTimeDelta)
+HRESULT CLevel_GameTool::LateTick(const _float& fTimeDelta)
 {
 	SetWindowText(g_hWnd, TEXT("게임 툴 레벨입니다."));
 

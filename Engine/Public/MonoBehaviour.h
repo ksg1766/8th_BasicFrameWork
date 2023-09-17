@@ -9,16 +9,16 @@ class ENGINE_DLL CMonoBehaviour final : public CComponent
 
 private:
 	CMonoBehaviour(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CMonoBehaviour(const CMonoBehaviour& rhs) = delete;
+	CMonoBehaviour(const CMonoBehaviour& rhs);
 	virtual ~CMonoBehaviour() = default;
 	
 public:
 	virtual HRESULT Initialize_Prototype()				override;
 	virtual HRESULT Initialize(void* pArg)				override;	// Start
 
-	virtual void	Tick(_float fTimeDelta)				override;
-	virtual void	LateTick(_float fTimeDelta)			override;
-	//virtual HRESULT FixedUpdate(_float fTimeDelta)	override;
+	virtual void	Tick(const _float& fTimeDelta)		override;
+	virtual void	LateTick(const _float& fTimeDelta)	override;
+	//virtual HRESULT FixedUpdate(const _float& fTimeDelta)	override;
 
 	virtual void	DebugRender()						override;
 

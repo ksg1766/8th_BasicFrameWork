@@ -2,6 +2,7 @@
 
 #include "Base.h"
 #include "LevelManager.h"
+#include "PoolManager.h"
 /* 게임내에 사용될 객체들을 만들어내기위한 원형객체들을 보관한다.(원본) */
 /* 게임내에 사용될 객체들을 보관한다.(사본) */
 
@@ -17,8 +18,8 @@ private:
 	virtual ~CObjectManager() = default;
 
 public:
-	void Tick(_float fTimeDelta);
-	void LateTick(_float fTimeDelta);
+	void Tick(const _float& fTimeDelta);
+	void LateTick(const _float& fTimeDelta);
 	void DebugRender();
 	void Clear(_uint iLevelIndex);
 
@@ -42,6 +43,8 @@ private:
 private:
 	class CGameObject* Find_Prototype(const wstring& strPrototypeTag);
 	class CLayer* Find_Layer(_uint iLevelIndex, const LAYERTAG& eLayerTag);
+
+	friend HRESULT CPoolManager::Reserve_Pool(const wstring&, const _uint&, void*);
 
 public:
 	virtual void Free() override;

@@ -26,7 +26,7 @@ private:
 	virtual ~CCollisionManager() = default;
 
 public:
-	void	LateTick_Collision(const _float fTimeDelta);
+	void	LateTick_Collision(const _float& fTimeDelta);
 
 public:
 	HRESULT Reserve_Manager(_uint iNumLevels);
@@ -43,12 +43,12 @@ private:
 	void	CheckStaticCollision(LAYERTAG eDynamicLayer, const _float fTimeDelta);
 	_bool	CompareMinZ(_float& fLeftMinZ, _float& fRightMinZ);
 
-	void	MakeCollisionDesc(OUT COLLISION_DESC& descLeft, OUT COLLISION_DESC& descRight, CRigidBody* lRigid, CRigidBody* rRigid, const _float fTimeDelta);
-	void	MakeCollisionDescStatic(OUT COLLISION_DESC& descLeft, CRigidBody* lRigid, CRigidBody* rRigid, const _float fTimeDelta);
+	void	MakeCollisionDesc(OUT COLLISION_DESC& descLeft, OUT COLLISION_DESC& descRight, CRigidBody* lRigid, CRigidBody* rRigid, const _float& fTimeDelta);
+	void	MakeCollisionDescStatic(OUT COLLISION_DESC& descLeft, CRigidBody* lRigid, CRigidBody* rRigid, const _float& fTimeDelta);
 
 private:
-	//map<ULONGLONG, _bool> m_mapColInfo;
-	unordered_map<ULONGLONG, _bool> m_mapColInfo;
+	map<ULONGLONG, _bool> m_mapColInfo;
+
 	_uint	m_arrCheck[(_uint)LAYERTAG::LAYER_END] = { 0 };
 	_bool	m_arrSorted[(_uint)LAYERTAG::LAYER_END] = { 0 };
 

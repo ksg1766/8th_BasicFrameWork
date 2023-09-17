@@ -25,11 +25,11 @@ HRESULT CAABBCollider::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CAABBCollider::Tick(_float fTimeDelta)
+void CAABBCollider::Tick(const _float& fTimeDelta)
 {
 }
 
-void CAABBCollider::LateTick(_float fTimeDelta)
+void CAABBCollider::LateTick(const _float& fTimeDelta)
 {
 }
 

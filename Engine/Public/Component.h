@@ -43,8 +43,8 @@ protected:
 public:
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg)				PURE;
-	virtual void	Tick(const _float fTimeDelta)		{};
-	virtual void	LateTick(const _float fTimeDelta)	{};
+	virtual void	Tick(const _float& fTimeDelta)		{};
+	virtual void	LateTick(const _float& fTimeDelta)	{};
 	//virtual HRESULT FixedUpdate(_float fTimeDelta)	PURE;
 
 	virtual void	DebugRender()						{};
@@ -52,8 +52,8 @@ public:
 public:
 	ComponentType	GetType() const { return m_eType; }
 
-	CGameObject* GetGameObject() const;
-	CTransformEx* GetTransform() const;
+	CGameObject*	GetGameObject() const;
+	CTransformEx*	GetTransform() const;
 
 protected:
 	ID3D11Device*			m_pDevice = { nullptr };

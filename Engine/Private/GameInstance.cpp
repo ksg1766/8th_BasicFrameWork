@@ -55,7 +55,7 @@ HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, const GRAPHIC_DESC& G
 	return S_OK;
 }
 
-void CGameInstance::Tick(_float fTimeDelta)
+void CGameInstance::Tick(const _float& fTimeDelta)
 {
 	m_pObjectManager->Tick(fTimeDelta);
 	m_pLevelManager->Tick(fTimeDelta);

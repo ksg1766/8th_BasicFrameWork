@@ -21,7 +21,7 @@ private:
 
 public: /* For.GameInstance */
 	HRESULT Initialize_Engine(_uint iNumLevels, const GRAPHIC_DESC& GraphicDesc, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext, _In_ HINSTANCE hInst);
-	void Tick(_float fTimeDelta);
+	void Tick(const _float& fTimeDelta);
 	void DebugRender();
 
 	void Clear(_uint iLevelIndex);

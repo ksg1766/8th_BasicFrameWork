@@ -26,41 +26,47 @@ protected:
 public:
 	virtual HRESULT			Initialize_Prototype();
 	virtual HRESULT			Initialize(void* pArg);
-	virtual void			Tick(_float fTimeDelta);
-	virtual void			LateTick(_float fTimeDelta);
+	virtual void			Tick(const _float& fTimeDelta);
+	virtual void			LateTick(const _float& fTimeDelta);
 	virtual void			DebugRender();
 	virtual HRESULT			Render();
 
-	CComponent*				GetFixedComponent(ComponentType type) const;
-	CTransformEx*			GetTransform() const;
-	CVIBuffer*				GetBuffer() const;
-	CRigidBody*				GetRigidBody() const;
+	CComponent*				GetFixedComponent(const ComponentType& type) const;
+	CTransformEx*			GetTransform()	const;
+	CVIBuffer* const		GetBuffer()		const;
+	CRigidBody*				GetRigidBody()	const;
 	//CCamera*				GetCamera();
 	//CMeshRenderer*		GetMeshRenderer();
 	//CModelRenderer*		GetModelRenderer();
 	//CModelAnimator*		GetModelAnimator();
-	CRenderer*				GetRenderer() const;
-	CShader*				GetShader() const;
-	CTexture*				GetTexture() const;
+	CRenderer*				GetRenderer()	const;
+	CShader*				GetShader()		const;
+	CTexture*				GetTexture()	const;
 	//CLight*				GetLight();
 	//CTerrain*				GetTerrain();
 
 	CTransformEx*			GetOrAddTransform(_uint iLevelIndex);
-	_bool					IsDead() const					{ return m_IsDead; }
-	void					SetDeadState(_bool bDead)	{ m_IsDead = bDead; }
+	_bool					IsDead()		const			{ return m_IsDead; }
+	LAYERTAG				GetLayerTag()	const			{ return m_eLayerTag; }
+	const wstring&			GetObjectTag()	const			{ return m_strObjectTag; }
+
+	void					SetLayerTag(LAYERTAG eLayerTag) { m_eLayerTag = eLayerTag; }
+	void					SetObjectTag(const wstring& strObjectTag) { m_strObjectTag = strObjectTag; }
+	void					SetDeadState(_bool bDead)		{ m_IsDead = bDead; }
 
 	HRESULT					AddComponent(_uint iLevelIndex, ComponentType type, const wstring& strPrototypeTag, void* pArg = nullptr);
 
 	/*void					SetLayerIndex(uint8 layer) { m_i8LayerIndex = layer; }
 	uint8					GetLayerIndex() { return m_i8LayerIndex; }*/
 
-	virtual	void			OnCollisionEnter(CGameObject* pOther) {};
-	virtual	void			OnCollisionStay(CGameObject* pOther) {};
-	virtual	void			OnCollisionExit(CGameObject* pOther) {};
+	virtual	void			OnCollisionEnter(const CGameObject* pOther) {};
+	virtual	void			OnCollisionStay(const CGameObject* pOther) {};
+	virtual	void			OnCollisionExit(const CGameObject* pOther) {};
 
-	virtual	void			OnTriggerEnter(CGameObject* pOther) {};
-	virtual	void			OnTriggerStay(CGameObject* pOther) {};
-	virtual	void			OnTriggerExit(CGameObject* pOther) {};
+	virtual	void			OnTriggerEnter(const CGameObject* pOther) {};
+	virtual	void			OnTriggerStay(const CGameObject* pOther) {};
+	virtual	void			OnTriggerExit(const CGameObject* pOther) {};
+
 protected:
 	ID3D11Device*			m_pDevice = { nullptr };
 	ID3D11DeviceContext*	m_pContext = { nullptr };
@@ -69,19 +75,10 @@ protected:
 	array<CComponent*, FIXED_COMPONENT_COUNT> m_arrComponents = { nullptr };
 	vector<CMonoBehaviour*> m_vecScripts;
 
-	//uint8					m_i8LayerIndex = 0;
-
-protected:
-	/* 특정 컴포넌트의 검색을 용이하게 하기 위해서. */
-	/* 검색을 고려하는 이유?! : 타 객체가 현재 객체의 정보(컴포넌트)를 참조하고자 하는 경우가 빈번하다. */
-	//map<const wstring, class CComponent*>		m_Components;
-
-protected:
-	//HRESULT Add_Component(_uint iLevelIndex, const wstring& strPrototypeTag, const wstring& strComponentTag, _Inout_ CComponent** ppOut, void* pArg = nullptr);
-	//class CComponent* Find_Component(const wstring& strComponentTag);
-
 private:
 	_bool					m_IsDead;
+	LAYERTAG				m_eLayerTag;	// 필요없는지 생각해보자.
+	wstring					m_strObjectTag;
 
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;

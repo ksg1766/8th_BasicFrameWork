@@ -20,11 +20,11 @@ HRESULT CCamera::Initialize(void* pArg)
     return S_OK;
 }
 
-void CCamera::Tick(_float fTimeDelta)
+void CCamera::Tick(const _float& fTimeDelta)
 {
 }
 
-void CCamera::LateTick(_float fTimeDelta)
+void CCamera::LateTick(const _float& fTimeDelta)
 {
 }
 

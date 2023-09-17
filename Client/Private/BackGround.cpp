@@ -28,12 +28,12 @@ HRESULT CBackGround::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CBackGround::Tick(_float fTimeDelta)
+void CBackGround::Tick(const _float& fTimeDelta)
 {
 	int a = 10;
 }
 
-void CBackGround::LateTick(_float fTimeDelta)
+void CBackGround::LateTick(const _float& fTimeDelta)
 {
 
 	GetRenderer()->Add_RenderGroup(CRenderer::RG_UI, this);
