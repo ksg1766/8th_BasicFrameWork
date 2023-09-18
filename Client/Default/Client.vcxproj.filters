@@ -46,6 +46,9 @@
     <Filter Include="02.GameObjects\BasicTerrain">
       <UniqueIdentifier>{eb9b11a4-c3c9-4f3b-a50d-cbb0f833a983}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\TempCube">
+      <UniqueIdentifier>{23a6e04a-e4fc-4b28-b63a-f5716d9f8432}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -117,6 +120,9 @@
     <ClInclude Include="..\Public\BasicTerrain.h">
       <Filter>02.GameObjects\BasicTerrain</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\TempCube.h">
+      <Filter>02.GameObjects\TempCube</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -172,6 +178,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\BasicTerrain.cpp">
       <Filter>02.GameObjects\BasicTerrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TempCube.cpp">
+      <Filter>02.GameObjects\TempCube</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

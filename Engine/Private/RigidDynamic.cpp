@@ -1,5 +1,5 @@
 #include "RigidDynamic.h"
-#include "TransformEx.h"
+#include "Transform.h"
 #include "GameObject.h"
 #include "ColliderBase.h"
 
@@ -141,10 +141,10 @@ void CRigidDynamic::KinematicUpdate(const _float& fTimeDelta)
 
 void CRigidDynamic::UpdateTransform(const _float& fTimeDelta)
 {
-	CTransformEx* pTransform = GetTransform();
+	CTransform* pTransform = GetTransform();
 
-	pTransform->SetRotation(pTransform->GetRotation() + m_vAngularVelocity * fTimeDelta);
-	pTransform->SetPosition(pTransform->GetPosition() + m_vLinearVelocity * fTimeDelta);
+	pTransform->Rotate(m_vAngularVelocity * fTimeDelta);
+	pTransform->Translate(m_vLinearVelocity * fTimeDelta);
 }
 
 void CRigidDynamic::AddForce(const Vec3& vForce, ForceMode eMode)

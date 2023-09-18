@@ -21,7 +21,7 @@ public:
 	void			Demo();
 
 private:
-	HRESULT Ready_Layer_Terrain(const LAYERTAG& eLayerTag);
+	HRESULT			Ready_Layer_Terrain(const LAYERTAG& eLayerTag);
 
 private:
 	_bool	m_IsImGUIReady = false;

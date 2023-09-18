@@ -40,8 +40,6 @@ HRESULT CLevel_Logo::LateTick(const _float& fTimeDelta)
 		Safe_Release(pGameInstance);
 	}
 
-
-
 	return S_OK;
 }
 

@@ -3,7 +3,7 @@
 #include "Base.h"
 
 BEGIN(Engine)
-// 클라이언트로 옮길지 고민
+
 class CGameObject;
 class ENGINE_DLL CPoolManager final
 	: public CBase
@@ -21,8 +21,22 @@ public:
 	void	Restore_Object(CGameObject* pGameObject);
 
 private:
-	using POOLS = map<const wstring, queue<CGameObject*>>;
-	POOLS m_mapPools;
+	struct djb2Hasher
+	{
+		size_t operator() (const wstring& str) const
+		{
+			_ulong	hash = 5381;
+			_uint	size = str.length();
+
+			for (_uint i = 0; i < size; i++)
+				hash = ((hash << 5) + hash) + (str[i]); /* hash * 33 + c */
+
+			return hash;
+		}
+	};	// HashFunctionObject (djb2)
+
+	using POOLS = unordered_map<const wstring, queue<CGameObject*>, djb2Hasher>;
+	POOLS m_hashPools;
 
 public:
 	virtual void Free() override;

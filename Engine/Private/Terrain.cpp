@@ -146,8 +146,8 @@ HRESULT CTerrain::InitializeWithHeightMap(const wstring& strHeightMapPath)
 	m_BufferDesc.MiscFlags = 0;
 	m_BufferDesc.StructureByteStride = m_iStride;
 
-	ZeroMemory(&m_InitialData, sizeof m_InitialData);
-	m_InitialData.pSysMem = pVertices;
+	::ZeroMemory(&m_SubResourceData, sizeof m_SubResourceData);
+	m_SubResourceData.pSysMem = pVertices;
 
 	if (FAILED(__super::Create_Buffer(&m_pVB)))
 		return E_FAIL;
@@ -161,8 +161,8 @@ HRESULT CTerrain::InitializeWithHeightMap(const wstring& strHeightMapPath)
 	m_BufferDesc.MiscFlags = 0;
 	m_BufferDesc.StructureByteStride = 0;
 
-	ZeroMemory(&m_InitialData, sizeof m_InitialData);
-	m_InitialData.pSysMem = pIndices;
+	ZeroMemory(&m_SubResourceData, sizeof m_SubResourceData);
+	m_SubResourceData.pSysMem = pIndices;
 
 	if (FAILED(__super::Create_Buffer(&m_pIB)))
 		return E_FAIL;

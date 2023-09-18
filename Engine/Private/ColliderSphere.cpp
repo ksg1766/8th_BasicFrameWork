@@ -1,6 +1,6 @@
 #include "Engine_Defines.h"
 #include "GameObject.h"
-#include "TransformEx.h"
+#include "Transform.h"
 #include "ColliderSphere.h"
 #include "ColliderAABB.h"
 #include "ColliderOBB.h"
@@ -34,7 +34,7 @@ void CSphereCollider::Tick(const _float& fTimeDelta)
 {
 	m_tBoundingSphere.Center = GetGameObject()->GetTransform()->GetPosition();
 
-	Vec3 scale = GetGameObject()->GetTransform()->GetScale();
+	Vec3 scale = GetGameObject()->GetTransform()->GetLocalScale();
 	m_tBoundingSphere.Radius = m_fRadius * max(max(scale.x, scale.y), scale.z);
 }
 

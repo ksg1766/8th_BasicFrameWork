@@ -103,7 +103,7 @@ HRESULT CMainApp::Ready_Prototype_Components()
 
 	/* For.Prototype_Component_Transform */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),
-		CTransformEx::Create(m_pDevice, m_pContext))))
+		CTransform::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Shader_VtxPosTex */
@@ -119,6 +119,11 @@ HRESULT CMainApp::Ready_Prototype_Components()
 	/* For.Prototype_Component_VIBuffer_Rect */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"),
 		CVIBuffer_Rect::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_VIBuffer_Cube */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Cube"),
+		CVIBuffer_Cube::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_VIBuffer_Rect */

@@ -32,7 +32,7 @@ public:
 	virtual HRESULT			Render();
 
 	CComponent*				GetFixedComponent(const ComponentType& type) const;
-	CTransformEx*			GetTransform()	const;
+	CTransform*				GetTransform()	const;
 	CVIBuffer* const		GetBuffer()		const;
 	CRigidBody*				GetRigidBody()	const;
 	//CCamera*				GetCamera();
@@ -45,7 +45,7 @@ public:
 	//CLight*				GetLight();
 	//CTerrain*				GetTerrain();
 
-	CTransformEx*			GetOrAddTransform(_uint iLevelIndex);
+	CTransform*				GetOrAddTransform(_uint iLevelIndex);
 	_bool					IsDead()		const			{ return m_IsDead; }
 	LAYERTAG				GetLayerTag()	const			{ return m_eLayerTag; }
 	const wstring&			GetObjectTag()	const			{ return m_strObjectTag; }

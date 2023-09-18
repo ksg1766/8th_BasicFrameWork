@@ -1,5 +1,6 @@
 #pragma once
 #include "Base.h"
+#include "MurmurHash3.h"
 
 BEGIN(Engine)
 
@@ -47,7 +48,19 @@ private:
 	void	MakeCollisionDescStatic(OUT COLLISION_DESC& descLeft, CRigidBody* lRigid, CRigidBody* rRigid, const _float& fTimeDelta);
 
 private:
-	map<ULONGLONG, _bool> m_mapColInfo;
+	struct MurmurHash3Hasher
+	{
+		size_t operator() (const uint64& key) const
+		{
+			uint64 hashResult[2];
+			MurmurHash3_x64_128(&key, sizeof(key), 0, hashResult);
+			size_t combinedHash = static_cast<size_t>(hashResult[0]) ^ static_cast<size_t>(hashResult[1]);
+			return combinedHash;
+		}
+	};	// HashFunctionObject
+
+	using CollisionMap = unordered_map<ULONGLONG, _bool, MurmurHash3Hasher>;
+	CollisionMap m_hashColInfo;
 
 	_uint	m_arrCheck[(_uint)LAYERTAG::LAYER_END] = { 0 };
 	_bool	m_arrSorted[(_uint)LAYERTAG::LAYER_END] = { 0 };

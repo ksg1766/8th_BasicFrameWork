@@ -49,8 +49,8 @@ HRESULT CVIBuffer_Rect::Initialize_Prototype()
 	pVertices[3].vPosition = _float3(-0.5f, -0.5f, 0.f);
 	pVertices[3].vTexcoord = _float2(0.f, 1.f);
 
-	ZeroMemory(&m_InitialData, sizeof m_InitialData);
-	m_InitialData.pSysMem = pVertices;
+	ZeroMemory(&m_SubResourceData, sizeof m_SubResourceData);
+	m_SubResourceData.pSysMem = pVertices;
 
 	if (FAILED(__super::Create_Buffer(&m_pVB)))
 		return E_FAIL;
@@ -81,8 +81,8 @@ HRESULT CVIBuffer_Rect::Initialize_Prototype()
 	pIndices[4] = 2;
 	pIndices[5] = 3;
 
-	ZeroMemory(&m_InitialData, sizeof m_InitialData);
-	m_InitialData.pSysMem = pIndices;
+	ZeroMemory(&m_SubResourceData, sizeof m_SubResourceData);
+	m_SubResourceData.pSysMem = pIndices;
 
 	if (FAILED(__super::Create_Buffer(&m_pIB)))
 		return E_FAIL;

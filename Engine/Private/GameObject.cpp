@@ -48,10 +48,10 @@ HRESULT CGameObject::Render()
 	return S_OK;
 }
 
-CTransformEx* CGameObject::GetTransform() const
+CTransform* CGameObject::GetTransform() const
 {
 	CComponent* pComponent = GetFixedComponent(ComponentType::Transform);
-	return static_cast<CTransformEx*>(pComponent);
+	return static_cast<CTransform*>(pComponent);
 }
 
 CRigidBody* CGameObject::GetRigidBody() const
@@ -84,7 +84,7 @@ CTexture* CGameObject::GetTexture() const
 	return static_cast<CTexture*>(pComponent);
 }
 
-CTransformEx* CGameObject::GetOrAddTransform(_uint iLevelIndex)
+CTransform* CGameObject::GetOrAddTransform(_uint iLevelIndex)
 {
 	if (GetTransform() == nullptr)
 	{

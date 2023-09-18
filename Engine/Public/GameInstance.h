@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ComponentManager.h"
-#include "TransformEx.h"
+#include "Transform.h"
 #include "MonoBehaviour.h"
 #include "RigidBodyBase.h"
 #include "Shader.h"
@@ -54,6 +54,8 @@ private:
 	class CObjectManager*			m_pObjectManager = { nullptr };
 	class CComponentManager*		m_pComponentManager = { nullptr };
 	class CCollisionManager*		m_pCollisionManager = { nullptr };
+	class CEventManager*			m_pEventManager = { nullptr };
+	class CPoolManager*				m_pPoolManager = { nullptr };
 
 public:
 	static void Release_Engine();

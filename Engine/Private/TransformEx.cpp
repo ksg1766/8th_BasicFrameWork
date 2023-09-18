@@ -145,7 +145,7 @@ void CTransformEx::SetPosition(const Vec3& worldPosition)
 	}
 }
 
-HRESULT CTransformEx::Bind_ShaderResources(CShader* pShader, const char* pConstantName)
+HRESULT CTransformEx::Bind_ShaderResources(CShader* pShader, const _char* pConstantName)
 {
 	return pShader->Bind_Matrix(pConstantName, &m_matWorld);
 }

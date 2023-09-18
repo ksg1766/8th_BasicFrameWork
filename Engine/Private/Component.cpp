@@ -1,4 +1,4 @@
-#include "TransformEx.h"
+#include "Transform.h"
 #include "GameObject.h"
 
 CComponent::CComponent(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, ComponentType type)
@@ -38,7 +38,7 @@ CGameObject* CComponent::GetGameObject() const
 	return m_pGameObject;
 }
 
-CTransformEx* CComponent::GetTransform() const
+CTransform* CComponent::GetTransform() const
 {
 	return m_pGameObject->GetTransform();
 }

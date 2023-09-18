@@ -2,6 +2,8 @@
 #include "..\Public\Level_GamePlay.h"
 #include "ImGUIManager.h"
 
+#include "GameInstance.h"
+
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
 {
@@ -23,6 +25,20 @@ HRESULT CLevel_GamePlay::LateTick(const _float& fTimeDelta)
 	return S_OK;
 }
 
+HRESULT CLevel_GamePlay::Ready_Layer_Terrain(const LAYERTAG& eLayerTag)
+{
+	/* 원형객체를 복제하여 사본객체를 생성하고 레이어에 추가한다. */
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_BasicTerrain"))))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
+
+	return S_OK;
+}
+
 CLevel_GamePlay * CLevel_GamePlay::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
 	CLevel_GamePlay*	pInstance = new CLevel_GamePlay(pDevice, pContext);
@@ -38,7 +54,7 @@ CLevel_GamePlay * CLevel_GamePlay::Create(ID3D11Device * pDevice, ID3D11DeviceCo
 
 void CLevel_GamePlay::Free()
 {
-	__super::Free();
+	Super::Free();
 
 
 }

@@ -22,16 +22,16 @@ HRESULT CPoolManager::Reserve_Pool(const wstring& strObjectName, const _uint& iR
 		if (nullptr == pGameObject)
 			return E_FAIL;
 
-		POOLS::iterator iter = m_mapPools.find(strObjectName);
+		POOLS::iterator iter = m_hashPools.find(strObjectName);
 		iter->second.push(pGameObject);
 	}
 }
 
 void CPoolManager::Spawn_Object(const wstring& strObjectName, const Vec3& vSpawnPos)
 {
-	POOLS::iterator iter = m_mapPools.find(strObjectName);
+	POOLS::iterator iter = m_hashPools.find(strObjectName);
 
-	if (iter == m_mapPools.end())
+	if (iter == m_hashPools.end())
 		return;
 
 	CGameObject* pGameObject = iter->second.front();
@@ -43,7 +43,7 @@ void CPoolManager::Spawn_Object(const wstring& strObjectName, const Vec3& vSpawn
 
 void CPoolManager::Restore_Object(CGameObject* pGameObject)
 {
-	POOLS::iterator iter = m_mapPools.find(pGameObject->GetObjectTag());
+	POOLS::iterator iter = m_hashPools.find(pGameObject->GetObjectTag());
 	iter->second.push(pGameObject);
 }
 

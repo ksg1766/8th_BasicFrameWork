@@ -4,6 +4,7 @@
 #include "GameObject.h"
 #include "Layer.h"
 #include "RigidDynamic.h"
+#include "Transform.h"
 #include "ColliderSphere.h"
 #include "QuadTree.h"
 #include "QuadTreeNode.h"
@@ -91,7 +92,7 @@ void CCollisionManager::CheckDynamicCollision(LAYERTAG eLayerLeft, LAYERTAG eLay
 		m_arrSorted[(_uint)eLayerRight] = true;
 	}
 
-	map<ULONGLONG, _bool>::iterator iter;
+	CollisionMap::iterator iter;
 
 	for (auto& iterL : vecLeft)
 	{
@@ -126,12 +127,12 @@ void CCollisionManager::CheckDynamicCollision(LAYERTAG eLayerLeft, LAYERTAG eLay
 				ID.Left_id = pLeftCol->GetID();
 				ID.Right_id = pRightCol->GetID();
 
-				iter = m_mapColInfo.find(ID.ID);
+				iter = m_hashColInfo.find(ID.ID);
 
-				if (m_mapColInfo.end() == iter)
+				if (m_hashColInfo.end() == iter)
 				{
-					m_mapColInfo.insert(make_pair(ID.ID, false));
-					iter = m_mapColInfo.find(ID.ID);
+					m_hashColInfo.insert(make_pair(ID.ID, false));
+					iter = m_hashColInfo.find(ID.ID);
 				}
 
 				if (IsCollided(pLeftCol, pRightCol))
@@ -208,7 +209,7 @@ void CCollisionManager::CheckStaticCollision(LAYERTAG eDynamicLayer, const _floa
 	
 	CQuadTree* pQuadTreeInstance = CQuadTree::GetInstance();
 	
-	map<ULONGLONG, _bool>::iterator iter;
+	CollisionMap::iterator iter;
 
 	for (auto& iterL : vecLeft)
 	{
@@ -238,12 +239,12 @@ void CCollisionManager::CheckStaticCollision(LAYERTAG eDynamicLayer, const _floa
 			ID.Left_id = pLeftCol->GetID();
 			ID.Right_id = pRightCol->GetID();
 
-			iter = m_mapColInfo.find(ID.ID);
+			iter = m_hashColInfo.find(ID.ID);
 
-			if (m_mapColInfo.end() == iter)
+			if (m_hashColInfo.end() == iter)
 			{
-				m_mapColInfo.insert(make_pair(ID.ID, false));
-				iter = m_mapColInfo.find(ID.ID);
+				m_hashColInfo.insert(make_pair(ID.ID, false));
+				iter = m_hashColInfo.find(ID.ID);
 			}
 
 			// TODO: 아래 처럼 하든지 TriggerLayer 따로 두고 함수로 트리거 충돌만 따로 검출하든지 선택하자.

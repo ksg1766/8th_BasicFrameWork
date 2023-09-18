@@ -121,6 +121,9 @@
     <Filter Include="01.Utiltiy\01.Managers\LightManager">
       <UniqueIdentifier>{63bf0bdc-c567-4f85-b09a-2168b82bf334}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utiltiy\04.Component\05.VIBuffer\Cube">
+      <UniqueIdentifier>{df91b36b-28fd-40bd-8917-c5a7fed05ce4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -270,6 +273,12 @@
     <ClInclude Include="..\Public\PoolManager.h">
       <Filter>01.Utiltiy\01.Managers\05.PoolManager</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Cube.h">
+      <Filter>01.Utiltiy\04.Component\05.VIBuffer\Cube</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MurmurHash3.h">
+      <Filter>98.Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -400,6 +409,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\PoolManager.cpp">
       <Filter>01.Utiltiy\01.Managers\05.PoolManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Cube.cpp">
+      <Filter>01.Utiltiy\04.Component\05.VIBuffer\Cube</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MurmurHash3.cpp">
+      <Filter>98.Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
