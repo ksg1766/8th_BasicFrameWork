@@ -56,7 +56,7 @@ HRESULT CVIBuffer_Cube::Initialize_Prototype()
 	::ZeroMemory(&m_SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
 	m_SubResourceData.pSysMem = pVertices;
 
-	if (FAILED(__super::Create_Buffer(&m_pVB)))
+	if (FAILED(Super::Create_Buffer(&m_pVB)))
 		return E_FAIL;
 
 	Safe_Delete_Array(pVertices);

@@ -28,6 +28,7 @@ protected:
 
 	D3D11_PRIMITIVE_TOPOLOGY	m_eTopology;
 
+	_float3*					m_pVerticesPos = nullptr;
 	//
 	_uint						m_iNumVBs = { 0 };
 	_uint						m_iNumVertices = { 0 };
@@ -39,8 +40,8 @@ protected:
 	_uint						m_iNumIndicesofPrimitive = 0;
 
 	// For Rect
-	_uint						m_iIndexStride = { 0 };
-	_uint						m_iNumIndices = { 0 };
+	/*_uint						m_iIndexStride = { 0 };
+	_uint						m_iNumIndices = { 0 };*/
 
 	DXGI_FORMAT					m_eIndexFormat;
 

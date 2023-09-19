@@ -22,6 +22,7 @@ public:
 private:
 	_ulong			m_iNumVerticesX = { 0 };
 	_ulong			m_iNumVerticesZ = { 0 };
+	FACEINDICES32*	m_pFaceIndices = nullptr;
 
 public:
 	static CTerrain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

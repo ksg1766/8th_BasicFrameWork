@@ -28,8 +28,11 @@ private:
 private:
 	class CRigidDynamic*	m_pRigidBody;
 
-	Vec3			m_vMaxSpeed;
-	Vec3			m_vSpeed;
+	Vec3			m_vMaxLinearSpeed;
+	Vec3			m_vLinearSpeed;
+
+	Vec3			m_vMaxAngularSpeed;
+	Vec3			m_vAngularSpeed;
 
 public:
 	static	CPlayerController* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

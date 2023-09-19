@@ -11,8 +11,8 @@ CRigidDynamic::CRigidDynamic(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
 	, m_UseGravity(true)
 	, m_IsKinematic(false)
 	, m_fMass(1.f)
-	, m_fDrag(0.05f)
-	, m_fAngularDrag(0.05f)
+	, m_fDrag(0.01f)
+	, m_fAngularDrag(0.01f)
 	, m_byConstraints(0)
 	, m_vLinearAcceleration(Vec3::Zero)
 	, m_vAngularAcceleration(Vec3::Zero)
@@ -53,7 +53,7 @@ void CRigidDynamic::Tick(const _float& fTimeDelta)	// FixedUpdate 처럼 동작하기 
 	if (m_IsSleeping)
 		return;
 
-	if (m_fSleepThreshold > m_vLinearVelocity.Length() && m_fSleepThreshold > m_vAngularVelocity.Length())
+	if (m_fSleepThreshold > m_vLinearVelocity.Length() && m_fSleepThreshold > 180.f * XM_1DIVPI * m_vAngularVelocity.Length())
 	{
 		Sleep();
 		return;
@@ -87,8 +87,8 @@ void CRigidDynamic::KineticUpdate(const _float& fTimeDelta)
 	m_vAngularVelocity += m_vAngularAcceleration * fTimeDelta;
 	m_vLinearVelocity += m_vLinearAcceleration * fTimeDelta;
 
-	_float fAngularResistance = m_fAngularDrag * fTimeDelta;
-	_float fLinearResistance = m_fDrag * fTimeDelta;
+	_float fAngularResistance = m_fAngularDrag;
+	_float fLinearResistance = m_fDrag;
 
 	(fAngularResistance < 1.f) ? (m_vAngularVelocity = m_vAngularVelocity * (1.f - fAngularResistance)) : (m_vAngularVelocity = Vec3::Zero);
 	(fLinearResistance < 1.f) ? (m_vLinearVelocity = m_vLinearVelocity * (1.f - fLinearResistance)) : (m_vLinearVelocity = Vec3::Zero);

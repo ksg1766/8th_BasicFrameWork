@@ -14,8 +14,9 @@ CVIBuffer::CVIBuffer(const CVIBuffer & rhs)
 	, m_pIB(rhs.m_pIB)
 	, m_iStride(rhs.m_iStride)
 	, m_iNumVertices(rhs.m_iNumVertices)
-	, m_iIndexStride(rhs.m_iIndexStride)
-	, m_iNumIndices(rhs.m_iNumIndices)
+	, m_iNumPrimitives(rhs.m_iNumPrimitives)
+	, m_iIndexSizeofPrimitive(rhs.m_iIndexSizeofPrimitive)
+	, m_iNumIndicesofPrimitive(rhs.m_iNumIndicesofPrimitive)
 	, m_eIndexFormat(rhs.m_eIndexFormat)
 	, m_eTopology(rhs.m_eTopology)
 	, m_iNumVBs(rhs.m_iNumVBs)
@@ -58,7 +59,8 @@ HRESULT CVIBuffer::Render()
 	m_pContext->IASetPrimitiveTopology(m_eTopology);
 
 	/* 인덱스가 가르키는 정점을 활용하여 그린다. */
-	m_pContext->DrawIndexed(m_iNumIndices, 0, 0);
+	//m_pContext->DrawIndexed(m_iNumIndices, 0, 0);
+	m_pContext->DrawIndexed(m_iNumPrimitives * m_iNumIndicesofPrimitive, 0, 0);
 
 	return S_OK;
 }

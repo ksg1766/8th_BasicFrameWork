@@ -15,10 +15,6 @@ HRESULT CVIBuffer_Rect::Initialize_Prototype()
 {
 	m_iStride = sizeof(VTXPOSTEX); /* 정점하나의 크기 .*/
 	m_iNumVertices = 4;
-	m_iIndexStride = 2; /* 인덱스 하나의 크기. 2 or 4 */
-	m_iNumIndices = 6;
-	m_eIndexFormat = m_iIndexStride == 2 ? DXGI_FORMAT_R16_UINT : DXGI_FORMAT_R32_UINT;
-	m_eTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 	m_iNumVBs = 1;
 
 #pragma region VERTEX_BUFFER
@@ -61,25 +57,34 @@ HRESULT CVIBuffer_Rect::Initialize_Prototype()
 
 #pragma region INDEX_BUFFER
 
+	//m_iIndexStride = 2; /* 인덱스 하나의 크기. 2 or 4 */
+	//m_iNumIndices = 6;
+	//m_eIndexFormat = m_iIndexStride == 2 ? DXGI_FORMAT_R16_UINT : DXGI_FORMAT_R32_UINT;
+	m_iNumPrimitives = 2;
+	m_iIndexSizeofPrimitive = sizeof(FACEINDICES16);
+	m_iNumIndicesofPrimitive = 3;
+	m_eIndexFormat = DXGI_FORMAT_R16_UINT;
+	m_eTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+
 	/* 정점버퍼와 인덱스 버퍼를 만드낟. */
 	ZeroMemory(&m_BufferDesc, sizeof m_BufferDesc);
-	m_BufferDesc.ByteWidth = m_iIndexStride * m_iNumIndices;
+	m_BufferDesc.ByteWidth = m_iNumPrimitives * m_iIndexSizeofPrimitive;
 	m_BufferDesc.Usage = D3D11_USAGE_DEFAULT; /* 정적버퍼로 할당한다. (Lock, unLock 호출 불가)*/
 	m_BufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	m_BufferDesc.CPUAccessFlags = 0;
 	m_BufferDesc.MiscFlags = 0;
 	m_BufferDesc.StructureByteStride = 0;
 
-	_ushort*		pIndices = new _ushort[m_iNumIndices];
-	ZeroMemory(pIndices, sizeof(_ushort) * m_iNumIndices);
+	FACEINDICES16* pIndices = new FACEINDICES16[m_iNumPrimitives];
+	ZeroMemory(pIndices, sizeof(FACEINDICES16) * m_iNumPrimitives);
 
-	pIndices[0] = 0;
-	pIndices[1] = 1;
-	pIndices[2] = 2;
+	pIndices[0]._0 = 0;
+	pIndices[0]._1 = 1;
+	pIndices[0]._2 = 2;
 
-	pIndices[3] = 0;
-	pIndices[4] = 2;
-	pIndices[5] = 3;
+	pIndices[1]._0 = 0;
+	pIndices[1]._1 = 2;
+	pIndices[1]._2 = 3;
 
 	ZeroMemory(&m_SubResourceData, sizeof m_SubResourceData);
 	m_SubResourceData.pSysMem = pIndices;

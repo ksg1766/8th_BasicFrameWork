@@ -22,9 +22,12 @@ HRESULT CPlayerController::Initialize_Prototype()
 HRESULT CPlayerController::Initialize(void* pArg)
 {
 	m_pRigidBody = static_cast<CRigidDynamic*>(m_pGameObject->GetRigidBody());
-	m_vSpeed = Vec3(10.f, 10.f, 10.f);
-	m_vMaxSpeed = Vec3(10.f, 10.f, 10.f);
+	m_vLinearSpeed = Vec3(100.f, 100.f, 100.f);
+	m_vMaxLinearSpeed = Vec3(100.f, 100.f, 100.f);
 	
+	m_vAngularSpeed = Vec3(90.f, 90.f, 90.f);
+	m_vMaxAngularSpeed = Vec3(90.f, 90.f, 90.f);
+
 	m_pRigidBody->FreezeRotation(Axis::X);
 	m_pRigidBody->FreezeRotation(Axis::Z);
 
@@ -51,16 +54,27 @@ void CPlayerController::Move(const _float& fTimeDelta)
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
 	if (KEY_PRESSING(KEY::W) || KEY_DOWN(KEY::W))
-		m_pRigidBody->AddForce(Vec3(0.f, 0.f, m_vSpeed.z), ForceMode::VELOCITY_CHANGE);
+		m_pRigidBody->AddForce(Vec3(0.f, 0.f, m_vLinearSpeed.z), ForceMode::VELOCITY_CHANGE);
 
 	if (KEY_PRESSING(KEY::A) || KEY_DOWN(KEY::A))
-		m_pRigidBody->AddForce(Vec3(-m_vSpeed.x, 0.f, 0.f), ForceMode::VELOCITY_CHANGE);
+		m_pRigidBody->AddForce(Vec3(-m_vLinearSpeed.x, 0.f, 0.f), ForceMode::VELOCITY_CHANGE);
 
 	if (KEY_PRESSING(KEY::S) || KEY_DOWN(KEY::S))
-		m_pRigidBody->AddForce(Vec3(0.f, 0.f, -m_vSpeed.z), ForceMode::VELOCITY_CHANGE);
+		m_pRigidBody->AddForce(Vec3(0.f, 0.f, -m_vLinearSpeed.z), ForceMode::VELOCITY_CHANGE);
 
 	if (KEY_PRESSING(KEY::D) || KEY_DOWN(KEY::D))
-		m_pRigidBody->AddForce(Vec3(m_vSpeed.x, 0.f, 0.f), ForceMode::VELOCITY_CHANGE);
+		m_pRigidBody->AddForce(Vec3(m_vLinearSpeed.x, 0.f, 0.f), ForceMode::VELOCITY_CHANGE);
+	
+	if (KEY_PRESSING(KEY::Q) || KEY_DOWN(KEY::Q))
+		m_pRigidBody->AddTorque(Vec3(0.f, -m_vAngularSpeed.y, 0.f), ForceMode::VELOCITY_CHANGE);
+	
+	if (KEY_PRESSING(KEY::E) || KEY_DOWN(KEY::E))
+		m_pRigidBody->AddTorque(Vec3(0.f, m_vAngularSpeed.y, 0.f), ForceMode::VELOCITY_CHANGE);
+
+	if (KEY_PRESSING(KEY::SHIFT) && KEY_DOWN(KEY::K))
+		m_pRigidBody->IsKinematic(!m_pRigidBody->IsKinematic());
+	if (KEY_PRESSING(KEY::SHIFT) && KEY_DOWN(KEY::U))
+		m_pRigidBody->UseGravity(!m_pRigidBody->UseGravity());
 
 	LimitAllAxisVelocity();
 }
@@ -81,13 +95,37 @@ CPlayerController* CPlayerController::Create(ID3D11Device* pDevice, ID3D11Device
 void CPlayerController::LimitAllAxisVelocity()
 {
 	Vec3 pCurLinearVelocity = m_pRigidBody->GetLinearVelocity();
+	Vec3 pCurAngularVelocity = m_pRigidBody->GetAngularVelocity();
 
-	if (fabs(pCurLinearVelocity.x) > fabs(m_vMaxSpeed.x))
-		m_pRigidBody->SetLinearAxisVelocity(Axis::X, m_vMaxSpeed.x);
-	if (fabs(pCurLinearVelocity.y) > fabs(m_vMaxSpeed.y))
-		m_pRigidBody->SetLinearAxisVelocity(Axis::Y, m_vMaxSpeed.y);
-	if (fabs(pCurLinearVelocity.z) > fabs(m_vMaxSpeed.z))
-		m_pRigidBody->SetLinearAxisVelocity(Axis::Z, m_vMaxSpeed.z);
+	if (pCurLinearVelocity.x > m_vMaxLinearSpeed.x)
+		m_pRigidBody->SetLinearAxisVelocity(Axis::X, m_vMaxLinearSpeed.x);
+	if (pCurLinearVelocity.x < -m_vMaxLinearSpeed.x)
+		m_pRigidBody->SetLinearAxisVelocity(Axis::X, -m_vMaxLinearSpeed.x);
+
+	if (pCurLinearVelocity.y > m_vMaxLinearSpeed.y)
+		m_pRigidBody->SetLinearAxisVelocity(Axis::Y, m_vMaxLinearSpeed.y);
+	if (pCurLinearVelocity.y < -m_vMaxLinearSpeed.y)
+		m_pRigidBody->SetLinearAxisVelocity(Axis::Y, -m_vMaxLinearSpeed.y);
+
+	if (pCurLinearVelocity.z > m_vMaxLinearSpeed.z)
+		m_pRigidBody->SetLinearAxisVelocity(Axis::Z, m_vMaxLinearSpeed.z);
+	if (pCurLinearVelocity.z < -m_vMaxLinearSpeed.z)
+		m_pRigidBody->SetLinearAxisVelocity(Axis::Z, -m_vMaxLinearSpeed.z);
+
+	if (pCurAngularVelocity.x > m_vMaxAngularSpeed.x)
+		m_pRigidBody->SetAngularAxisVelocity(Axis::X, m_vMaxAngularSpeed.x);
+	if (pCurAngularVelocity.x < -m_vMaxAngularSpeed.x)
+		m_pRigidBody->SetAngularAxisVelocity(Axis::X, -m_vMaxAngularSpeed.x);
+
+	if (pCurAngularVelocity.y > m_vMaxAngularSpeed.y)
+		m_pRigidBody->SetAngularAxisVelocity(Axis::Y, m_vMaxAngularSpeed.y);
+	if (pCurAngularVelocity.y < -m_vMaxAngularSpeed.y)
+		m_pRigidBody->SetAngularAxisVelocity(Axis::Y, -m_vMaxAngularSpeed.y);
+
+	if (pCurAngularVelocity.z > m_vMaxAngularSpeed.z)
+		m_pRigidBody->SetAngularAxisVelocity(Axis::Z, m_vMaxAngularSpeed.z);
+	if (pCurAngularVelocity.z < -m_vMaxAngularSpeed.z)
+		m_pRigidBody->SetAngularAxisVelocity(Axis::Z, -m_vMaxAngularSpeed.z);
 }
 
 CComponent* CPlayerController::Clone(CGameObject* pGameObject, void* pArg)
