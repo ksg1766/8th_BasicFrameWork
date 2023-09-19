@@ -183,6 +183,7 @@ call Copy.bat</Command>
     <ClInclude Include="..\Public\EventManager.h" />
     <ClInclude Include="..\Public\FileUtils.h" />
     <ClInclude Include="..\Public\InputDevice.h" />
+    <ClInclude Include="..\Public\KeyManager.h" />
     <ClInclude Include="..\Public\ModelConverter.h" />
     <ClInclude Include="..\Public\MurmurHash3.h" />
     <ClInclude Include="..\Public\PoolManager.h" />
@@ -234,6 +235,7 @@ call Copy.bat</Command>
     <ClCompile Include="..\Private\EventManager.cpp" />
     <ClCompile Include="..\Private\FileUtils.cpp" />
     <ClCompile Include="..\Private\InputDevice.cpp" />
+    <ClCompile Include="..\Private\KeyManager.cpp" />
     <ClCompile Include="..\Private\ModelConverter.cpp" />
     <ClCompile Include="..\Private\MurmurHash3.cpp" />
     <ClCompile Include="..\Private\PoolManager.cpp" />

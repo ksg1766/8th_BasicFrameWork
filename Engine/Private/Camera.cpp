@@ -41,9 +41,10 @@ CCamera* CCamera::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	return pInstance;
 }
 
-CComponent* CCamera::Clone(void* pArg)
+CComponent* CCamera::Clone(CGameObject* pGameObject, void* pArg)
 {
 	CCamera* pInstance = new CCamera(*this);
+	pInstance->m_pGameObject = pGameObject;
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{

@@ -76,4 +76,11 @@
 			return dwRefCnt;									\
 		}
 
+// For.KeyManager
+#define KEY_CHECK(key, state) CGameInstance::GetInstance()->GetKeyState(key) == state
+#define KEY_PRESSING(key) KEY_CHECK(key, KEYSTATE::HOLD)
+#define KEY_DOWN(key) KEY_CHECK(key, KEYSTATE::TAP)
+#define KEY_UP(key) KEY_CHECK(key, KEYSTATE::AWAY)
+#define KEY_NONE(key) KEY_CHECK(key, KEYSTATE::NONE)
+
 #endif // Engine_Macro_h__

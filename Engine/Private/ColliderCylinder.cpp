@@ -74,9 +74,10 @@ CCylinderCollider* CCylinderCollider::Create(ID3D11Device* pDevice, ID3D11Device
     return pInstance;
 }
 
-CComponent* CCylinderCollider::Clone(void* pArg)
+CComponent* CCylinderCollider::Clone(CGameObject* pGameObject, void* pArg)
 {
     CCylinderCollider* pInstance = new CCylinderCollider(*this);
+    pInstance->m_pGameObject = pGameObject;
 
     if (FAILED(pInstance->Initialize(pArg)))
     {

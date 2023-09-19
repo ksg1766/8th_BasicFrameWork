@@ -33,6 +33,10 @@ HRESULT CGameObject::Initialize(void* pArg)
 
 void CGameObject::Tick(const _float& fTimeDelta)
 {
+	/*for (auto& iter : m_arrComponents)
+		if(iter)	iter->Tick(fTimeDelta);*/
+	for (auto& iter : m_vecScripts)
+		iter->Tick(fTimeDelta);
 }
 
 void CGameObject::LateTick(const _float& fTimeDelta)
@@ -48,37 +52,37 @@ HRESULT CGameObject::Render()
 	return S_OK;
 }
 
-CTransform* CGameObject::GetTransform() const
+CTransform* CGameObject::GetTransform()
 {
 	CComponent* pComponent = GetFixedComponent(ComponentType::Transform);
 	return static_cast<CTransform*>(pComponent);
 }
 
-CRigidBody* CGameObject::GetRigidBody() const
+CRigidBody* CGameObject::GetRigidBody()
 {
 	CComponent* pComponent = GetFixedComponent(ComponentType::RigidBody);
 	return static_cast<CRigidBody*>(pComponent);
 }
 
-CVIBuffer* const CGameObject::GetBuffer() const
+CVIBuffer* const CGameObject::GetBuffer()
 {
 	CComponent* pComponent = GetFixedComponent(ComponentType::Buffer);
 	return static_cast<CVIBuffer*>(pComponent);
 }
 
-CShader* CGameObject::GetShader() const
+CShader* CGameObject::GetShader()
 {
 	CComponent* pComponent = GetFixedComponent(ComponentType::Shader);
 	return static_cast<CShader*>(pComponent);
 }
 
-CRenderer* CGameObject::GetRenderer() const
+CRenderer* CGameObject::GetRenderer()
 {
 	CComponent* pComponent = GetFixedComponent(ComponentType::Renderer);
 	return static_cast<CRenderer*>(pComponent);
 }
 
-CTexture* CGameObject::GetTexture() const
+CTexture* CGameObject::GetTexture()
 {
 	CComponent* pComponent = GetFixedComponent(ComponentType::Texture);
 	return static_cast<CTexture*>(pComponent);
@@ -94,37 +98,37 @@ CTransform* CGameObject::GetOrAddTransform(_uint iLevelIndex)
 	return GetTransform();
 }
 
-CComponent* CGameObject::GetFixedComponent(const ComponentType& type) const
+CComponent* CGameObject::GetFixedComponent(const ComponentType& type)
 {
-	uint8 index = static_cast<uint8>(type);
-	assert(index < FIXED_COMPONENT_COUNT);
+	_uint index = static_cast<_uint>(type);
+	assert(index <= FIXED_COMPONENT_COUNT);
 	return m_arrComponents[index];
 }
 
-HRESULT CGameObject::AddComponent(_uint iLevelIndex, ComponentType type, const wstring& strPrototypeTag, void* pArg)
+HRESULT CGameObject::AddComponent(_uint iLevelIndex, const ComponentType& type, const wstring& strPrototypeTag, void* pArg)
 {
-	if (nullptr != GetFixedComponent(type))
-		return E_FAIL;
+	_uint index = static_cast<_uint>(type);
+
+	if (index < FIXED_COMPONENT_COUNT)
+	{
+		if (nullptr != m_arrComponents[index])
+			return E_FAIL;
+	}
 
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
 	/* 원형 컴포넌트를 복제하여 사본 컴포넌트를 얻어오자. */
-	CComponent* pComponent = pGameInstance->Clone_Component(iLevelIndex, strPrototypeTag, pArg);
+	CComponent* pComponent = pGameInstance->Clone_Component(this, iLevelIndex, strPrototypeTag, pArg);
 	if (nullptr == pComponent)
 		return E_FAIL;
 
 	pComponent->SetGameObject(this);
 
-	uint8 index = static_cast<uint8>(static_cast<CComponent*>(pComponent)->GetType());
 	if (index < FIXED_COMPONENT_COUNT)
-	{
 		m_arrComponents[index] = pComponent;
-	}
 	else
-	{
 		m_vecScripts.push_back(dynamic_cast<CMonoBehaviour*>(pComponent));
-	}
 
 	Safe_AddRef(pComponent);
 

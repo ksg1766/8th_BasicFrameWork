@@ -33,7 +33,7 @@ private:
 public:
 	HRESULT Reserve_Manager(_uint iNumLevels);
 	HRESULT Add_Prototype(_uint iLevelIndex, const wstring& strPrototypeTag, class CComponent* pPrototype);
-	class CComponent* Clone_Component(_uint iLevelIndex, const wstring& strPrototypeTag, void* pArg);
+	class CComponent* Clone_Component(CGameObject* pGameObject, _uint iLevelIndex, const wstring& strPrototypeTag, void* pArg);
 
 private:
 	_uint											m_iNumLevels = { 0 };

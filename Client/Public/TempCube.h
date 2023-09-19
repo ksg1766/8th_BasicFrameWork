@@ -21,7 +21,8 @@ public:
 	virtual HRESULT Render();
 
 private:
-	HRESULT			Ready_Components();
+	HRESULT			Ready_FixedComponents();
+	HRESULT			Ready_Scripts();
 	HRESULT			Bind_ShaderResources(); /* 셰이더 전역변수에 값 던진다. */
 
 public:

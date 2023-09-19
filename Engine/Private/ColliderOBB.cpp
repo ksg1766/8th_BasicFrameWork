@@ -75,9 +75,10 @@ COBBCollider* COBBCollider::Create(ID3D11Device* pDevice, ID3D11DeviceContext* p
 	return pInstance;
 }
 
-CComponent* COBBCollider::Clone(void* pArg)
+CComponent* COBBCollider::Clone(CGameObject* pGameObject, void* pArg)
 {
 	COBBCollider* pInstance = new COBBCollider(*this);
+	pInstance->m_pGameObject = pGameObject;
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{

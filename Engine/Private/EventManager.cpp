@@ -14,7 +14,7 @@ CEventManager::CEventManager()
 {
 }
 
-void CEventManager::LastTick()
+void CEventManager::FinalTick()
 {
 	for (size_t i = 0; i < m_vecDead.size(); ++i)
 	{
@@ -89,5 +89,5 @@ void CEventManager::Execute(const tagEvent& eve)
 
 void CEventManager::Free()
 {
-	__super::Free();
+	Super::Free();
 }

@@ -66,7 +66,7 @@ HRESULT CBasicTerrain::Ready_Components(void* pArg)
 		return E_FAIL;
 
 	/* Com_Texture*/
-	if (FAILED(Super::AddComponent(LEVEL_GAMETOOL, ComponentType::Texture, TEXT("Prototype_Component_Texture_Terrain"))))
+	if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::Texture, TEXT("Prototype_Component_Texture_Terrain"))))
 		return E_FAIL;
 
 	/* Com_Transform */
@@ -85,7 +85,7 @@ HRESULT CBasicTerrain::Bind_ShaderResources()
 	_float4x4		ViewMatrix, ProjMatrix;
 
 	XMStoreFloat4x4(&ViewMatrix, XMMatrixLookAtLH(XMVectorSet(0.f, 500.f, -500.f, 1.f), XMVectorSet(0.f, 0.f, 0.f, 1.f), XMVectorSet(0.0f, 1.f, 0.f, 0.f)));
-	XMStoreFloat4x4(&ProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), g_iWinSizeX / g_iWinSizeY, 0.1f, 1000.f));
+	XMStoreFloat4x4(&ProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), g_iWinSizeX / (_float)g_iWinSizeY, 0.1f, 1000.f));
 
 	if (FAILED(GetTransform()->Bind_ShaderResources(GetShader(), "g_WorldMatrix")))
 		return E_FAIL;

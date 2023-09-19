@@ -11,6 +11,12 @@ CLevel_GamePlay::CLevel_GamePlay(ID3D11Device * pDevice, ID3D11DeviceContext * p
 
 HRESULT CLevel_GamePlay::Initialize()
 {
+	if (FAILED(Ready_Layer_Terrain()))
+		return E_FAIL;
+
+	if (FAILED(Ready_Layer_Player()))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -25,13 +31,27 @@ HRESULT CLevel_GamePlay::LateTick(const _float& fTimeDelta)
 	return S_OK;
 }
 
-HRESULT CLevel_GamePlay::Ready_Layer_Terrain(const LAYERTAG& eLayerTag)
+HRESULT CLevel_GamePlay::Ready_Layer_Terrain()
 {
 	/* 원형객체를 복제하여 사본객체를 생성하고 레이어에 추가한다. */
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_BasicTerrain"))))
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, LAYERTAG::TERRAIN, TEXT("Prototype_GameObject_BasicTerrain"))))
+		return E_FAIL;
+
+	Safe_Release(pGameInstance);
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_Player()
+{
+	/* 원형객체를 복제하여 사본객체를 생성하고 레이어에 추가한다. */
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, LAYERTAG::PLAYER, TEXT("Prototype_GameObject_TempCube"))))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);

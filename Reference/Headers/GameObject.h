@@ -31,17 +31,17 @@ public:
 	virtual void			DebugRender();
 	virtual HRESULT			Render();
 
-	CComponent*				GetFixedComponent(const ComponentType& type) const;
-	CTransform*				GetTransform()	const;
-	CVIBuffer* const		GetBuffer()		const;
-	CRigidBody*				GetRigidBody()	const;
+	CComponent*				GetFixedComponent(const ComponentType& type);
+	CTransform*				GetTransform();
+	CVIBuffer* const		GetBuffer();
+	CRigidBody*				GetRigidBody();
 	//CCamera*				GetCamera();
 	//CMeshRenderer*		GetMeshRenderer();
 	//CModelRenderer*		GetModelRenderer();
 	//CModelAnimator*		GetModelAnimator();
-	CRenderer*				GetRenderer()	const;
-	CShader*				GetShader()		const;
-	CTexture*				GetTexture()	const;
+	CRenderer*				GetRenderer();
+	CShader*				GetShader();
+	CTexture*				GetTexture();
 	//CLight*				GetLight();
 	//CTerrain*				GetTerrain();
 
@@ -54,7 +54,7 @@ public:
 	void					SetObjectTag(const wstring& strObjectTag) { m_strObjectTag = strObjectTag; }
 	void					SetDeadState(_bool bDead)		{ m_IsDead = bDead; }
 
-	HRESULT					AddComponent(_uint iLevelIndex, ComponentType type, const wstring& strPrototypeTag, void* pArg = nullptr);
+	HRESULT					AddComponent(_uint iLevelIndex, const ComponentType& type, const wstring& strPrototypeTag, void* pArg = nullptr);
 
 	/*void					SetLayerIndex(uint8 layer) { m_i8LayerIndex = layer; }
 	uint8					GetLayerIndex() { return m_i8LayerIndex; }*/

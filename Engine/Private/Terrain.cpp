@@ -186,9 +186,10 @@ CTerrain* CTerrain::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContex
 	return pInstance;
 }
 
-CComponent * CTerrain::Clone(void * pArg)
+CComponent * CTerrain::Clone(CGameObject* pGameObject, void * pArg)
 {
 	CTerrain*	pInstance = new CTerrain(*this);
+	pInstance->m_pGameObject = pGameObject;
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{

@@ -25,7 +25,7 @@ private:
 
 public:
 	static CTerrain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	virtual CComponent* Clone(void* pArg) override;
+	virtual CComponent* Clone(CGameObject* pGameObject, void* pArg) override;
 	virtual void Free() override;
 };
 

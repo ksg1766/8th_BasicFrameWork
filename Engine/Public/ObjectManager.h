@@ -8,8 +8,7 @@
 
 BEGIN(Engine)
 
-class CObjectManager final
-	: public CBase
+class CObjectManager final : public CBase
 {
 	DECLARE_SINGLETON(CObjectManager)
 

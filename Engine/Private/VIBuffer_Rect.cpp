@@ -111,9 +111,10 @@ CVIBuffer_Rect * CVIBuffer_Rect::Create(ID3D11Device * pDevice, ID3D11DeviceCont
 	return pInstance;
 }
 
-CComponent * CVIBuffer_Rect::Clone(void * pArg)
+CComponent * CVIBuffer_Rect::Clone(CGameObject* pGameObject, void * pArg)
 {
 	CVIBuffer_Rect*	pInstance = new CVIBuffer_Rect(*this);
+	pInstance->m_pGameObject = pGameObject;
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{

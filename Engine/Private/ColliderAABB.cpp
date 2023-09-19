@@ -74,9 +74,10 @@ CAABBCollider* CAABBCollider::Create(ID3D11Device* pDevice, ID3D11DeviceContext*
 	return pInstance;
 }
 
-CComponent* CAABBCollider::Clone(void* pArg)
+CComponent* CAABBCollider::Clone(CGameObject* pGameObject, void* pArg)
 {
 	CAABBCollider* pInstance = new CAABBCollider(*this);
+	pInstance->m_pGameObject = pGameObject;
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{

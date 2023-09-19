@@ -49,6 +49,12 @@
     <Filter Include="02.GameObjects\TempCube">
       <UniqueIdentifier>{23a6e04a-e4fc-4b28-b63a-f5716d9f8432}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\TempCube\01.Script">
+      <UniqueIdentifier>{f2e7a9aa-968f-4f22-a126-803d09d5cdd2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\TempCube\00.GameObject">
+      <UniqueIdentifier>{19ba0693-056c-4617-a870-a8b73617aef6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -121,7 +127,13 @@
       <Filter>02.GameObjects\BasicTerrain</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\TempCube.h">
-      <Filter>02.GameObjects\TempCube</Filter>
+      <Filter>02.GameObjects\TempCube\00.GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerController.h">
+      <Filter>02.GameObjects\TempCube\01.Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Bin\ShaderFiles\Client_Shader_Defines.hpp">
+      <Filter>97.ShaderFiles</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -180,7 +192,10 @@
       <Filter>02.GameObjects\BasicTerrain</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\TempCube.cpp">
-      <Filter>02.GameObjects\TempCube</Filter>
+      <Filter>02.GameObjects\TempCube\00.GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerController.cpp">
+      <Filter>02.GameObjects\TempCube\01.Script</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -201,6 +216,9 @@
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxCubeTex.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

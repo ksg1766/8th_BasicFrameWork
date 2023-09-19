@@ -29,7 +29,7 @@ private:
 public:
 	static CTexture* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, 
 		const wstring& strTextureFilePath, _uint iNumTextures = 1);
-	virtual CComponent* Clone(void* pArg) override;
+	virtual CComponent* Clone(CGameObject* pGameObject, void* pArg) override;
 	virtual void Free() override;
 };
 

@@ -18,10 +18,10 @@ public:
 	virtual HRESULT LateTick(const _float& fTimeDelta) override;
 	virtual HRESULT	DebugRender() override;
 
-	void			Demo();
+	void			ImGUIDemo();
 
 private:
-	HRESULT			Ready_Layer_Terrain(const LAYERTAG& eLayerTag);
+	HRESULT			Ready_Layer_Terrain();
 
 private:
 	_bool	m_IsImGUIReady = false;

@@ -13,7 +13,7 @@ HRESULT CLevel_GameTool::Initialize()
 { 
 	CImGUIManager::GetInstance()->Initialize(m_pDevice, m_pContext);
 	
- 	if (FAILED(Ready_Layer_Terrain(LAYERTAG::TERRAIN)))
+ 	if (FAILED(Ready_Layer_Terrain()))
 		return E_FAIL;
 
 	return S_OK;
@@ -26,7 +26,7 @@ HRESULT CLevel_GameTool::Tick(const _float& fTimeDelta)
 		m_IsImGUIReady = true;
 	
 	CImGUIManager::GetInstance()->Tick();
-	Demo();
+	ImGUIDemo();
 
 	return S_OK;
 }
@@ -46,13 +46,13 @@ HRESULT CLevel_GameTool::DebugRender()
 	return S_OK;
 }
 
-HRESULT CLevel_GameTool::Ready_Layer_Terrain(const LAYERTAG& eLayerTag)
+HRESULT CLevel_GameTool::Ready_Layer_Terrain()
 {
 	/* 원형객체를 복제하여 사본객체를 생성하고 레이어에 추가한다. */
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMETOOL, eLayerTag, TEXT("Prototype_GameObject_BasicTerrain"))))
+	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMETOOL, LAYERTAG::TERRAIN, TEXT("Prototype_GameObject_BasicTerrain"))))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -60,7 +60,7 @@ HRESULT CLevel_GameTool::Ready_Layer_Terrain(const LAYERTAG& eLayerTag)
 	return S_OK;
 }
 
-void CLevel_GameTool::Demo()
+void CLevel_GameTool::ImGUIDemo()
 {
 	// 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
 	if (show_demo_window)

@@ -6,7 +6,7 @@
 //
 #include "BasicTerrain.h"
 #include "TempCube.h"
-
+#include "PlayerController.h"
 
 CLoader::CLoader(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: m_pDevice(pDevice)
@@ -127,6 +127,11 @@ HRESULT CLoader::Loading_For_Level_GamePlay()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Tile0.jpg")))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_PlayerController*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_PlayerController"),
+		CPlayerController::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	/* For.Mesh */
 	m_strLoading = TEXT("메시를 로딩 중 입니다.");
 
@@ -141,7 +146,7 @@ HRESULT CLoader::Loading_For_Level_GamePlay()
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_Sky */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Sky"), CTempCube::Create(m_pDevice, m_pContext))))
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_TempCube"), CTempCube::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	Safe_Release(pGameInstance);
@@ -161,7 +166,7 @@ HRESULT CLoader::Loading_For_Level_GameTool()
 	m_strLoading = TEXT("텍스쳐를 로딩 중 입니다.");
 
 	/* For.Prototype_Component_Texture_Sky */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Sky"),
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMETOOL, TEXT("Prototype_Component_Texture_Sky"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/SkyBox/Sky_%d.dds"), 4))))
 		return E_FAIL;
 

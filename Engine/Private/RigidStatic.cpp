@@ -62,9 +62,10 @@ CRigidStatic* CRigidStatic::Create(ID3D11Device* pDevice, ID3D11DeviceContext* p
 	return pInstance;
 }
 
-CComponent* CRigidStatic::Clone(void* pArg)
+CComponent* CRigidStatic::Clone(CGameObject* pGameObject, void* pArg)
 {
 	CRigidStatic* pInstance = new CRigidStatic(*this);
+	pInstance->m_pGameObject = pGameObject;
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{

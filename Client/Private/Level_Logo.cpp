@@ -31,11 +31,11 @@ HRESULT CLevel_Logo::LateTick(const _float& fTimeDelta)
 		CGameInstance*	pGameInstance = CGameInstance::GetInstance();
 		Safe_AddRef(pGameInstance);
 
-		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_GAMETOOL))))
-			return E_FAIL;
-
-		/*if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING,  CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_GAMEPLAY))))
+		/*if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_GAMETOOL))))
 			return E_FAIL;*/
+
+		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING,  CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_GAMEPLAY))))
+			return E_FAIL;
 
 		Safe_Release(pGameInstance);
 	}

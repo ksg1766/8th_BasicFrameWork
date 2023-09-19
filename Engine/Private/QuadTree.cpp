@@ -7,10 +7,11 @@ CQuadTree::CQuadTree()
 {
 }
 
-HRESULT CQuadTree::Initialize()
+HRESULT CQuadTree::Build_QuadTree(_uint iNumLevels)
 {
     m_pQuadTreeRoot = BuildQuadTree(Vec3(0.f, m_vRootExtents.y * 0.5f, 0.f), Vec3(m_vRootExtents), m_iDepthLimit);
 
+    // TODO: 아래는 SR때 코드. 구현해야 함.
     //vector<CGameObject*>& vecStaticObject = SceneManager()->Get_ObjectList(LAYERTAG::GAMELOGIC, OBJECTTAG::BLOCK);
     //for (auto& iter : vecStaticObject)
     //    AddObjectInNode(iter->m_pTransform, m_pQuadTreeRoot);
@@ -29,6 +30,7 @@ void CQuadTree::Update_QuadTree()
 
 void CQuadTree::Update_Frustum()
 {
+    // TODO: 이 함수가 필요해서 놔둔건지 기억이 안남... 프러스텀이 자동으로 갱신되지 않는다면 여기서 갱신해줄 것.
     //BoundingFrustum::CreateFromMatrix(m_tFrustum, );
 }
 

@@ -30,7 +30,7 @@ public:
 	void	RotateAround(const Vec3& vPoint, const Vec3& vAxis, const _float& fAngle);	// Revolution;
 	//void	SetRotation(Vec3& vRotation);
 
-	void	Translate(Vec3& vTranslation)			{ static_cast<Vec3>(m_matWorld.m[STATE_POSITION]) += vTranslation; }
+	void	Translate(Vec3& vTranslation);
 	void	Translate(const Vec3& vTranslation)		{ Translate(const_cast<Vec3&>(vTranslation)); }
 	void	SetPosition(Vec3& vPosition)			{ static_cast<Vec3>(m_matWorld.m[STATE_POSITION]) = vPosition; }
 	void	SetPosition(const Vec3& vPosition)		{ SetPosition(const_cast<Vec3&>(vPosition)); }
@@ -56,7 +56,7 @@ private:
 
 public:
 	static CTransform* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	virtual CComponent* Clone(void* pArg) override;	// Awake
+	virtual CComponent* Clone(CGameObject* pGameObject, void* pArg) override;	// Awake
 	virtual void Free() override;
 };
 

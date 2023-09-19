@@ -12,21 +12,23 @@ private:
 	virtual ~CInputDevice() = default;
 
 public:
-	HRESULT Initialize(HINSTANCE hInst, HWND hWnd);
-	void Update();
+	HRESULT Ready_InputDevice(HINSTANCE hInst, HWND hWnd);
+	void	Update_InputDevice();
 
 public:
-	_ubyte	Get_DIKeyState(_ubyte eKeyID)	{ return m_CurKeyState[eKeyID];	}
-	_ubyte	Get_DIMouseState(MOUSEKEYSTATE eMouseKeyID) { return m_CurMouseState.rgbButtons[eMouseKeyID]; }
-	_long	Get_DIMouseMove(MOUSEMOVESTATE eMouseMoveID) { return ((_long*)&m_CurMouseState)[eMouseMoveID]; }
+	_ubyte	Get_DIKeyState(_ubyte byKeyID)					{ return m_CurKeyState[byKeyID];	}
+	_ubyte	Get_DIMouseState(MOUSEKEYSTATE eMouseKeyID)		{ return m_CurMouseState.rgbButtons[eMouseKeyID]; }
+	_long	Get_DIMouseMove(MOUSEMOVESTATE eMouseMoveID)	{ return ((_long*)&m_CurMouseState)[eMouseMoveID]; }
 
-	_bool	Key_Down(_ubyte eKeyID);
-	_bool	Key_Pressing(_ubyte eKeyID);
-	_bool	Key_Up(_ubyte eKeyID);
+	_bool	Key_Down(_ubyte byKeyID);
+	_bool	Key_Pressing(_ubyte byKeyID);
+	_bool	Key_Up(_ubyte byKeyID);
 
 	_bool	Mouse_Down(MOUSEKEYSTATE eMouseKeyID);
 	_bool	Mouse_Pressing(MOUSEKEYSTATE eMouseKeyID);
 	_bool	Mouse_Up(MOUSEKEYSTATE eMouseKeyID);
+
+	_bool	Get_AnyKeyDown();
 
 private:
 	LPDIRECTINPUT8			m_pInputSDK = nullptr;

@@ -36,6 +36,12 @@ void CTransform::SetScale(Vec3& vScale)
 	}
 }
 
+void CTransform::Translate(Vec3& vTranslation)
+{
+	for(_uint i = 0; i < 3; ++i)
+		*((_float*)(&m_matWorld.m[STATE_POSITION]) + i) += *((_float*)&vTranslation + i);
+}
+
 void CTransform::Rotate(Vec3& vEulers)
 {
 	Matrix matRotation = Matrix::Identity;
@@ -135,9 +141,10 @@ CTransform* CTransform::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pCont
 	return pInstance;
 }
 
-CComponent* CTransform::Clone(void* pArg)
+CComponent* CTransform::Clone(CGameObject* pGameObject, void* pArg)
 {
 	CTransform* pInstance = new CTransform(*this);
+	pInstance->m_pGameObject = pGameObject;
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{

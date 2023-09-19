@@ -26,30 +26,67 @@ public: /* For.GameInstance */
 
 	void Clear(_uint iLevelIndex);
 
-public: /* For.Timer_Manager */
-	_float Compute_TimeDelta(const wstring& strTimerTag);
+public: /* For.TimerManager */
+	_float	Compute_TimeDelta(const wstring& strTimerTag);
 	HRESULT	Add_Timer(const wstring& strTimerTag);
 
-public: /* For.Graphic_Device */
+public: /* For.GraphicDevice */
 	HRESULT Clear_BackBuffer_View(_float4 vClearColor);	
 	HRESULT Clear_DepthStencil_View();	
 	HRESULT Present();
 
-public: /* For.Level_Manager */
+public: /* For.QuadTRee */
+	void	Update_QuadTree();
+	void	Render_QuadTree();
+
+public: /* For.LevelManager */
 	HRESULT Open_Level(_uint iLevelIndex, class CLevel* pNewLevel);
 
-public: /* For.Object_Manager */
+public: /* For.ObjectManager */
 	HRESULT Add_Prototype(const wstring& strPrototypeTag, class CGameObject* pPrototype);
 	HRESULT Add_GameObject(_uint iLevelIndex, const LAYERTAG& eLayerTag, const wstring& strPrototypeTag, void* pArg = nullptr);
 
-public: /* For.Component_Manager */
+public: /* For.ComponentManager */
 	HRESULT Add_Prototype(_uint iLevelIndex, const wstring& strPrototypeTag, class CComponent* pPrototype);
-	class CComponent* Clone_Component(_uint iLevelIndex, const wstring& strPrototypeTag, void* pArg = nullptr);
+	class CComponent* Clone_Component(CGameObject* pGameObject, _uint iLevelIndex, const wstring& strPrototypeTag, void* pArg = nullptr);
+
+public: /* For.EventManager */
+	void	FinalTick();
+	void	CreateObject(CGameObject* pObj, LAYERTAG eLayer);
+	void	DeleteObject(CGameObject* pObj);
+	void	LevelChange(class CLevel* pLevel, _uint iLevelId);
+
+public: /* For.CollisionManager */
+	void	LateTick_Collision(const _float& fTimeDelta);
+
+public: /* For.PoolManager */
+	HRESULT	Reserve_Pool(const wstring& strObjectName, const _uint& iReserveCount, void* pArg = nullptr);	// 매니저 초기화 아님.
+
+public: /* For.InputDevice */
+	_bool	Key_Down(_ubyte byKeyID);
+	_bool	Key_Pressing(_ubyte byKeyID);
+	_bool	Key_Up(_ubyte byKeyID);
+
+	_bool	Mouse_Down(MOUSEKEYSTATE eMouseKeyID);
+	_bool	Mouse_Pressing(MOUSEKEYSTATE eMouseKeyID);
+	_bool	Mouse_Up(MOUSEKEYSTATE eMouseKeyID);
+
+	_ubyte	Get_DIKeyState(_ubyte eKeyID);
+	_ubyte	Get_DIMouseState(MOUSEKEYSTATE eMouseKeyID);
+	_long	Get_DIMouseMove(MOUSEMOVESTATE eMouseMoveID);
+
+	_bool	Get_AnyKeyDown();
+	
+public:	/* For. KeyManager */
+	KEYSTATE GetKeyState(KEY _eKey);
+	const POINT& GetMousePos();
 
 private:
 	class CTimerManager*			m_pTimerManager = { nullptr };
 	class CGraphicDevice*			m_pGraphicDevice = { nullptr };
+	class CQuadTree*				m_pQuadTree = { nullptr };
 	class CInputDevice*				m_pInputDevice = { nullptr };
+	class CKeyManager*				m_pKeyManager = { nullptr };
 	class CLevelManager*			m_pLevelManager = { nullptr };
 	class CObjectManager*			m_pObjectManager = { nullptr };
 	class CComponentManager*		m_pComponentManager = { nullptr };

@@ -18,8 +18,8 @@ public:
 	virtual HRESULT LateTick(const _float& fTimeDelta) override;
 
 private:
-	HRESULT			Ready_Layer_Terrain(const LAYERTAG& eLayerTag);
-
+	HRESULT			Ready_Layer_Terrain();
+	HRESULT			Ready_Layer_Player();
 public:
 	static class CLevel_GamePlay* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

@@ -7,8 +7,7 @@ BEGIN(Engine)
 //class CFrustum;
 class CQuadTreeNode;
 
-class ENGINE_DLL CQuadTree :
-    public CBase
+class CQuadTree final : public CBase
 {
     DECLARE_SINGLETON(CQuadTree)
 
@@ -17,7 +16,7 @@ private:
     virtual ~CQuadTree() = default;
 
 public:
-    HRESULT			Initialize();
+    HRESULT			Build_QuadTree(_uint iNumLevels);
     void            Update_QuadTree();
     void            Render_QuadTree();
 
@@ -37,7 +36,7 @@ private:
     const _float    m_fLooseFactor = 2.f;
 
     Vec3            m_vRootExtents = Vec3(256.f, 128.f, 256.f);
-    CQuadTreeNode*  m_pQuadTreeRoot;
+    CQuadTreeNode*  m_pQuadTreeRoot = nullptr;
 
     BoundingFrustum m_tFrustum;
 

@@ -122,9 +122,10 @@ CTransformBurger* CTransformBurger::Create(ID3D11Device* pDevice, ID3D11DeviceCo
 	return pInstance;
 }
 
-CComponent* CTransformBurger::Clone(void* pArg)
+CComponent* CTransformBurger::Clone(CGameObject* pGameObject, void* pArg)
 {
 	CTransformBurger* pInstance = new CTransformBurger(*this);
+	pInstance->m_pGameObject = pGameObject;
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{

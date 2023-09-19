@@ -19,13 +19,13 @@ void CCollisionManager::LateTick_Collision(const _float& fTimeDelta)
 {
 	::ZeroMemory(m_arrSorted, (_uint)LAYERTAG::LAYER_END * sizeof(_bool));
 
-	for (UINT iRow = 0; iRow < (UINT)LAYERTAG::LAYER_END; ++iRow)
+	for (_uint iRow = 0; iRow < (_uint)LAYERTAG::LAYER_END; ++iRow)
 	{
-		for (UINT iCol = iRow; iCol < (UINT)LAYERTAG::LAYER_END; ++iCol)
+		for (_uint iCol = iRow; iCol < (_uint)LAYERTAG::LAYER_END; ++iCol)
 		{
 			if (m_arrCheck[iRow] & (1 << iCol))
 			{
-				CheckDynamicCollision((LAYERTAG)iRow, (LAYERTAG)iCol, fTimeDelta);
+				CheckDynamicCollision(reinterpret_cast<LAYERTAG&>(iRow), reinterpret_cast<LAYERTAG&>(iCol), fTimeDelta);
 			}
 		}
 	}
@@ -38,7 +38,7 @@ HRESULT CCollisionManager::Reserve_Manager(_uint iNumLevels)
 	return S_OK;
 }
 
-void CCollisionManager::CheckGroup(LAYERTAG eLeft, LAYERTAG eRight)
+void CCollisionManager::CheckGroup(LAYERTAG& eLeft, LAYERTAG& eRight)
 {
 	_uint iRow = (_uint)eLeft;
 	_uint iCol = (_uint)eRight;
@@ -75,7 +75,7 @@ bool CCollisionManager::IsCollided(CCollider* pLeft, CCollider* pRight)
     return false;
 }
 
-void CCollisionManager::CheckDynamicCollision(LAYERTAG eLayerLeft, LAYERTAG eLayerRight , const _float fTimeDelta)
+void CCollisionManager::CheckDynamicCollision(LAYERTAG& eLayerLeft, LAYERTAG& eLayerRight , const _float& fTimeDelta)
 {
 	vector<CGameObject*>& vecLeft = (*pCurrentLevelLayers)[eLayerLeft]->GetGameObjects();
 	vector<CGameObject*>& vecRight = (*pCurrentLevelLayers)[eLayerRight]->GetGameObjects();
@@ -203,7 +203,7 @@ void CCollisionManager::CheckDynamicCollision(LAYERTAG eLayerLeft, LAYERTAG eLay
 	}
 }
 
-void CCollisionManager::CheckStaticCollision(LAYERTAG eDynamicLayer, const _float fTimeDelta)
+void CCollisionManager::CheckStaticCollision(LAYERTAG& eDynamicLayer, const _float& fTimeDelta)
 {
 	vector<CGameObject*>& vecLeft = (*pCurrentLevelLayers)[eDynamicLayer]->GetGameObjects();
 	

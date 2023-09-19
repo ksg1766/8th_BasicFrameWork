@@ -167,9 +167,10 @@ CTransformEx* CTransformEx::Create(ID3D11Device* pDevice, ID3D11DeviceContext* p
 	return pInstance;
 }
 
-CComponent* CTransformEx::Clone(void* pArg)
+CComponent* CTransformEx::Clone(CGameObject* pGameObject, void* pArg)
 {
 	CTransformEx* pInstance = new CTransformEx(*this);
+	pInstance->m_pGameObject = pGameObject;
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{

@@ -138,9 +138,10 @@ CVIBuffer_Cube* CVIBuffer_Cube::Create(ID3D11Device * pDevice, ID3D11DeviceConte
 	return pInstance;
 }
 
-CComponent * CVIBuffer_Cube::Clone(void * pArg)
+CComponent * CVIBuffer_Cube::Clone(CGameObject* pGameObject, void * pArg)
 {
 	CVIBuffer_Cube*	pInstance = new CVIBuffer_Cube(*this);
+	pInstance->m_pGameObject = pGameObject;
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{

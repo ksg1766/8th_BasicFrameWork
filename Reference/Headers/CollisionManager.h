@@ -14,11 +14,10 @@ union COLLIDER_ID
 		_uint Left_id;
 		_uint Right_id;
 	};
-	ULONGLONG ID;
+	uint64 ID;
 };
 
-class ENGINE_DLL CCollisionManager :
-    public CBase
+class CCollisionManager : public CBase
 {
     DECLARE_SINGLETON(CCollisionManager);
 
@@ -31,17 +30,17 @@ public:
 
 public:
 	HRESULT Reserve_Manager(_uint iNumLevels);
-	//map<ULONGLONG, _bool>& GetMapColInfo() { return m_mapColInfo; }
+	//map<uint64, _bool>& GetMapColInfo() { return m_mapColInfo; }
 	//void SetMapColInfo(ULONGLONG ID, _bool bCollision) { m_mapColInfo[ID] = bCollision; }
 	
 private:
-	void	CheckGroup(LAYERTAG eLeft, LAYERTAG eRight);
+	void	CheckGroup(LAYERTAG& eLeft, LAYERTAG& eRight);
 	void	Reset();
 	
 	_bool	IsCollided(CCollider* pLeft, CCollider* pRight);
 
-	void	CheckDynamicCollision(LAYERTAG eObjectLeft, LAYERTAG eObjectRight, const _float fTimeDelta);
-	void	CheckStaticCollision(LAYERTAG eDynamicLayer, const _float fTimeDelta);
+	void	CheckDynamicCollision(LAYERTAG& eObjectLeft, LAYERTAG& eObjectRight, const _float& fTimeDelta);
+	void	CheckStaticCollision(LAYERTAG& eDynamicLayer, const _float& fTimeDelta);
 	_bool	CompareMinZ(_float& fLeftMinZ, _float& fRightMinZ);
 
 	void	MakeCollisionDesc(OUT COLLISION_DESC& descLeft, OUT COLLISION_DESC& descRight, CRigidBody* lRigid, CRigidBody* rRigid, const _float& fTimeDelta);
@@ -57,9 +56,9 @@ private:
 			size_t combinedHash = static_cast<size_t>(hashResult[0]) ^ static_cast<size_t>(hashResult[1]);
 			return combinedHash;
 		}
-	};	// HashFunctionObject
+	};	// HashFunctionObject (MurmurHash3)
 
-	using CollisionMap = unordered_map<ULONGLONG, _bool, MurmurHash3Hasher>;
+	using CollisionMap = unordered_map<uint64, _bool, MurmurHash3Hasher>;
 	CollisionMap m_hashColInfo;
 
 	_uint	m_arrCheck[(_uint)LAYERTAG::LAYER_END] = { 0 };

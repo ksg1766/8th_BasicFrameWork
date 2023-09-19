@@ -5,8 +5,7 @@
 BEGIN(Engine)
 
 class CGameObject;
-class ENGINE_DLL CPoolManager final
-	: public CBase
+class CPoolManager final : public CBase
 {
 	DECLARE_SINGLETON(CPoolManager)
 

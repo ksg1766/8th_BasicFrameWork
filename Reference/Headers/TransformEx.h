@@ -78,7 +78,7 @@ private:
 
 public:
 	static CTransformEx* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	virtual CComponent* Clone(void* pArg) override;	// Awake
+	virtual CComponent* Clone(CGameObject* pGameObject, void* pArg) override;	// Awake
 	virtual void Free() override;
 };
 

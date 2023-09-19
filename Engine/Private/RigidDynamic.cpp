@@ -1,7 +1,8 @@
 #include "RigidDynamic.h"
 #include "Transform.h"
 #include "GameObject.h"
-#include "ColliderBase.h"
+#include "ColliderSphere.h"
+#include "ColliderOBB.h"
 
 CRigidDynamic::CRigidDynamic(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: Super(pDevice, pContext, RigidBodyType::DYNAMIC)
@@ -37,36 +38,6 @@ CRigidDynamic::CRigidDynamic(const CRigidDynamic& rhs)
 {
 }
 
-CRigidDynamic* CRigidDynamic::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-{
-	CRigidDynamic* pInstance = new CRigidDynamic(pDevice, pContext);
-
-	if (FAILED(pInstance->Initialize_Prototype()))
-	{
-		MSG_BOX("Failed to Created : CRigidDynamic");
-		Safe_Release(pInstance);
-	}
-
-	return pInstance;
-}
-
-CComponent* CRigidDynamic::Clone(void* pArg)
-{
-	CRigidDynamic* pInstance = new CRigidDynamic(*this);
-
-	if (FAILED(pInstance->Initialize(pArg)))
-	{
-		MSG_BOX("Failed To Cloned : CRigidDynamic");
-		Safe_Release(pInstance);
-	}
-	return pInstance;
-}
-
-void CRigidDynamic::Free()
-{
-	Super::Free();
-}
-
 HRESULT CRigidDynamic::Initialize_Prototype()
 {
 	return S_OK;
@@ -92,6 +63,10 @@ void CRigidDynamic::Tick(const _float& fTimeDelta)	// FixedUpdate 처럼 동작하기 
 		KinematicUpdate(fTimeDelta);
 	else				// Kinetic
 		KineticUpdate(fTimeDelta);
+
+	// ColliderUpdate
+	if (m_pSphereCollider)	m_pSphereCollider->Tick(fTimeDelta);
+	if (m_pBoxCollider)	m_pBoxCollider->Tick(fTimeDelta);
 }
 
 void CRigidDynamic::LateTick(const _float& fTimeDelta)
@@ -135,6 +110,7 @@ void CRigidDynamic::KinematicUpdate(const _float& fTimeDelta)
 {
 	UpdateTransform(fTimeDelta);
 
+	//ClearNetPower();
 	ClearForce(ForceMode::VELOCITY_CHANGE);
 	ClearTorque(ForceMode::VELOCITY_CHANGE);
 }
@@ -314,4 +290,35 @@ void CRigidDynamic::SetAngularVelocity(const Vec3& vAngularVelocity)
 	m_vAngularVelocity = vAngularVelocity;
 
 	WakeUp();
+}
+
+CRigidDynamic* CRigidDynamic::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+{
+	CRigidDynamic* pInstance = new CRigidDynamic(pDevice, pContext);
+
+	if (FAILED(pInstance->Initialize_Prototype()))
+	{
+		MSG_BOX("Failed to Created : CRigidDynamic");
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
+}
+
+CComponent* CRigidDynamic::Clone(CGameObject* pGameObject, void* pArg)
+{
+	CRigidDynamic* pInstance = new CRigidDynamic(*this);
+	pInstance->m_pGameObject = pGameObject;
+
+	if (FAILED(pInstance->Initialize(pArg)))
+	{
+		MSG_BOX("Failed To Cloned : CRigidDynamic");
+		Safe_Release(pInstance);
+	}
+	return pInstance;
+}
+
+void CRigidDynamic::Free()
+{
+	Super::Free();
 }

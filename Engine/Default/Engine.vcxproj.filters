@@ -115,14 +115,17 @@
     <Filter Include="00.System\01.Device\02.Sound">
       <UniqueIdentifier>{17de0ee4-1c0e-4c51-976d-f48e8f089447}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utiltiy\01.Managers\CameraManager">
-      <UniqueIdentifier>{49702ad5-04bd-43de-b16c-ccea0713acd8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utiltiy\01.Managers\LightManager">
-      <UniqueIdentifier>{63bf0bdc-c567-4f85-b09a-2168b82bf334}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Utiltiy\04.Component\05.VIBuffer\Cube">
       <UniqueIdentifier>{df91b36b-28fd-40bd-8917-c5a7fed05ce4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utiltiy\01.Managers\06.CameraManager">
+      <UniqueIdentifier>{49702ad5-04bd-43de-b16c-ccea0713acd8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utiltiy\01.Managers\07.LightManager">
+      <UniqueIdentifier>{63bf0bdc-c567-4f85-b09a-2168b82bf334}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.System\03.KeyManager">
+      <UniqueIdentifier>{c78b08b1-9e6d-4c42-823c-2931b1cd14c6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -279,6 +282,9 @@
     <ClInclude Include="..\Public\MurmurHash3.h">
       <Filter>98.Utils</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\KeyManager.h">
+      <Filter>00.System\03.KeyManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -415,6 +421,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\MurmurHash3.cpp">
       <Filter>98.Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\KeyManager.cpp">
+      <Filter>00.System\03.KeyManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -7,7 +7,7 @@ BEGIN(Engine)
 class CGameObject;
 class CTransform;
 
-enum class ComponentType : uint8
+enum class ComponentType
 {
 	Transform,
 	RigidBody,
@@ -30,7 +30,7 @@ enum class ComponentType : uint8
 
 enum
 {
-	FIXED_COMPONENT_COUNT = static_cast<uint8>(ComponentType::End) - 1
+	FIXED_COMPONENT_COUNT = static_cast<_uint>(ComponentType::End) - 1
 };
 
 class ENGINE_DLL CComponent abstract : public CBase
@@ -67,10 +67,10 @@ protected:
 
 private:
 	friend class CGameObject;
-	void SetGameObject(CGameObject* _gameObject) { m_pGameObject = _gameObject; }
+	void SetGameObject(CGameObject* pGameObject) { m_pGameObject = pGameObject; }
 
 public:
-	virtual CComponent* Clone(void* pArg) = 0;
+	virtual CComponent* Clone(CGameObject* pGameObject, void* pArg) = 0;
 	virtual void Free() override;
 };
 

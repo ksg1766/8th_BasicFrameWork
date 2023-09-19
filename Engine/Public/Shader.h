@@ -29,7 +29,7 @@ private:
 public:
 	static CShader* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strShaderFilePath, 
 		const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements);
-	virtual CComponent* Clone(void* pArg) override;
+	virtual CComponent* Clone(CGameObject* pGameObject, void* pArg) override;
 	virtual void Free() override;
 };
 

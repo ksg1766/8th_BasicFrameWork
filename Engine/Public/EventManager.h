@@ -12,25 +12,23 @@ struct tagEvent
 	DWORD_PTR	wParam;
 };
 
-class ENGINE_DLL CEventManager :
-	public CBase
+class CEventManager : public CBase
 {
 	DECLARE_SINGLETON(CEventManager);
-
+	using Super = CBase;
 private:
 	CEventManager();
 	virtual ~CEventManager() = default;
 
 public:
-	void LastTick();
-
-	void AddEvent(const tagEvent& eve) { m_vecEvent.push_back(eve); }
+	void FinalTick();
 
 	void CreateObject(CGameObject* pObj, LAYERTAG eLayer);
 	void DeleteObject(CGameObject* pObj);
 	void LevelChange(class CLevel* pLevel, _uint iLevelId);
 
 private:
+	void AddEvent(const tagEvent& eve) { m_vecEvent.push_back(eve); }
 	void Execute(const tagEvent& eve);
 
 private:

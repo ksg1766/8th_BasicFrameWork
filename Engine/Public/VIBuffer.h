@@ -48,7 +48,7 @@ protected:
 	HRESULT Create_Buffer(_Inout_ ID3D11Buffer** ppOut);
 
 public:
-	virtual CComponent* Clone(void* pArg) = 0;
+	virtual CComponent* Clone(CGameObject* pGameObject, void* pArg) = 0;
 	virtual void Free() override;
 };
 

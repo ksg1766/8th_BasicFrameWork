@@ -2,50 +2,69 @@
 #include "TimerManager.h"
 #include "GraphicDevice.h"
 #include "InputDevice.h"
+#include "QuadTree.h"
+#include "KeyManager.h"
 #include "LevelManager.h"
 #include "ObjectManager.h"
 #include "CollisionManager.h"
+#include "EventManager.h"
+#include "PoolManager.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
 CGameInstance::CGameInstance()
-	: m_pTimerManager(CTimerManager::GetInstance())
-	, m_pGraphicDevice(CGraphicDevice::GetInstance())
+	: m_pGraphicDevice(CGraphicDevice::GetInstance())
+	, m_pTimerManager(CTimerManager::GetInstance())
 	, m_pInputDevice(CInputDevice::GetInstance())
-	, m_pLevelManager(CLevelManager::GetInstance())
-	, m_pObjectManager(CObjectManager::GetInstance())
+	, m_pKeyManager(CKeyManager::GetInstance())
+	, m_pEventManager(CEventManager::GetInstance())
 	, m_pComponentManager(CComponentManager::GetInstance())
+	, m_pObjectManager(CObjectManager::GetInstance())
+	, m_pLevelManager(CLevelManager::GetInstance())
+	, m_pQuadTree(CQuadTree::GetInstance())
 	, m_pCollisionManager(CCollisionManager::GetInstance())
+	, m_pPoolManager(CPoolManager::GetInstance())
 {
+	Safe_AddRef(m_pGraphicDevice);
+	Safe_AddRef(m_pTimerManager);
+	Safe_AddRef(m_pInputDevice);
+	Safe_AddRef(m_pKeyManager);
+	Safe_AddRef(m_pEventManager);
 	Safe_AddRef(m_pComponentManager);
 	Safe_AddRef(m_pObjectManager);
 	Safe_AddRef(m_pLevelManager);
-	Safe_AddRef(m_pGraphicDevice);
-	Safe_AddRef(m_pInputDevice);
-	Safe_AddRef(m_pTimerManager);
+	Safe_AddRef(m_pQuadTree);
 	Safe_AddRef(m_pCollisionManager);
+	Safe_AddRef(m_pPoolManager);
 }
 
 HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, const GRAPHIC_DESC& GraphicDesc, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext, _In_ HINSTANCE hInst)
 {
-	/* 그래픽디바이스 초기화 처리. */
+	/* 그래픽 디바이스 초기화 처리. */
 	if (FAILED(m_pGraphicDevice->Ready_GraphicDevice(GraphicDesc.hWnd, GraphicDesc.eWinMode, GraphicDesc.iWinSizeX, GraphicDesc.iWinSizeY, ppDevice, ppContext)))
 		return E_FAIL;
 
-	/* 사운드디바이스 초기화 처리. */
+	/* 사운드 디바이스 초기화 처리. */
 
 
-	/* 입력디바이스 초기화 처리. */
-	if (FAILED(m_pInputDevice->Initialize(hInst, GraphicDesc.hWnd)))
+	/* 입력 디바이스 초기화 처리. */
+	if (FAILED(m_pInputDevice->Ready_InputDevice(hInst, GraphicDesc.hWnd)))
 		return E_FAIL;
 
+	/* 키 매니져의 예약 처리. */
+	if (FAILED(m_pKeyManager->Reserve_Manager(GraphicDesc.hWnd)))
+		return E_FAIL;
+
+	/* 컴포넌트 매니져의 예약 처리. */
+	if (FAILED(m_pComponentManager->Reserve_Manager(iNumLevels)))
+		return E_FAIL;
 
 	/* 오브젝트 매니져의 예약 처리. */
 	if (FAILED(m_pObjectManager->Reserve_Manager(iNumLevels)))
 		return E_FAIL;
 
-	/* 컴포넌트 매니져의 예약 처리. */
-	if (FAILED(m_pComponentManager->Reserve_Manager(iNumLevels)))
+	/* 쿼드트리의 예약 처리. */
+	if (FAILED(m_pQuadTree->Build_QuadTree(iNumLevels)))
 		return E_FAIL;
 
 	/* 콜리전 매니져의 예약 처리. */
@@ -57,11 +76,15 @@ HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, const GRAPHIC_DESC& G
 
 void CGameInstance::Tick(const _float& fTimeDelta)
 {
+	m_pInputDevice->Update_InputDevice();
+	m_pKeyManager->Tick(fTimeDelta);
 	m_pObjectManager->Tick(fTimeDelta);
+	m_pQuadTree->Update_QuadTree();
 	m_pLevelManager->Tick(fTimeDelta);
 
 	m_pObjectManager->LateTick(fTimeDelta);
 	m_pLevelManager->LateTick(fTimeDelta);
+	m_pCollisionManager->LateTick_Collision(fTimeDelta);
 }
 
 void CGameInstance::DebugRender()
@@ -115,10 +138,21 @@ HRESULT CGameInstance::Present()
 	return m_pGraphicDevice->Present();
 }
 
+void CGameInstance::Update_QuadTree()
+{
+	m_pQuadTree->Update_QuadTree();
+}
+
+void CGameInstance::Render_QuadTree()
+{
+	m_pQuadTree->Render_QuadTree();
+}
+
 HRESULT CGameInstance::Open_Level(_uint iLevelIndex, CLevel * pNewLevel)
 {
 	if (nullptr == m_pLevelManager)
 		return E_FAIL;
+
 	return m_pLevelManager->Open_Level(iLevelIndex, pNewLevel);
 }
 
@@ -146,13 +180,108 @@ HRESULT CGameInstance::Add_Prototype(_uint iLevelIndex, const wstring& strProtot
 	return m_pComponentManager->Add_Prototype(iLevelIndex, strPrototypeTag, pPrototype);
 }
 
-CComponent * CGameInstance::Clone_Component(_uint iLevelIndex, const wstring& strPrototypeTag, void * pArg)
+CComponent * CGameInstance::Clone_Component(CGameObject* pGameObject, _uint iLevelIndex, const wstring& strPrototypeTag, void * pArg)
 {
 	if (nullptr == m_pComponentManager)
 		return nullptr;
 
-	return m_pComponentManager->Clone_Component(iLevelIndex, strPrototypeTag, pArg);
+	return m_pComponentManager->Clone_Component(pGameObject, iLevelIndex, strPrototypeTag, pArg);
 }
+
+void CGameInstance::FinalTick()
+{
+	m_pEventManager->FinalTick();
+}
+
+void CGameInstance::CreateObject(CGameObject* pObj, LAYERTAG eLayer)
+{
+	m_pEventManager->CreateObject(pObj, eLayer);
+}
+
+void CGameInstance::DeleteObject(CGameObject* pObj)
+{
+	m_pEventManager->DeleteObject(pObj);
+}
+
+void CGameInstance::LevelChange(CLevel* pLevel, _uint iLevelId)
+{
+	m_pEventManager->LevelChange(pLevel, iLevelId);
+}
+
+void CGameInstance::LateTick_Collision(const _float& fTimeDelta)
+{
+	m_pCollisionManager->LateTick_Collision(fTimeDelta);
+}
+
+HRESULT CGameInstance::Reserve_Pool(const wstring& strObjectName, const _uint& iReserveCount, void* pArg)
+{
+	if (nullptr == m_pPoolManager)
+		return E_FAIL;
+
+	return m_pPoolManager->Reserve_Pool(strObjectName, iReserveCount, pArg);
+}
+
+_bool CGameInstance::Key_Down(_ubyte byKeyID)
+{
+	return m_pInputDevice->Key_Down(byKeyID);
+}
+
+_bool CGameInstance::Key_Pressing(_ubyte byKeyID)
+{
+	return m_pInputDevice->Key_Pressing(byKeyID);
+}
+
+_bool CGameInstance::Key_Up(_ubyte byKeyID)
+{
+	return m_pInputDevice->Key_Up(byKeyID);
+}
+
+_bool CGameInstance::Mouse_Down(MOUSEKEYSTATE eMouseKeyID)
+{
+	return m_pInputDevice->Mouse_Down(eMouseKeyID);
+}
+
+_bool CGameInstance::Mouse_Pressing(MOUSEKEYSTATE eMouseKeyID)
+{
+	return m_pInputDevice->Mouse_Pressing(eMouseKeyID);
+}
+
+_bool CGameInstance::Mouse_Up(MOUSEKEYSTATE eMouseKeyID)
+{
+	return m_pInputDevice->Mouse_Up(eMouseKeyID);
+}
+
+_ubyte CGameInstance::Get_DIKeyState(_ubyte eKeyID)
+{
+	return m_pInputDevice->Get_DIKeyState(eKeyID);
+}
+
+_ubyte CGameInstance::Get_DIMouseState(MOUSEKEYSTATE eMouseKeyID)
+{
+	return m_pInputDevice->Get_DIMouseState(eMouseKeyID);
+}
+
+_long CGameInstance::Get_DIMouseMove(MOUSEMOVESTATE eMouseMoveID)
+{
+	return m_pInputDevice->Get_DIMouseMove(eMouseMoveID);
+}
+
+_bool CGameInstance::Get_AnyKeyDown()
+{
+	return m_pInputDevice->Get_AnyKeyDown();
+}
+
+KEYSTATE CGameInstance::GetKeyState(KEY _eKey)
+{
+	return m_pKeyManager->GetKeyState(_eKey);
+}
+
+const POINT& CGameInstance::GetMousePos()
+{
+	return POINT();
+}
+
+
 
 void CGameInstance::Release_Engine()
 {

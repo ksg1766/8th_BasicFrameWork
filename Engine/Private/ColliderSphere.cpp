@@ -83,9 +83,10 @@ CSphereCollider* CSphereCollider::Create(ID3D11Device* pDevice, ID3D11DeviceCont
 	return pInstance;
 }
 
-CComponent* CSphereCollider::Clone(void* pArg)
+CComponent* CSphereCollider::Clone(CGameObject* pGameObject, void* pArg)
 {
 	CSphereCollider* pInstance = new CSphereCollider(*this);
+	pInstance->m_pGameObject = pGameObject;
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
