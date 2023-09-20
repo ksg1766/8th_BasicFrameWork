@@ -1,25 +1,25 @@
 #include "stdafx.h"
-#include "PlayerController.h"
+#include "TestAIController.h"
 #include "GameInstance.h"
 #include "GameObject.h"
 #include "RigidDynamic.h"
 
-CPlayerController::CPlayerController(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CTestAIController::CTestAIController(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:Super(pDevice, pContext)
 {
 }
 
-CPlayerController::CPlayerController(const CPlayerController& rhs)
+CTestAIController::CTestAIController(const CTestAIController& rhs)
 	:Super(rhs)
 {
 }
 
-HRESULT CPlayerController::Initialize_Prototype()
+HRESULT CTestAIController::Initialize_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CPlayerController::Initialize(void* pArg)
+HRESULT CTestAIController::Initialize(void* pArg)
 {
 	m_pRigidBody = static_cast<CRigidDynamic*>(m_pGameObject->GetRigidBody());
 	m_vLinearSpeed = Vec3(100.f, 100.f, 100.f);
@@ -32,30 +32,30 @@ HRESULT CPlayerController::Initialize(void* pArg)
 	m_pRigidBody->FreezeRotation(Axis::Z);
 
 	m_pRigidBody->UseGravity(false);
-	m_pRigidBody->IsKinematic(true);
-	m_pRigidBody->SetMass(1.f);
+	m_pRigidBody->IsKinematic(false);
+	m_pRigidBody->SetMass(0.5f);
 
 	return S_OK;
 }
 
-void CPlayerController::Tick(const _float& fTimeDelta)
+void CTestAIController::Tick(const _float& fTimeDelta)
 {
-	Input(fTimeDelta);
+	AutoMove(fTimeDelta);
 }
 
-void CPlayerController::LateTick(const _float& fTimeDelta)
-{
-}
-
-void CPlayerController::DebugRender()
+void CTestAIController::LateTick(const _float& fTimeDelta)
 {
 }
 
-void CPlayerController::Input(const _float& fTimeDelta)
+void CTestAIController::DebugRender()
+{
+}
+
+void CTestAIController::AutoMove(const _float& fTimeDelta)
 {
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 
-	if (KEY_PRESSING(KEY::W) || KEY_DOWN(KEY::W))
+	/*if (KEY_PRESSING(KEY::W) || KEY_DOWN(KEY::W))
 		m_pRigidBody->AddForce(Vec3(0.f, 0.f, m_vLinearSpeed.z), ForceMode::VELOCITY_CHANGE);
 
 	if (KEY_PRESSING(KEY::A) || KEY_DOWN(KEY::A))
@@ -76,25 +76,27 @@ void CPlayerController::Input(const _float& fTimeDelta)
 	if (KEY_PRESSING(KEY::SHIFT) && KEY_DOWN(KEY::K))
 		m_pRigidBody->IsKinematic(!m_pRigidBody->IsKinematic());
 	if (KEY_PRESSING(KEY::SHIFT) && KEY_DOWN(KEY::U))
-		m_pRigidBody->UseGravity(!m_pRigidBody->UseGravity());
+		m_pRigidBody->UseGravity(!m_pRigidBody->UseGravity());*/
+
+	m_pRigidBody->AddTorque(Vec3(0.f, m_vAngularSpeed.y, 0.f), ForceMode::VELOCITY_CHANGE);
 
 	LimitAllAxisVelocity();
 }
 
-CPlayerController* CPlayerController::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CTestAIController* CTestAIController::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CPlayerController* pInstance = new CPlayerController(pDevice, pContext);
+	CTestAIController* pInstance = new CTestAIController(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CPlayerController");
+		MSG_BOX("Failed to Created : CTestAIController");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CPlayerController::LimitAllAxisVelocity()
+void CTestAIController::LimitAllAxisVelocity()
 {
 	Vec3 pCurLinearVelocity = m_pRigidBody->GetLinearVelocity();
 	Vec3 pCurAngularVelocity = m_pRigidBody->GetAngularVelocity();
@@ -130,19 +132,19 @@ void CPlayerController::LimitAllAxisVelocity()
 		m_pRigidBody->SetAngularAxisVelocity(Axis::Z, -m_vMaxAngularSpeed.z);
 }
 
-CComponent* CPlayerController::Clone(CGameObject* pGameObject, void* pArg)
+CComponent* CTestAIController::Clone(CGameObject* pGameObject, void* pArg)
 {
-	CPlayerController* pInstance = new CPlayerController(*this);
+	CTestAIController* pInstance = new CTestAIController(*this);
 	pInstance->m_pGameObject = pGameObject;
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed To Cloned : CPlayerController");
+		MSG_BOX("Failed To Cloned : CTestAIController");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-void CPlayerController::Free()
+void CTestAIController::Free()
 {
 }

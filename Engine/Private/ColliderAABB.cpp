@@ -42,7 +42,7 @@ _bool CAABBCollider::Intersects(Ray& ray, OUT _float& distance)
 	return m_tBoundingBox.Intersects(ray.position, ray.direction, OUT distance);
 }
 
-_bool CAABBCollider::Intersects(Super*& other)
+_bool CAABBCollider::Intersects(Super* other)
 {
 	ColliderType type = other->GetColliderType();
 

@@ -55,6 +55,15 @@
     <Filter Include="02.GameObjects\TempCube\00.GameObject">
       <UniqueIdentifier>{19ba0693-056c-4617-a870-a8b73617aef6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\CollisionTest">
+      <UniqueIdentifier>{e292aea5-e692-4d18-9fff-2738cfc049d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\CollisionTest\00.GameObject">
+      <UniqueIdentifier>{b17b4c1b-b792-4db7-9b23-90940fce33a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\CollisionTest\01.Script">
+      <UniqueIdentifier>{55bff19f-cc5b-4634-997a-3cd2a3a214de}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -135,6 +144,12 @@
     <ClInclude Include="..\Bin\ShaderFiles\Client_Shader_Defines.hpp">
       <Filter>97.ShaderFiles</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\CollisionTest.h">
+      <Filter>02.GameObjects\CollisionTest\00.GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TestAIController.h">
+      <Filter>02.GameObjects\CollisionTest\01.Script</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -196,6 +211,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\PlayerController.cpp">
       <Filter>02.GameObjects\TempCube\01.Script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CollisionTest.cpp">
+      <Filter>02.GameObjects\CollisionTest\00.GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TestAIController.cpp">
+      <Filter>02.GameObjects\CollisionTest\01.Script</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

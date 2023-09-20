@@ -24,7 +24,8 @@ public:
 
 	HRESULT Reserve_Manager(_uint iNumLevels);
 	HRESULT Add_Prototype(const wstring& strPrototypeTag, class CGameObject* pPrototype);
-	HRESULT Add_GameObject(_uint iLevelIndex, const LAYERTAG& eLayerTag, const wstring& strPrototypeTag, void* pArg);
+	//HRESULT Add_GameObject(_uint iLevelIndex, const LAYERTAG& eLayerTag, const wstring& strPrototypeTag, void* pArg);
+	CGameObject* Add_GameObject(_uint iLevelIndex, const LAYERTAG& eLayerTag, const wstring& strPrototypeTag, void* pArg);
 	
 	using LAYERS = map<LAYERTAG, class CLayer*>;
 	LAYERS* GetCurrentLevelLayers() const { return &m_pLayers[CLevelManager::GetInstance()->GetCurrentLevelIndex()]; }

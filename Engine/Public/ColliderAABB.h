@@ -19,7 +19,7 @@ public:
 	virtual void	DebugRender()							override;
 
 	virtual _bool	Intersects(Ray& ray, OUT _float& distance)	override;
-	virtual _bool	Intersects(Super*& other)					override;
+	virtual _bool	Intersects(Super* other)					override;
 
 	BoundingBox&	GetBoundingBox() { return m_tBoundingBox; }
 

@@ -32,17 +32,17 @@ HRESULT CObjectManager::Add_Prototype(const wstring& strPrototypeTag, CGameObjec
 	return S_OK;
 }
 
-HRESULT CObjectManager::Add_GameObject(_uint iLevelIndex, const LAYERTAG& eLayerTag, const wstring& strPrototypeTag, void * pArg)
+CGameObject* CObjectManager::Add_GameObject(_uint iLevelIndex, const LAYERTAG& eLayerTag, const wstring& strPrototypeTag, void * pArg)
 {
 	/* 복제할 사본을 찾는다. */
 	CGameObject*		pPrototype = Find_Prototype(strPrototypeTag);
 	if (nullptr == pPrototype)
-		return E_FAIL;
+		return nullptr;
 
 	/* 원형을 복제하여 사본을 만든다. */
 	CGameObject*		pGameObject = pPrototype->Clone(pArg);
 	if (nullptr == pGameObject)
-		return E_FAIL;
+		return nullptr;
 
 	CLayer*		pLayer = Find_Layer(iLevelIndex, eLayerTag);
 
@@ -52,16 +52,18 @@ HRESULT CObjectManager::Add_GameObject(_uint iLevelIndex, const LAYERTAG& eLayer
 		/* 레이어를 만들자. */
 		pLayer = CLayer::Create();
 		pLayer->SetLayerTag(eLayerTag);
-		/* 레이어에 객체를 추가하자. */
-		pLayer->Add_GameObject(pGameObject, eLayerTag);
 
 		/* 생성한 레이어를 iLevelIndex용 레이어로 추가하였다. */
 		m_pLayers[iLevelIndex].emplace(eLayerTag, pLayer);
+		
+		/* 레이어에 객체를 추가하자. */
+		pLayer->Add_GameObject(pGameObject, eLayerTag);
+		//
 	}
 	else /* 추가하고자 하는 레이어가 있었다. */
 		pLayer->Add_GameObject(pGameObject, eLayerTag);
 
-	return S_OK;
+	return pGameObject;
 }
 
 void CObjectManager::Tick(const _float& fTimeDelta)

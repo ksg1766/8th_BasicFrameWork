@@ -31,7 +31,7 @@ void CTransform::SetScale(Vec3& vScale)
 {
 	for (_int i = 0; i < 3; ++i)
 	{
-		Vec3 v(m_matWorld.m[i][0], m_matWorld.m[i][1], m_matWorld.m[i][2]);
+		Vec3 v(m_matWorld.m[i]);
 		v.Normalize();
 
 		for (_int j = 0; j < 3; ++j)
@@ -141,8 +141,18 @@ Vec3 CTransform::GetRotation()
 	Vec3 vDummy;
 	Quaternion quat;
 	m_matWorld.Decompose(vDummy, quat, vDummy);
+	vDummy = ToEulerAngles(quat);
 
-	return ToEulerAngles(quat);
+	return vDummy;
+}
+
+Quaternion CTransform::GetRotationQuaternion()
+{
+	Vec3 vDummy;
+	Quaternion quat;
+	m_matWorld.Decompose(vDummy, quat, vDummy);
+
+	return quat;
 }
 
 Vec3 CTransform::ToEulerAngles(Quaternion q)

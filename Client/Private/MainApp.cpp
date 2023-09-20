@@ -146,6 +146,17 @@ HRESULT CMainApp::Ready_Prototype_Components()
 		CRigidDynamic::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	// 일단 여기에 넣어보자
+	/* For.Prototype_Component_SphereCollider */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_SphereCollider"),
+		CSphereCollider::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_OBBCollider */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_OBBCollider"),
+		COBBCollider::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	Safe_AddRef(m_pRenderer);
 	
 	return S_OK;

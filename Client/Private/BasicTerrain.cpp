@@ -82,10 +82,9 @@ HRESULT CBasicTerrain::Bind_ShaderResources()
 	//if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &IdentityMatrix)))
 	//	return E_FAIL;
 
-	_float4x4		ViewMatrix, ProjMatrix;
-
-	XMStoreFloat4x4(&ViewMatrix, XMMatrixLookAtLH(XMVectorSet(0.f, 500.f, -500.f, 1.f), XMVectorSet(0.f, 0.f, 0.f, 1.f), XMVectorSet(0.0f, 1.f, 0.f, 0.f)));
-	XMStoreFloat4x4(&ProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), g_iWinSizeX / (_float)g_iWinSizeY, 0.1f, 1000.f));
+	Matrix		ViewMatrix, ProjMatrix;
+	ViewMatrix = XMMatrixLookAtLH(Vec4(0.f, 500.f, -500.f, 1.f), Vec4(0.f, 0.f, 0.f, 1.f), Vec4(0.0f, 1.f, 0.f, 0.f));
+	ProjMatrix = XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), g_iWinSizeX / (_float)g_iWinSizeY, 0.1f, 1000.f);
 
 	if (FAILED(GetTransform()->Bind_ShaderResources(GetShader(), "g_WorldMatrix")))
 		return E_FAIL;

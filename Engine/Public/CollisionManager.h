@@ -34,7 +34,7 @@ public:
 	//void SetMapColInfo(ULONGLONG ID, _bool bCollision) { m_mapColInfo[ID] = bCollision; }
 	
 private:
-	void	CheckGroup(LAYERTAG& eLeft, LAYERTAG& eRight);
+	void	CheckGroup(LAYERTAG eLeft, LAYERTAG eRight);
 	void	Reset();
 	
 	_bool	IsCollided(CCollider* pLeft, CCollider* pRight);

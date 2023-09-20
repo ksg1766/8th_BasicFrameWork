@@ -1,4 +1,6 @@
 #include "Engine_Defines.h"
+#include "GameObject.h"
+#include "Transform.h"
 #include "ColliderSphere.h"
 #include "ColliderAABB.h"
 #include "ColliderOBB.h"
@@ -23,11 +25,25 @@ HRESULT COBBCollider::Initialize_Prototype()
 
 HRESULT COBBCollider::Initialize(void* pArg)
 {
+	//Vec3 scale = GetGameObject()->GetTransform()->GetLocalScale();
+	//m_tBoundingBox.Extents = scale;
+	//m_pRigidBody = m_pGameObject->GetRigidBody();
+	CTransform* pTransform = GetGameObject()->GetTransform();
+
+	m_tBoundingBox.Center = pTransform->GetPosition();
+	m_tBoundingBox.Extents = 0.5f * pTransform->GetLocalScale();
+	m_tBoundingBox.Orientation = pTransform->GetRotationQuaternion();
+
 	return S_OK;
 }
 
 void COBBCollider::Tick(const _float& fTimeDelta)
 {
+	CTransform* pTransform = GetGameObject()->GetTransform();
+
+	m_tBoundingBox.Center = pTransform->GetPosition();
+	m_tBoundingBox.Extents = 0.5f * pTransform->GetLocalScale();
+	m_tBoundingBox.Orientation = pTransform->GetRotationQuaternion();
 }
 
 void COBBCollider::LateTick(const _float& fTimeDelta)
@@ -43,7 +59,7 @@ _bool COBBCollider::Intersects(Ray& ray, OUT _float& distance)
 	return m_tBoundingBox.Intersects(ray.position, ray.direction, OUT distance);
 }
 
-_bool COBBCollider::Intersects(Super*& other)
+_bool COBBCollider::Intersects(Super* other)
 {
 	ColliderType type = other->GetColliderType();
 
@@ -79,6 +95,7 @@ CComponent* COBBCollider::Clone(CGameObject* pGameObject, void* pArg)
 {
 	COBBCollider* pInstance = new COBBCollider(*this);
 	pInstance->m_pGameObject = pGameObject;
+	pInstance->m_pRigidBody = pInstance->m_pGameObject->GetRigidBody();
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{

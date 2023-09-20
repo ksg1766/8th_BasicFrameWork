@@ -3,6 +3,7 @@
 #include "ImGUIManager.h"
 
 #include "GameInstance.h"
+#include "GameObject.h"
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -17,6 +18,9 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Player()))
 		return E_FAIL;
 
+	if (FAILED(Ready_Layer_Default()))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -28,6 +32,10 @@ HRESULT CLevel_GamePlay::Tick(const _float& fTimeDelta)
 HRESULT CLevel_GamePlay::LateTick(const _float& fTimeDelta)
 {
 	SetWindowText(g_hWnd, TEXT("게임플레이 레벨입니다."));
+	
+	// TODO: 꼭 영기 말고 더 좋은 위치를 찾도록 하자....
+	CGameInstance::GetInstance()->LateTick_Collision(fTimeDelta);
+	
 	return S_OK;
 }
 
@@ -37,8 +45,10 @@ HRESULT CLevel_GamePlay::Ready_Layer_Terrain()
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, LAYERTAG::TERRAIN, TEXT("Prototype_GameObject_BasicTerrain"))))
-		return E_FAIL;
+	CGameObject* pGameObject = nullptr;
+
+	pGameObject = pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, LAYERTAG::TERRAIN, TEXT("Prototype_GameObject_BasicTerrain"));
+	if (nullptr == pGameObject)	return E_FAIL;
 
 	Safe_Release(pGameInstance);
 
@@ -51,8 +61,63 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player()
 	CGameInstance* pGameInstance = CGameInstance::GetInstance();
 	Safe_AddRef(pGameInstance);
 
-	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, LAYERTAG::PLAYER, TEXT("Prototype_GameObject_TempCube"))))
-		return E_FAIL;
+	CGameObject* pGameObject = nullptr;
+
+	pGameObject = pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, LAYERTAG::PLAYER, TEXT("Prototype_GameObject_TempCube"));
+	if (nullptr == pGameObject)	return E_FAIL;
+
+	Safe_Release(pGameInstance);
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_Default()
+{
+	/* 원형객체를 복제하여 사본객체를 생성하고 레이어에 추가한다. */
+	CGameInstance* pGameInstance = CGameInstance::GetInstance();
+	Safe_AddRef(pGameInstance);
+
+	CGameObject* pGameObject = nullptr;
+
+	pGameObject = pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, LAYERTAG::DEFAULT, TEXT("Prototype_GameObject_CollisionTest"));
+	if (nullptr == pGameObject)	return E_FAIL;
+	pGameObject->GetTransform()->Translate(Vec3(-230.f, 100.f, -180.f));
+
+	pGameObject = pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, LAYERTAG::DEFAULT, TEXT("Prototype_GameObject_CollisionTest"));
+	if (nullptr == pGameObject)	return E_FAIL;
+	pGameObject->GetTransform()->Translate(Vec3(-180.f, 100.f, -130.f));
+
+	pGameObject = pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, LAYERTAG::DEFAULT, TEXT("Prototype_GameObject_CollisionTest"));
+	if (nullptr == pGameObject)	return E_FAIL;
+	pGameObject->GetTransform()->Translate(Vec3(-130.f, 100.f, -80.f));
+
+	pGameObject = pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, LAYERTAG::DEFAULT, TEXT("Prototype_GameObject_CollisionTest"));
+	if (nullptr == pGameObject)	return E_FAIL;
+	pGameObject->GetTransform()->Translate(Vec3(-80.f, 100.f, -30.f));
+
+	pGameObject = pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, LAYERTAG::DEFAULT, TEXT("Prototype_GameObject_CollisionTest"));
+	if (nullptr == pGameObject)	return E_FAIL;
+	pGameObject->GetTransform()->Translate(Vec3(-30.f, 100.f, 20.f));
+
+	pGameObject = pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, LAYERTAG::DEFAULT, TEXT("Prototype_GameObject_CollisionTest"));
+	if (nullptr == pGameObject)	return E_FAIL;
+	pGameObject->GetTransform()->Translate(Vec3(30.f, 100.f, 20.f));
+
+	pGameObject = pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, LAYERTAG::DEFAULT, TEXT("Prototype_GameObject_CollisionTest"));
+	if (nullptr == pGameObject)	return E_FAIL;
+	pGameObject->GetTransform()->Translate(Vec3(80.f, 100.f, -30.f));
+
+	pGameObject = pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, LAYERTAG::DEFAULT, TEXT("Prototype_GameObject_CollisionTest"));
+	if (nullptr == pGameObject)	return E_FAIL;
+	pGameObject->GetTransform()->Translate(Vec3(130.f, 100.f, -80.f));
+
+	pGameObject = pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, LAYERTAG::DEFAULT, TEXT("Prototype_GameObject_CollisionTest"));
+	if (nullptr == pGameObject)	return E_FAIL;
+	pGameObject->GetTransform()->Translate(Vec3(180.f, 100.f, -130.f));
+
+	pGameObject = pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, LAYERTAG::DEFAULT, TEXT("Prototype_GameObject_CollisionTest"));
+	if (nullptr == pGameObject)	return E_FAIL;
+	pGameObject->GetTransform()->Translate(Vec3(230.f, 100.f, -180.f));
 
 	Safe_Release(pGameInstance);
 

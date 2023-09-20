@@ -3,7 +3,8 @@
 
 BEGIN(Engine)
 
-class CCollider;
+//class CCollider;
+class COBBCollider;
 class CSphereCollider;
 
 enum class RigidBodyType
@@ -30,9 +31,12 @@ public:
 	virtual void		LateTick(const _float& fTimeDelta)	override;
 	virtual void		DebugRender()						override;
 
+	HRESULT				InitializeCollider();
+
 	RigidBodyType&		GetRigidBodyType()		{ return m_eRigidBodyType; }
 	CSphereCollider*&	GetSphereCollider()		{ return m_pSphereCollider; }
-	CCollider*&			GetBoxCollider()		{ return m_pBoxCollider; }
+	COBBCollider*&		GetOBBCollider()		{ return m_pOBBCollider; }
+	//CCollider*&		GetBoxCollider()		{ return m_pBoxCollider; }
 	/*CCollider*		GetCollider(ColliderType eColliderType) { return m_arrColliderGroup[(_uint)eColliderType]; }*/
 
 public:
@@ -44,7 +48,8 @@ public:
 protected:
 	RigidBodyType		m_eRigidBodyType;
 	CSphereCollider*	m_pSphereCollider = nullptr;	// 아직 안함
-	CCollider*			m_pBoxCollider = nullptr;	// 아직 안함
+	COBBCollider*		m_pOBBCollider = nullptr;		// 아직 안함
+	//CCollider*		m_pBoxCollider = nullptr;		// 아직 안함
 	//array<CCollider*, 2>	m_arrColliderGroup;
 
 public:

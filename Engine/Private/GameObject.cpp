@@ -33,14 +33,18 @@ HRESULT CGameObject::Initialize(void* pArg)
 
 void CGameObject::Tick(const _float& fTimeDelta)
 {
-	/*for (auto& iter : m_arrComponents)
-		if(iter)	iter->Tick(fTimeDelta);*/
+	for (auto& iter : m_arrComponents)
+		if(iter)	iter->Tick(fTimeDelta);
 	for (auto& iter : m_vecScripts)
 		iter->Tick(fTimeDelta);
 }
 
 void CGameObject::LateTick(const _float& fTimeDelta)
 {
+	for (auto& iter : m_arrComponents)
+		if(iter)	iter->LateTick(fTimeDelta);
+	for (auto& iter : m_vecScripts)
+		iter->LateTick(fTimeDelta);
 }
 
 void CGameObject::DebugRender()
@@ -123,7 +127,7 @@ HRESULT CGameObject::AddComponent(_uint iLevelIndex, const ComponentType& type, 
 	if (nullptr == pComponent)
 		return E_FAIL;
 
-	pComponent->SetGameObject(this);
+	//pComponent->SetGameObject(this);
 
 	if (index < FIXED_COMPONENT_COUNT)
 		m_arrComponents[index] = pComponent;

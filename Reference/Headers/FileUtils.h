@@ -37,7 +37,12 @@ public:
 	void Read(OUT T& data)
 	{
 		DWORD numOfBytes = 0;
+
+#ifdef DEBUG
 		assert(::ReadFile(_handle, &data, sizeof(T), (LPDWORD)&numOfBytes, nullptr));
+#else
+		::ReadFile(_handle, &data, sizeof(T), (LPDWORD)&numOfBytes, nullptr);
+#endif
 	}
 
 	template<typename T>

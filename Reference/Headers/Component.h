@@ -9,8 +9,8 @@ class CTransform;
 
 enum class ComponentType
 {
-	Transform,
 	RigidBody,
+	Transform,
 	Collider,
 	Buffer,
 	Shader,

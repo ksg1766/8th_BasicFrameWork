@@ -27,15 +27,24 @@ HRESULT CSphereCollider::Initialize_Prototype()
 
 HRESULT CSphereCollider::Initialize(void* pArg)
 {
+	//m_pRigidBody = m_pGameObject->GetRigidBody();
+	CTransform* pTransform = GetGameObject()->GetTransform();
+
+	m_tBoundingSphere.Center = pTransform->GetPosition();
+	m_tBoundingSphere.Radius = pTransform->GetLocalScale().Length();
+
 	return S_OK;
 }
 
 void CSphereCollider::Tick(const _float& fTimeDelta)
 {
-	m_tBoundingSphere.Center = GetGameObject()->GetTransform()->GetPosition();
+	CTransform* pTransform = GetGameObject()->GetTransform();
 
-	Vec3 scale = GetGameObject()->GetTransform()->GetLocalScale();
-	m_tBoundingSphere.Radius = m_fRadius * max(max(scale.x, scale.y), scale.z);
+	m_tBoundingSphere.Center = pTransform->GetPosition();
+	m_tBoundingSphere.Radius = pTransform->GetLocalScale().Length();
+
+	//Vec3 scale = GetGameObject()->GetTransform()->GetLocalScale();
+	//m_tBoundingSphere.Radius = m_fRadius * max(max(scale.x, scale.y), scale.z);
 }
 
 void CSphereCollider::LateTick(const _float& fTimeDelta)
@@ -51,7 +60,7 @@ _bool CSphereCollider::Intersects(Ray& ray, OUT _float& distance)
 	return m_tBoundingSphere.Intersects(ray.position, ray.direction, OUT distance);
 }
 
-_bool CSphereCollider::Intersects(Super*& other)
+_bool CSphereCollider::Intersects(Super* other)
 {
 	ColliderType type = other->GetColliderType();
 
@@ -87,6 +96,7 @@ CComponent* CSphereCollider::Clone(CGameObject* pGameObject, void* pArg)
 {
 	CSphereCollider* pInstance = new CSphereCollider(*this);
 	pInstance->m_pGameObject = pGameObject;
+	pInstance->m_pRigidBody = pInstance->m_pGameObject->GetRigidBody();
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{

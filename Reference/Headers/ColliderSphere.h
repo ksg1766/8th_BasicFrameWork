@@ -19,7 +19,7 @@ public:
 	virtual void	DebugRender()							override;
 
 	virtual _bool	Intersects(Ray& ray, OUT _float& distance)	override;
-	virtual _bool	Intersects(Super*& other)					override;
+	virtual _bool	Intersects(Super* other)					override;
 
 	void			SetRadius(_float radius)	{ m_fRadius = radius; }
 	BoundingSphere&	GetBoundingSphere()		{ return m_tBoundingSphere; }
@@ -33,7 +33,7 @@ private:
 	BoundingSphere	m_tBoundingSphere;
 
 public:
-	static CSphereCollider* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static	CSphereCollider* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CComponent* Clone(CGameObject* pGameObject, void* pArg)	override;
 	virtual void Free()						override;
 };

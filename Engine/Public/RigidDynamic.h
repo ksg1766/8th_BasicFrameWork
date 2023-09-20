@@ -44,6 +44,7 @@ public:
 	void	IsKinematic(_bool IsKinematic)				{ m_IsKinematic = IsKinematic; }
 
 	_float	GetMass()	const							{ return m_fMass; }
+	void	SetMass(_float fMass)						{ m_fMass = fMass; }
 	_float	GetDrag()	const							{ return m_fDrag; }
 	_float	GetAngularDrag()	const					{ return m_fAngularDrag; }
 

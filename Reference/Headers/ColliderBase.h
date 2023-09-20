@@ -24,7 +24,7 @@ protected:
 
 public:
 	virtual _bool	Intersects(Ray& ray, OUT float& distance)	PURE;
-	virtual _bool	Intersects(CCollider*& other)				PURE;
+	virtual _bool	Intersects(CCollider* other)				PURE;
 
 	ColliderType	GetColliderType()			{ return m_eColliderType; }
 	_uint			GetID()						{ return m_iID; }

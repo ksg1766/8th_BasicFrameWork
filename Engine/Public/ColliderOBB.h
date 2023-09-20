@@ -19,7 +19,7 @@ public:
 	virtual void	DebugRender()							override;
 
 	virtual _bool	Intersects(Ray& ray, OUT _float& distance)	override;
-	virtual _bool	Intersects(Super*& other)					override;
+	virtual _bool	Intersects(Super* other)					override;
 
 	BoundingOrientedBox& GetBoundingBox() { return m_tBoundingBox; }
 
@@ -27,7 +27,7 @@ private:
 	BoundingOrientedBox m_tBoundingBox;
 
 public:
-	static COBBCollider* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static	COBBCollider* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CComponent* Clone(CGameObject* pGameObject, void* pArg)	override;
 	virtual void Free()						override;
 };

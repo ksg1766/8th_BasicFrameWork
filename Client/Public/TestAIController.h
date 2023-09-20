@@ -5,14 +5,14 @@
 
 BEGIN(Client)
 
-class CPlayerController : public CMonoBehaviour
+class CTestAIController : public CMonoBehaviour
 {
 	using Super = CMonoBehaviour;
 
 private:
-	CPlayerController(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CPlayerController(const CPlayerController& rhs);
-	virtual ~CPlayerController() = default;
+	CTestAIController(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CTestAIController(const CTestAIController& rhs);
+	virtual ~CTestAIController() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype()				override;
@@ -22,7 +22,7 @@ public:
 	virtual void	DebugRender()						override;
 
 private:
-	void	Input(const _float& fTimeDelta);
+	void	AutoMove(const _float& fTimeDelta);
 	void	LimitAllAxisVelocity();
 
 private:
@@ -35,7 +35,7 @@ private:
 	Vec3			m_vAngularSpeed;
 
 public:
-	static	CPlayerController* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static	CTestAIController* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CComponent* Clone(CGameObject* pGameObject, void* pArg) override;
 	virtual void Free() override;
 };

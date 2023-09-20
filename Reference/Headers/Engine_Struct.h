@@ -68,8 +68,8 @@ namespace Engine
 	{
 		class CRigidBody* pOther;
 		// Vec3		vImpulse;
-		// Vec3		vResultVelocity;
-		_float fTimeDelta;
+		 Vec3		vResultVelocity;
+		//_float fTimeDelta;
 	}COLLISION_DESC;
 }
 

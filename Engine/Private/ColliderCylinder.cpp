@@ -42,7 +42,7 @@ _bool CCylinderCollider::Intersects(Ray& ray, OUT _float& distance)
     return m_tBoundingCylinder.Intersects(ray.position, ray.direction, OUT distance);
 }
 
-_bool CCylinderCollider::Intersects(Super*& other)
+_bool CCylinderCollider::Intersects(Super* other)
 {
     ColliderType type = other->GetColliderType();
 

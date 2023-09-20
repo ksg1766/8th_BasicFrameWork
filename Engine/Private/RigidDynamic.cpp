@@ -1,8 +1,6 @@
-#include "RigidDynamic.h"
-#include "Transform.h"
+#include "ComponentManager.h"
+#include "LevelManager.h"
 #include "GameObject.h"
-#include "ColliderSphere.h"
-#include "ColliderOBB.h"
 
 CRigidDynamic::CRigidDynamic(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: Super(pDevice, pContext, RigidBodyType::DYNAMIC)
@@ -45,11 +43,16 @@ HRESULT CRigidDynamic::Initialize_Prototype()
 
 HRESULT CRigidDynamic::Initialize(void* pArg)
 {
+
 	return S_OK;
 }
 
 void CRigidDynamic::Tick(const _float& fTimeDelta)	// FixedUpdate 처럼 동작하기 위해 RigidBody의 업데이트를 가장 우선 호출해야 함.
 {
+	// ColliderUpdate
+	m_pSphereCollider->Tick(fTimeDelta);
+	m_pOBBCollider->Tick(fTimeDelta);
+
 	if (m_IsSleeping)
 		return;
 
@@ -63,16 +66,10 @@ void CRigidDynamic::Tick(const _float& fTimeDelta)	// FixedUpdate 처럼 동작하기 
 		KinematicUpdate(fTimeDelta);
 	else				// Kinetic
 		KineticUpdate(fTimeDelta);
-
-	// ColliderUpdate
-	if (m_pSphereCollider)	m_pSphereCollider->Tick(fTimeDelta);
-	if (m_pBoxCollider)	m_pBoxCollider->Tick(fTimeDelta);
 }
 
 void CRigidDynamic::LateTick(const _float& fTimeDelta)
 {
-	// Collision
-
 }
 
 void CRigidDynamic::DebugRender()
@@ -238,18 +235,27 @@ void CRigidDynamic::ClearNetPower()
 
 void CRigidDynamic::OnCollisionEnter(const COLLISION_DESC& desc)
 {
+	const CRigidDynamic* pRigidOther = dynamic_cast<const CRigidDynamic*>(desc.pOther);
+
 	if (!m_IsKinematic)	// Kinetic
 	{
-		const CRigidDynamic* pRigidR = dynamic_cast<const CRigidDynamic*>(desc.pOther);
-
-		UpdateTransform(-desc.fTimeDelta);	// fTimeDelta는 Tick에서 가져와도 되긴 함
-		
-		_float fMassRatio = m_fMass / pRigidR->GetMass();
-		m_vLinearVelocity = (2.f * pRigidR->GetLinearVelocity() - (1.f - fMassRatio) * m_vLinearVelocity) / (1.f + fMassRatio);
+		if (!pRigidOther->IsKinematic()) // Kinetic
+		{
+			m_vLinearVelocity = desc.vResultVelocity;
+		}
+		else	// Kinematic
+		{
+		}
 	}
 	else	// Kinematic
 	{
-		UpdateTransform(-desc.fTimeDelta);
+		if (pRigidOther->IsKinematic())	// Kinematic
+		{
+			GetTransform()->Translate(0.08f * desc.vResultVelocity);
+		}
+		else	// Kinetic
+		{	
+		}
 	}
 
 	m_pGameObject->OnCollisionEnter(desc.pOther->GetGameObject());
@@ -257,18 +263,26 @@ void CRigidDynamic::OnCollisionEnter(const COLLISION_DESC& desc)
 
 void CRigidDynamic::OnCollisionStay(const COLLISION_DESC& desc)
 {
+	const CRigidDynamic* pRigidOther = dynamic_cast<const CRigidDynamic*>(desc.pOther);
+
 	if (!m_IsKinematic)	// Kinetic
 	{
-		const CRigidDynamic* pRigidR = dynamic_cast<const CRigidDynamic*>(desc.pOther);
-
-		UpdateTransform(-desc.fTimeDelta);	// fTimeDelta는 Tick에서 가져와도 되긴 함
-
-		_float fMassRatio = m_fMass / pRigidR->GetMass();
-		m_vLinearVelocity = (2.f * pRigidR->GetLinearVelocity() - (1.f - fMassRatio) * m_vLinearVelocity) / (1.f + fMassRatio);
+		if (!pRigidOther->IsKinematic()) // Kinematic
+		{
+		}
+		else	// Kinematic
+		{
+		}
 	}
 	else	// Kinematic
 	{
-		UpdateTransform(-desc.fTimeDelta);
+		if (pRigidOther->IsKinematic())	// Kinematic
+		{
+			GetTransform()->Translate(0.08f * desc.vResultVelocity);
+		}
+		else	// Kinetic
+		{
+		}
 	}
 
 	m_pGameObject->OnCollisionStay(desc.pOther->GetGameObject());
@@ -315,6 +329,7 @@ CComponent* CRigidDynamic::Clone(CGameObject* pGameObject, void* pArg)
 		MSG_BOX("Failed To Cloned : CRigidDynamic");
 		Safe_Release(pInstance);
 	}
+
 	return pInstance;
 }
 

@@ -6,6 +6,7 @@
 #include "RigidDynamic.h"
 #include "Transform.h"
 #include "ColliderSphere.h"
+#include "ColliderOBB.h"
 #include "QuadTree.h"
 #include "QuadTreeNode.h"
 
@@ -17,6 +18,9 @@ CCollisionManager::CCollisionManager()
 
 void CCollisionManager::LateTick_Collision(const _float& fTimeDelta)
 {
+	pCurrentLevelLayers = CObjectManager::GetInstance()->GetCurrentLevelLayers();
+	if (pCurrentLevelLayers->empty())	return;
+
 	::ZeroMemory(m_arrSorted, (_uint)LAYERTAG::LAYER_END * sizeof(_bool));
 
 	for (_uint iRow = 0; iRow < (_uint)LAYERTAG::LAYER_END; ++iRow)
@@ -26,6 +30,7 @@ void CCollisionManager::LateTick_Collision(const _float& fTimeDelta)
 			if (m_arrCheck[iRow] & (1 << iCol))
 			{
 				CheckDynamicCollision(reinterpret_cast<LAYERTAG&>(iRow), reinterpret_cast<LAYERTAG&>(iCol), fTimeDelta);
+				//CheckStaticCollision(reinterpret_cast<LAYERTAG&>(iRow), fTimeDelta);
 			}
 		}
 	}
@@ -35,10 +40,13 @@ HRESULT CCollisionManager::Reserve_Manager(_uint iNumLevels)
 {
 	Reset();
 
+	CheckGroup(LAYERTAG::DEFAULT, LAYERTAG::PLAYER);
+	//CheckGroup(LAYERTAG::DEFAULT, LAYERTAG::DEFAULT);
+
 	return S_OK;
 }
 
-void CCollisionManager::CheckGroup(LAYERTAG& eLeft, LAYERTAG& eRight)
+void CCollisionManager::CheckGroup(LAYERTAG eLeft, LAYERTAG eRight)
 {
 	_uint iRow = (_uint)eLeft;
 	_uint iCol = (_uint)eRight;
@@ -61,7 +69,7 @@ void CCollisionManager::CheckGroup(LAYERTAG& eLeft, LAYERTAG& eRight)
 
 void CCollisionManager::Reset()
 {
-	::ZeroMemory(m_arrCheck, sizeof(UINT) * (UINT)LAYERTAG::LAYER_END);
+	::ZeroMemory(m_arrCheck, sizeof(_uint) * (_uint)LAYERTAG::LAYER_END);
 	pCurrentLevelLayers = CObjectManager::GetInstance()->GetCurrentLevelLayers();
 }
 
@@ -69,7 +77,8 @@ bool CCollisionManager::IsCollided(CCollider* pLeft, CCollider* pRight)
 {
 	if (pLeft->Intersects(pRight))
 	{
-		if (pLeft->GetRigidBody()->GetBoxCollider()->Intersects(pRight->GetRigidBody()->GetBoxCollider()))
+		//if (pLeft->GetRigidBody()->GetBoxCollider()->Intersects(pRight->GetRigidBody()->GetBoxCollider()))
+		if (pLeft->GetRigidBody()->GetOBBCollider()->Intersects(pRight->GetRigidBody()->GetOBBCollider()))
 			return true;
 	}
     return false;
@@ -77,6 +86,9 @@ bool CCollisionManager::IsCollided(CCollider* pLeft, CCollider* pRight)
 
 void CCollisionManager::CheckDynamicCollision(LAYERTAG& eLayerLeft, LAYERTAG& eLayerRight , const _float& fTimeDelta)
 {
+	if (!(*pCurrentLevelLayers)[eLayerLeft] || !(*pCurrentLevelLayers)[eLayerLeft])
+		return;
+
 	vector<CGameObject*>& vecLeft = (*pCurrentLevelLayers)[eLayerLeft]->GetGameObjects();
 	vector<CGameObject*>& vecRight = (*pCurrentLevelLayers)[eLayerRight]->GetGameObjects();
 	
@@ -323,34 +335,22 @@ _bool CCollisionManager::CompareMinZ(_float& fLeftMinZ, _float& fRightMinZ)
 
 void CCollisionManager::MakeCollisionDesc(OUT COLLISION_DESC& descLeft, OUT COLLISION_DESC& descRight, CRigidBody* lRigid, CRigidBody* rRigid, const _float& fTimeDelta)
 {
+	Vec3 vVelocityL = dynamic_cast<CRigidDynamic*>(lRigid)->GetLinearVelocity();
+	Vec3 vVelocityR = dynamic_cast<CRigidDynamic*>(rRigid)->GetLinearVelocity();
+
+	_float fMassRatio = dynamic_cast<CRigidDynamic*>(lRigid)->GetMass() / dynamic_cast<CRigidDynamic*>(rRigid)->GetMass();	// L/R
+
 	descLeft.pOther = rRigid;
-	descLeft.fTimeDelta = fTimeDelta;
-
-	descRight.pOther = lRigid;
-	descRight.fTimeDelta = fTimeDelta;
-
-	/*CRigidDynamic* pRigidL = dynamic_cast<CRigidDynamic*>(lObj->GetRigidBody());
-	CRigidDynamic* pRigidR = dynamic_cast<CRigidDynamic*>(rObj->GetRigidBody());
-
-	Vec3 vVelocityL = pRigidL->GetLinearVelocity();
-	Vec3 vVelocityR = pRigidR->GetLinearVelocity();
-
-	_float fMassRatio = pRigidL->GetMass() / pRigidR->GetMass();	// L/R
-
-	descLeft.pOther = rObj;
 	descLeft.vResultVelocity = (2.f * vVelocityR - (1.f - fMassRatio) * vVelocityL) / (1.f + fMassRatio);
 	
-	descRight.pOther = lObj;
-	descRight.vResultVelocity = (2.f * vVelocityL - (1.f - 1.f / fMassRatio) * vVelocityR) / (1.f + 1.f / fMassRatio);*/
+	descRight.pOther = lRigid;
+	descRight.vResultVelocity = (2.f * vVelocityL - (1.f - 1.f / fMassRatio) * vVelocityR) / (1.f + 1.f / fMassRatio);
 }
 
 void CCollisionManager::MakeCollisionDescStatic(OUT COLLISION_DESC& descLeft, CRigidBody* lRigid, CRigidBody* rRigid, const _float& fTimeDelta)
 {
 	descLeft.pOther = rRigid;
-	descLeft.fTimeDelta = fTimeDelta;
-
-	/*descLeft.pOther = rObj;
-	descLeft.vResultVelocity = -dynamic_cast<CRigidDynamic*>(lObj->GetRigidBody())->GetLinearVelocity();*/
+	descLeft.vResultVelocity = -dynamic_cast<CRigidDynamic*>(lRigid)->GetLinearVelocity();
 }
 
 void CCollisionManager::Free()

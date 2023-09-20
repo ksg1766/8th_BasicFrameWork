@@ -1,23 +1,23 @@
 #include "stdafx.h"
-#include "..\Public\TempCube.h"
+#include "..\Public\CollisionTest.h"
 #include "GameInstance.h"
 
-CTempCube::CTempCube(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CCollisionTest::CCollisionTest(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CGameObject(pDevice, pContext)
 {
 }
 
-CTempCube::CTempCube(const CTempCube& rhs)
+CCollisionTest::CCollisionTest(const CCollisionTest& rhs)
 	: CGameObject(rhs)
 {
 }
 
-HRESULT CTempCube::Initialize_Prototype()
+HRESULT CCollisionTest::Initialize_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CTempCube::Initialize(void * pArg)
+HRESULT CCollisionTest::Initialize(void * pArg)
 {
 	if (FAILED(Ready_FixedComponents()))
 		return E_FAIL;
@@ -25,27 +25,27 @@ HRESULT CTempCube::Initialize(void * pArg)
 	if (FAILED(Ready_Scripts()))
 		return E_FAIL;
 	
-	GetTransform()->SetScale(Vec3(50.f, 50.f, 50.f));
-	GetTransform()->Translate(Vec3(0.f, 100.f, 10.f));
+	GetTransform()->SetScale(Vec3(40.f, 40.f, 40.f));
+	GetTransform()->Translate(Vec3(0.f, 0.f, 200.f));
 
 	return S_OK;
 }
 
-void CTempCube::Tick(const _float& fTimeDelta)
+void CCollisionTest::Tick(const _float& fTimeDelta)
 {
 	Super::Tick(fTimeDelta);
 
 	//GetRigidBody()->Tick(fTimeDelta);
 }
 
-void CTempCube::LateTick(const _float& fTimeDelta)
+void CCollisionTest::LateTick(const _float& fTimeDelta)
 {
 	Super::LateTick(fTimeDelta);
 
 	GetRenderer()->Add_RenderGroup(CRenderer::RG_NONBLEND, this);
 }
 
-HRESULT CTempCube::Render()
+HRESULT CCollisionTest::Render()
 {
 	if (nullptr == GetBuffer() || nullptr == GetShader())
 		return E_FAIL;
@@ -64,7 +64,7 @@ HRESULT CTempCube::Render()
 	return S_OK;
 }
 
-HRESULT CTempCube::Ready_FixedComponents()
+HRESULT CCollisionTest::Ready_FixedComponents()
 {
 	/* Com_Transform */
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Transform, TEXT("Prototype_Component_Transform"))))
@@ -91,28 +91,29 @@ HRESULT CTempCube::Ready_FixedComponents()
 		|| FAILED(GetRigidBody()->InitializeCollider()))
 		return E_FAIL;
 
-	// TODO: Collider는 RigidBody의 Initialize에서 추가하고 GameObject의 컴포넌트 목록에 넣지 않아도 될것같다.
-	// 업데이트는 RigidBody에서 호출해주면 된다. 시도해보자.
-	/* Com_SphereCollider */
+	//// TODO: 함수로 뺼 것.
+	//m_pSphereCollider = dynamic_cast<CSphereCollider*>(CComponentManager::GetInstance()
+	//	->Clone_Component(m_pGameObject, 0, TEXT("Prototype_Component_SphereCollider"), nullptr));
+	//m_pOBBCollider = dynamic_cast<COBBCollider*>(CComponentManager::GetInstance()
+	//	->Clone_Component(m_pGameObject, 0, TEXT("Prototype_Component_OBBCollider"), nullptr));
+
 	//if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::Collider, TEXT("Prototype_Component_SphereCollider"))))
 	//	return E_FAIL;
-	/* Com_OBBCollider */
-	//if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::Collider, TEXT("Prototype_Component_OBBCollider"))))
-	//	return E_FAIL;
-
+	//Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::Collider, TEXT("Prototype_Component_OBBCollider"));
+	
 	return S_OK;
 }
 
-HRESULT CTempCube::Ready_Scripts()
+HRESULT CCollisionTest::Ready_Scripts()
 {
 	/* Com_PlayerController */
-	if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::Script, TEXT("Prototype_Component_PlayerController"))))
+	if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::Script, TEXT("Prototype_Component_TestAIController"))))
 		return E_FAIL;
 
 	return S_OK;
 }
 
-HRESULT CTempCube::Bind_ShaderResources()
+HRESULT CCollisionTest::Bind_ShaderResources()
 {
 	Matrix		ViewMatrix, ProjMatrix;
 	ViewMatrix = XMMatrixLookAtLH(Vec4(0.f, 500.f, -500.f, 1.f), Vec4(0.f, 0.f, 0.f, 1.f), Vec4(0.0f, 1.f, 0.f, 0.f));
@@ -125,39 +126,39 @@ HRESULT CTempCube::Bind_ShaderResources()
 	if (FAILED(GetShader()->Bind_Matrix("g_ProjMatrix", &ProjMatrix)))
 		return E_FAIL;
 
-	if (FAILED(GetTexture()->Bind_ShaderResource(GetShader(), "g_DiffuseTexture", 0)))
+	if (FAILED(GetTexture()->Bind_ShaderResource(GetShader(), "g_DiffuseTexture", 1)))
 		return E_FAIL;
 
 	return S_OK;
 }
 
-CTempCube* CTempCube::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CCollisionTest* CCollisionTest::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
-	CTempCube*		pInstance = new CTempCube(pDevice, pContext);
+	CCollisionTest*		pInstance = new CCollisionTest(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed To Created : CTempCube");
+		MSG_BOX("Failed To Created : CCollisionTest");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject * CTempCube::Clone(void * pArg)
+CGameObject * CCollisionTest::Clone(void * pArg)
 {
-	CTempCube*		pInstance = new CTempCube(*this);
+	CCollisionTest*		pInstance = new CCollisionTest(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed To Cloned : CTempCube");
+		MSG_BOX("Failed To Cloned : CCollisionTest");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CTempCube::Free()
+void CCollisionTest::Free()
 {
 	Super::Free();
 }

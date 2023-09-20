@@ -40,6 +40,7 @@ public:
 
 	Vec3	GetLocalScale();
 	Vec3	GetRotation();
+	Quaternion	GetRotationQuaternion();
 	Vec3	GetPosition()							{ return static_cast<Vec3>(m_matWorld.m[STATE_POSITION]); }
 
 public:

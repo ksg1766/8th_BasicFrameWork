@@ -84,7 +84,7 @@ void CGameInstance::Tick(const _float& fTimeDelta)
 
 	m_pObjectManager->LateTick(fTimeDelta);
 	m_pLevelManager->LateTick(fTimeDelta);
-	m_pCollisionManager->LateTick_Collision(fTimeDelta);
+	//m_pCollisionManager->LateTick_Collision(fTimeDelta);
 }
 
 void CGameInstance::DebugRender()
@@ -164,10 +164,10 @@ HRESULT CGameInstance::Add_Prototype(const wstring & strPrototypeTag, CGameObjec
 	return m_pObjectManager->Add_Prototype(strPrototypeTag, pPrototype);	
 }
 
-HRESULT CGameInstance::Add_GameObject(_uint iLevelIndex, const LAYERTAG& eLayerTag, const wstring & strPrototypeTag, void * pArg)
+CGameObject* CGameInstance::Add_GameObject(_uint iLevelIndex, const LAYERTAG& eLayerTag, const wstring & strPrototypeTag, void * pArg)
 {
 	if (nullptr == m_pObjectManager)
-		return E_FAIL;
+		return nullptr;
 
 	return m_pObjectManager->Add_GameObject(iLevelIndex, eLayerTag, strPrototypeTag, pArg);
 }
