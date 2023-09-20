@@ -4,11 +4,11 @@ namespace Engine
 {
 	enum class LAYERTAG
 	{
+		PLAYER,
 		DEFAULT,
 		BACKGROUND,
 		IGNORERAY,
 		UI,
-		PLAYER,
 		GROUND,
 		TERRAIN,
 		WALL,
