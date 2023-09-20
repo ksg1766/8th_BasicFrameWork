@@ -2,6 +2,7 @@
 
 #include "Client_Defines.h"
 #include "MonoBehaviour.h"
+#include "RigidDynamic.h"
 
 BEGIN(Client)
 
@@ -26,7 +27,7 @@ private:
 	void	LimitAllAxisVelocity();
 
 private:
-	class CRigidDynamic*	m_pRigidBody;
+	CRigidDynamic*	m_pRigidBody;
 
 	Vec3			m_vMaxLinearSpeed;
 	Vec3			m_vLinearSpeed;

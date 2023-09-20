@@ -64,6 +64,15 @@
     <Filter Include="02.GameObjects\CollisionTest\01.Script">
       <UniqueIdentifier>{55bff19f-cc5b-4634-997a-3cd2a3a214de}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Camera">
+      <UniqueIdentifier>{548fcad8-b15c-480f-be95-7ac6cffde6c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Camera\GameObject">
+      <UniqueIdentifier>{bdcf4e26-ba9b-418c-93cf-9fe79e0e688c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Camera\Script">
+      <UniqueIdentifier>{dd15396f-49de-4631-a0d5-97aa141723a3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -150,6 +159,12 @@
     <ClInclude Include="..\Public\TestAIController.h">
       <Filter>02.GameObjects\CollisionTest\01.Script</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\FlyingCamera.h">
+      <Filter>02.GameObjects\Camera\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CameraController.h">
+      <Filter>02.GameObjects\Camera\Script</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -217,6 +232,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\TestAIController.cpp">
       <Filter>02.GameObjects\CollisionTest\01.Script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\FlyingCamera.cpp">
+      <Filter>02.GameObjects\Camera\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CameraController.cpp">
+      <Filter>02.GameObjects\Camera\Script</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

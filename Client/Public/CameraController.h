@@ -2,18 +2,17 @@
 
 #include "Client_Defines.h"
 #include "MonoBehaviour.h"
-#include "RigidDynamic.h"
 
 BEGIN(Client)
 
-class CTestAIController : public CMonoBehaviour
+class CCameraController : public CMonoBehaviour
 {
 	using Super = CMonoBehaviour;
 
 private:
-	CTestAIController(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CTestAIController(const CTestAIController& rhs);
-	virtual ~CTestAIController() = default;
+	CCameraController(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CCameraController(const CCameraController& rhs);
+	virtual ~CCameraController() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype()				override;
@@ -23,12 +22,9 @@ public:
 	virtual void	DebugRender()						override;
 
 private:
-	void	AutoMove(const _float& fTimeDelta);
-	void	LimitAllAxisVelocity();
+	void	Input(const _float& fTimeDelta);
 
 private:
-	CRigidDynamic*	m_pRigidBody;
-
 	Vec3			m_vMaxLinearSpeed;
 	Vec3			m_vLinearSpeed;
 
@@ -36,7 +32,7 @@ private:
 	Vec3			m_vAngularSpeed;
 
 public:
-	static	CTestAIController* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static	CCameraController* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CComponent* Clone(CGameObject* pGameObject, void* pArg) override;
 	virtual void Free() override;
 };

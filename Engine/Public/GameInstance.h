@@ -1,11 +1,6 @@
 #pragma once
 
 #include "ComponentManager.h"
-#include "Transform.h"
-#include "MonoBehaviour.h"
-#include "RigidBodyBase.h"
-#include "Shader.h"
-#include "Terrain.h"
 
 /* 클라이언트개발자가 엔진의 기능을 이용하고자할 때 접촉하는 객체.  */
 /* 클라이언트에 보여줘야할 함수들을 모두 정의하고 있는다. */

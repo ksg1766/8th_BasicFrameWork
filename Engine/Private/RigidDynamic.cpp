@@ -235,7 +235,7 @@ void CRigidDynamic::ClearNetPower()
 
 void CRigidDynamic::OnCollisionEnter(const COLLISION_DESC& desc)
 {
-	const CRigidDynamic* pRigidOther = dynamic_cast<const CRigidDynamic*>(desc.pOther);
+	CRigidDynamic* pRigidOther = static_cast<CRigidDynamic*>(desc.pOther);
 
 	if (!m_IsKinematic)	// Kinetic
 	{
@@ -263,11 +263,11 @@ void CRigidDynamic::OnCollisionEnter(const COLLISION_DESC& desc)
 
 void CRigidDynamic::OnCollisionStay(const COLLISION_DESC& desc)
 {
-	const CRigidDynamic* pRigidOther = dynamic_cast<const CRigidDynamic*>(desc.pOther);
+	CRigidDynamic* pRigidOther = static_cast<CRigidDynamic*>(desc.pOther);
 
 	if (!m_IsKinematic)	// Kinetic
 	{
-		if (!pRigidOther->IsKinematic()) // Kinematic
+		if (!pRigidOther->IsKinematic()) // Kinetic
 		{
 		}
 		else	// Kinematic

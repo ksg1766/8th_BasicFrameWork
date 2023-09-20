@@ -19,7 +19,10 @@ public:
     virtual void LateTick(const _float& fTimeDelta) override;
 
 private:
+    class CPipeLine* m_pPipeLine = { nullptr };
 
+    Vec4			m_vEye, m_vAt;
+    _float			m_fFovy, m_fAspect, m_fNear, m_fFar;
 
 public:
     static CCamera* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

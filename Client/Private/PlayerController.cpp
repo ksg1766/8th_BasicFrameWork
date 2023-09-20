@@ -2,7 +2,6 @@
 #include "PlayerController.h"
 #include "GameInstance.h"
 #include "GameObject.h"
-#include "RigidDynamic.h"
 
 CPlayerController::CPlayerController(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:Super(pDevice, pContext)
@@ -145,4 +144,5 @@ CComponent* CPlayerController::Clone(CGameObject* pGameObject, void* pArg)
 
 void CPlayerController::Free()
 {
+	Super::Free();
 }

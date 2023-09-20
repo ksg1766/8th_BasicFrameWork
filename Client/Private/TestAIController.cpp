@@ -2,7 +2,6 @@
 #include "TestAIController.h"
 #include "GameInstance.h"
 #include "GameObject.h"
-#include "RigidDynamic.h"
 
 CTestAIController::CTestAIController(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:Super(pDevice, pContext)
@@ -24,7 +23,7 @@ HRESULT CTestAIController::Initialize(void* pArg)
 	m_pRigidBody = static_cast<CRigidDynamic*>(m_pGameObject->GetRigidBody());
 	m_vLinearSpeed = Vec3(100.f, 100.f, 100.f);
 	m_vMaxLinearSpeed = Vec3(200.f, 200.f, 200.f);
-	
+
 	m_vAngularSpeed = Vec3(90.f, 90.f, 90.f);
 	m_vMaxAngularSpeed = Vec3(180.f, 180.f, 180.f);
 
@@ -66,10 +65,10 @@ void CTestAIController::AutoMove(const _float& fTimeDelta)
 
 	if (KEY_PRESSING(KEY::D) || KEY_DOWN(KEY::D))
 		m_pRigidBody->AddForce(Vec3(m_vLinearSpeed.x, 0.f, 0.f), ForceMode::VELOCITY_CHANGE);
-	
+
 	if (KEY_PRESSING(KEY::Q) || KEY_DOWN(KEY::Q))
 		m_pRigidBody->AddTorque(Vec3(0.f, -m_vAngularSpeed.y, 0.f), ForceMode::VELOCITY_CHANGE);
-	
+
 	if (KEY_PRESSING(KEY::E) || KEY_DOWN(KEY::E))
 		m_pRigidBody->AddTorque(Vec3(0.f, m_vAngularSpeed.y, 0.f), ForceMode::VELOCITY_CHANGE);
 
@@ -147,4 +146,5 @@ CComponent* CTestAIController::Clone(CGameObject* pGameObject, void* pArg)
 
 void CTestAIController::Free()
 {
+	Super::Free();
 }

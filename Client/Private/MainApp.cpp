@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 #include "EventManager.h"
 #include "Level_Loading.h"
+#include "CameraController.h"
 
 CMainApp::CMainApp()	
 	: m_pGameInstance(CGameInstance::GetInstance())
@@ -155,6 +156,11 @@ HRESULT CMainApp::Ready_Prototype_Components()
 	/* For.Prototype_Component_OBBCollider */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_OBBCollider"),
 		COBBCollider::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_CameraController */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_CameraController"),
+		CCameraController::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	Safe_AddRef(m_pRenderer);

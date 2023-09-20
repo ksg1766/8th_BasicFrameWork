@@ -93,7 +93,7 @@ void CCollisionManager::CheckDynamicCollision(LAYERTAG& eLayerLeft, LAYERTAG& eL
 	vector<CGameObject*>& vecRight = (*pCurrentLevelLayers)[eLayerRight]->GetGameObjects();
 	
 	if (!m_arrSorted[(_uint)eLayerRight])
-	{
+	{	// sweep and prune
 		::sort(vecRight.begin(), vecRight.end(), [&](CGameObject* pObjL, CGameObject* pObjR) ->_bool
 			{
 				BoundingSphere& tBoundingSphereL = pObjL->GetRigidBody()->GetSphereCollider()->GetBoundingSphere();
