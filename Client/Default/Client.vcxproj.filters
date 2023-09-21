@@ -55,23 +55,35 @@
     <Filter Include="02.GameObjects\TempCube\00.GameObject">
       <UniqueIdentifier>{19ba0693-056c-4617-a870-a8b73617aef6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\CollisionTest">
-      <UniqueIdentifier>{e292aea5-e692-4d18-9fff-2738cfc049d9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\CollisionTest\00.GameObject">
-      <UniqueIdentifier>{b17b4c1b-b792-4db7-9b23-90940fce33a0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\CollisionTest\01.Script">
-      <UniqueIdentifier>{55bff19f-cc5b-4634-997a-3cd2a3a214de}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Camera">
       <UniqueIdentifier>{548fcad8-b15c-480f-be95-7ac6cffde6c8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Camera\GameObject">
+    <Filter Include="02.GameObjects\Camera\00.FlyingCamera">
+      <UniqueIdentifier>{58335612-64ea-4fb8-9646-d008b3eaed74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Camera\00.FlyingCamera\GameObject">
       <UniqueIdentifier>{bdcf4e26-ba9b-418c-93cf-9fe79e0e688c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Camera\Script">
+    <Filter Include="02.GameObjects\Camera\00.FlyingCamera\Script">
       <UniqueIdentifier>{dd15396f-49de-4631-a0d5-97aa141723a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\CollisionTestCube">
+      <UniqueIdentifier>{e292aea5-e692-4d18-9fff-2738cfc049d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\CollisionTestCube\00.GameObject">
+      <UniqueIdentifier>{b17b4c1b-b792-4db7-9b23-90940fce33a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\CollisionTestCube\01.Script">
+      <UniqueIdentifier>{55bff19f-cc5b-4634-997a-3cd2a3a214de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Camera\01.MainCamera">
+      <UniqueIdentifier>{957dc45a-e064-4c63-a0de-15a961b42e61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Camera\01.MainCamera\GameObject">
+      <UniqueIdentifier>{939637c6-34cf-4fda-b60b-f7891e65c8c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Camera\01.MainCamera\Script">
+      <UniqueIdentifier>{5c7e68d7-8b95-4ea2-868c-2f65d5a1612c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -154,16 +166,16 @@
       <Filter>97.ShaderFiles</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CollisionTest.h">
-      <Filter>02.GameObjects\CollisionTest\00.GameObject</Filter>
+      <Filter>02.GameObjects\CollisionTestCube\00.GameObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\TestAIController.h">
-      <Filter>02.GameObjects\CollisionTest\01.Script</Filter>
+      <Filter>02.GameObjects\CollisionTestCube\01.Script</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\FlyingCamera.h">
-      <Filter>02.GameObjects\Camera\GameObject</Filter>
+      <Filter>02.GameObjects\Camera\00.FlyingCamera\GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\CameraController.h">
-      <Filter>02.GameObjects\Camera\Script</Filter>
+    <ClInclude Include="..\Public\FlyingCameraController.h">
+      <Filter>02.GameObjects\Camera\00.FlyingCamera\Script</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -228,16 +240,16 @@
       <Filter>02.GameObjects\TempCube\01.Script</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CollisionTest.cpp">
-      <Filter>02.GameObjects\CollisionTest\00.GameObject</Filter>
+      <Filter>02.GameObjects\CollisionTestCube\00.GameObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\TestAIController.cpp">
-      <Filter>02.GameObjects\CollisionTest\01.Script</Filter>
+      <Filter>02.GameObjects\CollisionTestCube\01.Script</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\FlyingCamera.cpp">
-      <Filter>02.GameObjects\Camera\GameObject</Filter>
+      <Filter>02.GameObjects\Camera\00.FlyingCamera\GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\CameraController.cpp">
-      <Filter>02.GameObjects\Camera\Script</Filter>
+    <ClCompile Include="..\Private\FlyingCameraController.cpp">
+      <Filter>02.GameObjects\Camera\00.FlyingCamera\Script</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

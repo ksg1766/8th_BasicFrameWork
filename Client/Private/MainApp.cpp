@@ -4,7 +4,7 @@
 #include "GameInstance.h"
 #include "EventManager.h"
 #include "Level_Loading.h"
-#include "CameraController.h"
+#include "FlyingCameraController.h"
 
 CMainApp::CMainApp()	
 	: m_pGameInstance(CGameInstance::GetInstance())
@@ -47,6 +47,9 @@ HRESULT CMainApp::Initialize()
 		return E_FAIL;
 
 	if (FAILED(Ready_Prototype_Components()))
+		return E_FAIL;
+
+	if (FAILED(Ready_Prototype_Scrpts()))
 		return E_FAIL;
 
 	/* 1-4. 게임내에서 사용할 레벨(씬)을 생성한다.   */
@@ -158,13 +161,23 @@ HRESULT CMainApp::Ready_Prototype_Components()
 		COBBCollider::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	/* For.Prototype_Component_CameraController */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_CameraController"),
-		CCameraController::Create(m_pDevice, m_pContext))))
+	/* For.Prototype_Component_OBBCollider */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Camera"),
+		CCamera::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	Safe_AddRef(m_pRenderer);
 	
+	return S_OK;
+}
+
+HRESULT CMainApp::Ready_Prototype_Scrpts()
+{
+	/* For.Prototype_Component_FlyingCameraController */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_FlyingCameraController"),
+		CFlyingCameraController::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	return S_OK;
 }
 

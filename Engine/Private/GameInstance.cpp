@@ -24,6 +24,7 @@ CGameInstance::CGameInstance()
 	, m_pQuadTree(CQuadTree::GetInstance())
 	, m_pCollisionManager(CCollisionManager::GetInstance())
 	, m_pPoolManager(CPoolManager::GetInstance())
+	, m_pPipeLine(CPipeLine::GetInstance())
 {
 	Safe_AddRef(m_pGraphicDevice);
 	Safe_AddRef(m_pTimerManager);
@@ -81,6 +82,8 @@ void CGameInstance::Tick(const _float& fTimeDelta)
 	m_pObjectManager->Tick(fTimeDelta);
 	m_pQuadTree->Update_QuadTree();
 	m_pLevelManager->Tick(fTimeDelta);
+
+	m_pPipeLine->Tick();
 
 	m_pObjectManager->LateTick(fTimeDelta);
 	m_pLevelManager->LateTick(fTimeDelta);
@@ -281,6 +284,20 @@ const POINT& CGameInstance::GetMousePos()
 	return POINT();
 }
 
+HRESULT CGameInstance::Bind_TransformToShader(CShader* pShader, const _char* pConstantName, CPipeLine::TRANSFORMSTATE eState)
+{
+	return m_pPipeLine->Bind_TransformToShader(pShader, pConstantName, eState);
+}
+
+_float4 CGameInstance::Get_CamPosition_Float4() const
+{
+	return m_pPipeLine->Get_CamPosition_Float4();
+}
+
+_vector CGameInstance::Get_CamPosition_Vector() const
+{
+	return m_pPipeLine->Get_CamPosition_Vector();
+}
 
 
 void CGameInstance::Release_Engine()
@@ -291,6 +308,13 @@ void CGameInstance::Release_Engine()
 	CComponentManager::GetInstance()->DestroyInstance();
 	CTimerManager::GetInstance()->DestroyInstance();		
 	CGraphicDevice::GetInstance()->DestroyInstance();
+	CQuadTree::GetInstance()->DestroyInstance();
+	CInputDevice::GetInstance()->DestroyInstance();
+	CKeyManager::GetInstance()->DestroyInstance();
+	CCollisionManager::GetInstance()->DestroyInstance();
+	CEventManager::GetInstance()->DestroyInstance();
+	CPoolManager::GetInstance()->DestroyInstance();
+	CPipeLine::GetInstance()->DestroyInstance();
 }
 
 void CGameInstance::Free()
@@ -300,4 +324,11 @@ void CGameInstance::Free()
 	Safe_Release(m_pLevelManager);
 	Safe_Release(m_pGraphicDevice);
 	Safe_Release(m_pTimerManager);
+	Safe_Release(m_pInputDevice);
+	Safe_Release(m_pKeyManager);
+	Safe_Release(m_pQuadTree);
+	Safe_Release(m_pCollisionManager);
+	Safe_Release(m_pEventManager);
+	Safe_Release(m_pPoolManager);
+	Safe_Release(m_pPipeLine);
 }

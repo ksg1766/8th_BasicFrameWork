@@ -41,7 +41,7 @@ private:
 
 	void	CheckDynamicCollision(LAYERTAG& eObjectLeft, LAYERTAG& eObjectRight, const _float& fTimeDelta);
 	void	CheckStaticCollision(LAYERTAG& eDynamicLayer, const _float& fTimeDelta);
-	_bool	CompareMinZ(_float& fLeftMinZ, _float& fRightMinZ);
+	_bool	CompareMaxMinZ(_float& fLeftMaxZ, _float& fRightMinZ);
 
 	void	MakeCollisionDesc(OUT COLLISION_DESC& descLeft, OUT COLLISION_DESC& descRight, CRigidBody* lRigid, CRigidBody* rRigid, const _float& fTimeDelta);
 	void	MakeCollisionDescStatic(OUT COLLISION_DESC& descLeft, CRigidBody* lRigid, CRigidBody* rRigid, const _float& fTimeDelta);

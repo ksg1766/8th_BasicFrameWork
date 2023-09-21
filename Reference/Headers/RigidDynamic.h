@@ -74,7 +74,6 @@ public:
 	void	ClearForce(ForceMode eMode);
 	void	ClearTorque(ForceMode eMode);
 	void	ClearNetPower();
-
 #pragma endregion Property
 
 #pragma region Collision

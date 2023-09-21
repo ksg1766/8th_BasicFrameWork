@@ -114,20 +114,21 @@ HRESULT CTempCube::Ready_Scripts()
 
 HRESULT CTempCube::Bind_ShaderResources()
 {
-	Matrix		ViewMatrix, ProjMatrix;
-	ViewMatrix = XMMatrixLookAtLH(Vec4(0.f, 500.f, -500.f, 1.f), Vec4(0.f, 0.f, 0.f, 1.f), Vec4(0.0f, 1.f, 0.f, 0.f));
-	ProjMatrix = XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), g_iWinSizeX / (_float)g_iWinSizeY, 0.1f, 1000.f);
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	if (FAILED(GetTransform()->Bind_ShaderResources(GetShader(), "g_WorldMatrix")))
-		return E_FAIL;
-	if (FAILED(GetShader()->Bind_Matrix("g_ViewMatrix", &ViewMatrix)))
-		return E_FAIL;
-	if (FAILED(GetShader()->Bind_Matrix("g_ProjMatrix", &ProjMatrix)))
-		return E_FAIL;
+	//const _float4& vCampPos = pGameInstance->Get_CamPosition_Float4();
 
-	if (FAILED(GetTexture()->Bind_ShaderResource(GetShader(), "g_DiffuseTexture", 0)))
+	if (FAILED(GetTransform()->Bind_ShaderResources(GetShader(), "g_WorldMatrix")) ||
+		FAILED(pGameInstance->Bind_TransformToShader(GetShader(), "g_ViewMatrix", CPipeLine::D3DTS_VIEW)) ||
+		FAILED(pGameInstance->Bind_TransformToShader(GetShader(), "g_ProjMatrix", CPipeLine::D3DTS_PROJ)) ||
+		//FAILED(GetShader()->Bind_RawValue("g_vCamPosition", &static_cast<const _float4&>(pGameInstance->Get_CamPosition_Float4()), sizeof(_float4))) ||
+		FAILED(GetTexture()->Bind_ShaderResource(GetShader(), "g_DiffuseTexture", 0)))
+	{
+		RELEASE_INSTANCE(CGameInstance);
 		return E_FAIL;
+	}
 
+	RELEASE_INSTANCE(CGameInstance);
 	return S_OK;
 }
 

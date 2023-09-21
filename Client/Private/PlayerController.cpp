@@ -39,7 +39,7 @@ HRESULT CPlayerController::Initialize(void* pArg)
 
 void CPlayerController::Tick(const _float& fTimeDelta)
 {
-	Input(fTimeDelta);
+	// Input(fTimeDelta);
 }
 
 void CPlayerController::LateTick(const _float& fTimeDelta)

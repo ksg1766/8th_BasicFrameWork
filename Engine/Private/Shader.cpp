@@ -90,6 +90,15 @@ HRESULT CShader::Begin(_uint iPassIndex)
 	return S_OK;
 }
 
+HRESULT CShader::Bind_RawValue(const _char* pConstantName, const void* pData, _uint iLength)
+{
+	ID3DX11EffectVariable* pVariable = m_pEffect->GetVariableByName(pConstantName);
+	if (nullptr == pVariable)
+		return E_FAIL;
+
+	return pVariable->SetRawValue(pData, 0, iLength);
+}
+
 HRESULT CShader::Bind_Matrix(const _char* pConstantName, const _float4x4* pMatrix) const
 {
 	/* pConstantName이름에 해당하는 타입을 고려하지않은 전역변수를 컨트롤하는 객체를 얻어온다 .*/

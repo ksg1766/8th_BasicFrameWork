@@ -58,7 +58,7 @@ HRESULT CFlyingCamera::Ready_FixedComponents()
 HRESULT CFlyingCamera::Ready_Scripts()
 {
 	/* Com_PlayerController */
-	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Script, TEXT("Prototype_Component_CameraController"))))
+	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Script, TEXT("Prototype_Component_FlyingCameraController"))))
 		return E_FAIL;
 
 	return S_OK;

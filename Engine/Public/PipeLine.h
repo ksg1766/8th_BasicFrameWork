@@ -25,12 +25,12 @@ public:
 	_matrix		Get_Transform_Matrix(TRANSFORMSTATE eState) const;
 	_float4x4	Get_Transform_float4x4_Inverse(TRANSFORMSTATE eState) const;
 	_matrix		Get_Transform_Matrix_Inverse(TRANSFORMSTATE eState) const;
-	_float4		Get_CamPosition_Float4x4(TRANSFORMSTATE eState) const;
-	_vector		Get_CamPosition_Vector(TRANSFORMSTATE eState) const;
+	_float4		Get_CamPosition_Float4() const;
+	_vector		Get_CamPosition_Vector() const;
 	void		Set_Transform(TRANSFORMSTATE eState, _fmatrix TransformMatrix);
 
 public:
-	HRESULT		Bind_TransformToShader(class CShader* pShader, const char* pConstantName, CPipeLine::TRANSFORMSTATE eState);	
+	HRESULT		Bind_TransformToShader(class CShader* pShader, const _char* pConstantName, CPipeLine::TRANSFORMSTATE eState);	
 
 private:
 	_float4x4			m_TransformMatrices[D3DTS_END];

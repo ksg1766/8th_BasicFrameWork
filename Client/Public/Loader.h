@@ -43,8 +43,19 @@ private:
 
 private:
 	HRESULT Loading_For_Level_Logo();
+	HRESULT Loading_Components_For_Level_Logo();
+	HRESULT Loading_Scripts_For_Level_Logo();
+	HRESULT Loading_GameObjects_For_Level_Logo();
+
 	HRESULT Loading_For_Level_GamePlay();
+	HRESULT Loading_Components_For_Level_GamePlay();
+	HRESULT Loading_Scripts_For_Level_GamePlay();
+	HRESULT Loading_GameObjects_For_Level_GamePlay();
+
 	HRESULT Loading_For_Level_GameTool();
+	HRESULT Loading_Components_For_Level_GameTool();
+	HRESULT Loading_Scripts_For_Level_GameTool();
+	HRESULT Loading_GameObjects_For_Level_GameTool();
 
 
 public:

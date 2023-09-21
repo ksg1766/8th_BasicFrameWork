@@ -1,6 +1,7 @@
 
 /* 상수테이블. */
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
+
 Texture2D g_Texture;
 Texture2D g_Textures[2];
 

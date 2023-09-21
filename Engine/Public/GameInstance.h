@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ComponentManager.h"
-
+#include "PipeLine.h"
 /* 클라이언트개발자가 엔진의 기능을 이용하고자할 때 접촉하는 객체.  */
 /* 클라이언트에 보여줘야할 함수들을 모두 정의하고 있는다. */
 
@@ -76,6 +76,11 @@ public:	/* For. KeyManager */
 	KEYSTATE GetKeyState(KEY _eKey);
 	const POINT& GetMousePos();
 
+public: /* For.PipeLine */
+	HRESULT Bind_TransformToShader(class CShader* pShader, const char* pConstantName, CPipeLine::TRANSFORMSTATE eState);
+	_float4 Get_CamPosition_Float4() const;
+	_vector Get_CamPosition_Vector() const;
+
 private:
 	class CTimerManager*			m_pTimerManager = { nullptr };
 	class CGraphicDevice*			m_pGraphicDevice = { nullptr };
@@ -88,6 +93,7 @@ private:
 	class CCollisionManager*		m_pCollisionManager = { nullptr };
 	class CEventManager*			m_pEventManager = { nullptr };
 	class CPoolManager*				m_pPoolManager = { nullptr };
+	class CPipeLine*				m_pPipeLine = { nullptr };
 
 public:
 	static void Release_Engine();

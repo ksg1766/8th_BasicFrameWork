@@ -34,6 +34,8 @@ HRESULT COBBCollider::Initialize(void* pArg)
 	m_tBoundingBox.Extents = 0.5f * pTransform->GetLocalScale();
 	m_tBoundingBox.Orientation = pTransform->GetRotationQuaternion();
 
+
+
 	return S_OK;
 }
 
@@ -52,6 +54,7 @@ void COBBCollider::LateTick(const _float& fTimeDelta)
 
 void COBBCollider::DebugRender()
 {
+
 }
 
 _bool COBBCollider::Intersects(Ray& ray, OUT _float& distance)

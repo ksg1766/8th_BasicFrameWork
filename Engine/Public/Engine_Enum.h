@@ -6,6 +6,7 @@ namespace Engine
 	{
 		PLAYER,
 		DEFAULT,
+		CAMERA,
 		BACKGROUND,
 		IGNORERAY,
 		UI,

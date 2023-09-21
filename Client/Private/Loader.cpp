@@ -9,6 +9,7 @@
 #include "CollisionTest.h"
 #include "PlayerController.h"
 #include "TestAIController.h"
+#include "FlyingCamera.h"
 
 CLoader::CLoader(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: m_pDevice(pDevice)
@@ -78,16 +79,11 @@ _int CLoader::Loading()
 
 HRESULT CLoader::Loading_For_Level_Logo()
 {
-	CGameInstance*		pGameInstance = CGameInstance::GetInstance();
-	Safe_AddRef(pGameInstance);
-
 	/* For.Texture */
 	m_strLoading = TEXT("텍스쳐를 로딩 중 입니다.");
 
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_LOGO, TEXT("Prototype_Component_Texture_BackGround"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Default%d.jpg"), 2))))
-		return E_FAIL;
-	
+	Loading_Components_For_Level_Logo();
+	Loading_Scripts_For_Level_Logo();
 
 	/* For.Mesh */
 	m_strLoading = TEXT("메시를 로딩 중 입니다.");
@@ -98,12 +94,7 @@ HRESULT CLoader::Loading_For_Level_Logo()
 
 	/* For.GameObject */
 	m_strLoading = TEXT("객체원형을 로딩 중 입니다.");
-
-	/* For.Prototype_GameObject_BackGround */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BackGround"), CBackGround::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-	
-	Safe_Release(pGameInstance);
+	Loading_GameObjects_For_Level_Logo();
 
 	m_strLoading = TEXT("로딩 끝.");
 	m_isFinished = true;
@@ -111,13 +102,66 @@ HRESULT CLoader::Loading_For_Level_Logo()
 	return S_OK;
 }
 
+HRESULT CLoader::Loading_Components_For_Level_Logo()
+{
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	/* For.Prototype_Component_Texture_BackGround */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_LOGO, TEXT("Prototype_Component_Texture_BackGround"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Default%d.jpg"), 2))))
+		return E_FAIL;
+
+	RELEASE_INSTANCE(CGameInstance);
+
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_Scripts_For_Level_Logo()
+{
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_GameObjects_For_Level_Logo()
+{
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	/* For.Prototype_GameObject_BackGround */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BackGround"), CBackGround::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	RELEASE_INSTANCE(CGameInstance);
+
+	return S_OK;
+}
+
 HRESULT CLoader::Loading_For_Level_GamePlay()
 {
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	Safe_AddRef(pGameInstance);
-
 	/* For.Texture */
 	m_strLoading = TEXT("텍스쳐를 로딩 중 입니다.");
+
+	Loading_Components_For_Level_GamePlay();
+	Loading_Scripts_For_Level_GamePlay();
+
+	/* For.Mesh */
+	m_strLoading = TEXT("메시를 로딩 중 입니다.");
+
+	/* For.Shader */
+	m_strLoading = TEXT("셰이더를 로딩 중 입니다.");
+
+	/* For.GameObject */
+	m_strLoading = TEXT("객체원형을 로딩 중 입니다.");
+
+	Loading_GameObjects_For_Level_GamePlay();
+
+	m_strLoading = TEXT("로딩 끝.");
+	m_isFinished = true;
+
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_Components_For_Level_GamePlay()
+{
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
 	/* For.Prototype_Component_Texture_Sky */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Sky"),
@@ -129,34 +173,33 @@ HRESULT CLoader::Loading_For_Level_GamePlay()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Tile0.jpg")))))
 		return E_FAIL;
 
+	RELEASE_INSTANCE(CGameInstance);
+
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_Scripts_For_Level_GamePlay()
+{
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
 	/* For.Prototype_Component_PlayerController*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_PlayerController"),
 		CPlayerController::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
-	
+
 	/* For.Prototype_Component_TestAIController*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_TestAIController"),
 		CTestAIController::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	///* For.Prototype_Component_SphereCollider */
-	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_SphereCollider"),
-	//	CSphereCollider::Create(m_pDevice, m_pContext))))
-	//	return E_FAIL;
+	RELEASE_INSTANCE(CGameInstance);
 
-	///* For.Prototype_Component_OBBCollider */
-	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_OBBCollider"),
-	//	COBBCollider::Create(m_pDevice, m_pContext))))
-	//	return E_FAIL;
+	return S_OK;
+}
 
-	/* For.Mesh */
-	m_strLoading = TEXT("메시를 로딩 중 입니다.");
-
-	/* For.Shader */
-	m_strLoading = TEXT("셰이더를 로딩 중 입니다.");
-
-	/* For.GameObject */
-	m_strLoading = TEXT("객체원형을 로딩 중 입니다.");
+HRESULT CLoader::Loading_GameObjects_For_Level_GamePlay()
+{
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
 	/* For.Prototype_GameObject_Terrain*/
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BasicTerrain"), CBasicTerrain::Create(m_pDevice, m_pContext))))
@@ -170,7 +213,33 @@ HRESULT CLoader::Loading_For_Level_GamePlay()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_CollisionTest"), CCollisionTest::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	Safe_Release(pGameInstance);
+	/* For.Prototype_GameObject_FlyingCamera */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_FlyingCamera"), CFlyingCamera::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	RELEASE_INSTANCE(CGameInstance);
+
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_For_Level_GameTool()
+{
+	/* For.Texture */
+	m_strLoading = TEXT("텍스쳐를 로딩 중 입니다.");
+
+	Loading_Components_For_Level_GameTool();
+	Loading_Scripts_For_Level_GameTool();
+
+	/* For.Mesh */
+	m_strLoading = TEXT("메시를 로딩 중 입니다.");
+
+	/* For.Shader */
+	m_strLoading = TEXT("셰이더를 로딩 중 입니다.");
+
+	/* For.GameObject */
+	m_strLoading = TEXT("객체원형을 로딩 중 입니다.");
+
+	Loading_GameObjects_For_Level_GameTool();
 
 	m_strLoading = TEXT("로딩 끝.");
 	m_isFinished = true;
@@ -178,13 +247,9 @@ HRESULT CLoader::Loading_For_Level_GamePlay()
 	return S_OK;
 }
 
-HRESULT CLoader::Loading_For_Level_GameTool()
+HRESULT CLoader::Loading_Components_For_Level_GameTool()
 {
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	Safe_AddRef(pGameInstance);
-
-	/* For.Texture */
-	m_strLoading = TEXT("텍스쳐를 로딩 중 입니다.");
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
 	/* For.Prototype_Component_Texture_Sky */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMETOOL, TEXT("Prototype_Component_Texture_Sky"),
@@ -196,23 +261,35 @@ HRESULT CLoader::Loading_For_Level_GameTool()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Tile0.jpg")))))
 		return E_FAIL;
 
-	/* For.Mesh */
-	m_strLoading = TEXT("메시를 로딩 중 입니다.");
+	RELEASE_INSTANCE(CGameInstance);
 
-	/* For.Shader */
-	m_strLoading = TEXT("셰이더를 로딩 중 입니다.");
+	return S_OK;
+}
 
-	/* For.GameObject */
-	m_strLoading = TEXT("객체원형을 로딩 중 입니다.");
+HRESULT CLoader::Loading_Scripts_For_Level_GameTool()
+{
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+
+
+	RELEASE_INSTANCE(CGameInstance);
+
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_GameObjects_For_Level_GameTool()
+{
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
 	/* For.Prototype_GameObject_Terrain*/
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BasicTerrain"), CBasicTerrain::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	Safe_Release(pGameInstance);
+	/* For.Prototype_GameObject_FlyingCamera */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_FlyingCamera"), CFlyingCamera::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
-	m_strLoading = TEXT("로딩 끝.");
-	m_isFinished = true;
+	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
 }

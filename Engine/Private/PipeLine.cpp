@@ -47,17 +47,17 @@ _matrix CPipeLine::Get_Transform_Matrix_Inverse(TRANSFORMSTATE eState) const
 	return XMLoadFloat4x4(&m_TransformMatrices_Inverse[eState]);
 }
 
-_float4 CPipeLine::Get_CamPosition_Float4x4(TRANSFORMSTATE eState) const
+_float4 CPipeLine::Get_CamPosition_Float4() const
 {
 	return m_vCamPosition;
 }
 
-_vector CPipeLine::Get_CamPosition_Vector(TRANSFORMSTATE eState) const
+_vector CPipeLine::Get_CamPosition_Vector() const
 {
 	return XMLoadFloat4(&m_vCamPosition);
 }
 
-HRESULT CPipeLine::Bind_TransformToShader(CShader * pShader, const char * pConstantName, CPipeLine::TRANSFORMSTATE eState)
+HRESULT CPipeLine::Bind_TransformToShader(CShader * pShader, const _char * pConstantName, CPipeLine::TRANSFORMSTATE eState)
 {	
 	return pShader->Bind_Matrix(pConstantName, &m_TransformMatrices[eState]);	
 }

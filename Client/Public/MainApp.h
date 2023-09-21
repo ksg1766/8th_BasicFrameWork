@@ -65,6 +65,7 @@ private:
 	HRESULT Open_Level(LEVELID eLevelID);
 	/* 모든레벨에서 사용되는 컴포넌트 원형. */
 	HRESULT Ready_Prototype_Components(); 
+	HRESULT Ready_Prototype_Scrpts(); 
 
 public:
 	static CMainApp* Create();

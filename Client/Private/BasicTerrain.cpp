@@ -78,26 +78,19 @@ HRESULT CBasicTerrain::Ready_Components(void* pArg)
 
 HRESULT CBasicTerrain::Bind_ShaderResources()
 {
-	/* 셰이더 전역변수로 던져야 할 값들을 던지자. */
-	//if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &IdentityMatrix)))
-	//	return E_FAIL;
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	Matrix		ViewMatrix, ProjMatrix;
-	ViewMatrix = XMMatrixLookAtLH(Vec4(0.f, 500.f, -500.f, 1.f), Vec4(0.f, 0.f, 0.f, 1.f), Vec4(0.0f, 1.f, 0.f, 0.f));
-	ProjMatrix = XMMatrixPerspectiveFovLH(XMConvertToRadians(60.0f), g_iWinSizeX / (_float)g_iWinSizeY, 0.1f, 1000.f);
+	if (FAILED(GetTransform()->Bind_ShaderResources(GetShader(), "g_WorldMatrix")) ||
+		FAILED(pGameInstance->Bind_TransformToShader(GetShader(), "g_ViewMatrix", CPipeLine::D3DTS_VIEW)) ||
+		FAILED(pGameInstance->Bind_TransformToShader(GetShader(), "g_ProjMatrix", CPipeLine::D3DTS_PROJ)) ||
+		//FAILED(GetShader()->Bind_RawValue("g_vCamPosition", &static_cast<const _float4&>(pGameInstance->Get_CamPosition_Float4((), sizeof(_float4))) ||
+		FAILED(GetTexture()->Bind_ShaderResource(GetShader(), "g_Texture", 0)))
+	{
+		RELEASE_INSTANCE(CGameInstance);
+		return E_FAIL;
+	}
 
-	if (FAILED(GetTransform()->Bind_ShaderResources(GetShader(), "g_WorldMatrix")))
-		return E_FAIL;
-	/*if (FAILED(GetShader()->Bind_Matrix("g_WorldMatrix", &GetTransform()->GetWorldMatrix())))
-		return E_FAIL;*/
-	if (FAILED(GetShader()->Bind_Matrix("g_ViewMatrix", &ViewMatrix)))
-		return E_FAIL;
-	if (FAILED(GetShader()->Bind_Matrix("g_ProjMatrix", &ProjMatrix)))
-		return E_FAIL;
-
-	if (FAILED(GetTexture()->Bind_ShaderResource(GetShader(), "g_Texture", 0)))
-		return E_FAIL;
-
+	RELEASE_INSTANCE(CGameInstance);
 	return S_OK;
 }
 

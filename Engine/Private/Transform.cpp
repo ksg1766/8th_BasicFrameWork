@@ -52,8 +52,10 @@ void CTransform::Rotate(Vec3& vEulers)
 
 	if (0.f != vEulers.y)
 	{
+		/*Vec3 v(m_matWorld.m[1]);
+		quat = Quaternion::CreateFromAxisAngle(v, XMConvertToRadians(vEulers.y));*/
 		Vec3 v(m_matWorld.m[1]);
-		quat = Quaternion::CreateFromAxisAngle(v, XMConvertToRadians(vEulers.y));
+		quat = Quaternion::CreateFromAxisAngle(Vec3(0.f, 1.f, 0.f), XMConvertToRadians(vEulers.y));
 	}
 	if (0.f != vEulers.x)
 	{

@@ -21,6 +21,7 @@ private:
 	HRESULT			Ready_Layer_Terrain();
 	HRESULT			Ready_Layer_Player();
 	HRESULT			Ready_Layer_Default();
+	HRESULT			Ready_Layer_Camera();
 
 public:
 	static class CLevel_GamePlay* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

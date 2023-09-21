@@ -5,14 +5,14 @@
 
 BEGIN(Client)
 
-class CCameraController : public CMonoBehaviour
+class CFlyingCameraController : public CMonoBehaviour
 {
 	using Super = CMonoBehaviour;
 
 private:
-	CCameraController(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CCameraController(const CCameraController& rhs);
-	virtual ~CCameraController() = default;
+	CFlyingCameraController(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CFlyingCameraController(const CFlyingCameraController& rhs);
+	virtual ~CFlyingCameraController() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype()				override;
@@ -25,14 +25,13 @@ private:
 	void	Input(const _float& fTimeDelta);
 
 private:
-	Vec3			m_vMaxLinearSpeed;
-	Vec3			m_vLinearSpeed;
+	CTransform*		m_pTransform;
 
-	Vec3			m_vMaxAngularSpeed;
+	_float			m_fLinearSpeed;
 	Vec3			m_vAngularSpeed;
 
 public:
-	static	CCameraController* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static	CFlyingCameraController* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CComponent* Clone(CGameObject* pGameObject, void* pArg) override;
 	virtual void Free() override;
 };

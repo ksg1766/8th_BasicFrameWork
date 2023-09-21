@@ -70,7 +70,6 @@ void CCollisionManager::CheckGroup(LAYERTAG eLeft, LAYERTAG eRight)
 void CCollisionManager::Reset()
 {
 	::ZeroMemory(m_arrCheck, sizeof(_uint) * (_uint)LAYERTAG::LAYER_END);
-	pCurrentLevelLayers = CObjectManager::GetInstance()->GetCurrentLevelLayers();
 }
 
 bool CCollisionManager::IsCollided(CCollider* pLeft, CCollider* pRight)
@@ -86,7 +85,7 @@ bool CCollisionManager::IsCollided(CCollider* pLeft, CCollider* pRight)
 
 void CCollisionManager::CheckDynamicCollision(LAYERTAG& eLayerLeft, LAYERTAG& eLayerRight , const _float& fTimeDelta)
 {
-	if (!(*pCurrentLevelLayers)[eLayerLeft] || !(*pCurrentLevelLayers)[eLayerLeft])
+	if (!(*pCurrentLevelLayers)[eLayerLeft] || !(*pCurrentLevelLayers)[eLayerRight])
 		return;
 
 	vector<CGameObject*>& vecLeft = (*pCurrentLevelLayers)[eLayerLeft]->GetGameObjects();
@@ -115,7 +114,7 @@ void CCollisionManager::CheckDynamicCollision(LAYERTAG& eLayerLeft, LAYERTAG& eL
 		if (nullptr == pLeftCol)
 			continue;
 
-		_float	fLeftMinZ = pLeftCol->GetBoundingSphere().Center.z - pLeftCol->GetBoundingSphere().Radius;
+		_float	fLeftMaxZ = pLeftCol->GetBoundingSphere().Center.z + pLeftCol->GetBoundingSphere().Radius;
 		_bool	bIgnoreRest = false;
 
 		for (auto& iterR : vecRight)
@@ -130,7 +129,7 @@ void CCollisionManager::CheckDynamicCollision(LAYERTAG& eLayerLeft, LAYERTAG& eL
 			{
 				_float fRightMinZ = pRightCol->GetBoundingSphere().Center.z - pRightCol->GetBoundingSphere().Radius;
 
-				if (false == CompareMinZ(fLeftMinZ, fRightMinZ)) // false면 이후 무시 or Exit호출
+				if (false == CompareMaxMinZ(fLeftMaxZ, fRightMinZ)) // false면 이후 무시 or Exit호출
 				{
 					bIgnoreRest = true;
 				}
@@ -326,9 +325,9 @@ void CCollisionManager::CheckStaticCollision(LAYERTAG& eDynamicLayer, const _flo
 	}
 }
 
-_bool CCollisionManager::CompareMinZ(_float& fLeftMinZ, _float& fRightMinZ)
+_bool CCollisionManager::CompareMaxMinZ(_float& fLeftMaxZ, _float& fRightMinZ)
 {
-	if (fLeftMinZ < fRightMinZ)
+	if (fLeftMaxZ < fRightMinZ)
 		return false;
 	return true;
 }
