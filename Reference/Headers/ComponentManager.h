@@ -8,6 +8,7 @@
 #include "Renderer.h"
 #include "VIBuffer_Rect.h"
 #include "VIBuffer_Cube.h"
+#include "VIBuffer_Grid.h"
 #include "RigidDynamic.h"
 #include "RigidStatic.h"
 #include "MonoBehaviour.h"

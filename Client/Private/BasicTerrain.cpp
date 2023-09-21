@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\Public\BasicTerrain.h"
 #include "GameInstance.h"
+#include "DebugTerrainGrid.h"
 
 CBasicTerrain::CBasicTerrain(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: Super(pDevice, pContext)
@@ -19,7 +20,9 @@ HRESULT CBasicTerrain::Initialize_Prototype()
 
 HRESULT CBasicTerrain::Initialize(void* pArg)
 {
-	if (FAILED(Ready_Components(pArg)))
+	if (FAILED(Ready_FixedComponents(pArg)))
+		return E_FAIL;
+	if (FAILED(Ready_Scripts(pArg)))
 		return E_FAIL;
 
 	return S_OK;
@@ -27,10 +30,12 @@ HRESULT CBasicTerrain::Initialize(void* pArg)
 
 void CBasicTerrain::Tick(const _float& fTimeDelta)
 {
+	Super::Tick(fTimeDelta);
 }
 
 void CBasicTerrain::LateTick(const _float& fTimeDelta)
 {
+	Super::Tick(fTimeDelta);
 	GetRenderer()->Add_RenderGroup(CRenderer::RG_NONBLEND, this);
 }
 
@@ -47,14 +52,21 @@ HRESULT CBasicTerrain::Render()
 
 	static_cast<CTerrain*>(GetFixedComponent(ComponentType::Terrain))->Render();
 
+	// DebugRender
+	Super::DebugRender();
+
 	return S_OK;
 }
 
-HRESULT CBasicTerrain::Ready_Components(void* pArg)
+HRESULT CBasicTerrain::Ready_FixedComponents(void* pArg)
 {
 	/* Com_Renderer */
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Renderer, TEXT("Prototype_Component_Renderer"))))
 		return E_FAIL;
+
+	///* Com_VIBuffer_DebugGrid */
+	//if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Buffer, TEXT("Prototype_Component_VIBuffer_Grid"))))
+	//	return E_FAIL;
 
 	/* Com_Shader */
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Shader, TEXT("Prototype_Component_Shader_VtxNorTex"))))
@@ -71,6 +83,15 @@ HRESULT CBasicTerrain::Ready_Components(void* pArg)
 
 	/* Com_Transform */
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Transform, TEXT("Prototype_Component_Transform"))))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CBasicTerrain::Ready_Scripts(void* pArg)
+{
+	/* Com_PlayerController */
+	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Script, TEXT("Prototype_Component_DebugTerrainGrid"))))
 		return E_FAIL;
 
 	return S_OK;

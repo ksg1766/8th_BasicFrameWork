@@ -23,7 +23,8 @@ public:
 	virtual HRESULT			Render()							override;
 
 protected:
-	HRESULT Ready_Components(void* pArg);
+	HRESULT Ready_FixedComponents(void* pArg);
+	HRESULT Ready_Scripts(void* pArg);
 	HRESULT Bind_ShaderResources();
 
 public:

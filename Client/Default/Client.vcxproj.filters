@@ -85,6 +85,12 @@
     <Filter Include="02.GameObjects\Camera\01.MainCamera\Script">
       <UniqueIdentifier>{5c7e68d7-8b95-4ea2-868c-2f65d5a1612c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\BasicTerrain\GameObject">
+      <UniqueIdentifier>{79a39662-8215-4a70-b672-949f35bc41ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\BasicTerrain\Script">
+      <UniqueIdentifier>{c8081918-9961-4612-a3ca-15cf00eb28a3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -153,9 +159,6 @@
     <ClInclude Include="..\Public\ImGUI\imstb_truetype.h">
       <Filter>01.Levels\02.GameTool\ImGUI</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\BasicTerrain.h">
-      <Filter>02.GameObjects\BasicTerrain</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\TempCube.h">
       <Filter>02.GameObjects\TempCube\00.GameObject</Filter>
     </ClInclude>
@@ -176,6 +179,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\FlyingCameraController.h">
       <Filter>02.GameObjects\Camera\00.FlyingCamera\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BasicTerrain.h">
+      <Filter>02.GameObjects\BasicTerrain\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\DebugTerrainGrid.h">
+      <Filter>02.GameObjects\BasicTerrain\Script</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -230,9 +239,6 @@
     <ClCompile Include="..\Public\ImGUI\imgui_widgets.cpp">
       <Filter>01.Levels\02.GameTool\ImGUI</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\BasicTerrain.cpp">
-      <Filter>02.GameObjects\BasicTerrain</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\TempCube.cpp">
       <Filter>02.GameObjects\TempCube\00.GameObject</Filter>
     </ClCompile>
@@ -250,6 +256,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\FlyingCameraController.cpp">
       <Filter>02.GameObjects\Camera\00.FlyingCamera\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BasicTerrain.cpp">
+      <Filter>02.GameObjects\BasicTerrain\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\DebugTerrainGrid.cpp">
+      <Filter>02.GameObjects\BasicTerrain\Script</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -273,6 +285,12 @@
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxCubeTex.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxCubeNom.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxDebug.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

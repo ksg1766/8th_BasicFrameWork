@@ -69,13 +69,13 @@ _bool COBBCollider::Intersects(Super* other)
 	switch (type)
 	{
 	case ColliderType::Sphere:
-		return m_tBoundingBox.Intersects(dynamic_cast<CSphereCollider*>(other)->GetBoundingSphere());
+		return m_tBoundingBox.Intersects(static_cast<CSphereCollider*>(other)->GetBoundingSphere());
 	case ColliderType::AABB:
-		return m_tBoundingBox.Intersects(dynamic_cast<CAABBCollider*>(other)->GetBoundingBox());
+		return m_tBoundingBox.Intersects(static_cast<CAABBCollider*>(other)->GetBoundingBox());
 	case ColliderType::OBB:
-		return m_tBoundingBox.Intersects(dynamic_cast<COBBCollider*>(other)->GetBoundingBox());
+		return m_tBoundingBox.Intersects(static_cast<COBBCollider*>(other)->GetBoundingBox());
 	//case ColliderType::Cylinder:
-	//	return m_tBoundingBox.Intersects(dynamic_cast<CCylinderCollider*>(other)->GetBoundingCylinder());
+	//	return m_tBoundingBox.Intersects(static_cast<CCylinderCollider*>(other)->GetBoundingCylinder());
 	}
 
 	return false;

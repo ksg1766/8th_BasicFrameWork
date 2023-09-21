@@ -127,6 +127,9 @@
     <Filter Include="01.Utiltiy\01.Managers\06.PipeLine">
       <UniqueIdentifier>{49702ad5-04bd-43de-b16c-ccea0713acd8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utiltiy\04.Component\05.VIBuffer\Debug">
+      <UniqueIdentifier>{7a7f8416-5029-409e-90b4-c7880d5bc385}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -288,6 +291,9 @@
     <ClInclude Include="..\Public\PipeLine.h">
       <Filter>01.Utiltiy\01.Managers\06.PipeLine</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Grid.h">
+      <Filter>01.Utiltiy\04.Component\05.VIBuffer\Debug</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -430,6 +436,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\PipeLine.cpp">
       <Filter>01.Utiltiy\01.Managers\06.PipeLine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Grid.cpp">
+      <Filter>01.Utiltiy\04.Component\05.VIBuffer\Debug</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

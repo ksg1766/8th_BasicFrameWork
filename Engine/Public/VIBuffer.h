@@ -39,10 +39,6 @@ protected:
 	_uint						m_iIndexSizeofPrimitive = 0;
 	_uint						m_iNumIndicesofPrimitive = 0;
 
-	// For Rect
-	/*_uint						m_iIndexStride = { 0 };
-	_uint						m_iNumIndices = { 0 };*/
-
 	DXGI_FORMAT					m_eIndexFormat;
 
 protected:

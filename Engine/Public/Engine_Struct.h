@@ -23,6 +23,15 @@ namespace Engine
 		unsigned long		_0, _1, _2;
 	}FACEINDICES32;
 
+	typedef struct ENGINE_DLL tagVertex_Position
+	{
+		XMFLOAT3		vPosition;
+
+		static const _uint				iNumElements = 1;
+		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
+
+	}VTXPOS;
+
 	typedef struct ENGINE_DLL tagVertex_Position_Texcoord
 	{
 		XMFLOAT3		vPosition;
@@ -44,7 +53,7 @@ namespace Engine
 
 	}VTXNORTEX;
 
-	typedef struct ENGINE_DLL tagVertex_Cube_Texture
+	typedef struct ENGINE_DLL tagVertex_Cube_Texcoord
 	{
 		XMFLOAT3		vPosition;
 		XMFLOAT3		vTexture;
@@ -53,6 +62,17 @@ namespace Engine
 		static const D3D11_INPUT_ELEMENT_DESC Elements[iNumElements];
 
 	}VTXCUBETEX;
+
+	typedef struct ENGINE_DLL tagVertex_Cube_Texcoord_Normal
+	{
+		XMFLOAT3		vPosition;
+		XMFLOAT3		vNormal;
+		XMFLOAT3		vTexture;
+
+		static const _uint				iNumElements = 3;
+		static const D3D11_INPUT_ELEMENT_DESC Elements[iNumElements];
+
+	}VTXCUBENOM;
 
 	typedef struct tagVertexAnimModel
 	{
