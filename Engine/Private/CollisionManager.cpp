@@ -103,7 +103,7 @@ void CCollisionManager::CheckDynamicCollision(LAYERTAG& eLayerLeft, LAYERTAG& eL
 		m_arrSorted[(_uint)eLayerRight] = true;
 	}
 
-	CollisionMap::iterator iter;
+	CollisionHash::iterator iter;
 
 	for (auto& iterL : vecLeft)
 	{
@@ -220,7 +220,7 @@ void CCollisionManager::CheckStaticCollision(LAYERTAG& eDynamicLayer, const _flo
 	
 	CQuadTree* pQuadTreeInstance = CQuadTree::GetInstance();
 	
-	CollisionMap::iterator iter;
+	CollisionHash::iterator iter;
 
 	for (auto& iterL : vecLeft)
 	{

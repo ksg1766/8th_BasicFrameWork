@@ -14,62 +14,78 @@ CVIBuffer_Grid::CVIBuffer_Grid(const CVIBuffer_Grid& rhs)
 HRESULT CVIBuffer_Grid::Initialize_Prototype()
 {
 	m_iStride = sizeof(VTXPOS); /* 정점하나의 크기 .*/
-	m_iNumVertices = 100 * 100 * 8;
+	m_iNumVertices = (256) * (256) * 8;
 	m_iNumVBs = 1;
+	m_iNumPrimitives = m_iNumVertices / 2;
+	m_iNumIndicesofPrimitive = 2;
 
 	VTXPOS*		pVertices = new VTXPOS[m_iNumVertices];
 	::ZeroMemory(pVertices, sizeof(VTXPOS) * m_iNumVertices);
 
-	_ushort* pIndices = new _ushort[m_iNumVertices];
-	::ZeroMemory(pIndices, sizeof(_ushort) * m_iNumVertices);
+	_uint* pIndices = new _uint[m_iNumVertices];
+	::ZeroMemory(pIndices, sizeof(_uint) * m_iNumVertices);
 
 	_uint index = 0;
 
-	for (_uint i = 0; i < 100; ++i)
+	for (_int i = -128; i < 128; ++i)
 	{
-		for (_uint j = 0; j < 100; ++j)
+		for (_int j = -128; j < 128; ++j)
 		{
 			_float	fPositionX = (_float)i;
-			_float	fPositionZ = (_float)(j+1);
+			_float	fPositionZ = (_float)(j + 1);
 
-			pVertices[index].vPosition = XMFLOAT3(fPositionX, 0.f, fPositionZ);
-			pIndices[index] = index++;
-
-			fPositionX = (_float)(i + 1);
-			fPositionZ = (_float)(j + 1);
-
-			pVertices[index].vPosition = XMFLOAT3(fPositionX, 0.f, fPositionZ);
-			pIndices[index] = index++;
+			pVertices[index].vPosition = XMFLOAT3(fPositionX * 4.f, 10.f, fPositionZ * 4.f);
+			pIndices[index] = index;
+			index++;
 
 			fPositionX = (_float)(i + 1);
 			fPositionZ = (_float)(j + 1);
 
-			pVertices[index].vPosition = XMFLOAT3(fPositionX, 0.f, fPositionZ);
-			pIndices[index] = index++;
+			pVertices[index].vPosition = XMFLOAT3(fPositionX * 4.f, 10.f, fPositionZ * 4.f);
+			pIndices[index] = index;
+			index++;
+
+			fPositionX = (_float)(i + 1);
+			fPositionZ = (_float)(j + 1);
+
+			pVertices[index].vPosition = XMFLOAT3(fPositionX * 4.f, 10.f, fPositionZ * 4.f);
+			pIndices[index] = index;
+			index++;
 
 			fPositionX = (_float)(i + 1);
 			fPositionZ = (_float)j;
 
-			pVertices[index].vPosition = XMFLOAT3(fPositionX, 0.f, fPositionZ);
-			pIndices[index] = index++;
+			pVertices[index].vPosition = XMFLOAT3(fPositionX * 4.f, 10.f, fPositionZ * 4.f);
+			pIndices[index] = index;
+			index++;
 
 			fPositionX = (_float)(i + 1);
 			fPositionZ = (_float)j;
 
-			pVertices[index].vPosition = XMFLOAT3(fPositionX, 0.f, fPositionZ);
-			pIndices[index] = index++;
+			pVertices[index].vPosition = XMFLOAT3(fPositionX * 4.f, 10.f, fPositionZ * 4.f);
+			pIndices[index] = index;
+			index++;
 
 			fPositionX = (_float)i;
 			fPositionZ = (_float)j;
 
-			pVertices[index].vPosition = XMFLOAT3(fPositionX, 0.f, fPositionZ);
-			pIndices[index] = index++;
+			pVertices[index].vPosition = XMFLOAT3(fPositionX * 4.f, 10.f, fPositionZ * 4.f);
+			pIndices[index] = index;
+			index++;
+			
+			fPositionX = (_float)i;
+			fPositionZ = (_float)j;
+
+			pVertices[index].vPosition = XMFLOAT3(fPositionX * 4.f, 10.f, fPositionZ * 4.f);
+			pIndices[index] = index;
+			index++;
 
 			fPositionX = (_float)i;
 			fPositionZ = (_float)(j + 1);
 
-			pVertices[index].vPosition = XMFLOAT3(fPositionX, 0.f, fPositionZ);
-			pIndices[index] = index++;
+			pVertices[index].vPosition = XMFLOAT3(fPositionX * 4.f, 10.f, fPositionZ * 4.f);
+			pIndices[index] = index;
+			index++;
 		}
 	}
 
@@ -84,7 +100,7 @@ HRESULT CVIBuffer_Grid::Initialize_Prototype()
 	m_BufferDesc.MiscFlags = 0;
 	m_BufferDesc.StructureByteStride = m_iStride;
 
-	::ZeroMemory(&m_SubResourceData, sizeof m_SubResourceData);
+	::ZeroMemory(&m_SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
 	m_SubResourceData.pSysMem = pVertices;
 
 	if (FAILED(__super::Create_Buffer(&m_pVB)))
@@ -93,19 +109,19 @@ HRESULT CVIBuffer_Grid::Initialize_Prototype()
 	Safe_Delete_Array(pVertices);
 
 	// Index Buffer
-	m_eIndexFormat = DXGI_FORMAT_R16_UINT;
+	m_eIndexFormat = DXGI_FORMAT_R32_UINT;
 	m_eTopology = D3D_PRIMITIVE_TOPOLOGY_LINELIST;
 
 	/* 인덱스 버퍼를 만드낟. */
 	::ZeroMemory(&m_BufferDesc, sizeof m_BufferDesc);
-	m_BufferDesc.ByteWidth = sizeof(_ushort) * m_iNumVertices;
+	m_BufferDesc.ByteWidth = sizeof(_uint) * m_iNumVertices;
 	m_BufferDesc.Usage = D3D11_USAGE_DEFAULT; /* 정적버퍼로 할당한다. (Lock, unLock 호출 불가)*/
 	m_BufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	m_BufferDesc.CPUAccessFlags = 0;
 	m_BufferDesc.MiscFlags = 0;
 	m_BufferDesc.StructureByteStride = 0;
 
-	::ZeroMemory(&m_SubResourceData, sizeof m_SubResourceData);
+	::ZeroMemory(&m_SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
 	m_SubResourceData.pSysMem = pIndices;
 
 	if (FAILED(__super::Create_Buffer(&m_pIB)))

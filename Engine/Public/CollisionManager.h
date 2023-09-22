@@ -58,8 +58,8 @@ private:
 		}
 	};	// HashFunctionObject (MurmurHash3)
 
-	using CollisionMap = unordered_map<uint64, _bool, MurmurHash3Hasher>;
-	CollisionMap m_hashColInfo;
+	using CollisionHash = unordered_map<uint64, _bool, MurmurHash3Hasher>;
+	CollisionHash m_hashColInfo;
 
 	_uint	m_arrCheck[(_uint)LAYERTAG::LAYER_END] = { 0 };
 	_bool	m_arrSorted[(_uint)LAYERTAG::LAYER_END] = { 0 };

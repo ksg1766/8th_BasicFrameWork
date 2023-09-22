@@ -81,7 +81,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Default()
 
 	CGameObject* pGameObject = nullptr;
 
-	for (_uint i = 0; i < 100; ++i)
+	for (_uint i = 0; i < 1; ++i)
 	{
 		pGameObject = pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, LAYERTAG::DEFAULT, TEXT("Prototype_GameObject_CollisionTest"));
 		if (nullptr == pGameObject)	return E_FAIL;
