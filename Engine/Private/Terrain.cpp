@@ -1,5 +1,7 @@
 #include "..\Public\Terrain.h"
+#include "PipeLine.h"
 #include "FileUtils.h"
+#include "DebugDraw.h"
 
 CTerrain::CTerrain(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: Super(pDevice, pContext)
@@ -10,13 +12,34 @@ CTerrain::CTerrain(const CTerrain& rhs)
 	: Super(rhs)
 	, m_iNumVerticesX(rhs.m_iNumVerticesX)
 	, m_iNumVerticesZ(rhs.m_iNumVerticesZ)
+#ifdef _DEBUG
+	, m_pBatch(rhs.m_pBatch)
+	, m_pEffect(rhs.m_pEffect)
+	, m_pInputLayout(rhs.m_pInputLayout)
+#endif
 {
-	
+#ifdef _DEBUG
+	Safe_AddRef(m_pInputLayout);
+#endif
 }
 
 HRESULT CTerrain::Initialize_Prototype()
 {
 	m_eType = ComponentType::Terrain;
+
+#ifdef _DEBUG
+	m_pBatch = new PrimitiveBatch<VertexPositionColor>(m_pContext);
+
+	m_pEffect = new BasicEffect(m_pDevice);
+	m_pEffect->SetVertexColorEnabled(true);
+
+	const void*	pShaderByteCodes = nullptr;
+	size_t		iLength = 0;
+	m_pEffect->GetVertexShaderBytecode(&pShaderByteCodes, &iLength);
+
+	if (FAILED(m_pDevice->CreateInputLayout(VertexPositionColor::InputElements, VertexPositionColor::InputElementCount, pShaderByteCodes, iLength, &m_pInputLayout)))
+		return E_FAIL;
+#endif
 
 	return S_OK;
 }
@@ -194,6 +217,28 @@ HRESULT CTerrain::InitializeWithHeightMap(const wstring& strHeightMapPath)
 	Safe_Delete_Array(pIndices);
 
 	return S_OK;
+}
+
+void CTerrain::DebugRender()
+{
+	m_pEffect->SetWorld(XMMatrixIdentity());
+
+	CPipeLine* pPipeLine = GET_INSTANCE(CPipeLine);
+
+	m_pEffect->SetView(pPipeLine->Get_Transform_Matrix(CPipeLine::D3DTS_VIEW));
+	m_pEffect->SetProjection(pPipeLine->Get_Transform_Matrix(CPipeLine::D3DTS_PROJ));
+
+	RELEASE_INSTANCE(CPipeLine);
+
+	m_pEffect->Apply(m_pContext);
+
+	m_pContext->IASetInputLayout(m_pInputLayout);
+
+	m_pBatch->Begin();
+
+	DX::DrawGrid(m_pBatch, m_iNumVerticesX / 2.f * Vec3::UnitX, m_iNumVerticesZ / 2.f * Vec3::UnitZ, 10.f * Vec3::UnitY, m_iNumVerticesX / 4.f, m_iNumVerticesZ / 4.f, Colors::Cyan);
+
+	m_pBatch->End();
 }
 
 CTerrain* CTerrain::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

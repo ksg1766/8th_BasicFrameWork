@@ -49,6 +49,8 @@ void CGameObject::LateTick(const _float& fTimeDelta)
 
 void CGameObject::DebugRender()
 {
+	for (auto& iter : m_arrComponents)
+		if (iter)	iter->DebugRender();
 	for (auto& iter : m_vecScripts)
 		iter->DebugRender();
 }

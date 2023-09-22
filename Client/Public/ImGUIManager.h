@@ -6,7 +6,7 @@
 #include "../Public/ImGUI/imgui_impl_dx11.h"
 #include "../Public/ImGUI/imgui_impl_win32.h"
 
-BEGIN(Engine)
+BEGIN(Client)
 
 class CImGUIManager final : public CBase
 {

@@ -58,7 +58,7 @@ HRESULT CCollisionTest::Render()
 	GetBuffer()->Render();
 
 #ifdef _DEBUG
-
+	Super::DebugRender();
 #endif
 
 	return S_OK;

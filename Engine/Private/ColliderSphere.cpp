@@ -6,6 +6,7 @@
 #include "ColliderOBB.h"
 #include "ColliderCylinder.h"
 #include "RigidDynamic.h"
+#include "DebugDraw.h"
 
 CSphereCollider::CSphereCollider(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:Super(pDevice, pContext, ColliderType::Sphere)
@@ -22,6 +23,8 @@ CSphereCollider::CSphereCollider(const CSphereCollider& rhs)
 
 HRESULT CSphereCollider::Initialize_Prototype()
 {
+	Super::Initialize_Prototype();
+
 	return S_OK;
 }
 
@@ -31,7 +34,7 @@ HRESULT CSphereCollider::Initialize(void* pArg)
 	CTransform* pTransform = GetGameObject()->GetTransform();
 
 	m_tBoundingSphere.Center = pTransform->GetPosition();
-	m_tBoundingSphere.Radius = pTransform->GetLocalScale().Length();
+	m_tBoundingSphere.Radius = pTransform->GetLocalScale().Length() / 2.f;
 
 	return S_OK;
 }
@@ -41,7 +44,7 @@ void CSphereCollider::Tick(const _float& fTimeDelta)
 	CTransform* pTransform = GetGameObject()->GetTransform();
 
 	m_tBoundingSphere.Center = pTransform->GetPosition();
-	m_tBoundingSphere.Radius = pTransform->GetLocalScale().Length();
+	m_tBoundingSphere.Radius = pTransform->GetLocalScale().Length() / 2.f;
 
 	//Vec3 scale = GetGameObject()->GetTransform()->GetLocalScale();
 	//m_tBoundingSphere.Radius = m_fRadius * max(max(scale.x, scale.y), scale.z);
@@ -53,6 +56,13 @@ void CSphereCollider::LateTick(const _float& fTimeDelta)
 
 void CSphereCollider::DebugRender()
 {
+	Super::DebugRender();
+
+	m_pBatch->Begin();
+
+	DX::Draw(m_pBatch, m_tBoundingSphere, Colors::Green);
+
+	m_pBatch->End();
 }
 
 _bool CSphereCollider::Intersects(Ray& ray, OUT _float& distance)

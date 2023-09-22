@@ -26,9 +26,8 @@ public:
 	HRESULT Add_RenderGroup(RENDERGROUP eRenderGroup, class CGameObject* pGameObject);
 	HRESULT Draw_RenderObjects();
 
-
 private:
-	list<class CGameObject*>			m_RenderObjects[RG_END];
+	vector<class CGameObject*>			m_RenderObjects[RG_END];
 
 private:
 	HRESULT Render_Priority();

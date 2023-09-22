@@ -19,7 +19,7 @@ HRESULT CRenderer::Initialize(void * pArg)
 HRESULT CRenderer::Add_RenderGroup(RENDERGROUP eRenderGroup, CGameObject * pGameObject)
 {
 	if (eRenderGroup >= RG_END)
-		return E_FAIL;
+		return S_OK;
 
 	m_RenderObjects[eRenderGroup].push_back(pGameObject);
 
@@ -31,15 +31,15 @@ HRESULT CRenderer::Add_RenderGroup(RENDERGROUP eRenderGroup, CGameObject * pGame
 HRESULT CRenderer::Draw_RenderObjects()
 {
 	if (FAILED(Render_Priority()))
-		return E_FAIL;
+		return S_OK;
 	if (FAILED(Render_NonLight()))
-		return E_FAIL;
+		return S_OK;
 	if (FAILED(Render_NonBlend()))
-		return E_FAIL;
+		return S_OK;
 	if (FAILED(Render_Blend()))
-		return E_FAIL;
+		return S_OK;
 	if (FAILED(Render_UI()))
-		return E_FAIL;
+		return S_OK;
 
 	return S_OK;
 }

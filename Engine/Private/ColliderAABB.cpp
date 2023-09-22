@@ -3,6 +3,7 @@
 #include "ColliderAABB.h"
 #include "ColliderOBB.h"
 #include "ColliderCylinder.h"
+#include "DebugDraw.h"
 
 CAABBCollider::CAABBCollider(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:Super(pDevice, pContext, ColliderType::AABB)
@@ -35,6 +36,13 @@ void CAABBCollider::LateTick(const _float& fTimeDelta)
 
 void CAABBCollider::DebugRender()
 {
+	Super::DebugRender();
+
+	m_pBatch->Begin();
+
+	DX::Draw(m_pBatch, m_tBoundingBox, Colors::Lime);
+
+	m_pBatch->End();
 }
 
 _bool CAABBCollider::Intersects(Ray& ray, OUT _float& distance)

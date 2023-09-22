@@ -33,6 +33,7 @@ void CRigidStatic::LateTick(const _float& fTimeDelta)
 
 void CRigidStatic::DebugRender()
 {
+	Super::DebugRender();
 }
 
 void CRigidStatic::OnCollisionEnter(const COLLISION_DESC& desc)

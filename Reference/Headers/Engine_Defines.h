@@ -14,6 +14,10 @@
 #include "SimpleMath.h"
 #include <d3dcompiler.h>
 #include <Effect11/d3dx11effect.h>
+#include <DirectXColors.h>
+#include <DirectXTK/Effects.h>
+#include <DirectXTK/PrimitiveBatch.h>
+#include <DirectXTK/VertexTypes.h>
 #include <DirectXTK/DDSTextureLoader.h>
 #include <DirectXTK/WICTextureLoader.h>
 

@@ -5,6 +5,7 @@
 #include "ColliderAABB.h"
 #include "ColliderOBB.h"
 #include "ColliderCylinder.h"
+#include "DebugDraw.h"
 
 COBBCollider::COBBCollider(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: Super(pDevice, pContext, ColliderType::OBB)
@@ -20,6 +21,8 @@ COBBCollider::COBBCollider(const COBBCollider& rhs)
 
 HRESULT COBBCollider::Initialize_Prototype()
 {
+	Super::Initialize_Prototype();
+
 	return S_OK;
 }
 
@@ -54,7 +57,13 @@ void COBBCollider::LateTick(const _float& fTimeDelta)
 
 void COBBCollider::DebugRender()
 {
+	Super::DebugRender();
 
+	m_pBatch->Begin();
+
+	DX::Draw(m_pBatch, m_tBoundingBox, Colors::Lime);
+
+	m_pBatch->End();
 }
 
 _bool COBBCollider::Intersects(Ray& ray, OUT _float& distance)

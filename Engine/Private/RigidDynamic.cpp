@@ -74,6 +74,7 @@ void CRigidDynamic::LateTick(const _float& fTimeDelta)
 
 void CRigidDynamic::DebugRender()
 {
+	Super::DebugRender();
 }
 
 void CRigidDynamic::KineticUpdate(const _float& fTimeDelta)

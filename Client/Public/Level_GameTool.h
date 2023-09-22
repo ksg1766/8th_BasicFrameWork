@@ -22,8 +22,11 @@ public:
 
 private:
 	HRESULT			Ready_Layer_Terrain();
+	HRESULT			Ready_Layer_Camera();
 
 private:
+	class CImGUIManager* m_pImGUIInstance;
+
 	_bool	m_IsImGUIReady = false;
 	_bool	show_demo_window = true;
 	_bool	show_another_window = false;

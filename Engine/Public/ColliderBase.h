@@ -23,6 +23,11 @@ protected:
 	virtual ~CCollider() = default;
 
 public:
+	virtual HRESULT Initialize_Prototype()						override;
+	virtual HRESULT Initialize(void* pArg)						override;
+	virtual void	DebugRender()								override;
+
+
 	virtual _bool	Intersects(Ray& ray, OUT float& distance)	PURE;
 	virtual _bool	Intersects(CCollider* other)				PURE;
 
@@ -50,6 +55,15 @@ private:
 	_uint			m_iID;
 	static _uint	g_iNextID;
 
+	//_int			m_iCol;
+
+#ifdef _DEBUG
+protected:
+	PrimitiveBatch<VertexPositionColor>* m_pBatch = nullptr;
+	BasicEffect* m_pEffect = nullptr;
+	ID3D11InputLayout* m_pInputLayout = nullptr;
+	_float4										m_vColor = _float4(0.f, 1.f, 0.f, 1.f);
+#endif
 
 public:
 	virtual void Free()						override;

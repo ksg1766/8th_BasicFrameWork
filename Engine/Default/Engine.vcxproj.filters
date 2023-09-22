@@ -294,6 +294,9 @@
     <ClInclude Include="..\Public\VIBuffer_Grid.h">
       <Filter>01.Utiltiy\04.Component\05.VIBuffer\Debug</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\DebugDraw.h">
+      <Filter>98.Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -439,6 +442,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_Grid.cpp">
       <Filter>01.Utiltiy\04.Component\05.VIBuffer\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\DebugDraw.cpp">
+      <Filter>98.Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

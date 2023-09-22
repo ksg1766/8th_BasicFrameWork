@@ -104,7 +104,7 @@ HRESULT CMainApp::Ready_Prototype_Components()
 	/* For.Prototype_Component_Renderer */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Renderer"), 
 		m_pRenderer = CRenderer::Create(m_pDevice, m_pContext))))
-		return E_FAIL;	
+		return E_FAIL;
 
 	/* For.Prototype_Component_Transform */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Transform"),

@@ -16,13 +16,21 @@ public:
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg) override;
 	HRESULT			InitializeWithHeightMap(const wstring& strHeightMapPath);
+	void			DebugRender()	override;
 
 public:
 	
+#ifdef _DEBUG
 private:
-	_ulong			m_iNumVerticesX = { 0 };
-	_ulong			m_iNumVerticesZ = { 0 };
-	FACEINDICES32*	m_pFaceIndices = nullptr;
+	_ulong				m_iNumVerticesX = { 0 };
+	_ulong				m_iNumVerticesZ = { 0 };
+	FACEINDICES32*		m_pFaceIndices = nullptr;
+	ID3D11InputLayout*	m_pInputLayout = nullptr;
+#endif
+
+private:
+	PrimitiveBatch<VertexPositionColor>* m_pBatch = nullptr;
+	class BasicEffect* m_pEffect = nullptr;
 
 public:
 	static CTerrain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

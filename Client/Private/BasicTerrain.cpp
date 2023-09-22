@@ -41,6 +41,7 @@ void CBasicTerrain::LateTick(const _float& fTimeDelta)
 
 void CBasicTerrain::DebugRender()
 {
+
 }
 
 HRESULT CBasicTerrain::Render()
@@ -52,8 +53,10 @@ HRESULT CBasicTerrain::Render()
 
 	static_cast<CTerrain*>(GetFixedComponent(ComponentType::Terrain))->Render();
 
+#ifdef _DEBUG
 	// DebugRender
 	Super::DebugRender();
+#endif
 
 	return S_OK;
 }
@@ -64,22 +67,22 @@ HRESULT CBasicTerrain::Ready_FixedComponents(void* pArg)
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Renderer, TEXT("Prototype_Component_Renderer"))))
 		return E_FAIL;
 
-	///* Com_VIBuffer_DebugGrid */
-	//if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Buffer, TEXT("Prototype_Component_VIBuffer_Grid"))))
-	//	return E_FAIL;
-
 	/* Com_Shader */
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Shader, TEXT("Prototype_Component_Shader_VtxNorTex"))))
 		return E_FAIL;
 
 	/* Com_Terrain */
-	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Terrain, TEXT("Prototype_Component_Terrain")))
-		|| FAILED(dynamic_cast<CTerrain*>(GetFixedComponent(ComponentType::Terrain))->InitializeWithHeightMap(TEXT("../Bin/Resources/Textures/Terrain/Height1.bmp"))))
+	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Terrain, TEXT("Prototype_Component_Terrain"))))
+		return E_FAIL;
+
+	if (FAILED(dynamic_cast<CTerrain*>(GetFixedComponent(ComponentType::Terrain))->InitializeWithHeightMap(TEXT("../Bin/Resources/Textures/Terrain/Height1.bmp"))))
 		return E_FAIL;
 
 	/* Com_Texture*/
 	if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::Texture, TEXT("Prototype_Component_Texture_Terrain"))))
 		return E_FAIL;
+	/*if (FAILED(Super::AddComponent(LEVEL_GAMETOOL, ComponentType::Texture, TEXT("Prototype_Component_Texture_Terrain"))))
+		return E_FAIL;*/
 
 	/* Com_Transform */
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Transform, TEXT("Prototype_Component_Transform"))))
@@ -91,8 +94,8 @@ HRESULT CBasicTerrain::Ready_FixedComponents(void* pArg)
 HRESULT CBasicTerrain::Ready_Scripts(void* pArg)
 {
 	/* Com_PlayerController */
-	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Script, TEXT("Prototype_Component_DebugTerrainGrid"))))
-		return E_FAIL;
+	//if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Script, TEXT("Prototype_Component_DebugTerrainGrid"))))
+	//	return E_FAIL;
 
 	return S_OK;
 }

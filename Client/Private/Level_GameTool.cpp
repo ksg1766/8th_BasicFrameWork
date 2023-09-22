@@ -3,6 +3,7 @@
 #include "ImGUIManager.h"
 
 #include "GameInstance.h"
+#include "GameObject.h"
 
 CLevel_GameTool::CLevel_GameTool(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -11,10 +12,15 @@ CLevel_GameTool::CLevel_GameTool(ID3D11Device * pDevice, ID3D11DeviceContext * p
 
 HRESULT CLevel_GameTool::Initialize()
 { 
-	CImGUIManager::GetInstance()->Initialize(m_pDevice, m_pContext);
+	m_pImGUIInstance = GET_INSTANCE(CImGUIManager);
+	m_pImGUIInstance->Initialize(m_pDevice, m_pContext);
 	
  	if (FAILED(Ready_Layer_Terrain()))
 		return E_FAIL;
+
+	if (FAILED(Ready_Layer_Camera()))
+		return E_FAIL;
+
 
 	return S_OK;
 }
@@ -25,7 +31,9 @@ HRESULT CLevel_GameTool::Tick(const _float& fTimeDelta)
 	if (!m_IsImGUIReady)
 		m_IsImGUIReady = true;
 	
-	CImGUIManager::GetInstance()->Tick();
+	
+	m_pImGUIInstance->Tick();
+
 	ImGUIDemo();
 
 	return S_OK;
@@ -41,7 +49,7 @@ HRESULT CLevel_GameTool::LateTick(const _float& fTimeDelta)
 HRESULT CLevel_GameTool::DebugRender()
 {
 	if(m_IsImGUIReady)
-		CImGUIManager::GetInstance()->Render();
+		m_pImGUIInstance->Render();
 
 	return S_OK;
 }
@@ -49,13 +57,27 @@ HRESULT CLevel_GameTool::DebugRender()
 HRESULT CLevel_GameTool::Ready_Layer_Terrain()
 {
 	/* 원형객체를 복제하여 사본객체를 생성하고 레이어에 추가한다. */
-	CGameInstance* pGameInstance = CGameInstance::GetInstance();
-	Safe_AddRef(pGameInstance);
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
 	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMETOOL, LAYERTAG::TERRAIN, TEXT("Prototype_GameObject_BasicTerrain"))))
 		return E_FAIL;
 
-	Safe_Release(pGameInstance);
+	RELEASE_INSTANCE(CGameInstance);
+
+	return S_OK;
+}
+
+HRESULT CLevel_GameTool::Ready_Layer_Camera()
+{
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	CGameObject* pGameObject = nullptr;
+
+	pGameObject = pGameInstance->Add_GameObject(LEVEL_GAMETOOL, LAYERTAG::CAMERA, TEXT("Prototype_GameObject_FlyingCamera"));
+	if (nullptr == pGameObject)	return E_FAIL;
+	pGameObject->GetTransform()->Translate(Vec3(0.f, 400.f, 0.f));
+
+	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
 }
@@ -117,5 +139,5 @@ void CLevel_GameTool::Free()
 {
 	Super::Free();
 
-
+	Safe_Release(m_pImGUIInstance);
 }
