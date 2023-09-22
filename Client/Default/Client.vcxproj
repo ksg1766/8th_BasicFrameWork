@@ -196,6 +196,7 @@
     <ClInclude Include="..\public\Loader.h" />
     <ClInclude Include="..\public\MainApp.h" />
     <ClInclude Include="..\Public\PlayerController.h" />
+    <ClInclude Include="..\Public\StaticTest.h" />
     <ClInclude Include="..\Public\TempCube.h" />
     <ClInclude Include="..\Public\TestAIController.h" />
     <ClInclude Include="Client.h" />
@@ -224,6 +225,7 @@
     <ClCompile Include="..\private\Loader.cpp" />
     <ClCompile Include="..\private\MainApp.cpp" />
     <ClCompile Include="..\Private\PlayerController.cpp" />
+    <ClCompile Include="..\Private\StaticTest.cpp" />
     <ClCompile Include="..\Private\TempCube.cpp" />
     <ClCompile Include="..\Private\TestAIController.cpp" />
     <ClCompile Include="..\Public\ImGUI\imgui.cpp">

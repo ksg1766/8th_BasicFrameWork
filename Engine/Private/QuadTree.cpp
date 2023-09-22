@@ -1,5 +1,9 @@
 #include "QuadTree.h"
 #include "QuadTreeNode.h"
+#include "ObjectManager.h"
+#include "GameObject.h"
+#include "Transform.h"
+#include "Layer.h"
 
 IMPLEMENT_SINGLETON(CQuadTree)
 
@@ -9,15 +13,26 @@ CQuadTree::CQuadTree()
 
 HRESULT CQuadTree::Build_QuadTree(_uint iNumLevels)
 {
+    CObjectManager* pObjectManager = GET_INSTANCE(CObjectManager);
+
     m_pQuadTreeRoot = BuildQuadTree(Vec3(0.f, m_vRootExtents.y * 0.5f, 0.f), Vec3(m_vRootExtents), m_iDepthLimit);
 
-    // TODO: 아래는 SR때 코드. 구현해야 함.
-    //vector<CGameObject*>& vecStaticObject = SceneManager()->Get_ObjectList(LAYERTAG::GAMELOGIC, OBJECTTAG::BLOCK);
-    //for (auto& iter : vecStaticObject)
-    //    AddObjectInNode(iter->m_pTransform, m_pQuadTreeRoot);
+    map<LAYERTAG, CLayer*>& mapLayers = *pObjectManager->GetCurrentLevelLayers();
+
+    vector<CGameObject*>& vecObjects = mapLayers[LAYERTAG::WALL]->GetGameObjects();
+    /*vector<CGameObject*>& vecObjects = mapLayers[LAYERTAG::WALL]->GetGameObjects();
+    vector<CGameObject*>& vecObjects = mapLayers[LAYERTAG::WALL]->GetGameObjects();*/
+    
+    for (auto& iter : vecObjects)
+        AddObjectInNode(iter->GetTransform(), m_pQuadTreeRoot);
 
     if (!m_pQuadTreeRoot)
+    {
+        RELEASE_INSTANCE(CObjectManager)
         return E_FAIL;
+    }
+
+    RELEASE_INSTANCE(CObjectManager)
 
     return S_OK;
 }
@@ -127,7 +142,7 @@ void CQuadTree::FrustumCull(CQuadTreeNode* pNode)
             FrustumCull(vecChildren[i]);
 }
 
-void CQuadTree::AddObjectInNode(CTransformEx* pTransform, CQuadTreeNode* const pNode)
+void CQuadTree::AddObjectInNode(CTransform* pTransform, CQuadTreeNode* const pNode)
 {
     Vec3 vTransformCenter = pTransform->GetPosition();
     Vec3 vNodeCenter = pNode->GetPosition();

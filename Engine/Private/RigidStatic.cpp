@@ -1,4 +1,4 @@
-#include "RigidStatic.h"
+#include "ComponentManager.h"
 #include "GameObject.h"
 
 CRigidStatic::CRigidStatic(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -25,6 +25,9 @@ HRESULT CRigidStatic::Initialize(void* pArg)
 
 void CRigidStatic::Tick(const _float& fTimeDelta)
 {
+	// ColliderUpdate
+	m_pSphereCollider->Tick(fTimeDelta);
+	m_pOBBCollider->Tick(fTimeDelta);
 }
 
 void CRigidStatic::LateTick(const _float& fTimeDelta)

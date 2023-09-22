@@ -91,6 +91,15 @@
     <Filter Include="02.GameObjects\BasicTerrain\Script">
       <UniqueIdentifier>{c8081918-9961-4612-a3ca-15cf00eb28a3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\StaticTestCube">
+      <UniqueIdentifier>{f5cd7116-71d1-4b30-9d70-4164654c1857}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\StaticTestCube\00.GameObject">
+      <UniqueIdentifier>{ca36102f-589a-4126-8c1f-ea8ba8c4f083}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\StaticTestCube\01.Script">
+      <UniqueIdentifier>{de5e19ca-de04-4b4b-955d-d8538e111663}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -186,6 +195,9 @@
     <ClInclude Include="..\Public\DebugTerrainGrid.h">
       <Filter>02.GameObjects\BasicTerrain\Script</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\StaticTest.h">
+      <Filter>02.GameObjects\StaticTestCube\00.GameObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -262,6 +274,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\DebugTerrainGrid.cpp">
       <Filter>02.GameObjects\BasicTerrain\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\StaticTest.cpp">
+      <Filter>02.GameObjects\StaticTestCube\00.GameObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

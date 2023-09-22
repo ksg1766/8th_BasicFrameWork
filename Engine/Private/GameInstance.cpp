@@ -64,10 +64,6 @@ HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, const GRAPHIC_DESC& G
 	if (FAILED(m_pObjectManager->Reserve_Manager(iNumLevels)))
 		return E_FAIL;
 
-	/* 쿼드트리의 예약 처리. */
-	if (FAILED(m_pQuadTree->Build_QuadTree(iNumLevels)))
-		return E_FAIL;
-
 	/* 콜리전 매니져의 예약 처리. */
 	if (FAILED(m_pCollisionManager->Reserve_Manager(iNumLevels)))
 		return E_FAIL;
@@ -139,6 +135,14 @@ HRESULT CGameInstance::Present()
 		return E_FAIL;
 
 	return m_pGraphicDevice->Present();
+}
+
+HRESULT CGameInstance::Build_QuadTree(_uint iNumLevels)
+{
+	if (nullptr == m_pQuadTree)
+		return E_FAIL;
+
+	return m_pQuadTree->Build_QuadTree(iNumLevels);
 }
 
 void CGameInstance::Update_QuadTree()

@@ -31,6 +31,7 @@ public: /* For.GraphicDevice */
 	HRESULT Present();
 
 public: /* For.QuadTRee */
+	HRESULT	Build_QuadTree(_uint iNumLevels);
 	void	Update_QuadTree();
 	void	Render_QuadTree();
 

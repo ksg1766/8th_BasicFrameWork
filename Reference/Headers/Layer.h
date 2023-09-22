@@ -19,8 +19,9 @@ public:
 	void LateTick(_float fTimeDelta);
 	void DebugRender();
 
-	vector<class CGameObject*>& GetGameObjects() { return m_GameObjects; }
-	void	SetLayerTag(const LAYERTAG& eLayerTag) { m_eLayerTag = eLayerTag; }
+	vector<class CGameObject*>& GetGameObjects()		{ return m_GameObjects; }
+	LAYERTAG&	GetLayerTag()							{ return m_eLayerTag; }
+	void		SetLayerTag(const LAYERTAG& eLayerTag)	{ m_eLayerTag = eLayerTag; }
 
 private:
 	LAYERTAG					m_eLayerTag;

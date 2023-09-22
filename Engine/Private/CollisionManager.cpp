@@ -21,15 +21,19 @@ void CCollisionManager::LateTick_Collision(const _float& fTimeDelta)
 	pCurrentLevelLayers = CObjectManager::GetInstance()->GetCurrentLevelLayers();
 	if (pCurrentLevelLayers->empty())	return;
 
-	::ZeroMemory(m_arrSorted, (_uint)LAYERTAG::LAYER_END * sizeof(_bool));
+	_uint iOffset = (_uint)LAYERTAG::DEFAULT_LAYER_END;
 
-	for (_uint iRow = 0; iRow < (_uint)LAYERTAG::LAYER_END; ++iRow)
+	::ZeroMemory(m_arrSorted, ((_uint)LAYERTAG::LAYER_END - iOffset) * sizeof(_bool));
+
+	for (_uint iRow = 0; iRow < (_uint)LAYERTAG::LAYER_END - iOffset; ++iRow)
 	{
-		for (_uint iCol = iRow; iCol < (_uint)LAYERTAG::LAYER_END; ++iCol)
+		for (_uint iCol = iRow; iCol < (_uint)LAYERTAG::LAYER_END - iOffset; ++iCol)
 		{
 			if (m_arrCheck[iRow] & (1 << iCol))
 			{
-				CheckDynamicCollision(reinterpret_cast<LAYERTAG&>(iRow), reinterpret_cast<LAYERTAG&>(iCol), fTimeDelta);
+				_uint _iRow = iRow + iOffset;
+				_uint _iCol = iCol + iOffset;
+				CheckDynamicCollision(reinterpret_cast<LAYERTAG&>(_iRow), reinterpret_cast<LAYERTAG&>(_iCol), fTimeDelta);
 				//CheckStaticCollision(reinterpret_cast<LAYERTAG&>(iRow), fTimeDelta);
 			}
 		}

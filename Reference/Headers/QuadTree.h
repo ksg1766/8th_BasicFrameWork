@@ -1,11 +1,11 @@
 #pragma once
 #include "Base.h"
-#include "TransformEx.h"
 
 BEGIN(Engine)
 
 //class CFrustum;
 class CQuadTreeNode;
+class CTransform;
 
 class CQuadTree final : public CBase
 {
@@ -26,7 +26,7 @@ public:
 
 private:
     CQuadTreeNode*  BuildQuadTree(Vec3 vCenter, Vec3 vHalfWidth, _int iDepthLimit = 5);
-    void            AddObjectInNode(CTransformEx* pTransform, CQuadTreeNode* const pNode);
+    void            AddObjectInNode(CTransform* pTransform, CQuadTreeNode* const pNode);
 
     void            Update_Frustum();
     void	        FrustumCull(CQuadTreeNode* pNode);

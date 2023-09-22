@@ -13,15 +13,18 @@ private:
 	virtual ~CLevel_GamePlay() = default;
 
 public:
-	virtual HRESULT Initialize() override;
-	virtual HRESULT Tick(const _float& fTimeDelta) override;
-	virtual HRESULT LateTick(const _float& fTimeDelta) override;
+	virtual HRESULT Initialize()						override;
+	virtual HRESULT Tick(const _float& fTimeDelta)		override;
+	virtual HRESULT LateTick(const _float& fTimeDelta)	override;
 
 private:
 	HRESULT			Ready_Layer_Terrain();
 	HRESULT			Ready_Layer_Player();
 	HRESULT			Ready_Layer_Default();
+	HRESULT			Ready_Layer_UnitGround();
+	HRESULT			Ready_Layer_UnitAir();
 	HRESULT			Ready_Layer_Camera();
+	HRESULT			Ready_Layer_Wall();	// Static
 
 public:
 	static class CLevel_GamePlay* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

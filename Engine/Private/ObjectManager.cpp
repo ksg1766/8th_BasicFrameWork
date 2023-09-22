@@ -72,7 +72,11 @@ void CObjectManager::Tick(const _float& fTimeDelta)
 	{
 		for (auto& Pair : m_pLayers[i])
 		{
-			Pair.second->Tick(fTimeDelta);		
+			if((_uint)Pair.second->GetLayerTag() < (_uint)LAYERTAG::DYNAMIC_LAYER_END)
+				Pair.second->Tick(fTimeDelta);
+			// Temp
+			if(Pair.second->GetLayerTag() == LAYERTAG::TERRAIN)
+				Pair.second->Tick(fTimeDelta);
 		}
 	}
 }
@@ -83,7 +87,11 @@ void CObjectManager::LateTick(const _float& fTimeDelta)
 	{
 		for (auto& Pair : m_pLayers[i])
 		{
-			Pair.second->LateTick(fTimeDelta);
+			if ((_uint)Pair.second->GetLayerTag() < (_uint)LAYERTAG::DYNAMIC_LAYER_END)
+				Pair.second->LateTick(fTimeDelta);
+			// Temp
+			if (Pair.second->GetLayerTag() == LAYERTAG::TERRAIN)
+				Pair.second->LateTick(fTimeDelta);
 		}
 	}
 }
@@ -94,7 +102,11 @@ void CObjectManager::DebugRender()
 	{
 		for (auto& Pair : m_pLayers[i])
 		{
-			Pair.second->DebugRender();
+			if ((_uint)Pair.second->GetLayerTag() < (_uint)LAYERTAG::DYNAMIC_LAYER_END)
+				Pair.second->DebugRender();
+			// Temp
+			if (Pair.second->GetLayerTag() == LAYERTAG::TERRAIN)
+				Pair.second->DebugRender();
 		}
 	}
 }
