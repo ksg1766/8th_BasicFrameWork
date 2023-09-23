@@ -74,6 +74,8 @@ HRESULT CMainApp::Render()
 	/* 게임내에 존재하는 여러 객체들의 렌더링. */
 	m_pGameInstance->Clear_BackBuffer_View(_float4(0.f, 0.f, 1.f, 1.f));
 	m_pGameInstance->Clear_DepthStencil_View();
+	if(2 == m_pGameInstance->GetCurrentLevelIndex())
+		m_pGameInstance->Render_QuadTree();
 
 	m_pRenderer->Draw_RenderObjects();
 

@@ -37,6 +37,7 @@ CGameInstance::CGameInstance()
 	Safe_AddRef(m_pQuadTree);
 	Safe_AddRef(m_pCollisionManager);
 	Safe_AddRef(m_pPoolManager);
+	Safe_AddRef(m_pPipeLine);
 }
 
 HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, const GRAPHIC_DESC& GraphicDesc, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext, _In_ HINSTANCE hInst)
@@ -67,6 +68,10 @@ HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, const GRAPHIC_DESC& G
 	/* 콜리전 매니져의 예약 처리. */
 	if (FAILED(m_pCollisionManager->Reserve_Manager(iNumLevels)))
 		return E_FAIL;
+	
+	/* 콜리전 매니져의 예약 처리. */
+	if (FAILED(m_pPipeLine->Initialize()))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -76,7 +81,6 @@ void CGameInstance::Tick(const _float& fTimeDelta)
 	m_pInputDevice->Update_InputDevice();
 	m_pKeyManager->Tick(fTimeDelta);
 	m_pObjectManager->Tick(fTimeDelta);
-	m_pQuadTree->Update_QuadTree();
 	m_pLevelManager->Tick(fTimeDelta);
 
 	m_pPipeLine->Tick();
@@ -90,6 +94,11 @@ void CGameInstance::DebugRender()
 {
 	// m_pObjectManager->DebugRender();
 	m_pLevelManager->DebugRender();
+#ifdef _DEBUG
+	//if (2 == m_pLevelManager->GetCurrentLevelIndex())
+	//	m_pQuadTree->Render_QuadTree();
+#endif // DEBUG
+
 }
 
 void CGameInstance::Clear(_uint iLevelIndex)
@@ -123,7 +132,6 @@ HRESULT CGameInstance::Clear_BackBuffer_View(_float4 vClearColor)
 
 HRESULT CGameInstance::Clear_DepthStencil_View()
 {
-
 	if (nullptr == m_pGraphicDevice)
 		return E_FAIL;
 	return m_pGraphicDevice->Clear_DepthStencil_View();
@@ -161,6 +169,16 @@ HRESULT CGameInstance::Open_Level(_uint iLevelIndex, CLevel * pNewLevel)
 		return E_FAIL;
 
 	return m_pLevelManager->Open_Level(iLevelIndex, pNewLevel);
+}
+
+_uint CGameInstance::GetCurrentLevelIndex()
+{
+	return m_pLevelManager->GetCurrentLevelIndex();
+}
+
+void CGameInstance::SetCurrentLevelIndex(_uint iLevelIndex)
+{
+	m_pLevelManager->SetCurrentLevelIndex(iLevelIndex);
 }
 
 HRESULT CGameInstance::Add_Prototype(const wstring & strPrototypeTag, CGameObject * pPrototype)

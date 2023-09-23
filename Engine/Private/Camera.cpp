@@ -62,6 +62,18 @@ HRESULT CCamera::Initialize(void* pArg)
 	m_fNear		= 0.1f;
 	m_fFar		= 1000.0f;*/
 
+	m_pPipeLine->Set_Transform(CPipeLine::D3DTS_VIEW, m_pTransform->WorldMatrix().Invert());
+	
+	switch (m_eMode)
+	{
+	case PROJECTION_MODE::PERSPECTIVE:
+		m_pPipeLine->Set_Transform(CPipeLine::D3DTS_PROJ, XMMatrixPerspectiveFovLH(m_fFovy, m_fAspect, m_fNear, m_fFar));
+		break;
+	case PROJECTION_MODE::ORTHOGRAPHIC:
+		m_pPipeLine->Set_Transform(CPipeLine::D3DTS_PROJ, XMMatrixOrthographicLH(m_fFovy, m_fAspect, m_fNear, m_fFar));
+		break;
+	}
+
     return S_OK;
 }
 

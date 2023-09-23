@@ -27,6 +27,9 @@ public:
 	/* 후면 버퍼를 전면버퍼로 교체한다.(백버퍼를 화면에 직접 보여준다.) */
 	HRESULT Present();
 
+	ID3D11Device*			GetDevice()		{ return m_pDevice; }
+	ID3D11DeviceContext*	GetContext()	{ return m_pDeviceContext; }
+
 private:		
 	// IDirect3DDevice9* == LPDIRECT3DDEVICE9 == ID3D11Device + ID3D11DeviceContext 
 
@@ -51,9 +54,6 @@ private:
 	/* ID3D11DepthStencilView : 깊이스텐실버퍼로서 사용될 수 있는 타입.  */
 	ID3D11RenderTargetView*		m_pBackBufferRTV = nullptr;
 	ID3D11DepthStencilView*		m_pDepthStencilView = nullptr;
-
-	
-
 
 private:
 	/* 스왑체인에게 필수적으로 필요한 데이터는 백버퍼가 필요하여. 하여 백버퍼를 생성하기위한 정보를 던져준다. */

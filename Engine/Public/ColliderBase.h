@@ -59,10 +59,9 @@ private:
 
 #ifdef _DEBUG
 protected:
-	PrimitiveBatch<VertexPositionColor>* m_pBatch = nullptr;
-	BasicEffect* m_pEffect = nullptr;
-	ID3D11InputLayout* m_pInputLayout = nullptr;
-	_float4										m_vColor = _float4(0.f, 1.f, 0.f, 1.f);
+	PrimitiveBatch<VertexPositionColor>*	m_pBatch = nullptr;
+	BasicEffect*							m_pEffect = nullptr;
+	ID3D11InputLayout*						m_pInputLayout = nullptr;
 #endif
 
 public:

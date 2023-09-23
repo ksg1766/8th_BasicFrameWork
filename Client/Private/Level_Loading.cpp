@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 #include "Loader.h"
 
+#include "LevelManager.h"
 #include "Level_Logo.h"
 #include "Level_GamePlay.h"
 #include "Level_GameTool.h"
@@ -13,9 +14,9 @@ CLevel_Loading::CLevel_Loading(ID3D11Device * pDevice, ID3D11DeviceContext * pCo
 {
 }
 
-
 HRESULT CLevel_Loading::Initialize(LEVELID eNextLevel)
 {
+	m_pGameInstance = GET_INSTANCE(CGameInstance);
 	m_eNextLevel = eNextLevel;
 
 	/* m_eNextLevel 에 대한 로딩작업을 수행한다. */
@@ -42,10 +43,10 @@ HRESULT CLevel_Loading::LateTick(const _float& fTimeDelta)
 	{	
 		if (true == m_pLoader->Get_Finished())
 		{
-			CGameInstance*	pGameInstance = CGameInstance::GetInstance();
-			Safe_AddRef(pGameInstance);
-
 			CLevel*		pNewLevel = nullptr;
+
+			LEVELID eCurLevel = (LEVELID)m_pGameInstance->GetCurrentLevelIndex();
+			m_pGameInstance->SetCurrentLevelIndex(m_eNextLevel);
 
 			switch (m_eNextLevel)
 			{
@@ -61,15 +62,18 @@ HRESULT CLevel_Loading::LateTick(const _float& fTimeDelta)
 			}
 
 			if (nullptr == pNewLevel)
+			{
+				m_pGameInstance->SetCurrentLevelIndex(eCurLevel);
 				return E_FAIL;
+			}
 
-			if (FAILED(pGameInstance->Open_Level(m_eNextLevel, pNewLevel)))
-				return E_FAIL;		
-
-			Safe_Release(pGameInstance);
+			if (FAILED(m_pGameInstance->Open_Level(m_eNextLevel, pNewLevel)))
+			{
+				m_pGameInstance->SetCurrentLevelIndex(eCurLevel);
+				return E_FAIL;
+			}
 		}
 	}
-
 
 	return S_OK;
 }

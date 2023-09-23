@@ -20,6 +20,7 @@ public:
 	virtual HRESULT	DebugRender() { return S_OK; };
 
 protected:
+	class CGameInstance*		m_pGameInstance;
 	ID3D11Device*				m_pDevice = { nullptr };
 	ID3D11DeviceContext*		m_pContext = { nullptr };
 

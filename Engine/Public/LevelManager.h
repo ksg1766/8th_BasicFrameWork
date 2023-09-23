@@ -25,10 +25,12 @@ public:
 
 public:
 	HRESULT Open_Level(_uint iLevelIndex, class CLevel* pNewLevel);
-	_uint GetCurrentLevelIndex() const { return m_iCurrentLevelIndex; }
+	_uint	GetCurrentLevelIndex() const { return m_iCurrentLevelIndex; }
+	void	SetCurrentLevelIndex(_uint iLevelIndex) { m_iPreviousLevelIndex = m_iCurrentLevelIndex; m_iCurrentLevelIndex = iLevelIndex; }
 
 private:
 	_uint						m_iCurrentLevelIndex = { 0 };
+	_uint						m_iPreviousLevelIndex = { 0 };
 	class CLevel*				m_pCurrentLevel = { nullptr };
 
 public:

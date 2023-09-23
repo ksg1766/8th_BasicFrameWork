@@ -48,7 +48,12 @@ HRESULT CCollider::Initialize_Prototype()
 	m_pEffect->GetVertexShaderBytecode(&pShaderByteCodes, &iLength);
 
 	if (FAILED(m_pDevice->CreateInputLayout(VertexPositionColor::InputElements, VertexPositionColor::InputElementCount, pShaderByteCodes, iLength, &m_pInputLayout)))
+	{
+		Safe_Delete(m_pBatch);
+		Safe_Delete(m_pEffect);
+		Safe_Release(m_pInputLayout);
 		return E_FAIL;
+	}
 #endif
 
 	return S_OK;
@@ -80,4 +85,14 @@ void CCollider::DebugRender()
 void CCollider::Free()
 {
 	Super::Free();
+#ifdef _DEBUG
+	if (false == m_isCloned)
+	{
+		Safe_Delete(m_pBatch);
+		Safe_Delete(m_pEffect);
+	}
+
+	Safe_Release(m_pInputLayout);
+
+#endif // _DEBUG
 }

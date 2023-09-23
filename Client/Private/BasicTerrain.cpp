@@ -55,7 +55,7 @@ HRESULT CBasicTerrain::Render()
 
 #ifdef _DEBUG
 	// DebugRender
-	Super::DebugRender();
+	//Super::DebugRender();
 #endif
 
 	return S_OK;

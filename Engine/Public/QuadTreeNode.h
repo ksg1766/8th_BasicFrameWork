@@ -10,17 +10,17 @@ class ENGINE_DLL CQuadTreeNode :
 {
 public:
     CQuadTreeNode();
-   // CQuadTreeNode();
     CQuadTreeNode(const CGameObject& rhs) = delete;
     virtual ~CQuadTreeNode() = default;
 
 public:
-    //HRESULT               InitBoundingBoxVisible();
+#ifdef _DEBUG
+    HRESULT                 InitDebugSquare();
+#endif
 
     void                    AddChildNode(CQuadTreeNode* pChild);
     void                    AddObject(CGameObject* pObject) { m_vecObjects.push_back(pObject); }
 
-    Vec3                    GetPosition()                   { return m_vPosition; }
     CQuadTreeNode* const    GetParent()                     { return m_pParent; }
     vector<CQuadTreeNode*>& GetChildren()                   { return m_vecChildren; }
     CQuadTreeNode* const    GetChildNode(_uint _iChildNum)  { return m_vecChildren[_iChildNum]; }
@@ -28,10 +28,12 @@ public:
     vector<CGameObject*>&   GetObjectList()                 { return m_vecObjects; }
     BoundingBox* const      GetBoundingBox()                { return &m_tBoundBox; }
 
-    void                    SetPosition(Vec3 _vPos)         { m_vPosition = _vPos; }
     void                    SetParent(CQuadTreeNode* const _pParent) { m_pParent = _pParent; }
 
     void                    Render_QuadTreeNode();
+#ifdef _DEBUG
+    void                    DebugRender();
+#endif
 
     void                    CullNode(_int _iCulled)         { m_iCulled = _iCulled; }
     _int                    IsCulled()                      { return m_iCulled; }
@@ -46,13 +48,15 @@ private:
     vector<CGameObject*>    m_vecObjects;
 
     CQuadTreeNode*          m_pParent;
-    Vec3                    m_vPosition;
 
     _int                    m_iCulled;
 
-    // Only Used in Debug mode
-    // LPDIRECT3DVERTEXBUFFER9 m_pVB;
-    // LPDIRECT3DINDEXBUFFER9	m_pIB;
+#ifdef _DEBUG
+private:
+    PrimitiveBatch<VertexPositionColor>*    m_pBatch = nullptr;
+    BasicEffect*                            m_pEffect = nullptr;
+    ID3D11InputLayout*                      m_pInputLayout = nullptr;
+#endif
 
 public:
     virtual void Free() override;

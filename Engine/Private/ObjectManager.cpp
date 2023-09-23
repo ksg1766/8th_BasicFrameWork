@@ -72,10 +72,15 @@ void CObjectManager::Tick(const _float& fTimeDelta)
 	{
 		for (auto& Pair : m_pLayers[i])
 		{
-			if((_uint)Pair.second->GetLayerTag() < (_uint)LAYERTAG::DYNAMIC_LAYER_END)
+			if ((_uint)Pair.first == (_uint)LAYERTAG::DEFAULT_LAYER_END
+				/*|| (_uint)Pair.second->GetLayerTag() < (_uint)LAYERTAG::DYNAMIC_LAYER_END
+				|| (_uint)Pair.second->GetLayerTag() < (_uint)LAYERTAG::STATIC_LAYER_END*/)
+				continue;
+
+			if((_uint)Pair.first < (_uint)LAYERTAG::DYNAMIC_LAYER_END)
 				Pair.second->Tick(fTimeDelta);
 			// Temp
-			if(Pair.second->GetLayerTag() == LAYERTAG::TERRAIN)
+			if(Pair.first == LAYERTAG::TERRAIN)
 				Pair.second->Tick(fTimeDelta);
 		}
 	}
@@ -87,10 +92,13 @@ void CObjectManager::LateTick(const _float& fTimeDelta)
 	{
 		for (auto& Pair : m_pLayers[i])
 		{
-			if ((_uint)Pair.second->GetLayerTag() < (_uint)LAYERTAG::DYNAMIC_LAYER_END)
+			if ((_uint)Pair.first == (_uint)LAYERTAG::DEFAULT_LAYER_END)
+				continue;
+
+			if ((_uint)Pair.first < (_uint)LAYERTAG::DYNAMIC_LAYER_END)
 				Pair.second->LateTick(fTimeDelta);
 			// Temp
-			if (Pair.second->GetLayerTag() == LAYERTAG::TERRAIN)
+			if (Pair.first == LAYERTAG::TERRAIN)
 				Pair.second->LateTick(fTimeDelta);
 		}
 	}
@@ -102,10 +110,13 @@ void CObjectManager::DebugRender()
 	{
 		for (auto& Pair : m_pLayers[i])
 		{
-			if ((_uint)Pair.second->GetLayerTag() < (_uint)LAYERTAG::DYNAMIC_LAYER_END)
+			if ((_uint)Pair.first == (_uint)LAYERTAG::DEFAULT_LAYER_END)
+				continue;
+
+			if ((_uint)Pair.first < (_uint)LAYERTAG::DYNAMIC_LAYER_END)
 				Pair.second->DebugRender();
 			// Temp
-			if (Pair.second->GetLayerTag() == LAYERTAG::TERRAIN)
+			if (Pair.first == LAYERTAG::TERRAIN)
 				Pair.second->DebugRender();
 		}
 	}

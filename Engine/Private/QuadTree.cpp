@@ -4,6 +4,7 @@
 #include "GameObject.h"
 #include "Transform.h"
 #include "Layer.h"
+#include "PipeLine.h"
 
 IMPLEMENT_SINGLETON(CQuadTree)
 
@@ -13,16 +14,18 @@ CQuadTree::CQuadTree()
 
 HRESULT CQuadTree::Build_QuadTree(_uint iNumLevels)
 {
+    m_pPipeLine = GET_INSTANCE(CPipeLine);
+   
     CObjectManager* pObjectManager = GET_INSTANCE(CObjectManager);
 
-    m_pQuadTreeRoot = BuildQuadTree(Vec3(0.f, m_vRootExtents.y * 0.5f, 0.f), Vec3(m_vRootExtents), m_iDepthLimit);
+    m_pQuadTreeRoot = BuildQuadTree(Vec3(0.f, m_vRootExtents.y, 0.f), 0.5f * m_vRootExtents, m_iDepthLimit);
 
     map<LAYERTAG, CLayer*>& mapLayers = *pObjectManager->GetCurrentLevelLayers();
 
     vector<CGameObject*>& vecObjects = mapLayers[LAYERTAG::WALL]->GetGameObjects();
     /*vector<CGameObject*>& vecObjects = mapLayers[LAYERTAG::WALL]->GetGameObjects();
     vector<CGameObject*>& vecObjects = mapLayers[LAYERTAG::WALL]->GetGameObjects();*/
-    
+
     for (auto& iter : vecObjects)
         AddObjectInNode(iter->GetTransform(), m_pQuadTreeRoot);
 
@@ -39,14 +42,15 @@ HRESULT CQuadTree::Build_QuadTree(_uint iNumLevels)
 
 void CQuadTree::Update_QuadTree()
 {
-    Update_Frustum();
-    FrustumCull(m_pQuadTreeRoot);
+    BoundingFrustum tFrustum;
+    Update_Frustum(tFrustum);
+    FrustumCull(tFrustum, m_pQuadTreeRoot);
 }
 
-void CQuadTree::Update_Frustum()
+void CQuadTree::Update_Frustum(BoundingFrustum& tFrustum)
 {
-    // TODO: 이 함수가 필요해서 놔둔건지 기억이 안남... 프러스텀이 자동으로 갱신되지 않는다면 여기서 갱신해줄 것.
-    //BoundingFrustum::CreateFromMatrix(m_tFrustum, );
+    BoundingFrustum::CreateFromMatrix(tFrustum, m_pPipeLine->Get_Transform_Matrix(CPipeLine::D3DTS_PROJ));
+    tFrustum.Transform(tFrustum, m_pPipeLine->Get_Transform_Matrix_Inverse(CPipeLine::D3DTS_VIEW));
 }
 
 void CQuadTree::Render_QuadTree()
@@ -85,44 +89,35 @@ CQuadTreeNode* CQuadTree::BuildQuadTree(Vec3 vCenter, Vec3 vHalfExtents, _int iD
     CQuadTreeNode*  pNode = new CQuadTreeNode;
     BoundingBox*    pBBox = pNode->GetBoundingBox();
 
-    //Vec3           vCorner[4];
-
-    //for (_uint i = 0; i < 4; ++i)
-    //{
-    //    *((_float*)(&vCorner[i]) + 0) = ((i & 1) ? vHalfExtents.x : -vHalfExtents.x) + *((_float*)(&vCenter) + 0);
-    //    //*((_float*)(&vCorner[i]) + 1) = ((i & 4) ? vHalfExtents.y : -vHalfExtents.y) + *((_float*)(&vCenter) + 1);
-    //    *((_float*)(&vCorner[i]) + 2) = ((i & 2) ? vHalfExtents.z : -vHalfExtents.z) + *((_float*)(&vCenter) + 2);
-    //}
-
-    //pNode->SetCorners(vCorner);
-    pNode->SetPosition(vCenter);
+    pBBox->Center = vCenter;
     pBBox->Extents = vHalfExtents;
     
     Vec3 vOffset;
     Vec3 vChildCenter;
-    Vec3 vStep = vHalfExtents * 0.5f;
+    Vec3 vStep = Vec3(0.5f * vHalfExtents.x, vHalfExtents.y, 0.5f * vHalfExtents.z);
 
     for (_uint iTree = 0; iTree < CQuadTreeNode::m_iChild_Node_Count; ++iTree)
     {
         *((_float*)(&vOffset) + 0) = ((iTree & 1) ? vStep.x : -vStep.x);
         *((_float*)(&vOffset) + 2) = ((iTree & 2) ? vStep.z : -vStep.z);
 
-        *((_float*)(&vChildCenter) + 0) = *((_float*)(&vOffset) + 0) + *((_float*)(&vCenter) + 0);
-        *((_float*)(&vChildCenter) + 2) = *((_float*)(&vOffset) + 2) + *((_float*)(&vCenter) + 2);
+        *((_float*)(&vChildCenter) + 0) = *((_float*)(&vOffset) + 0) + *((_float*)(&pBBox->Center) + 0);
+        *((_float*)(&vChildCenter) + 1) = *((_float*)(&pBBox->Center) + 1);
+        *((_float*)(&vChildCenter) + 2) = *((_float*)(&vOffset) + 2) + *((_float*)(&pBBox->Center) + 2);
 
         pNode->AddChildNode(BuildQuadTree(vChildCenter, vStep, iDepthLimit - 1));
     }
 
 #ifdef _DEBUG
-    //pNode->InitBoundingBoxVisible();
+    pNode->InitDebugSquare();
 #endif
 
     return pNode;
 }
 
-void CQuadTree::FrustumCull(CQuadTreeNode* pNode)
+void CQuadTree::FrustumCull(BoundingFrustum& tFrustum, CQuadTreeNode* pNode)
 {
-    switch (m_tFrustum.Contains(*pNode->GetBoundingBox()))
+    switch (tFrustum.Contains(*pNode->GetBoundingBox()))
     {
     case CONTAINS:
         pNode->CullNode(CONTAINS);
@@ -139,13 +134,13 @@ void CQuadTree::FrustumCull(CQuadTreeNode* pNode)
 
     if (!vecChildren.empty())
         for (_int i = 0; i < 4; ++i)
-            FrustumCull(vecChildren[i]);
+            FrustumCull(tFrustum, vecChildren[i]);
 }
 
 void CQuadTree::AddObjectInNode(CTransform* pTransform, CQuadTreeNode* const pNode)
 {
     Vec3 vTransformCenter = pTransform->GetPosition();
-    Vec3 vNodeCenter = pNode->GetPosition();
+    Vec3 vNodeCenter = pNode->GetBoundingBox()->Center;
 
     Vec3 vExtents = pNode->GetBoundingBox()->Extents;
     vExtents *= m_fLooseFactor;
@@ -165,16 +160,8 @@ void CQuadTree::AddObjectInNode(CTransform* pTransform, CQuadTreeNode* const pNo
 
 void CQuadTree::Free()
 {
-    //Safe_Delete(m_tBoundBox);
+    m_pQuadTreeRoot->Free();
+    Safe_Delete(m_pQuadTreeRoot);
 
-    //if (!m_vecChildren.empty())
-    //{
-    //	/*for (auto& iter : m_vecChildren)
-    //	{
-    //		iter->Free();
-    //		Safe_Delete(iter);
-    //	}*/
-    //	m_vecObjects.clear();
-    //	m_vecChildren.clear();
-    //}
+    RELEASE_INSTANCE(CPipeLine);
 }

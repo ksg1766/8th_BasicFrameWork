@@ -37,6 +37,8 @@ public: /* For.QuadTRee */
 
 public: /* For.LevelManager */
 	HRESULT Open_Level(_uint iLevelIndex, class CLevel* pNewLevel);
+	_uint	GetCurrentLevelIndex();
+	void	SetCurrentLevelIndex(_uint iLevelIndex);
 
 public: /* For.ObjectManager */
 	HRESULT Add_Prototype(const wstring& strPrototypeTag, class CGameObject* pPrototype);

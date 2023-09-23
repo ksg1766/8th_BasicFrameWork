@@ -91,16 +91,6 @@ HRESULT CCollisionTest::Ready_FixedComponents()
 		|| FAILED(GetRigidBody()->InitializeCollider()))
 		return E_FAIL;
 
-	//// TODO: 함수로 뺼 것.
-	//m_pSphereCollider = dynamic_cast<CSphereCollider*>(CComponentManager::GetInstance()
-	//	->Clone_Component(m_pGameObject, 0, TEXT("Prototype_Component_SphereCollider"), nullptr));
-	//m_pOBBCollider = dynamic_cast<COBBCollider*>(CComponentManager::GetInstance()
-	//	->Clone_Component(m_pGameObject, 0, TEXT("Prototype_Component_OBBCollider"), nullptr));
-
-	//if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::Collider, TEXT("Prototype_Component_SphereCollider"))))
-	//	return E_FAIL;
-	//Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::Collider, TEXT("Prototype_Component_OBBCollider"));
-	
 	return S_OK;
 }
 

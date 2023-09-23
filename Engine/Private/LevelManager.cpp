@@ -40,7 +40,7 @@ HRESULT CLevelManager::Open_Level(_uint iLevelIndex, CLevel * pNewLevel)
 		Safe_AddRef(pGameInstance);
 
 		/* 기존에 추가되어있던 레벨용 자원을 정리한다. */
-		pGameInstance->Clear(m_iCurrentLevelIndex);
+		pGameInstance->Clear(m_iPreviousLevelIndex);
 
 		Safe_Release(pGameInstance);
 	}
@@ -50,7 +50,7 @@ HRESULT CLevelManager::Open_Level(_uint iLevelIndex, CLevel * pNewLevel)
 
 	m_pCurrentLevel = pNewLevel;
 
-	m_iCurrentLevelIndex = iLevelIndex;
+	//m_iCurrentLevelIndex = iLevelIndex;
 
 	return S_OK;
 }
