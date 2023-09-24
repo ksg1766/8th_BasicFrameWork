@@ -71,12 +71,24 @@ void CMainApp::Tick(const _float& fTimeDelta)
 
 HRESULT CMainApp::Render()
 {
+	++m_iFps;
+
+	if (m_dwTime + 1000 < GetTickCount())
+	{
+		swprintf_s(m_szFPS, L"FPS : %d", m_iFps);
+		SetWindowText(g_hWnd, m_szFPS);
+
+		m_iFps = 0;
+		m_dwTime = GetTickCount();
+	}
+
 	/* 게임내에 존재하는 여러 객체들의 렌더링. */
 	m_pGameInstance->Clear_BackBuffer_View(_float4(0.f, 0.f, 1.f, 1.f));
 	m_pGameInstance->Clear_DepthStencil_View();
-	if(2 == m_pGameInstance->GetCurrentLevelIndex())
+#ifdef DEBUG
+	if(LEVEL_GAMEPLAY == m_pGameInstance->GetCurrentLevelIndex())
 		m_pGameInstance->Render_QuadTree();
-
+#endif
 	m_pRenderer->Draw_RenderObjects();
 
 	m_pGameInstance->DebugRender();

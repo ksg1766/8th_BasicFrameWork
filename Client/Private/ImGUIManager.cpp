@@ -1,6 +1,10 @@
 #include "stdafx.h"
 #include "ImGUIManager.h"
 
+#include "../Public/ImGUI/imgui.h"
+#include "../Public/ImGUI/imgui_impl_dx11.h"
+#include "../Public/ImGUI/imgui_impl_win32.h"
+
 IMPLEMENT_SINGLETON(CImGUIManager)
 
 CImGUIManager::CImGUIManager()

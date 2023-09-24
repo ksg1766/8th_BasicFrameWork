@@ -1,3 +1,4 @@
+#include "Client_Shader_Defines.hpp"
 
 /* 상수테이블. */
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
@@ -85,12 +86,23 @@ PS_OUT PS_BLUE(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_WHITE(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    Out.vColor = float4(1.f, 1.f, 1.f, 1.f);
+
+    return Out;
+}
+
 technique11 DefaultTechnique
 {
 	/* */
     pass RED
     {
 		/* 여러 셰이더에 대해서 각각 어떤 버젼으로 빌드하고 어떤 함수를 호출하여 해당 셰이더가 구동되는지를 설정한다. */
+        SetRasterizerState(RS_Wireframe);
+
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         HullShader = NULL;
@@ -101,6 +113,8 @@ technique11 DefaultTechnique
     pass GREEN
     {
 		/* 여러 셰이더에 대해서 각각 어떤 버젼으로 빌드하고 어떤 함수를 호출하여 해당 셰이더가 구동되는지를 설정한다. */
+        SetRasterizerState(RS_Wireframe);
+
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         HullShader = NULL;
@@ -111,6 +125,8 @@ technique11 DefaultTechnique
     pass BLUE
     {
 		/* 여러 셰이더에 대해서 각각 어떤 버젼으로 빌드하고 어떤 함수를 호출하여 해당 셰이더가 구동되는지를 설정한다. */
+        SetRasterizerState(RS_Wireframe);
+
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         HullShader = NULL;
@@ -118,6 +134,17 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_BLUE();
     }
 
+    pass WHITE
+    {
+		/* 여러 셰이더에 대해서 각각 어떤 버젼으로 빌드하고 어떤 함수를 호출하여 해당 셰이더가 구동되는지를 설정한다. */
+        SetRasterizerState(RS_Wireframe);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_WHITE();
+    }
 }
 
 

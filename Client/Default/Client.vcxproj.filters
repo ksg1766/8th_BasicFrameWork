@@ -100,6 +100,12 @@
     <Filter Include="02.GameObjects\StaticTestCube\01.Script">
       <UniqueIdentifier>{de5e19ca-de04-4b4b-955d-d8538e111663}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Levels\02.GameTool\MapTool">
+      <UniqueIdentifier>{16c8a98b-47ea-4c7b-8334-f9880d99f349}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\02.GameTool\ToolBase">
+      <UniqueIdentifier>{0bf6b0f8-774d-4ce2-b52b-07a8a7d02bb1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -198,6 +204,12 @@
     <ClInclude Include="..\Public\StaticTest.h">
       <Filter>02.GameObjects\StaticTestCube\00.GameObject</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\MapTool.h">
+      <Filter>01.Levels\02.GameTool\MapTool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Tool.h">
+      <Filter>01.Levels\02.GameTool\ToolBase</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -277,6 +289,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\StaticTest.cpp">
       <Filter>02.GameObjects\StaticTestCube\00.GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MapTool.cpp">
+      <Filter>01.Levels\02.GameTool\MapTool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Tool.cpp">
+      <Filter>01.Levels\02.GameTool\ToolBase</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

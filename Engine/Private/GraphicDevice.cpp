@@ -49,16 +49,15 @@ HRESULT CGraphicDevice::Ready_GraphicDevice(HWND hWnd, GRAPHIC_DESC::WINMODE eWi
 	m_pDeviceContext->OMSetRenderTargets(1, pRTVs,
 		m_pDepthStencilView);		
 	
-	D3D11_VIEWPORT			ViewPortDesc;
-	ZeroMemory(&ViewPortDesc, sizeof(D3D11_VIEWPORT));
-	ViewPortDesc.TopLeftX = 0;
-	ViewPortDesc.TopLeftY = 0;
-	ViewPortDesc.Width = (_float)iWinCX;
-	ViewPortDesc.Height = (_float)iWinCY;
-	ViewPortDesc.MinDepth = 0.f;
-	ViewPortDesc.MaxDepth = 1.f;
+	ZeroMemory(&m_tViewPort, sizeof(Viewport));
+	m_tViewPort.x = 0;
+	m_tViewPort.y = 0;
+	m_tViewPort.width = (_float)iWinCX;
+	m_tViewPort.height = (_float)iWinCY;
+	m_tViewPort.minDepth = 0.f;
+	m_tViewPort.maxDepth = 1.f;
 
-	m_pDeviceContext->RSSetViewports(1, &ViewPortDesc);
+	m_pDeviceContext->RSSetViewports(1, m_tViewPort.Get11());
 
 	*ppDeviceOut = m_pDevice;
 	*ppDeviceContextOut = m_pDeviceContext;

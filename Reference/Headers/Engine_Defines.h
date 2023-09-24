@@ -56,8 +56,9 @@ using namespace SimpleMath;
 #pragma comment(lib, "d3dcompiler.lib")
 
 
-#ifdef _DEBUG
+#define DEBUG _DEBUG
 
+#ifdef _DEBUG
 //#pragma comment(lib, "Assimp/assimp-vc143-mtd.lib")
 
 #define _CRTDBG_MAP_ALLOC

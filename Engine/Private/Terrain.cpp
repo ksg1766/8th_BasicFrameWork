@@ -2,6 +2,10 @@
 #include "PipeLine.h"
 #include "FileUtils.h"
 #include "DebugDraw.h"
+#include "GameObject.h"
+#include "Transform.h"
+#include "PipeLine.h"
+#include "GraphicDevice.h"
 
 CTerrain::CTerrain(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: Super(pDevice, pContext)
@@ -46,6 +50,119 @@ HRESULT CTerrain::Initialize_Prototype()
 
 HRESULT CTerrain::Initialize(void * pArg)
 {
+	return S_OK;
+}
+
+HRESULT CTerrain::InitializeJustGrid(const _uint& iSizeX, const _uint& iSizeZ, const _uint iCX, const _uint iCZ)
+{
+	m_iStride = sizeof(VTXPOS); /* 정점하나의 크기 .*/
+
+	m_iNumVerticesX = iSizeX / iCX + 1;
+	m_iNumVerticesZ = iSizeZ / iCZ + 1;
+
+	m_iNumVertices = m_iNumVerticesX * m_iNumVerticesZ;
+
+	m_iIndexSizeofPrimitive = sizeof(FACEINDICES32);
+	m_iNumIndicesofPrimitive = 3;
+	m_eIndexFormat = DXGI_FORMAT_R32_UINT;
+	m_eTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	m_iNumVBs = 1;
+
+#pragma region VERTEX_BUFFER
+
+	m_pVerticesPos = new _float3[m_iNumVertices];
+	VTXPOS* pVertices = new VTXPOS[m_iNumVertices];
+	ZeroMemory(pVertices, sizeof(VTXPOS) * m_iNumVertices);
+
+	for (size_t i = 0; i < m_iNumVerticesZ; i++)
+	{
+		for (size_t j = 0; j < m_iNumVerticesX; j++)
+		{
+			_uint		iIndex = i * m_iNumVerticesX + j;
+
+			pVertices[iIndex].vPosition = m_pVerticesPos[iIndex] = _float3(iCX * (j - (m_iNumVerticesX - 1) / 2.f), 0.f, iCZ * (i - (m_iNumVerticesZ - 1) / 2.f));
+			//m_vecVerticesCache.push_back(m_pVerticesPos[iIndex]);
+		}
+	}
+
+#pragma endregion
+
+#pragma region INDEX_BUFFER
+	m_iNumPrimitives = (m_iNumVerticesX - 1) * (m_iNumVerticesZ - 1) * 2;
+	m_iIndexSizeofPrimitive = sizeof(FACEINDICES32);
+	m_iNumIndicesofPrimitive = 3;
+	m_eIndexFormat = DXGI_FORMAT_R32_UINT;
+	m_eTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+
+	FACEINDICES32* pIndices = new FACEINDICES32[m_iNumPrimitives];
+	ZeroMemory(pIndices, sizeof(FACEINDICES32) * m_iNumPrimitives);
+
+	m_pFaceIndices = new FACEINDICES32[m_iNumPrimitives];
+	ZeroMemory(m_pFaceIndices, sizeof(FACEINDICES32) * m_iNumPrimitives);
+
+	_uint		iNumFaces = 0;
+
+	for (size_t i = 0; i < m_iNumVerticesZ - 1; i++)
+	{
+		for (size_t j = 0; j < m_iNumVerticesX - 1; j++)
+		{
+			_uint		iIndex = i * m_iNumVerticesX + j;
+
+			_uint		iIndices[4] = {
+				iIndex + m_iNumVerticesX,		//2
+				iIndex + m_iNumVerticesX + 1,	//3
+				iIndex + 1,						//1
+				iIndex							//0
+			};
+
+			pIndices[iNumFaces]._0 = iIndices[0];//2
+			pIndices[iNumFaces]._1 = iIndices[1];//3
+			pIndices[iNumFaces]._2 = iIndices[2];//1
+
+			++iNumFaces;
+
+			pIndices[iNumFaces]._0 = iIndices[0];//2
+			pIndices[iNumFaces]._1 = iIndices[2];//1
+			pIndices[iNumFaces]._2 = iIndices[3];//0
+
+			++iNumFaces;
+		}
+	}
+#pragma endregion
+
+	/* 정점버퍼와 인덱스 버퍼를 만든다. */
+	ZeroMemory(&m_BufferDesc, sizeof m_BufferDesc);
+	m_BufferDesc.ByteWidth = m_iStride * m_iNumVertices;
+	m_BufferDesc.Usage = D3D11_USAGE_DEFAULT; /* 정적버퍼로 할당한다. (Lock, unLock 호출 불가)*/
+	m_BufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	m_BufferDesc.CPUAccessFlags = 0;
+	m_BufferDesc.MiscFlags = 0;
+	m_BufferDesc.StructureByteStride = m_iStride;
+
+	::ZeroMemory(&m_SubResourceData, sizeof m_SubResourceData);
+	m_SubResourceData.pSysMem = pVertices;
+
+	if (FAILED(Super::Create_Buffer(&m_pVB)))
+		return E_FAIL;
+
+	/* 정점버퍼와 인덱스 버퍼를 만든다. */
+	ZeroMemory(&m_BufferDesc, sizeof m_BufferDesc);
+	m_BufferDesc.ByteWidth = m_iNumPrimitives * m_iIndexSizeofPrimitive;
+	m_BufferDesc.Usage = D3D11_USAGE_DEFAULT; /* 정적버퍼로 할당한다. (Lock, unLock 호출 불가)*/
+	m_BufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	m_BufferDesc.CPUAccessFlags = 0;
+	m_BufferDesc.MiscFlags = 0;
+	m_BufferDesc.StructureByteStride = 0;
+
+	ZeroMemory(&m_SubResourceData, sizeof m_SubResourceData);
+	m_SubResourceData.pSysMem = pIndices;
+
+	if (FAILED(Super::Create_Buffer(&m_pIB)))
+		return E_FAIL;
+
+	Safe_Delete_Array(pVertices);
+	Safe_Delete_Array(pIndices);
+
 	return S_OK;
 }
 
@@ -221,6 +338,7 @@ HRESULT CTerrain::InitializeWithHeightMap(const wstring& strHeightMapPath)
 
 void CTerrain::DebugRender()
 {
+#ifdef _DEBUG
 	m_pEffect->SetWorld(XMMatrixIdentity());
 
 	CPipeLine* pPipeLine = GET_INSTANCE(CPipeLine);
@@ -236,9 +354,84 @@ void CTerrain::DebugRender()
 
 	m_pBatch->Begin();
 
-	DX::DrawGrid(m_pBatch, m_iNumVerticesX / 2.f * Vec3::UnitX, m_iNumVerticesZ / 2.f * Vec3::UnitZ, 10.f * Vec3::UnitY, m_iNumVerticesX / 4.f, m_iNumVerticesZ / 4.f, Colors::Cyan);
+	DX::DrawGrid(m_pBatch, (m_iNumVerticesX - 1) / 2.f * Vec3::UnitX, (m_iNumVerticesZ - 1) / 2.f * Vec3::UnitZ, 10.f * Vec3::UnitY, (m_iNumVerticesX - 1) / 4.f, (m_iNumVerticesZ - 1) / 4.f, Colors::Cyan);
 
 	m_pBatch->End();
+#endif // DEBUG
+}
+
+_bool CTerrain::Pick(_uint screenX, _uint screenY, Vec3& pickPos, _float& distance)
+{
+	Matrix W = m_pGameObject->GetTransform()->WorldMatrix();
+	CPipeLine* pPipeLine = GET_INSTANCE(CPipeLine);
+	Matrix V = pPipeLine->Get_Transform_float4x4(CPipeLine::D3DTS_VIEW);
+	Matrix P = pPipeLine->Get_Transform_float4x4(CPipeLine::D3DTS_PROJ);
+
+	CGraphicDevice* pGraphicDevice = GET_INSTANCE(CGraphicDevice);
+	Viewport& vp = pGraphicDevice->GetViewPort();
+	
+	Vec3 n = Unproject(vp, Vec3(screenX, screenY, 0), W, V, P);
+	Vec3 f = Unproject(vp, Vec3(screenX, screenY, 1), W, V, P);
+
+	Vec3 start = n;
+	Vec3 direction = f - n;
+	direction.Normalize();
+
+	Ray ray = Ray(start, direction);
+
+	//const auto& vertices = _mesh->GetGeometry()->GetVertices();
+
+	for (int32 i = 0; i < m_iNumVerticesZ; i++)
+	{
+		for (int32 j = 0; j < m_iNumVerticesX; j++)
+		{
+			_uint		iIndices[4] = {
+				(i + 1) * m_iNumVerticesX + j,		//2
+				(i + 1) * m_iNumVerticesX + j + 1,	//3
+				i * m_iNumVerticesX + j + 1,		//1
+				i * m_iNumVerticesX + j				//0
+			};
+
+			Vec3 p[4];
+			for (int32 i = 0; i < 4; i++)
+				p[i] = m_pVerticesPos[iIndices[i]];
+
+			//  [2]
+			//   |	\
+			//  [0] - [1]
+			if (ray.Intersects(p[1], p[2], p[0], OUT distance))// 
+			{
+				pickPos = ray.position + ray.direction * distance;
+				return true;
+			}
+
+			//  [2] - [3]
+			//   	\  |
+			//		  [1]
+			if (ray.Intersects(p[3], p[0], p[2], OUT distance))// 
+			{
+				pickPos = ray.position + ray.direction * distance;
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
+Vec3 CTerrain::Unproject(const Viewport& viewport, const Vec3& pos, const Matrix& W, const Matrix& V, const Matrix& P)
+{
+	Vec3 p = pos;
+
+	p.x = 2.f * (p.x - viewport.x) / viewport.width - 1.f;
+	p.y = -2.f * (p.y - viewport.y) / viewport.height + 1.f;
+	p.z = ((p.z - viewport.minDepth) / (viewport.maxDepth - viewport.minDepth));
+
+	Matrix wvp = W * V * P;
+	Matrix wvpInv = wvp.Invert();
+
+	p = Vec3::Transform(p, wvpInv);
+	return p;
 }
 
 CTerrain* CTerrain::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

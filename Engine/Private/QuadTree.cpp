@@ -22,12 +22,32 @@ HRESULT CQuadTree::Build_QuadTree(_uint iNumLevels)
 
     map<LAYERTAG, CLayer*>& mapLayers = *pObjectManager->GetCurrentLevelLayers();
 
-    vector<CGameObject*>& vecObjects = mapLayers[LAYERTAG::WALL]->GetGameObjects();
-    /*vector<CGameObject*>& vecObjects = mapLayers[LAYERTAG::WALL]->GetGameObjects();
-    vector<CGameObject*>& vecObjects = mapLayers[LAYERTAG::WALL]->GetGameObjects();*/
+    map<LAYERTAG, CLayer*>::iterator iter;
 
-    for (auto& iter : vecObjects)
-        AddObjectInNode(iter->GetTransform(), m_pQuadTreeRoot);
+    iter = mapLayers.find(LAYERTAG::WALL);
+    if (mapLayers.end() != iter)
+    {
+        vector<CGameObject*>& vecObjects = mapLayers[LAYERTAG::WALL]->GetGameObjects();
+        for (auto& _iter : vecObjects)
+            AddObjectInNode(_iter->GetTransform(), m_pQuadTreeRoot);
+    }
+
+    /*iter = mapLayers.find(LAYERTAG::WALL);
+    if (mapLayers.end() != iter)
+    {
+        vector<CGameObject*>& vecObjects = mapLayers[LAYERTAG::WALL]->GetGameObjects();
+        for (auto& _iter : vecObjects)
+            AddObjectInNode(_iter->GetTransform(), m_pQuadTreeRoot);
+    }
+
+    iter = mapLayers.find(LAYERTAG::WALL);
+    if (mapLayers.end() != iter)
+    {
+        vector<CGameObject*>& vecObjects = mapLayers[LAYERTAG::WALL]->GetGameObjects();
+        for (auto& _iter : vecObjects)
+            AddObjectInNode(_iter->GetTransform(), m_pQuadTreeRoot);
+    }*/
+
 
     if (!m_pQuadTreeRoot)
     {
@@ -89,8 +109,8 @@ CQuadTreeNode* CQuadTree::BuildQuadTree(Vec3 vCenter, Vec3 vHalfExtents, _int iD
     CQuadTreeNode*  pNode = new CQuadTreeNode;
     BoundingBox*    pBBox = pNode->GetBoundingBox();
 
-    //vCenter.y = 20.f;
-    pBBox->Center = vCenter +Vec3(0.f, 10.f, 0.f);
+    vCenter.y = 20.f;
+    pBBox->Center = vCenter;// +Vec3(0.f, 10.f, 0.f);
     pBBox->Extents = vHalfExtents;
     
     Vec3 vOffset;

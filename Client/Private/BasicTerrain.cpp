@@ -49,7 +49,7 @@ HRESULT CBasicTerrain::Render()
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
-	GetShader()->Begin(0);
+	GetShader()->Begin(3);
 
 	static_cast<CTerrain*>(GetFixedComponent(ComponentType::Terrain))->Render();
 
@@ -68,21 +68,25 @@ HRESULT CBasicTerrain::Ready_FixedComponents(void* pArg)
 		return E_FAIL;
 
 	/* Com_Shader */
-	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Shader, TEXT("Prototype_Component_Shader_VtxNorTex"))))
+	/*if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Shader, TEXT("Prototype_Component_Shader_VtxNorTex"))))
+		return E_FAIL;*/
+	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Shader, TEXT("Prototype_Component_Shader_VtxDebug"))))
 		return E_FAIL;
 
 	/* Com_Terrain */
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Terrain, TEXT("Prototype_Component_Terrain"))))
 		return E_FAIL;
 
-	if (FAILED(dynamic_cast<CTerrain*>(GetFixedComponent(ComponentType::Terrain))->InitializeWithHeightMap(TEXT("../Bin/Resources/Textures/Terrain/Height1.bmp"))))
+	/*if (FAILED(dynamic_cast<CTerrain*>(GetFixedComponent(ComponentType::Terrain))->InitializeWithHeightMap(TEXT("../Bin/Resources/Textures/Terrain/Height1.bmp"))))
+		return E_FAIL;*/
+	if (FAILED(static_cast<CTerrain*>(GetFixedComponent(ComponentType::Terrain))->InitializeJustGrid(1024, 1024)))
 		return E_FAIL;
 
 	/* Com_Texture*/
-	if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::Texture, TEXT("Prototype_Component_Texture_Terrain"))))
+	/*CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+	if (FAILED(Super::AddComponent(pGameInstance->GetCurrentLevelIndex(), ComponentType::Texture, TEXT("Prototype_Component_Texture_Terrain"))))
 		return E_FAIL;
-	/*if (FAILED(Super::AddComponent(LEVEL_GAMETOOL, ComponentType::Texture, TEXT("Prototype_Component_Texture_Terrain"))))
-		return E_FAIL;*/
+	RELEASE_INSTANCE(CGameInstance);*/
 
 	/* Com_Transform */
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Transform, TEXT("Prototype_Component_Transform"))))
@@ -106,9 +110,9 @@ HRESULT CBasicTerrain::Bind_ShaderResources()
 
 	if (FAILED(GetTransform()->Bind_ShaderResources(GetShader(), "g_WorldMatrix")) ||
 		FAILED(pGameInstance->Bind_TransformToShader(GetShader(), "g_ViewMatrix", CPipeLine::D3DTS_VIEW)) ||
-		FAILED(pGameInstance->Bind_TransformToShader(GetShader(), "g_ProjMatrix", CPipeLine::D3DTS_PROJ)) ||
+		FAILED(pGameInstance->Bind_TransformToShader(GetShader(), "g_ProjMatrix", CPipeLine::D3DTS_PROJ))/* ||
 		FAILED(GetShader()->Bind_RawValue("g_vCamPosition", &static_cast<const _float4&>(pGameInstance->Get_CamPosition_Float4()), sizeof(_float4))) ||
-		FAILED(GetTexture()->Bind_ShaderResource(GetShader(), "g_DiffuseTexture", 0)))
+		FAILED(GetTexture()->Bind_ShaderResource(GetShader(), "g_DiffuseTexture", 0))*/)
 	{
 		RELEASE_INSTANCE(CGameInstance);
 		return E_FAIL;

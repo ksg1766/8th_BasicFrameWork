@@ -4,6 +4,8 @@
 #include "Client_Defines.h"
 #include "GameObject.h"
 
+BEGIN(Client)
+
 class CBasicTerrain : public CGameObject
 {
 	using Super = CGameObject;
@@ -32,3 +34,5 @@ public:
 	virtual CBasicTerrain* Clone(void* pArg);
 	virtual void Free() override;
 };
+
+END

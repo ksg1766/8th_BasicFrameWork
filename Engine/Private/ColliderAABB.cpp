@@ -36,6 +36,7 @@ void CAABBCollider::LateTick(const _float& fTimeDelta)
 
 void CAABBCollider::DebugRender()
 {
+#ifdef _DEBUG
 	Super::DebugRender();
 
 	m_pBatch->Begin();
@@ -43,6 +44,7 @@ void CAABBCollider::DebugRender()
 	DX::Draw(m_pBatch, m_tBoundingBox, Colors::Lime);
 
 	m_pBatch->End();
+#endif // DEBUG
 }
 
 _bool CAABBCollider::Intersects(Ray& ray, OUT _float& distance)

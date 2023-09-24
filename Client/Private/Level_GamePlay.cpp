@@ -50,11 +50,15 @@ HRESULT CLevel_GamePlay::Tick(const _float& fTimeDelta)
 
 HRESULT CLevel_GamePlay::LateTick(const _float& fTimeDelta)
 {
-	SetWindowText(g_hWnd, TEXT("게임플레이 레벨입니다."));
+	//SetWindowText(g_hWnd, TEXT("게임플레이 레벨입니다."));
 	
 	// TODO: 꼭 영기 말고 더 좋은 위치를 찾도록 하자....
 	m_pGameInstance->LateTick_Collision(fTimeDelta);
-	//m_pGameInstance->Render_QuadTree();
+
+#ifndef DEBUG
+	m_pGameInstance->Render_QuadTree();
+#endif // !DEBUG
+
 
 	return S_OK;
 }

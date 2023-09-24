@@ -2,10 +2,6 @@
 #include "Base.h"
 #include "Client_Defines.h"
 
-#include "../Public/ImGUI/imgui.h"
-#include "../Public/ImGUI/imgui_impl_dx11.h"
-#include "../Public/ImGUI/imgui_impl_win32.h"
-
 BEGIN(Client)
 
 class CImGUIManager final : public CBase

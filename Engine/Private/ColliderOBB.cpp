@@ -57,6 +57,7 @@ void COBBCollider::LateTick(const _float& fTimeDelta)
 
 void COBBCollider::DebugRender()
 {
+#ifdef _DEBUG
 	Super::DebugRender();
 
 	m_pBatch->Begin();
@@ -64,6 +65,7 @@ void COBBCollider::DebugRender()
 	DX::Draw(m_pBatch, m_tBoundingBox, Colors::Lime);
 
 	m_pBatch->End();
+#endif // DEBUG
 }
 
 _bool COBBCollider::Intersects(Ray& ray, OUT _float& distance)

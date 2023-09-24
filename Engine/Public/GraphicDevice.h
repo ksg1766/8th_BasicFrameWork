@@ -29,6 +29,7 @@ public:
 
 	ID3D11Device*			GetDevice()		{ return m_pDevice; }
 	ID3D11DeviceContext*	GetContext()	{ return m_pDeviceContext; }
+	Viewport&				GetViewPort()	{ return m_tViewPort; }
 
 private:		
 	// IDirect3DDevice9* == LPDIRECT3DDEVICE9 == ID3D11Device + ID3D11DeviceContext 
@@ -43,6 +44,7 @@ private:
 	/* 후면버퍼와 전면버퍼를 교체해가면서 화면에 보여주는 역활. */
 	IDXGISwapChain*				m_pSwapChain = nullptr;		
 
+	Viewport					m_tViewPort;
 
 	/* IDirect3DTexture9 */
 	/* ID3D11Texture2D : 텍스쳐를 표현하는 사전객체 타입이다.

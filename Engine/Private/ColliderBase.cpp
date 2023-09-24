@@ -68,6 +68,7 @@ HRESULT CCollider::Initialize(void* pArg)
 
 void CCollider::DebugRender()
 {
+#ifdef _DEBUG
 	m_pEffect->SetWorld(XMMatrixIdentity());
 
 	CPipeLine* pPipeLine = GET_INSTANCE(CPipeLine);
@@ -80,6 +81,7 @@ void CCollider::DebugRender()
 	m_pEffect->Apply(m_pContext);
 
 	m_pContext->IASetInputLayout(m_pInputLayout);
+#endif // DEBUG
 }
 
 void CCollider::Free()

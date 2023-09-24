@@ -14,9 +14,9 @@ CQuadTreeNode::CQuadTreeNode()
 #endif
 }
 
+#ifdef _DEBUG
 HRESULT CQuadTreeNode::InitDebugSquare()
 {
-#ifdef _DEBUG
 	CGraphicDevice* pGrahicDevice = GET_INSTANCE(CGraphicDevice);
 
 	m_pBatch = new PrimitiveBatch<VertexPositionColor>(pGrahicDevice->GetContext());
@@ -38,10 +38,10 @@ HRESULT CQuadTreeNode::InitDebugSquare()
 		return E_FAIL;
 	}
 	RELEASE_INSTANCE(CGraphicDevice);
-#endif
 
 	return S_OK;
 }
+#endif
 
 void CQuadTreeNode::AddChildNode(CQuadTreeNode* pChild)
 {
@@ -75,18 +75,8 @@ void CQuadTreeNode::Render_QuadTreeNode()
 			}
 		}
 	}
-
-	/*for (auto& _iter : m_vecObjects)
-	{
-		_iter->Tick(0.0167f);
-		_iter->LateTick(0.0167f);
-	}*/
-
-#ifdef _DEBUG
-	//DebugRender();
-#endif // _DEBUG
 }
-
+#ifdef _DEBUG
 void CQuadTreeNode::DebugRender()
 {
 	m_pEffect->SetWorld(XMMatrixIdentity());
@@ -111,9 +101,16 @@ void CQuadTreeNode::DebugRender()
 
 	m_pBatch->End();
 }
-
+#endif // _DEBUG
 void CQuadTreeNode::Free()
 {
+#ifdef _DEBUG
+	Safe_Delete(m_pBatch);
+	Safe_Delete(m_pEffect);
+
+	Safe_Release(m_pInputLayout);
+#endif // _DEBUG
+
 	if (!m_vecChildren.empty())
 	{
 		for (auto& iter : m_vecChildren)

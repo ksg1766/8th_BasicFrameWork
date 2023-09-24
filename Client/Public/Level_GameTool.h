@@ -13,16 +13,22 @@ private:
 	virtual ~CLevel_GameTool() = default;
 
 public:
-	virtual HRESULT Initialize() override;
-	virtual HRESULT Tick(const _float& fTimeDelta) override;
-	virtual HRESULT LateTick(const _float& fTimeDelta) override;
-	virtual HRESULT	DebugRender() override;
+	virtual HRESULT Initialize()						override;
+	virtual HRESULT Tick(const _float& fTimeDelta)		override;
+	virtual HRESULT LateTick(const _float& fTimeDelta)	override;
+	virtual HRESULT	DebugRender()						override;
 
 	void			ImGUIDemo();
 
 private:
 	HRESULT			Ready_Layer_Terrain();
 	HRESULT			Ready_Layer_Camera();
+
+	HRESULT			Ready_Tools();
+
+	class CMapTool*			m_pMapTool = nullptr;
+
+	class CBasicTerrain*	m_pBasicTerrain = nullptr;
 
 private:
 	class CImGUIManager* m_pImGUIInstance;

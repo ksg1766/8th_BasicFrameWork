@@ -4,6 +4,10 @@
 
 #include "GameInstance.h"
 #include "GameObject.h"
+#include "BasicTerrain.h"
+#include "Terrain.h"
+
+#include "MapTool.h"
 
 CLevel_GameTool::CLevel_GameTool(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -11,37 +15,50 @@ CLevel_GameTool::CLevel_GameTool(ID3D11Device * pDevice, ID3D11DeviceContext * p
 }
 
 HRESULT CLevel_GameTool::Initialize()
-{ 
+{
+	m_pGameInstance = GET_INSTANCE(CGameInstance);
 	m_pImGUIInstance = GET_INSTANCE(CImGUIManager);
 	m_pImGUIInstance->Initialize(m_pDevice, m_pContext);
-	
+
  	if (FAILED(Ready_Layer_Terrain()))
 		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Camera()))
 		return E_FAIL;
 
+	if (FAILED(Ready_Tools()))
+		return E_FAIL;
 
 	return S_OK;
 }
 
 HRESULT CLevel_GameTool::Tick(const _float& fTimeDelta)
 {
+	//m_pGameInstance->Update_QuadTree();
+
 	// UI
 	if (!m_IsImGUIReady)
 		m_IsImGUIReady = true;
 	
-	
+	//if (ImGui::GetIO().WantCaptureMouse)
+	//	return S_OK;
+
 	m_pImGUIInstance->Tick();
 
+	//
+	if (m_pMapTool)
+		m_pMapTool->Tick();
+	//
+
 	ImGUIDemo();
+
 
 	return S_OK;
 }
 
 HRESULT CLevel_GameTool::LateTick(const _float& fTimeDelta)
 {
-	SetWindowText(g_hWnd, TEXT("게임 툴 레벨입니다."));
+	//SetWindowText(g_hWnd, TEXT("게임 툴 레벨입니다."));
 
 	return S_OK;
 }
@@ -57,27 +74,26 @@ HRESULT CLevel_GameTool::DebugRender()
 HRESULT CLevel_GameTool::Ready_Layer_Terrain()
 {
 	/* 원형객체를 복제하여 사본객체를 생성하고 레이어에 추가한다. */
-	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
-	if (FAILED(pGameInstance->Add_GameObject(LEVEL_GAMETOOL, LAYERTAG::TERRAIN, TEXT("Prototype_GameObject_BasicTerrain"))))
-		return E_FAIL;
-
-	RELEASE_INSTANCE(CGameInstance);
+	m_pBasicTerrain = dynamic_cast<CBasicTerrain*>(m_pGameInstance->Add_GameObject(LEVEL_GAMETOOL, LAYERTAG::TERRAIN, TEXT("Prototype_GameObject_BasicTerrain")));
+	if (nullptr == m_pBasicTerrain) return E_FAIL;
 
 	return S_OK;
 }
 
 HRESULT CLevel_GameTool::Ready_Layer_Camera()
 {
-	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
 	CGameObject* pGameObject = nullptr;
 
-	pGameObject = pGameInstance->Add_GameObject(LEVEL_GAMETOOL, LAYERTAG::CAMERA, TEXT("Prototype_GameObject_FlyingCamera"));
+	pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMETOOL, LAYERTAG::CAMERA, TEXT("Prototype_GameObject_FlyingCamera"));
 	if (nullptr == pGameObject)	return E_FAIL;
 	pGameObject->GetTransform()->Translate(Vec3(0.f, 400.f, 0.f));
 
-	RELEASE_INSTANCE(CGameInstance);
+	return S_OK;
+}
+
+HRESULT CLevel_GameTool::Ready_Tools()
+{
+	m_pMapTool = CMapTool::Create(m_pDevice, m_pContext, dynamic_cast<CTerrain*>(m_pBasicTerrain->GetFixedComponent(ComponentType::Terrain)));
 
 	return S_OK;
 }
@@ -139,5 +155,6 @@ void CLevel_GameTool::Free()
 {
 	Super::Free();
 
-	Safe_Release(m_pImGUIInstance);
+	RELEASE_INSTANCE(CGameInstance);
+	RELEASE_INSTANCE(CImGUIManager);
 }

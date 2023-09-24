@@ -61,6 +61,10 @@ private:
 
 	CRenderer*				m_pRenderer = { nullptr };
 
+	_uint					m_iFps = 0;
+	DWORD					m_dwTime = 0;
+	_tchar					m_szFPS[64];
+
 private:
 	HRESULT Open_Level(LEVELID eLevelID);
 	/* 모든레벨에서 사용되는 컴포넌트 원형. */
