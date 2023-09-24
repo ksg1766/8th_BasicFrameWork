@@ -26,6 +26,9 @@ HRESULT CLevel_GameTool::Initialize()
 	if (FAILED(Ready_Layer_Camera()))
 		return E_FAIL;
 
+	if (FAILED(Ready_Layer_Wall()))
+		return E_FAIL;
+
 	if (FAILED(Ready_Tools()))
 		return E_FAIL;
 
@@ -87,6 +90,13 @@ HRESULT CLevel_GameTool::Ready_Layer_Camera()
 	pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMETOOL, LAYERTAG::CAMERA, TEXT("Prototype_GameObject_FlyingCamera"));
 	if (nullptr == pGameObject)	return E_FAIL;
 	pGameObject->GetTransform()->Translate(Vec3(0.f, 400.f, 0.f));
+
+	return S_OK;
+}
+
+HRESULT CLevel_GameTool::Ready_Layer_Wall()
+{
+
 
 	return S_OK;
 }

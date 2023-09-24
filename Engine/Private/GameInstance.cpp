@@ -303,7 +303,7 @@ KEYSTATE CGameInstance::GetKeyState(KEY _eKey)
 
 const POINT& CGameInstance::GetMousePos()
 {
-	return POINT();
+	return m_pKeyManager->GetMousePos();
 }
 
 HRESULT CGameInstance::Bind_TransformToShader(CShader* pShader, const _char* pConstantName, CPipeLine::TRANSFORMSTATE eState)

@@ -23,6 +23,7 @@ public:
 	virtual HRESULT	DebugRender()	PURE;
 
 protected:
+	class Engine::CGameInstance*	m_pGameInstance = nullptr;
 	class CImGUIManager*	m_pImGUIInstance = nullptr;
 
 	ID3D11Device*			m_pDevice = { nullptr };

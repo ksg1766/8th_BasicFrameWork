@@ -172,27 +172,27 @@ HRESULT CLevel_GamePlay::Ready_Layer_Wall()
 
 	pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_StaticTest"));
 	if (nullptr == pGameObject)	return E_FAIL;
-	pGameObject->GetTransform()->Translate(Vec3(200.f, 100.f, 100.f));
+	pGameObject->GetTransform()->Translate(Vec3(200.f, 300.f, 100.f));
 
 	pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_StaticTest"));
 	if (nullptr == pGameObject)	return E_FAIL;
-	pGameObject->GetTransform()->Translate(Vec3(-200.f, 100.f, 100.f));
+	pGameObject->GetTransform()->Translate(Vec3(-200.f, 300.f, 100.f));
 
 	pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_StaticTest"));
 	if (nullptr == pGameObject)	return E_FAIL;
-	pGameObject->GetTransform()->Translate(Vec3(250.f, 100.f, 50.f));
+	pGameObject->GetTransform()->Translate(Vec3(250.f, 300.f, 50.f));
 
 	pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_StaticTest"));
 	if (nullptr == pGameObject)	return E_FAIL;
-	pGameObject->GetTransform()->Translate(Vec3(-250.f, 100.f, 50.f));
+	pGameObject->GetTransform()->Translate(Vec3(-250.f, 300.f, 50.f));
 
 	pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_StaticTest"));
 	if (nullptr == pGameObject)	return E_FAIL;
-	pGameObject->GetTransform()->Translate(Vec3(300.f, 100.f, 0.f));
+	pGameObject->GetTransform()->Translate(Vec3(300.f, 300.f, 0.f));
 
 	pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_StaticTest"));
 	if (nullptr == pGameObject)	return E_FAIL;
-	pGameObject->GetTransform()->Translate(Vec3(-300.f, 100.f, 0.f));
+	pGameObject->GetTransform()->Translate(Vec3(-300.f, 300.f, 0.f));
 
 	return S_OK;
 }

@@ -26,7 +26,7 @@ HRESULT CStaticTest::Initialize(void * pArg)
 		return E_FAIL;
 	
 	GetTransform()->SetScale(Vec3(40.f, 40.f, 40.f));
-	GetTransform()->Translate(Vec3(0.f, 0.f, 200.f));
+	GetTransform()->Translate(Vec3(0.f, 0.f, 0.f));
 
 	return S_OK;
 }
@@ -82,8 +82,13 @@ HRESULT CStaticTest::Ready_FixedComponents()
 		return E_FAIL;
 
 	/* Com_Texture */
-	if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::Texture, TEXT("Prototype_Component_Texture_Sky"))))
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+	if (FAILED(Super::AddComponent(pGameInstance->GetCurrentLevelIndex(), ComponentType::Texture, TEXT("Prototype_Component_Texture_Sky"))))
+	{
+		RELEASE_INSTANCE(CGameInstance);
 		return E_FAIL;
+	}
+	RELEASE_INSTANCE(CGameInstance);
 
 	/* Com_RigidBody */
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::RigidBody, TEXT("Prototype_Component_RigidStatic")))

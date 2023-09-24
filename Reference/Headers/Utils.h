@@ -3,7 +3,7 @@
 
 BEGIN(Engine)
 
-class Utils
+class ENGINE_DLL Utils
 {
 public:
 	static bool StartsWith(string str, string comp);

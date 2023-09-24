@@ -370,16 +370,14 @@ _bool CTerrain::Pick(_uint screenX, _uint screenY, Vec3& pickPos, _float& distan
 	CGraphicDevice* pGraphicDevice = GET_INSTANCE(CGraphicDevice);
 	Viewport& vp = pGraphicDevice->GetViewPort();
 	
-	Vec3 n = Unproject(vp, Vec3(screenX, screenY, 0), W, V, P);
-	Vec3 f = Unproject(vp, Vec3(screenX, screenY, 1), W, V, P);
+	Vec3 n = vp.Unproject(Vec3(screenX, screenY, 0), P, V, W);
+	Vec3 f = vp.Unproject(Vec3(screenX, screenY, 1), P, V, W);
 
 	Vec3 start = n;
 	Vec3 direction = f - n;
 	direction.Normalize();
 
 	Ray ray = Ray(start, direction);
-
-	//const auto& vertices = _mesh->GetGeometry()->GetVertices();
 
 	for (int32 i = 0; i < m_iNumVerticesZ; i++)
 	{
@@ -396,42 +394,25 @@ _bool CTerrain::Pick(_uint screenX, _uint screenY, Vec3& pickPos, _float& distan
 			for (int32 i = 0; i < 4; i++)
 				p[i] = m_pVerticesPos[iIndices[i]];
 
-			//  [2]
-			//   |	\
-			//  [0] - [1]
 			if (ray.Intersects(p[1], p[2], p[0], OUT distance))// 
 			{
 				pickPos = ray.position + ray.direction * distance;
+				if (isnan(pickPos.x) || isnan(pickPos.y) || isnan(pickPos.z) || isnan(distance))
+					return false;
 				return true;
 			}
 
-			//  [2] - [3]
-			//   	\  |
-			//		  [1]
 			if (ray.Intersects(p[3], p[0], p[2], OUT distance))// 
 			{
 				pickPos = ray.position + ray.direction * distance;
+				if (isnan(pickPos.x) || isnan(pickPos.y) || isnan(pickPos.z) || isnan(distance))
+					return false;
 				return true;
 			}
 		}
 	}
 
 	return false;
-}
-
-Vec3 CTerrain::Unproject(const Viewport& viewport, const Vec3& pos, const Matrix& W, const Matrix& V, const Matrix& P)
-{
-	Vec3 p = pos;
-
-	p.x = 2.f * (p.x - viewport.x) / viewport.width - 1.f;
-	p.y = -2.f * (p.y - viewport.y) / viewport.height + 1.f;
-	p.z = ((p.z - viewport.minDepth) / (viewport.maxDepth - viewport.minDepth));
-
-	Matrix wvp = W * V * P;
-	Matrix wvpInv = wvp.Invert();
-
-	p = Vec3::Transform(p, wvpInv);
-	return p;
 }
 
 CTerrain* CTerrain::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)

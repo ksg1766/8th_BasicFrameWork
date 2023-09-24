@@ -23,9 +23,6 @@ public:
 	_bool			Pick(_uint screenX, _uint screenY, Vec3& pickPos, _float& distance);
 
 private:
-	Vec3			Unproject(const Viewport& viewport, const Vec3& pos, const Matrix& W, const Matrix& V, const Matrix& P);
-
-private:
 	_ulong				m_iNumVerticesX = { 0 };
 	_ulong				m_iNumVerticesZ = { 0 };
 	FACEINDICES32*		m_pFaceIndices = nullptr;

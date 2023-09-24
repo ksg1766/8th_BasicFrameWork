@@ -1,4 +1,5 @@
 #include "Tool.h"
+#include "GameInstance.h"
 #include "ImGUIManager.h"
 
 CTool::CTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -9,6 +10,7 @@ CTool::CTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 HRESULT CTool::Initialize(void* pArg)
 {
+	m_pGameInstance = GET_INSTANCE(CGameInstance);
 	m_pImGUIInstance = GET_INSTANCE(CImGUIManager);
 
 	return S_OK;
@@ -16,5 +18,6 @@ HRESULT CTool::Initialize(void* pArg)
 
 void CTool::Free()
 {
+	RELEASE_INSTANCE(CGameInstance);
 	RELEASE_INSTANCE(CImGUIManager);
 }

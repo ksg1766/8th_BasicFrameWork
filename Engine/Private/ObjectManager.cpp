@@ -70,7 +70,7 @@ void CObjectManager::Tick(const _float& fTimeDelta)
 {
 	for (size_t i = 0; i < m_iNumLevels; i++)
 	{
-		if (i != 1)
+		if (i == 2)		// GAMEPLAY
 		{
 			for (auto& Pair : m_pLayers[i])
 			{
@@ -84,12 +84,12 @@ void CObjectManager::Tick(const _float& fTimeDelta)
 					Pair.second->Tick(fTimeDelta);
 			}
 		}
-		else if (i == 1)
+		else if (i != 2)		// GAMEPLAY
 		{
 			for (auto& Pair : m_pLayers[i])
 			{
 				if ((_uint)Pair.first == (_uint)LAYERTAG::DEFAULT_LAYER_END
-					|| (_uint)Pair.first < (_uint)LAYERTAG::DYNAMIC_LAYER_END)
+					|| (_uint)Pair.first == (_uint)LAYERTAG::DYNAMIC_LAYER_END)
 					continue;
 
 				if ((_uint)Pair.first < (_uint)LAYERTAG::STATIC_LAYER_END)
@@ -106,7 +106,7 @@ void CObjectManager::LateTick(const _float& fTimeDelta)
 {
 	for (size_t i = 0; i < m_iNumLevels; i++)
 	{
-		if (i != 1)
+		if (i == 2)		// GAMEPLAY
 		{
 			for (auto& Pair : m_pLayers[i])
 			{
@@ -120,19 +120,19 @@ void CObjectManager::LateTick(const _float& fTimeDelta)
 					Pair.second->LateTick(fTimeDelta);
 			}
 		}
-		else if (i == 1)
+		else if (i != 2)	// GAMEPLAY
 		{
 			for (auto& Pair : m_pLayers[i])
 			{
 				if ((_uint)Pair.first == (_uint)LAYERTAG::DEFAULT_LAYER_END
-					|| (_uint)Pair.first < (_uint)LAYERTAG::DYNAMIC_LAYER_END)
+					|| (_uint)Pair.first == (_uint)LAYERTAG::DYNAMIC_LAYER_END)
 					continue;
 
 				if ((_uint)Pair.first < (_uint)LAYERTAG::STATIC_LAYER_END)
-					Pair.second->Tick(fTimeDelta);
+					Pair.second->LateTick(fTimeDelta);
 				// Temp
 				if (Pair.first == LAYERTAG::TERRAIN)
-					Pair.second->Tick(fTimeDelta);
+					Pair.second->LateTick(fTimeDelta);
 			}
 		}
 	}
@@ -142,7 +142,7 @@ void CObjectManager::DebugRender()
 {
 	for (size_t i = 0; i < m_iNumLevels; i++)
 	{
-		if (i != 1)
+		if (i == 2)		// GAMEPLAY
 		{
 			for (auto& Pair : m_pLayers[i])
 			{
@@ -156,12 +156,12 @@ void CObjectManager::DebugRender()
 					Pair.second->DebugRender();
 			}
 		}
-		else if (i == 1)
+		else if (i != 2)	// !GAMEPLAY
 		{
 			for (auto& Pair : m_pLayers[i])
 			{
 				if ((_uint)Pair.first == (_uint)LAYERTAG::DEFAULT_LAYER_END
-					|| (_uint)Pair.first < (_uint)LAYERTAG::DYNAMIC_LAYER_END)
+					|| (_uint)Pair.first == (_uint)LAYERTAG::DYNAMIC_LAYER_END)
 					continue;
 
 				if ((_uint)Pair.first < (_uint)LAYERTAG::STATIC_LAYER_END)
