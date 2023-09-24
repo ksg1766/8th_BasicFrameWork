@@ -31,6 +31,7 @@ private:
     void	        FrustumCull(BoundingFrustum& tFrustum, CQuadTreeNode* pNode);
 
 private:
+
     class CPipeLine* m_pPipeLine;
 
     const _int      m_iDepthLimit = 5;
@@ -38,6 +39,16 @@ private:
 
     Vec3            m_vRootExtents = Vec3(1024.f, 0.f, 1024.f);
     CQuadTreeNode*  m_pQuadTreeRoot = nullptr;
+
+#ifdef _DEBUG
+    HRESULT         InitDebugFrustum();
+
+    PrimitiveBatch<VertexPositionColor>* m_pBatch = nullptr;
+    BasicEffect*    m_pEffect = nullptr;
+    ID3D11InputLayout* m_pInputLayout = nullptr;
+
+    BoundingFrustum m_tBoundingFrustum;
+#endif
 
 public:
     virtual void Free() override;

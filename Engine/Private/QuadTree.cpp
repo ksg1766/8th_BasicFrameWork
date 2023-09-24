@@ -6,6 +6,12 @@
 #include "Layer.h"
 #include "PipeLine.h"
 
+#ifdef _DEBUG
+#include "GraphicDevice.h"
+#include "PipeLine.h"
+#include "DebugDraw.h"
+#endif // _DEBUG
+
 IMPLEMENT_SINGLETON(CQuadTree)
 
 CQuadTree::CQuadTree()
@@ -57,25 +63,64 @@ HRESULT CQuadTree::Build_QuadTree(_uint iNumLevels)
 
     RELEASE_INSTANCE(CObjectManager)
 
+#ifdef DEBUG
+        InitDebugFrustum();
+#endif // DEBUG
+
+
     return S_OK;
 }
 
 void CQuadTree::Update_QuadTree()
 {
+#ifndef DEBUG
     BoundingFrustum tFrustum;
     Update_Frustum(tFrustum);
     FrustumCull(tFrustum, m_pQuadTreeRoot);
+#elif DEBUG
+    Update_Frustum(m_tBoundingFrustum);
+    FrustumCull(m_tBoundingFrustum, m_pQuadTreeRoot);
+#endif
 }
 
 void CQuadTree::Update_Frustum(BoundingFrustum& tFrustum)
 {
+#ifndef DEBUG
     BoundingFrustum::CreateFromMatrix(tFrustum, m_pPipeLine->Get_Transform_Matrix(CPipeLine::D3DTS_PROJ));
     tFrustum.Transform(tFrustum, m_pPipeLine->Get_Transform_Matrix_Inverse(CPipeLine::D3DTS_VIEW));
+#elif DEBUG
+    BoundingFrustum::CreateFromMatrix(m_tBoundingFrustum, m_pPipeLine->Get_Transform_Matrix(CPipeLine::D3DTS_PROJ));
+    m_tBoundingFrustum.Transform(m_tBoundingFrustum, m_pPipeLine->Get_Transform_Matrix_Inverse(CPipeLine::D3DTS_VIEW));
+#endif
 }
 
 void CQuadTree::Render_QuadTree()
 {
     m_pQuadTreeRoot->Render_QuadTreeNode();
+
+#ifdef DEBUG
+    m_pEffect->SetWorld(XMMatrixIdentity());
+
+    CGraphicDevice* pGrahicDevice = GET_INSTANCE(CGraphicDevice);
+    CPipeLine* pPipeLine = GET_INSTANCE(CPipeLine);
+
+    m_pEffect->SetView(pPipeLine->Get_Transform_Matrix(CPipeLine::D3DTS_VIEW));
+    m_pEffect->SetProjection(pPipeLine->Get_Transform_Matrix(CPipeLine::D3DTS_PROJ));
+
+    RELEASE_INSTANCE(CPipeLine);
+
+    m_pEffect->Apply(pGrahicDevice->GetContext());
+
+    pGrahicDevice->GetContext()->IASetInputLayout(m_pInputLayout);
+
+    RELEASE_INSTANCE(CGraphicDevice);
+
+    m_pBatch->Begin();
+
+    DX::Draw(m_pBatch, m_tBoundingFrustum, Colors::DimGray);
+
+    m_pBatch->End();
+#endif // DEBUG
 }
 
 CQuadTreeNode* CQuadTree::GetCurrentNodeByPos(Vec3 vPos, CQuadTreeNode* const pNode)
@@ -109,8 +154,8 @@ CQuadTreeNode* CQuadTree::BuildQuadTree(Vec3 vCenter, Vec3 vHalfExtents, _int iD
     CQuadTreeNode*  pNode = new CQuadTreeNode;
     BoundingBox*    pBBox = pNode->GetBoundingBox();
 
-    vCenter.y = 20.f;
-    pBBox->Center = vCenter;// +Vec3(0.f, 10.f, 0.f);
+    vCenter.y += 10.f;  // °£Áö¿ë
+    pBBox->Center = vCenter;
     pBBox->Extents = vHalfExtents;
     
     Vec3 vOffset;
@@ -157,6 +202,35 @@ void CQuadTree::FrustumCull(BoundingFrustum& tFrustum, CQuadTreeNode* pNode)
         for (_int i = 0; i < 4; ++i)
             FrustumCull(tFrustum, vecChildren[i]);
 }
+
+#ifdef DEBUG
+HRESULT CQuadTree::InitDebugFrustum()
+{
+    CGraphicDevice* pGrahicDevice = GET_INSTANCE(CGraphicDevice);
+
+    m_pBatch = new PrimitiveBatch<VertexPositionColor>(pGrahicDevice->GetContext());
+
+    m_pEffect = new BasicEffect(pGrahicDevice->GetDevice());
+    m_pEffect->SetVertexColorEnabled(true);
+
+    const void* pShaderByteCodes = nullptr;
+    size_t		iLength = 0;
+    m_pEffect->GetVertexShaderBytecode(&pShaderByteCodes, &iLength);
+
+    if (FAILED(pGrahicDevice->GetDevice()->CreateInputLayout(VertexPositionColor::InputElements, VertexPositionColor::InputElementCount, pShaderByteCodes, iLength, &m_pInputLayout)))
+    {
+        Safe_Delete(m_pBatch);
+        Safe_Delete(m_pEffect);
+        Safe_Release(m_pInputLayout);
+
+        RELEASE_INSTANCE(CGraphicDevice);
+        return E_FAIL;
+    }
+    RELEASE_INSTANCE(CGraphicDevice);
+
+    return S_OK;
+}
+#endif // DEBUG
 
 void CQuadTree::AddObjectInNode(CTransform* pTransform, CQuadTreeNode* const pNode)
 {

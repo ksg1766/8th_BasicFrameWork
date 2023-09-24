@@ -26,19 +26,26 @@ HRESULT CLevel_Logo::LateTick(const _float& fTimeDelta)
 {
 	SetWindowText(g_hWnd, TEXT("로고레벨입니다."));
 
-	if (GetKeyState(VK_RETURN) & 0x8000)
-	{
-		CGameInstance*	pGameInstance = CGameInstance::GetInstance();
-		Safe_AddRef(pGameInstance);
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_GAMETOOL))))
+	if (KEY_DOWN(KEY::ENTER))
+	{		
+		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_GAMEPLAY))))
+		{
+			RELEASE_INSTANCE(CGameInstance);
 			return E_FAIL;
-
-		/*if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING,  CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_GAMEPLAY))))
-			return E_FAIL;*/
-
-		Safe_Release(pGameInstance);
+		}
 	}
+	else if (KEY_PRESSING(KEY::SHIFT) && KEY_DOWN(KEY::E))
+	{
+		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_GAMETOOL))))
+		{
+			RELEASE_INSTANCE(CGameInstance);
+			return E_FAIL;
+		}
+	}
+
+	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
 }
