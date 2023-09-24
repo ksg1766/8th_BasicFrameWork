@@ -31,7 +31,7 @@ HRESULT CCamera::Initialize_Prototype()
 	m_fFovy		= XM_PI / 4.f;
 	m_fAspect	= 1280.f / 720.f;
 	m_fNear		= 0.1f;
-	m_fFar		= 1000.0f;
+	m_fFar		= 2000.0f;
 
 	return S_OK;
 }

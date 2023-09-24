@@ -63,11 +63,16 @@ void CQuadTreeNode::Render_QuadTreeNode()
 			else if (1 == iter->IsCulled())
 				iter->Render_QuadTreeNode();
 			else
+			{
 				for (auto& _iter : iter->GetObjectList())
 				{
 					_iter->Tick(0.0167f);
 					_iter->LateTick(0.0167f);
 				}
+#ifdef _DEBUG
+				DebugRender();
+#endif // _DEBUG
+			}
 		}
 	}
 
@@ -78,7 +83,7 @@ void CQuadTreeNode::Render_QuadTreeNode()
 	}*/
 
 #ifdef _DEBUG
-	DebugRender();
+	//DebugRender();
 #endif // _DEBUG
 }
 

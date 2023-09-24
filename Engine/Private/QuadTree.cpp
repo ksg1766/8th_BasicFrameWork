@@ -89,7 +89,8 @@ CQuadTreeNode* CQuadTree::BuildQuadTree(Vec3 vCenter, Vec3 vHalfExtents, _int iD
     CQuadTreeNode*  pNode = new CQuadTreeNode;
     BoundingBox*    pBBox = pNode->GetBoundingBox();
 
-    pBBox->Center = vCenter;
+    //vCenter.y = 20.f;
+    pBBox->Center = vCenter +Vec3(0.f, 10.f, 0.f);
     pBBox->Extents = vHalfExtents;
     
     Vec3 vOffset;
