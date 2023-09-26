@@ -12,6 +12,7 @@ class CShader;
 class CTexture;
 class CVIBuffer;
 class CRigidBody;
+class CModel;
 
 class ENGINE_DLL CGameObject abstract : public CBase
 {
@@ -39,6 +40,7 @@ public:
 	//CMeshRenderer*		GetMeshRenderer();
 	//CModelRenderer*		GetModelRenderer();
 	//CModelAnimator*		GetModelAnimator();
+	CModel*					GetModel();
 	CRenderer*				GetRenderer();
 	CShader*				GetShader();
 	CTexture*				GetTexture();

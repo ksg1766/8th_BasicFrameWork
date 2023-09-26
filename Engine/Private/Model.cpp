@@ -18,7 +18,17 @@ CModel::CModel(const CModel& rhs)
 	}
 }
 
-HRESULT CModel::Initialize_Prototype(const wstring& pModelFilePath)
+HRESULT CModel::Initialize_Prototype()
+{
+	return S_OK;
+}
+
+HRESULT CModel::Initialize(void * pArg)
+{
+	return S_OK;
+}
+
+HRESULT CModel::InitializeWithFile(const wstring& pModelFilePath)
 {
 	/* .fbx 파일을 읽어서 aiScene을 리턶나다. */
 	m_pAIScene = m_Importer.ReadFile(Utils::ToString(pModelFilePath), aiProcess_PreTransformVertices | aiProcess_ConvertToLeftHanded | aiProcessPreset_TargetRealtime_Fast/*aiProcessPreset_TargetRealtime_MaxQuality*/);
@@ -30,11 +40,6 @@ HRESULT CModel::Initialize_Prototype(const wstring& pModelFilePath)
 	if (FAILED(Ready_Meshes()))
 		return E_FAIL;
 
-	return S_OK;
-}
-
-HRESULT CModel::Initialize(void * pArg)
-{
 	return S_OK;
 }
 
@@ -71,11 +76,11 @@ HRESULT CModel::Ready_Meshes()
 	return S_OK;
 }
 
-CModel * CModel::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& pModelFilePath)
+CModel * CModel::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
 	CModel*	pInstance = new CModel(pDevice, pContext);
 
-	if (FAILED(pInstance->Initialize_Prototype(pModelFilePath)))
+	if (FAILED(pInstance->Initialize_Prototype()))
 	{
 		MSG_BOX("Failed to Created : CModel");
 		Safe_Release(pInstance);

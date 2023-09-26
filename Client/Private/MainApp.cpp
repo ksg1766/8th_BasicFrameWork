@@ -83,7 +83,7 @@ HRESULT CMainApp::Render()
 	}
 
 	/* 게임내에 존재하는 여러 객체들의 렌더링. */
-	m_pGameInstance->Clear_BackBuffer_View(_float4(0.f, 0.f, 0.f, 1.f));
+	m_pGameInstance->Clear_BackBuffer_View(_float4(0.9f, 0.9f, 0.9f, 1.f));
 	m_pGameInstance->Clear_DepthStencil_View();
 #ifdef DEBUG
 	if(LEVEL_GAMEPLAY == m_pGameInstance->GetCurrentLevelIndex())
@@ -173,6 +173,11 @@ HRESULT CMainApp::Ready_Prototype_Components()
 	/* For.Prototype_Component_VIBuffer_Rect */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Terrain"),
 		CTerrain::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Model */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model"),
+		CModel::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_RigidStatic */

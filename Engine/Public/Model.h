@@ -14,8 +14,9 @@ private:
 	virtual ~CModel() = default;
 
 public:
-	virtual HRESULT Initialize_Prototype(const wstring& pModelFilePath);
+	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
+	HRESULT			InitializeWithFile(const wstring& pModelFilePath);
 	void			DebugRender()	override;
 	HRESULT			Render();
 
@@ -33,7 +34,7 @@ private:
 	HRESULT Ready_Meshes();
 
 public:
-	static	CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& pModelFilePath);
+	static	CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CComponent* Clone(CGameObject* pGameObject, void* pArg) override;
 	virtual void Free() override;
 };

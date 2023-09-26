@@ -130,10 +130,10 @@
     <Filter Include="01.Utiltiy\04.Component\05.VIBuffer\Debug">
       <UniqueIdentifier>{7a7f8416-5029-409e-90b4-c7880d5bc385}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utiltiy\04.Component\Model">
+    <Filter Include="01.Utiltiy\04.Component\11.Model">
       <UniqueIdentifier>{27942782-b4a2-499e-9b48-2e41cce64985}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utiltiy\04.Component\Model\Mesh">
+    <Filter Include="01.Utiltiy\04.Component\11.Model\Mesh">
       <UniqueIdentifier>{ca11ab3f-e0c9-44a0-9e86-9f5eafa4d113}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -304,10 +304,10 @@
       <Filter>98.Utils</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Model.h">
-      <Filter>01.Utiltiy\04.Component\Model</Filter>
+      <Filter>01.Utiltiy\04.Component\11.Model</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Mesh.h">
-      <Filter>01.Utiltiy\04.Component\Model\Mesh</Filter>
+      <Filter>01.Utiltiy\04.Component\11.Model\Mesh</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -459,10 +459,10 @@
       <Filter>98.Utils</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Model.cpp">
-      <Filter>01.Utiltiy\04.Component\Model</Filter>
+      <Filter>01.Utiltiy\04.Component\11.Model</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Mesh.cpp">
-      <Filter>01.Utiltiy\04.Component\Model\Mesh</Filter>
+      <Filter>01.Utiltiy\04.Component\11.Model\Mesh</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

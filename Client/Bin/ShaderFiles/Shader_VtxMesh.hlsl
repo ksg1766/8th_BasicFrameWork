@@ -124,7 +124,8 @@ PS_OUT PS_MAIN(PS_IN In)
 	PS_OUT			Out = (PS_OUT)0;
 
 	//vector	vMtrlDiffuse = Compute_TerrainPixelColor(In);
-    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord * 30.f);
+    //vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord * 30.f);
+    vector vMtrlDiffuse = vector(1.f, 0.f, 0.f, 1.f);
 
 	vector	vShade = max(dot(normalize(g_vLightDir) * -1.f, normalize(In.vNormal)), 0.f) +
 		g_vLightAmbient * g_vMtrlAmbient;		

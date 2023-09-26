@@ -84,6 +84,12 @@ CShader* CGameObject::GetShader()
 	return static_cast<CShader*>(pComponent);
 }
 
+CModel* CGameObject::GetModel()
+{
+	CComponent* pComponent = GetFixedComponent(ComponentType::Model);
+	return static_cast<CModel*>(pComponent);
+}
+
 CRenderer* CGameObject::GetRenderer()
 {
 	CComponent* pComponent = GetFixedComponent(ComponentType::Renderer);

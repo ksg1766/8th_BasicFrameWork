@@ -25,7 +25,7 @@ HRESULT CFloorTiles_A::Initialize(void* pArg)
 	if (FAILED(Ready_Scripts()))
 		return E_FAIL;
 
-	GetTransform()->SetScale(Vec3(40.f, 40.f, 40.f));
+	//GetTransform()->SetScale(Vec3(.05f, .05f, .05f));
 
 	return S_OK;
 }
@@ -48,7 +48,7 @@ void CFloorTiles_A::DebugRender()
 
 HRESULT CFloorTiles_A::Render()
 {
-	if (nullptr == GetBuffer() || nullptr == GetShader())
+	if (nullptr == GetModel() || nullptr == GetShader())
 		return E_FAIL;
 
 	if (FAILED(Bind_ShaderResources()))
@@ -56,7 +56,11 @@ HRESULT CFloorTiles_A::Render()
 
 	GetShader()->Begin(0);
 
-	GetBuffer()->Render();
+	GetModel()->Render();
+
+#ifdef _DEBUG
+	Super::DebugRender();
+#endif
 
 	return S_OK;
 }
@@ -64,7 +68,10 @@ HRESULT CFloorTiles_A::Render()
 HRESULT CFloorTiles_A::Ready_FixedComponents()
 {
 	/* Com_Model */
-	if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::Model, TEXT("Prototype_Component_Model_FloorTiles_A"))))
+	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Model, TEXT("Prototype_Component_Model"))))
+		return E_FAIL;
+
+	if (FAILED(GetModel()->InitializeWithFile(TEXT("../Bin/Resources/Models/FloorTiles_A/FloorTiles_A.fbx"))))
 		return E_FAIL;
 
 	/* Com_Transform */
@@ -76,7 +83,7 @@ HRESULT CFloorTiles_A::Ready_FixedComponents()
 		return E_FAIL;
 
 	/* Com_Shader */
-	if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::Shader, TEXT("Prototype_Component_Shader_VtxNorTex"))))
+	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Shader, TEXT("Prototype_Component_Shader_VtxNorTex"))))
 		return E_FAIL;
 
 	/* Com_RigidBody */
@@ -110,34 +117,39 @@ HRESULT CFloorTiles_A::Bind_ShaderResources()
 	RELEASE_INSTANCE(CGameInstance);
 	return S_OK;
 
-	/*const LIGHT_DESC* pLightDesc = pGameInstance->Get_LightDesc(0);
-	if (nullptr == pLightDesc)
-		return E_FAIL;
+	//const LIGHT_DESC* pLightDesc = pGameInstance->Get_LightDesc(0);
+	/*if (nullptr == pLightDesc)
+		return E_FAIL;*/
 
-	_uint		iPassIndex = 0;
+	//_uint		iPassIndex = 0;
 
-	if (LIGHT_DESC::LIGHT_DIRECTIONAL == pLightDesc->eLightType)
-	{
-		if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightDir", &pLightDesc->vLightDir, sizeof(_float4))))
+	//if (LIGHT_DESC::LIGHT_DIRECTIONAL == pLightDesc->eLightType)
+	//{
+	_float4 vLightDir = _float4(1.f, -1.f, 1.f, 0.f);
+		if (FAILED(GetShader()->Bind_RawValue("g_vLightDir", &vLightDir, sizeof(_float4))))
 			return E_FAIL;
-		iPassIndex = 0;
-	}
-	else
+	//	iPassIndex = 0;
+	//}
+	/*else
 	{
 		if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightPos", &pLightDesc->vLightPos, sizeof(_float4))))
 			return E_FAIL;
 		if (FAILED(m_pShaderCom->Bind_RawValue("g_fLightRange", &pLightDesc->fLightRange, sizeof(_float))))
 			return E_FAIL;
 		iPassIndex = 1;
-	}
+	}*/
 
+	_float4	vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
+	if (FAILED(GetShader()->Bind_RawValue("g_vLightDiffuse", &vDiffuse, sizeof(_float4))))
+		return E_FAIL;
 
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightDiffuse", &pLightDesc->vDiffuse, sizeof(_float4))))
+	_float4 vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
+	if (FAILED(GetShader()->Bind_RawValue("g_vLightAmbient", &vAmbient, sizeof(_float4))))
 		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightAmbient", &pLightDesc->vAmbient, sizeof(_float4))))
+
+	_float4 vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
+	if (FAILED(GetShader()->Bind_RawValue("g_vLightSpecular", &vSpecular, sizeof(_float4))))
 		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightSpecular", &pLightDesc->vSpecular, sizeof(_float4))))
-		return E_FAIL;	*/
 
 	return S_OK;
 }

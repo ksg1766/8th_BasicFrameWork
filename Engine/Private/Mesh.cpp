@@ -15,6 +15,7 @@ HRESULT CMesh::Initialize_Prototype(const aiMesh * pAIMesh)
 	m_iStride = sizeof(VTXMESH); /* 정점하나의 크기 .*/
 	m_iNumVertices = pAIMesh->mNumVertices;
 	m_iIndexSizeofPrimitive = sizeof(FACEINDICES32);
+	m_iNumIndicesofPrimitive = 3;
 	m_iNumPrimitives = pAIMesh->mNumFaces;
 	
 	//m_iIndexStride = 4; /* 인덱스 하나의 크기. 2 or 4 */
@@ -77,8 +78,8 @@ HRESULT CMesh::Initialize_Prototype(const aiMesh * pAIMesh)
 	for (size_t i = 0; i < pAIMesh->mNumFaces; ++i)
 	{
 		pIndices[i]._0 = pAIMesh->mFaces[i].mIndices[0];
-		pIndices[i]._1 = pAIMesh->mFaces[i].mIndices[0];
-		pIndices[i]._2 = pAIMesh->mFaces[i].mIndices[0];
+		pIndices[i]._1 = pAIMesh->mFaces[i].mIndices[1];
+		pIndices[i]._2 = pAIMesh->mFaces[i].mIndices[2];
 	}
 	
 	::ZeroMemory(&m_SubResourceData, sizeof m_SubResourceData);

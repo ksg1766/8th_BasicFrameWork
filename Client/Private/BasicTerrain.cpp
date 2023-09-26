@@ -77,10 +77,10 @@ HRESULT CBasicTerrain::Ready_FixedComponents(void* pArg)
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Terrain, TEXT("Prototype_Component_Terrain"))))
 		return E_FAIL;
 
-	/*if (FAILED(dynamic_cast<CTerrain*>(GetFixedComponent(ComponentType::Terrain))->InitializeWithHeightMap(TEXT("../Bin/Resources/Textures/Terrain/Height1.bmp"))))
-		return E_FAIL;*/
 	if (FAILED(static_cast<CTerrain*>(GetFixedComponent(ComponentType::Terrain))->InitializeJustGrid(1024, 1024)))
 		return E_FAIL;
+	/*if (FAILED(dynamic_cast<CTerrain*>(GetFixedComponent(ComponentType::Terrain))->InitializeWithHeightMap(TEXT("../Bin/Resources/Textures/Terrain/Height1.bmp"))))
+		return E_FAIL;*/
 
 	/* Com_Texture*/
 	/*CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);

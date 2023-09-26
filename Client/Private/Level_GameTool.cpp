@@ -108,7 +108,11 @@ HRESULT CLevel_GameTool::Ready_Layer_Camera()
 
 HRESULT CLevel_GameTool::Ready_Layer_Wall()
 {
+	CGameObject* pGameObject = nullptr;
 
+	pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMETOOL, LAYERTAG::WALL, TEXT("Prototype_GameObject_FloorTiles_A"));
+	if (nullptr == pGameObject)	return E_FAIL;
+	//pGameObject->GetTransform()->Translate(Vec3(10.f, 0.f, 100.f));
 
 	return S_OK;
 }

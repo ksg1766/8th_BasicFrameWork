@@ -208,7 +208,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Wall()
 
 	pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_FloorTiles_A"));
 	if (nullptr == pGameObject)	return E_FAIL;
-	pGameObject->GetTransform()->Translate(Vec3(10.f, 0.f, 100.f));
+	//pGameObject->GetTransform()->Translate(Vec3(10.f, 0.f, 100.f));
 
 	return S_OK;
 }
