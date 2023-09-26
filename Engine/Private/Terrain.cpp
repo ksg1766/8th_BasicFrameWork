@@ -62,10 +62,6 @@ HRESULT CTerrain::InitializeJustGrid(const _uint& iSizeX, const _uint& iSizeZ, c
 
 	m_iNumVertices = m_iNumVerticesX * m_iNumVerticesZ;
 
-	m_iIndexSizeofPrimitive = sizeof(FACEINDICES32);
-	m_iNumIndicesofPrimitive = 3;
-	m_eIndexFormat = DXGI_FORMAT_R32_UINT;
-	m_eTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 	m_iNumVBs = 1;
 
 #pragma region VERTEX_BUFFER

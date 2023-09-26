@@ -6,6 +6,8 @@
 #include "Camera.h"
 #include "Terrain.h"
 #include "Renderer.h"
+#include "Mesh.h"
+#include "Model.h"
 #include "VIBuffer_Rect.h"
 #include "VIBuffer_Cube.h"
 #include "VIBuffer_Grid.h"

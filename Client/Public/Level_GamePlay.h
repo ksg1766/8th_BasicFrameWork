@@ -19,6 +19,7 @@ public:
 
 private:
 	HRESULT			Ready_Layer_Terrain();
+	HRESULT			Ready_Layer_Ground();
 	HRESULT			Ready_Layer_Player();
 	HRESULT			Ready_Layer_Default();
 	HRESULT			Ready_Layer_UnitGround();

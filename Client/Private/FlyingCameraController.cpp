@@ -77,6 +77,10 @@ void CFlyingCameraController::Input(const _float& fTimeDelta)
 	if (KEY_PRESSING(KEY::E) || KEY_DOWN(KEY::E))
 		m_pTransform->Translate(-fTimeDelta * m_fLinearSpeed * m_pTransform->GetUp());
 
+	const POINT& p = pGameInstance->GetMousePos();
+	if (p.x > 1280 || p.x < 0 || p.y > 720 || p.y < 0)
+		return;
+
 	_long		dwMouseMove = 0;
 
 	if (dwMouseMove = pGameInstance->Get_DIMouseMove(DIMS_X))

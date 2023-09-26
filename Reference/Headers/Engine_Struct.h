@@ -74,6 +74,18 @@ namespace Engine
 
 	}VTXCUBENOM;
 
+	typedef struct ENGINE_DLL tagVertex_Mesh
+	{
+		XMFLOAT3		vPosition;
+		XMFLOAT3		vNormal;
+		XMFLOAT2		vTexcoord;
+		XMFLOAT3		vTangent;
+
+		static const _uint				iNumElements = 4;
+		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
+
+	}VTXMESH;
+
 	typedef struct tagVertexAnimModel
 	{
 		XMFLOAT3		vPosition;

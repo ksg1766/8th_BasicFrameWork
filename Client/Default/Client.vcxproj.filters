@@ -91,20 +91,29 @@
     <Filter Include="02.GameObjects\BasicTerrain\Script">
       <UniqueIdentifier>{c8081918-9961-4612-a3ca-15cf00eb28a3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\StaticTestCube">
-      <UniqueIdentifier>{f5cd7116-71d1-4b30-9d70-4164654c1857}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\StaticTestCube\00.GameObject">
-      <UniqueIdentifier>{ca36102f-589a-4126-8c1f-ea8ba8c4f083}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\StaticTestCube\01.Script">
-      <UniqueIdentifier>{de5e19ca-de04-4b4b-955d-d8538e111663}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Levels\02.GameTool\MapTool">
       <UniqueIdentifier>{16c8a98b-47ea-4c7b-8334-f9880d99f349}</UniqueIdentifier>
     </Filter>
     <Filter Include="01.Levels\02.GameTool\ToolBase">
       <UniqueIdentifier>{0bf6b0f8-774d-4ce2-b52b-07a8a7d02bb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\02.GameTool\ObjectTool">
+      <UniqueIdentifier>{f9b6c54a-738f-4a40-af0e-44022efaec4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Static">
+      <UniqueIdentifier>{c4e8b885-4768-40de-8227-7c9b20688169}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Static\StaticTestCube">
+      <UniqueIdentifier>{f5cd7116-71d1-4b30-9d70-4164654c1857}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Static\StaticTestCube\00.GameObject">
+      <UniqueIdentifier>{ca36102f-589a-4126-8c1f-ea8ba8c4f083}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Static\StaticTestCube\01.Script">
+      <UniqueIdentifier>{de5e19ca-de04-4b4b-955d-d8538e111663}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Static\FloorTiles_A">
+      <UniqueIdentifier>{17ee6e0e-ed82-4e0f-b145-209ae0c21eb5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -202,13 +211,16 @@
       <Filter>02.GameObjects\BasicTerrain\Script</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\StaticTest.h">
-      <Filter>02.GameObjects\StaticTestCube\00.GameObject</Filter>
+      <Filter>02.GameObjects\Static\StaticTestCube\00.GameObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\MapTool.h">
       <Filter>01.Levels\02.GameTool\MapTool</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Tool.h">
       <Filter>01.Levels\02.GameTool\ToolBase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\FloorTiles_A.h">
+      <Filter>02.GameObjects\Static\FloorTiles_A</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -288,13 +300,16 @@
       <Filter>02.GameObjects\BasicTerrain\Script</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\StaticTest.cpp">
-      <Filter>02.GameObjects\StaticTestCube\00.GameObject</Filter>
+      <Filter>02.GameObjects\Static\StaticTestCube\00.GameObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\MapTool.cpp">
       <Filter>01.Levels\02.GameTool\MapTool</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Tool.cpp">
       <Filter>01.Levels\02.GameTool\ToolBase</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\FloorTiles_A.cpp">
+      <Filter>02.GameObjects\Static\FloorTiles_A</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -324,6 +339,9 @@
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxDebug.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxMesh.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

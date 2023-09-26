@@ -6,6 +6,12 @@
 #include "../Public/ImGUI/imgui_impl_dx11.h"
 #include "../Public/ImGUI/imgui_impl_win32.h"
 
+BEGIN(Engine)
+
+class CGameInstance;
+
+END
+
 BEGIN(Client)
 
 class CTool : public CBase
@@ -23,7 +29,7 @@ public:
 	virtual HRESULT	DebugRender()	PURE;
 
 protected:
-	class Engine::CGameInstance*	m_pGameInstance = nullptr;
+	CGameInstance*	m_pGameInstance = nullptr;
 	class CImGUIManager*	m_pImGUIInstance = nullptr;
 
 	ID3D11Device*			m_pDevice = { nullptr };

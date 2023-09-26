@@ -23,6 +23,9 @@ HRESULT CLevel_GameTool::Initialize()
  	if (FAILED(Ready_Layer_Terrain()))
 		return E_FAIL;
 
+	if (FAILED(Ready_Layer_Ground()))
+		return E_FAIL;
+
 	if (FAILED(Ready_Layer_Camera()))
 		return E_FAIL;
 
@@ -79,6 +82,15 @@ HRESULT CLevel_GameTool::Ready_Layer_Terrain()
 	/* 원형객체를 복제하여 사본객체를 생성하고 레이어에 추가한다. */
 	m_pBasicTerrain = dynamic_cast<CBasicTerrain*>(m_pGameInstance->Add_GameObject(LEVEL_GAMETOOL, LAYERTAG::TERRAIN, TEXT("Prototype_GameObject_BasicTerrain")));
 	if (nullptr == m_pBasicTerrain) return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CLevel_GameTool::Ready_Layer_Ground()
+{
+	/* 원형객체를 복제하여 사본객체를 생성하고 레이어에 추가한다. */
+	CGameObject* pGameObject = nullptr;
+	LAYERTAG	eLayerTag = LAYERTAG::GROUND;
 
 	return S_OK;
 }

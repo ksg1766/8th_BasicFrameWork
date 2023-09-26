@@ -34,8 +34,8 @@ private:
 
     class CPipeLine* m_pPipeLine;
 
-    const _int      m_iDepthLimit = 5;
-    const _float    m_fLooseFactor = 2.f;
+    const _int      m_iDepthLimit = 6;
+    const _float    m_fLooseFactor = 1.f;
 
     Vec3            m_vRootExtents = Vec3(1024.f, 0.f, 1024.f);
     CQuadTreeNode*  m_pQuadTreeRoot = nullptr;

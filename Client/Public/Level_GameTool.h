@@ -22,6 +22,7 @@ public:
 
 private:
 	HRESULT			Ready_Layer_Terrain();
+	HRESULT			Ready_Layer_Ground();
 	HRESULT			Ready_Layer_Camera();
 	HRESULT			Ready_Layer_Wall();
 

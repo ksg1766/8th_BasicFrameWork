@@ -156,7 +156,7 @@ CQuadTreeNode* CQuadTree::BuildQuadTree(Vec3 vCenter, Vec3 vHalfExtents, _int iD
 
     vCenter.y += 10.f;  // °£Áö¿ë
     pBBox->Center = vCenter;
-    pBBox->Extents = vHalfExtents;
+    pBBox->Extents = vHalfExtents * m_fLooseFactor;
     
     Vec3 vOffset;
     Vec3 vChildCenter;
@@ -255,6 +255,13 @@ void CQuadTree::AddObjectInNode(CTransform* pTransform, CQuadTreeNode* const pNo
 
 void CQuadTree::Free()
 {
+#ifdef _DEBUG
+    Safe_Delete(m_pBatch);
+    Safe_Delete(m_pEffect);
+
+    Safe_Release(m_pInputLayout);
+#endif // _DEBUG
+
     m_pQuadTreeRoot->Free();
     Safe_Delete(m_pQuadTreeRoot);
 

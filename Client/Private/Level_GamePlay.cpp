@@ -17,6 +17,9 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Terrain()))
 		return E_FAIL;
 
+	if (FAILED(Ready_Layer_Ground()))
+		return E_FAIL;
+	
 	if (FAILED(Ready_Layer_Default()))
 		return E_FAIL;
 	
@@ -71,6 +74,15 @@ HRESULT CLevel_GamePlay::Ready_Layer_Terrain()
 
 	/*pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_BasicTerrain"));
 	if (nullptr == pGameObject)	return E_FAIL;*/
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_Ground()
+{
+	/* 원형객체를 복제하여 사본객체를 생성하고 레이어에 추가한다. */
+	CGameObject* pGameObject = nullptr;
+	LAYERTAG	eLayerTag = LAYERTAG::GROUND;
 
 	return S_OK;
 }
@@ -193,6 +205,10 @@ HRESULT CLevel_GamePlay::Ready_Layer_Wall()
 	pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_StaticTest"));
 	if (nullptr == pGameObject)	return E_FAIL;
 	pGameObject->GetTransform()->Translate(Vec3(-300.f, 300.f, 0.f));
+
+	pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_FloorTiles_A"));
+	if (nullptr == pGameObject)	return E_FAIL;
+	pGameObject->GetTransform()->Translate(Vec3(10.f, 0.f, 100.f));
 
 	return S_OK;
 }

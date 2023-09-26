@@ -13,6 +13,7 @@ enum class ComponentType
 	Transform,
 	Collider,
 	Buffer,
+	Model,
 	Shader,
 	Renderer,
 	Texture,
