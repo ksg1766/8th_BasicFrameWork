@@ -1,5 +1,5 @@
 #pragma once
-#include "Tool.h"
+#include "View.h"
 #include "Client_Defines.h"
 
 BEGIN(Engine)
@@ -10,12 +10,12 @@ END
 
 BEGIN(Client)
 
-class CMapTool : public CTool
+class CPrefabsView : public CView
 {
-    using Super = CTool;
+    using Super = CView;
 private:
-	CMapTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	virtual ~CMapTool() = default;
+	CPrefabsView(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	virtual ~CPrefabsView() = default;
 
 public:
 	virtual HRESULT Initialize(void* pArg)	override;
@@ -34,14 +34,14 @@ private:
 private:
 	CTerrain*			m_pTerrainBuffer = nullptr;
 
-	_bool				m_IsPickingActivated = false;
-
 	Vec3				m_vPickedPosition;
 	LAYERTAG			m_ePickedLayerTag = LAYERTAG::LAYER_END;
 	wstring				m_strPickedObject;
 
+	_int				m_Item_Current = 0;
+
 public:
-	static class CMapTool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CTerrain* m_pTerrainGrid);
+	static class CPrefabsView* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CTerrain* m_pTerrainGrid);
 	virtual void Free() override;
 };
 

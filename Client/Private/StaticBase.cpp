@@ -1,23 +1,23 @@
 #include "stdafx.h"
-#include "..\Public\FloorTiles_A.h"
+#include "..\Public\StaticBase.h"
 #include "GameInstance.h"
 
-CFloorTiles_A::CFloorTiles_A(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CStaticBase::CStaticBase(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: Super(pDevice, pContext)
 {
 }
 
-CFloorTiles_A::CFloorTiles_A(const Super& rhs)
+CStaticBase::CStaticBase(const CStaticBase& rhs)
 	: Super(rhs)
 {
 }
 
-HRESULT CFloorTiles_A::Initialize_Prototype()
+HRESULT CStaticBase::Initialize_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CFloorTiles_A::Initialize(void* pArg)
+HRESULT CStaticBase::Initialize(void* pArg)
 {
 	if (FAILED(Ready_FixedComponents()))
 		return E_FAIL;
@@ -30,23 +30,23 @@ HRESULT CFloorTiles_A::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CFloorTiles_A::Tick(const _float& fTimeDelta)
+void CStaticBase::Tick(const _float& fTimeDelta)
 {
 	Super::Tick(fTimeDelta);
 }
 
-void CFloorTiles_A::LateTick(const _float& fTimeDelta)
+void CStaticBase::LateTick(const _float& fTimeDelta)
 {
 	Super::LateTick(fTimeDelta);
 
 	GetRenderer()->Add_RenderGroup(CRenderer::RG_NONBLEND, this);
 }
 
-void CFloorTiles_A::DebugRender()
+void CStaticBase::DebugRender()
 {
 }
 
-HRESULT CFloorTiles_A::Render()
+HRESULT CStaticBase::Render()
 {
 	if (nullptr == GetModel() || nullptr == GetShader())
 		return E_FAIL;
@@ -54,9 +54,17 @@ HRESULT CFloorTiles_A::Render()
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
-	GetShader()->Begin(0);
+	_uint		iNumMeshes = GetModel()->GetNumMeshes();
 
-	GetModel()->Render();
+	for (_uint i = 0; i < iNumMeshes; i++)
+	{
+		GetModel()->Bind_MaterialTexture(GetShader(), "g_DiffuseTexture", i, aiTextureType_DIFFUSE);
+		GetModel()->Bind_MaterialTexture(GetShader(), "g_NormalTexture", i, aiTextureType_NORMALS);
+
+		GetShader()->Begin();
+
+		GetModel()->Render(i);
+	}
 
 #ifdef _DEBUG
 	Super::DebugRender();
@@ -65,13 +73,10 @@ HRESULT CFloorTiles_A::Render()
 	return S_OK;
 }
 
-HRESULT CFloorTiles_A::Ready_FixedComponents()
+HRESULT CStaticBase::Ready_FixedComponents()
 {
 	/* Com_Model */
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Model, TEXT("Prototype_Component_Model"))))
-		return E_FAIL;
-
-	if (FAILED(GetModel()->InitializeWithFile(TEXT("../Bin/Resources/Models/FloorTiles_A/FloorTiles_A.fbx"))))
 		return E_FAIL;
 
 	/* Com_Transform */
@@ -82,24 +87,24 @@ HRESULT CFloorTiles_A::Ready_FixedComponents()
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Renderer, TEXT("Prototype_Component_Renderer"))))
 		return E_FAIL;
 
-	/* Com_Shader */
-	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Shader, TEXT("Prototype_Component_Shader_VtxNorTex"))))
+	///* Com_Shader */
+	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Shader, TEXT("Prototype_Component_Shader_VtxMesh"))))
 		return E_FAIL;
 
 	/* Com_RigidBody */
-	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::RigidBody, TEXT("Prototype_Component_RigidStatic")))
+	/*if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::RigidBody, TEXT("Prototype_Component_RigidStatic")))
 		|| FAILED(GetRigidBody()->InitializeCollider()))
-		return E_FAIL;
+		return E_FAIL;*/
 
 	return S_OK;
 }
 
-HRESULT CFloorTiles_A::Ready_Scripts()
+HRESULT CStaticBase::Ready_Scripts()
 {
 	return S_OK;
 }
 
-HRESULT CFloorTiles_A::Bind_ShaderResources()
+HRESULT CStaticBase::Bind_ShaderResources()
 {
 	/* 셰이더 전역변수로 던져야 할 값들을 던지자. */
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
@@ -114,8 +119,8 @@ HRESULT CFloorTiles_A::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
-	RELEASE_INSTANCE(CGameInstance);
-	return S_OK;
+	//RELEASE_INSTANCE(CGameInstance);
+	//return S_OK;
 
 	//const LIGHT_DESC* pLightDesc = pGameInstance->Get_LightDesc(0);
 	/*if (nullptr == pLightDesc)
@@ -151,36 +156,37 @@ HRESULT CFloorTiles_A::Bind_ShaderResources()
 	if (FAILED(GetShader()->Bind_RawValue("g_vLightSpecular", &vSpecular, sizeof(_float4))))
 		return E_FAIL;
 
+	RELEASE_INSTANCE(CGameInstance);
 	return S_OK;
 }
 
-CFloorTiles_A* CFloorTiles_A::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CStaticBase* CStaticBase::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CFloorTiles_A* pInstance = new CFloorTiles_A(pDevice, pContext);
+	CStaticBase* pInstance = new CStaticBase(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CFloorTiles_A");
+		MSG_BOX("Failed to Created : CStaticBase");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CFloorTiles_A::Clone(void* pArg)
+CGameObject* CStaticBase::Clone(void* pArg)
 {
-	CFloorTiles_A* pInstance = new CFloorTiles_A(*this);
+	CStaticBase* pInstance = new CStaticBase(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CFloorTiles_A");
+		MSG_BOX("Failed to Cloned : CStaticBase");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CFloorTiles_A::Free()
+void CStaticBase::Free()
 {
 	Super::Free();
 }

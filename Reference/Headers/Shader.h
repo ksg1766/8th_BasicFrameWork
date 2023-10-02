@@ -15,16 +15,20 @@ public:
 	virtual HRESULT Initialize(void* pArg) override;
 
 public:
-	HRESULT	Begin(_uint iPassIndex);
+	HRESULT	Begin();
 	HRESULT Bind_RawValue(const _char* pConstantName, const void* pData, _uint iLength);
 	HRESULT Bind_Matrix(const _char* pConstantName, const _float4x4* pMatrix) const;
 	HRESULT Bind_Matrices(const _char* pConstantName, const _float4x4* pMatrices, _uint iNumMatrices) const;
 	HRESULT Bind_Texture(const _char* pConstantName, ID3D11ShaderResourceView* pSRV) const;
 	HRESULT Bind_Textures(const _char* pConstantName, ID3D11ShaderResourceView** ppSRVs, _uint iNumTextures) const;
 
+	void	SetPassIndex(_uint iPassIndex)	{ m_iPassIndex = iPassIndex; }
+
 private:	
 	ID3DX11Effect*				m_pEffect = { nullptr };
 	vector<ID3D11InputLayout*>	m_InputLayouts; /* 각 패스마다 인풋레이아웃을 만들어서 추가했다. */
+
+	_uint						m_iPassIndex = 0;
 
 public:
 	static CShader* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strShaderFilePath, 

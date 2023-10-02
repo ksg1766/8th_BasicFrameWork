@@ -90,6 +90,12 @@ CModel* CGameObject::GetModel()
 	return static_cast<CModel*>(pComponent);
 }
 
+CModelEx* CGameObject::GetModelEx()
+{
+	CComponent* pComponent = GetFixedComponent(ComponentType::Model);
+	return static_cast<CModelEx*>(pComponent);
+}
+
 CRenderer* CGameObject::GetRenderer()
 {
 	CComponent* pComponent = GetFixedComponent(ComponentType::Renderer);

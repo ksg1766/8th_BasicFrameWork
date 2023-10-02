@@ -136,6 +136,12 @@
     <Filter Include="01.Utiltiy\04.Component\11.Model\Mesh">
       <UniqueIdentifier>{ca11ab3f-e0c9-44a0-9e86-9f5eafa4d113}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utiltiy\04.Component\11.Model\Animation">
+      <UniqueIdentifier>{1b419f23-da88-4885-af05-f5f653656b54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utiltiy\04.Component\11.Model\HeirarchyNode">
+      <UniqueIdentifier>{8e7de421-9933-411e-944f-e4f2db0b4482}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -309,6 +315,18 @@
     <ClInclude Include="..\Public\Mesh.h">
       <Filter>01.Utiltiy\04.Component\11.Model\Mesh</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\ModelEx.h">
+      <Filter>01.Utiltiy\04.Component\11.Model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MeshEx.h">
+      <Filter>01.Utiltiy\04.Component\11.Model\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Animation.h">
+      <Filter>01.Utiltiy\04.Component\11.Model\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HierarchyNode.h">
+      <Filter>01.Utiltiy\04.Component\11.Model\HeirarchyNode</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -463,6 +481,18 @@
     </ClCompile>
     <ClCompile Include="..\Private\Mesh.cpp">
       <Filter>01.Utiltiy\04.Component\11.Model\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MeshEx.cpp">
+      <Filter>01.Utiltiy\04.Component\11.Model\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ModelEx.cpp">
+      <Filter>01.Utiltiy\04.Component\11.Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Animation.cpp">
+      <Filter>01.Utiltiy\04.Component\11.Model\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HierarchyNode.cpp">
+      <Filter>01.Utiltiy\04.Component\11.Model\HeirarchyNode</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

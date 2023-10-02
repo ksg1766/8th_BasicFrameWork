@@ -1,13 +1,15 @@
 #include "stdafx.h"
 #include "..\Public\Level_GameTool.h"
-#include "ImGUIManager.h"
 
 #include "GameInstance.h"
 #include "GameObject.h"
 #include "BasicTerrain.h"
 #include "Terrain.h"
 
-#include "MapTool.h"
+#include "ViewMediator.h"
+#include "PrefabsView.h"
+#include "LayersView.h"
+#include "TransformView.h"
 
 CLevel_GameTool::CLevel_GameTool(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -17,8 +19,20 @@ CLevel_GameTool::CLevel_GameTool(ID3D11Device * pDevice, ID3D11DeviceContext * p
 HRESULT CLevel_GameTool::Initialize()
 {
 	m_pGameInstance = GET_INSTANCE(CGameInstance);
-	m_pImGUIInstance = GET_INSTANCE(CImGUIManager);
-	m_pImGUIInstance->Initialize(m_pDevice, m_pContext);
+
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+
+	// Setup Dear ImGui style
+	ImGui::StyleColorsDark();
+	//ImGui::StyleColorsLight();
+
+	// Setup Platform/Renderer backends
+	ImGui_ImplWin32_Init(g_hWnd);
+	ImGui_ImplDX11_Init(m_pDevice, m_pContext);
 
  	if (FAILED(Ready_Layer_Terrain()))
 		return E_FAIL;
@@ -44,16 +58,22 @@ HRESULT CLevel_GameTool::Tick(const _float& fTimeDelta)
 
 	// UI
 	if (!m_IsImGUIReady)
+	{
 		m_IsImGUIReady = true;
-	
-	//if (ImGui::GetIO().WantCaptureMouse)
-	//	return S_OK;
+	}
 
-	m_pImGUIInstance->Tick();
+	ImGui_ImplDX11_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+	
 
 	//
-	if (m_pMapTool)
-		m_pMapTool->Tick();
+	if (m_pPrefabsView)
+		m_pPrefabsView->Tick();
+	if (m_pLayersView)
+		m_pLayersView->Tick();
+	if (m_pTransformView)
+		m_pTransformView->Tick();
 	//
 
 	ImGUIDemo();
@@ -71,8 +91,11 @@ HRESULT CLevel_GameTool::LateTick(const _float& fTimeDelta)
 
 HRESULT CLevel_GameTool::DebugRender()
 {
-	if(m_IsImGUIReady)
-		m_pImGUIInstance->Render();
+	if (m_IsImGUIReady)
+	{
+		ImGui::Render();
+		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+	}
 
 	return S_OK;
 }
@@ -110,16 +133,21 @@ HRESULT CLevel_GameTool::Ready_Layer_Wall()
 {
 	CGameObject* pGameObject = nullptr;
 
-	pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMETOOL, LAYERTAG::WALL, TEXT("Prototype_GameObject_FloorTiles_A"));
-	if (nullptr == pGameObject)	return E_FAIL;
-	//pGameObject->GetTransform()->Translate(Vec3(10.f, 0.f, 100.f));
-
 	return S_OK;
 }
 
 HRESULT CLevel_GameTool::Ready_Tools()
 {
-	m_pMapTool = CMapTool::Create(m_pDevice, m_pContext, dynamic_cast<CTerrain*>(m_pBasicTerrain->GetFixedComponent(ComponentType::Terrain)));
+	m_pMediator = new CViewMediator;
+
+	m_pPrefabsView = CPrefabsView::Create(m_pDevice, m_pContext, dynamic_cast<CTerrain*>(m_pBasicTerrain->GetFixedComponent(ComponentType::Terrain)));
+	m_pMediator->SetPrefabsView(m_pPrefabsView);	// TODO:나중에 Initialize에서 하게 하든지 하자...
+
+	m_pLayersView = CLayersView::Create(m_pDevice, m_pContext);
+	m_pMediator->SetLayersView(m_pLayersView);
+	
+	m_pTransformView = CTransformView::Create(m_pDevice, m_pContext);
+	m_pMediator->SetTransformView(m_pTransformView);
 
 	return S_OK;
 }
@@ -179,8 +207,9 @@ CLevel_GameTool* CLevel_GameTool::Create(ID3D11Device * pDevice, ID3D11DeviceCon
 
 void CLevel_GameTool::Free()
 {
+
+
 	Super::Free();
 
 	RELEASE_INSTANCE(CGameInstance);
-	RELEASE_INSTANCE(CImGUIManager);
 }

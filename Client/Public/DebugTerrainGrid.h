@@ -4,6 +4,13 @@
 #include "MonoBehaviour.h"
 #include "RigidDynamic.h"
 
+BEGIN(Engine)
+
+class CShader;
+class CVIBuffer_Grid;
+
+END
+
 BEGIN(Client)
 
 class CDebugTerrainGrid : public CMonoBehaviour
@@ -26,7 +33,7 @@ private:
 	HRESULT			Bind_ShaderResources();
 
 private:
-	CShader*		m_pShader;
+	CShader*			m_pShader;
 	CVIBuffer_Grid*	m_pBufferGrid;
 
 public:

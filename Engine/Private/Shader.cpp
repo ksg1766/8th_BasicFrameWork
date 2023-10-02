@@ -73,19 +73,19 @@ HRESULT CShader::Initialize(void * pArg)
 	return S_OK;
 }
 
-HRESULT CShader::Begin(_uint iPassIndex)
+HRESULT CShader::Begin()
 {
-	if (iPassIndex >= m_InputLayouts.size())
+	if (m_iPassIndex >= m_InputLayouts.size())
 		return E_FAIL;
 
-	m_pContext->IASetInputLayout(m_InputLayouts[iPassIndex]);
+	m_pContext->IASetInputLayout(m_InputLayouts[m_iPassIndex]);
 
 	ID3DX11EffectTechnique*	pTechnique = m_pEffect->GetTechniqueByIndex(0);
 	if (nullptr == pTechnique)
 		return E_FAIL;
 
 	/* iPassIndex번째 패스로 그리기를 시작합니다. */
-	pTechnique->GetPassByIndex(iPassIndex)->Apply(0, m_pContext);	
+	pTechnique->GetPassByIndex(m_iPassIndex)->Apply(0, m_pContext);
 
 	return S_OK;
 }

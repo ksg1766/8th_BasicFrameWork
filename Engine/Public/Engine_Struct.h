@@ -9,19 +9,35 @@ namespace Engine
 
 		HWND		hWnd;
 		WINMODE		eWinMode;
-		unsigned int	iWinSizeX, iWinSizeY;
+		_uint		iWinSizeX, iWinSizeY;
 
 	}GRAPHIC_DESC;
 
+	typedef struct tagMaterialDesc
+	{
+		_char		strName[MAX_PATH];
+
+		Vec4		vAmbient;
+		Vec4		vDiffuse;
+		Vec4		vSpecular;
+		Vec4		vEmissive;
+		class CTexture*	pTextures[AI_TEXTURE_TYPE_MAX];
+	}MATERIALDESC;
+
 	typedef struct tagFaceIndices16
 	{
-		unsigned short		_0, _1, _2;
+		_ushort		_0, _1, _2;
 	}FACEINDICES16;
 
 	typedef struct tagFaceIndices32
 	{
-		unsigned long		_0, _1, _2;
+		_ulong		_0, _1, _2;
 	}FACEINDICES32;
+
+	typedef struct tagMeshMaterial
+	{
+		class CTexture* pTextures[AI_TEXTURE_TYPE_MAX];
+	}MESH_MATERIAL;
 
 	typedef struct ENGINE_DLL tagVertex_Position
 	{
@@ -86,7 +102,7 @@ namespace Engine
 
 	}VTXMESH;
 
-	typedef struct tagVertexAnimModel
+	typedef struct ENGINE_DLL tagVertexAnimModel
 	{
 		XMFLOAT3		vPosition;
 		XMFLOAT3		vNormal;
@@ -94,6 +110,9 @@ namespace Engine
 		XMFLOAT3		vTangent;
 		XMUINT4			vBlendIndex; /* 이 정점에 영향을 주는 뼈의 인덱스 네개. */
 		XMFLOAT4		vBlendWeight; /* 영향르 주고 있는 각 뼈대의 영향 비율 */
+
+		static const _uint iNumElements = 6;
+		static const D3D11_INPUT_ELEMENT_DESC Elements[iNumElements];
 	}VTXANIMMODEL;
 
 	typedef struct tagCollision

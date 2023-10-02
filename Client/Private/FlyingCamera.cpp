@@ -19,6 +19,8 @@ HRESULT CFlyingCamera::Initialize_Prototype()
 
 HRESULT CFlyingCamera::Initialize(void * pArg)
 {
+	SetObjectTag(TEXT("FlyingCamera"));
+
 	if (FAILED(Ready_FixedComponents()))
 		return E_FAIL;
 

@@ -44,7 +44,7 @@ HRESULT CBackGround::Render()
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
-	GetShader()->Begin(0);
+	GetShader()->Begin();
 
 	GetBuffer()->Render();
 

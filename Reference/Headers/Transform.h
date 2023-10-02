@@ -23,16 +23,22 @@ public:
 	void	SetScale(Vec3& vScale);
 	void	SetScale(const Vec3& vScale)			{ SetScale(const_cast<Vec3&>(vScale)); }
 
+	void	RotateYAxisFixed(Vec3& vEulers);	// TODO : Constraint변수를 따로 두고 Rotate는 하나로 통합
+	void	RotateYAxisFixed(const Vec3& vEulers)		{ RotateYAxisFixed(const_cast<Vec3&>(vEulers)); }
 	void	Rotate(Vec3& vEulers);
 	void	Rotate(const Vec3& vEulers)				{ Rotate(const_cast<Vec3&>(vEulers)); }
 	void	Rotate(const _float& fXangle, const _float& fYangle, const _float& fZangle)
 													{ Rotate(Vec3(fXangle, fYangle, fZangle)); }
 	void	RotateAround(const Vec3& vPoint, const Vec3& vAxis, const _float& fAngle);	// Revolution;
-	//void	SetRotation(Vec3& vRotation);
+	void	SetRotation(Vec3& vRotation);
+	void	SetRotation(const Vec3& vRotation)		{ SetRotation(const_cast<Vec3&>(vRotation)); }
+	void	SetRotationQuaternion(Quaternion& quatRotation);
+	void	SetRotationQuaternion(const Quaternion& quatRotation)
+													{ SetRotationQuaternion(const_cast<Quaternion&>(quatRotation)); }
 
 	void	Translate(Vec3& vTranslation);
 	void	Translate(const Vec3& vTranslation)		{ Translate(const_cast<Vec3&>(vTranslation)); }
-	void	SetPosition(Vec3& vPosition)			{ static_cast<Vec3>(m_matWorld.m[STATE_POSITION]) = vPosition; }
+	void	SetPosition(Vec3& vPosition)			{ m_matWorld.Translation(vPosition); }
 	void	SetPosition(const Vec3& vPosition)		{ SetPosition(const_cast<Vec3&>(vPosition)); }
 	
 	const Matrix	WorldMatrix()					{ return m_matWorld; }
@@ -42,10 +48,10 @@ public:
 	Vec3	GetRotation();
 	Quaternion	GetRotationQuaternion();
 
-	Vec3	GetRight()								{ return static_cast<Vec3>(m_matWorld.m[STATE_RIGHT]); }
-	Vec3	GetUp()									{ return static_cast<Vec3>(m_matWorld.m[STATE_UP]); }
-	Vec3	GetForward()							{ return static_cast<Vec3>(m_matWorld.m[STATE_LOOK]); }
-	Vec3	GetPosition()							{ return static_cast<Vec3>(m_matWorld.m[STATE_POSITION]); }
+	Vec3	GetRight()								{ return static_cast<Vec3>(m_matWorld.Right()); }
+	Vec3	GetUp()									{ return static_cast<Vec3>(m_matWorld.Up()); }
+	Vec3	GetForward()							{ return static_cast<Vec3>(m_matWorld.Backward()); }
+	Vec3	GetPosition()							{ return static_cast<Vec3>(m_matWorld.Translation()); }
 
 public:
 	// RUL의 크기가 각 축의 길이(크기)

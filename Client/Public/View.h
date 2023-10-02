@@ -14,13 +14,14 @@ END
 
 BEGIN(Client)
 
-class CTool : public CBase
+class CViewMediator;
+class CView : public CBase
 {
 	using Super = CBase;
 
 protected:
-	CTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	virtual ~CTool() = default;
+	CView(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	virtual ~CView() = default;
 
 public:
 	virtual HRESULT Initialize(void* pArg);
@@ -28,9 +29,13 @@ public:
 	virtual HRESULT LateTick()		PURE;
 	virtual HRESULT	DebugRender()	PURE;
 
+	void	SetMediator(CViewMediator* pMediator);
+
 protected:
-	CGameInstance*	m_pGameInstance = nullptr;
-	class CImGUIManager*	m_pImGUIInstance = nullptr;
+	CGameInstance*			m_pGameInstance = nullptr;
+	CViewMediator*			m_pMediator = nullptr;
+
+	_bool					m_IsPickingActivated = false;
 
 	ID3D11Device*			m_pDevice = { nullptr };
 	ID3D11DeviceContext*	m_pContext = { nullptr };

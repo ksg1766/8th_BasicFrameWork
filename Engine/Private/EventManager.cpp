@@ -30,7 +30,7 @@ void CEventManager::FinalTick()
 	m_vecEvent.clear();
 }
 
-void CEventManager::CreateObject(CGameObject* pObj, LAYERTAG eLayer)
+void CEventManager::CreateObject(CGameObject*& pObj, const LAYERTAG& eLayer)
 {
 	tagEvent evn = {};
 	evn.eEvent = EVENT_TYPE::CREATE_OBJECT;
@@ -40,7 +40,48 @@ void CEventManager::CreateObject(CGameObject* pObj, LAYERTAG eLayer)
 	AddEvent(evn);
 }
 
-void CEventManager::DeleteObject(CGameObject* pObj)
+CGameObject* CEventManager::CreateObject(const wstring& strPrototypeTag, const LAYERTAG& eLayer, void* pArg)
+{
+	CObjectManager* pObjectManager = GET_INSTANCE(CObjectManager);
+	CLevelManager* pLevelManager = GET_INSTANCE(CLevelManager);
+
+	CGameObject* pPrototype = pObjectManager->Find_Prototype(strPrototypeTag);
+	if (nullptr == pPrototype)
+	{
+		RELEASE_INSTANCE(CObjectManager);
+		RELEASE_INSTANCE(CLevelManager);
+		return nullptr;
+	}
+
+	CGameObject* pGameObject = pPrototype->Clone(pArg);
+	if (nullptr == pGameObject)
+	{
+		RELEASE_INSTANCE(CObjectManager);
+		RELEASE_INSTANCE(CLevelManager);
+		return nullptr;
+	}
+	_uint iCurrentLevelIndex = pLevelManager->GetCurrentLevelIndex();
+	CLayer* pLayer = pObjectManager->Find_Layer(iCurrentLevelIndex, eLayer);
+
+	if (nullptr == pLayer)
+	{
+		pLayer = CLayer::Create();
+		pLayer->SetLayerTag(eLayer);
+
+		pObjectManager->GetCurrentLevelLayers()->emplace(eLayer, pLayer);
+
+		CreateObject(pGameObject, eLayer);
+	}
+	else
+		CreateObject(pGameObject, eLayer);
+	
+	RELEASE_INSTANCE(CObjectManager);
+	RELEASE_INSTANCE(CLevelManager);
+
+	return pGameObject;
+}
+
+void CEventManager::DeleteObject(CGameObject*& pObj)
 {
 	tagEvent evn = {};
 	evn.eEvent = EVENT_TYPE::DELETE_OBJECT;
@@ -49,7 +90,7 @@ void CEventManager::DeleteObject(CGameObject* pObj)
 	AddEvent(evn);
 }
 
-void CEventManager::LevelChange(CLevel* pLevel, _uint iLevelId)
+void CEventManager::LevelChange(CLevel*& pLevel, _uint& iLevelId)
 {
 	tagEvent evn = {};
 	evn.eEvent = EVENT_TYPE::LEVEL_CHANGE;

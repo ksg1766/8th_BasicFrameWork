@@ -23,10 +23,15 @@ HRESULT CLayer::Add_GameObject(CGameObject* pGameObject, const LAYERTAG& eLayerT
 
 void CLayer::Tick(_float fTimeDelta)
 {
-	for (auto& pGameObject : m_GameObjects)
+	for (auto iter = m_GameObjects.begin(); iter != m_GameObjects.end();)
 	{
-		if (nullptr != pGameObject)
-			pGameObject->Tick(fTimeDelta);
+		if (!(*iter)->IsDead())
+		{
+			(*iter)->Tick(fTimeDelta);
+			++iter;
+		}
+		else
+			iter = m_GameObjects.erase(iter);
 	}
 }
 

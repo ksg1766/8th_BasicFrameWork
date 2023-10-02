@@ -20,6 +20,8 @@ HRESULT CBasicTerrain::Initialize_Prototype()
 
 HRESULT CBasicTerrain::Initialize(void* pArg)
 {
+	SetObjectTag(TEXT("BasicTerrain"));
+
 	if (FAILED(Ready_FixedComponents(pArg)))
 		return E_FAIL;
 	if (FAILED(Ready_Scripts(pArg)))
@@ -49,7 +51,7 @@ HRESULT CBasicTerrain::Render()
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
-	GetShader()->Begin(3);
+	GetShader()->Begin();
 
 	static_cast<CTerrain*>(GetFixedComponent(ComponentType::Terrain))->Render();
 
@@ -72,6 +74,8 @@ HRESULT CBasicTerrain::Ready_FixedComponents(void* pArg)
 		return E_FAIL;*/
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Shader, TEXT("Prototype_Component_Shader_VtxDebug"))))
 		return E_FAIL;
+
+	GetShader()->SetPassIndex(3);
 
 	/* Com_Terrain */
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Terrain, TEXT("Prototype_Component_Terrain"))))

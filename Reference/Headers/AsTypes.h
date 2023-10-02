@@ -153,7 +153,6 @@ struct ModelBone
 	vector<shared_ptr<ModelBone>> tChildrens; // Cache
 };
 
-
 struct ModelKeyframeData
 {
 	float fTime;

@@ -53,7 +53,7 @@ HRESULT CCollisionTest::Render()
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
-	GetShader()->Begin(1);
+	GetShader()->Begin();
 
 	GetBuffer()->Render();
 
@@ -77,6 +77,7 @@ HRESULT CCollisionTest::Ready_FixedComponents()
 	/* Com_Shader */
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Shader, TEXT("Prototype_Component_Shader_VtxCubeNom"))))
 		return E_FAIL;
+	GetShader()->SetPassIndex(1);
 
 	/* Com_VIBuffer */
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Buffer, TEXT("Prototype_Component_VIBuffer_Cube"))))

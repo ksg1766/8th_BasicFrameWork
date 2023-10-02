@@ -1,4 +1,4 @@
-#include "Client_Shader_Defines.hpp"
+#include "Client_Shader_Defines.hlsl"
 
 /* 상수테이블. */
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;

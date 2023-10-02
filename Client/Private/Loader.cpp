@@ -11,7 +11,7 @@
 #include "TestAIController.h"
 #include "FlyingCamera.h"
 #include "StaticTest.h"
-#include "FloorTiles_A.h"
+#include "StaticBase.h"
 
 CLoader::CLoader(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: m_pDevice(pDevice)
@@ -223,10 +223,6 @@ HRESULT CLoader::Loading_GameObjects_For_Level_GamePlay()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_StaticTest"), CStaticTest::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 	
-	/* For.Prototype_GameObject_FloorTiles_A */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_FloorTiles_A"), CFloorTiles_A::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-
 	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
@@ -303,9 +299,10 @@ HRESULT CLoader::Loading_GameObjects_For_Level_GameTool()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_StaticTest"), CStaticTest::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	/* For.Prototype_GameObject_FloorTiles_A */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_FloorTiles_A"), CFloorTiles_A::Create(m_pDevice, m_pContext))))
+	/* For.Prototype_GameObject_StaticBase */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_StaticBase"), CStaticBase::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
 
 	RELEASE_INSTANCE(CGameInstance);
 

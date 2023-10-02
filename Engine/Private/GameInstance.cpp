@@ -176,6 +176,7 @@ _uint CGameInstance::GetCurrentLevelIndex()
 	return m_pLevelManager->GetCurrentLevelIndex();
 }
 
+
 void CGameInstance::SetCurrentLevelIndex(_uint iLevelIndex)
 {
 	m_pLevelManager->SetCurrentLevelIndex(iLevelIndex);
@@ -195,6 +196,14 @@ CGameObject* CGameInstance::Add_GameObject(_uint iLevelIndex, const LAYERTAG& eL
 		return nullptr;
 
 	return m_pObjectManager->Add_GameObject(iLevelIndex, eLayerTag, strPrototypeTag, pArg);
+}
+
+map<LAYERTAG, CLayer*>* CGameInstance::GetCurrentLevelLayers()
+{
+	if (nullptr == m_pObjectManager)
+		return nullptr;
+
+	return m_pObjectManager->GetCurrentLevelLayers();
 }
 
 HRESULT CGameInstance::Add_Prototype(_uint iLevelIndex, const wstring& strPrototypeTag, CComponent * pPrototype)
@@ -218,9 +227,9 @@ void CGameInstance::FinalTick()
 	m_pEventManager->FinalTick();
 }
 
-void CGameInstance::CreateObject(CGameObject* pObj, LAYERTAG eLayer)
+CGameObject* CGameInstance::CreateObject(const wstring& strPrototypeTag, const LAYERTAG& eLayer, void* pArg)
 {
-	m_pEventManager->CreateObject(pObj, eLayer);
+	return m_pEventManager->CreateObject(strPrototypeTag, eLayer, pArg);
 }
 
 void CGameInstance::DeleteObject(CGameObject* pObj)

@@ -37,9 +37,6 @@
     <Filter Include="01.Levels\02.GameTool">
       <UniqueIdentifier>{0ddb6f36-aab9-4683-8131-d89aef354c4b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Levels\02.GameTool\ImGUIManager">
-      <UniqueIdentifier>{8c7126cb-5386-45ee-a1ae-8f8ea4d71673}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Levels\02.GameTool\ImGUI">
       <UniqueIdentifier>{0750d5ff-76a3-4d8d-b06d-a7f58ab341ea}</UniqueIdentifier>
     </Filter>
@@ -91,15 +88,6 @@
     <Filter Include="02.GameObjects\BasicTerrain\Script">
       <UniqueIdentifier>{c8081918-9961-4612-a3ca-15cf00eb28a3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Levels\02.GameTool\MapTool">
-      <UniqueIdentifier>{16c8a98b-47ea-4c7b-8334-f9880d99f349}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Levels\02.GameTool\ToolBase">
-      <UniqueIdentifier>{0bf6b0f8-774d-4ce2-b52b-07a8a7d02bb1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Levels\02.GameTool\ObjectTool">
-      <UniqueIdentifier>{f9b6c54a-738f-4a40-af0e-44022efaec4d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\Static">
       <UniqueIdentifier>{c4e8b885-4768-40de-8227-7c9b20688169}</UniqueIdentifier>
     </Filter>
@@ -112,8 +100,23 @@
     <Filter Include="02.GameObjects\Static\StaticTestCube\01.Script">
       <UniqueIdentifier>{de5e19ca-de04-4b4b-955d-d8538e111663}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Static\FloorTiles_A">
-      <UniqueIdentifier>{17ee6e0e-ed82-4e0f-b145-209ae0c21eb5}</UniqueIdentifier>
+    <Filter Include="02.GameObjects\Static\StaticBase">
+      <UniqueIdentifier>{1b05fad7-47fa-4638-b885-25a871718926}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\02.GameTool\PrefabsView">
+      <UniqueIdentifier>{16c8a98b-47ea-4c7b-8334-f9880d99f349}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\02.GameTool\LayerView">
+      <UniqueIdentifier>{e8297b84-e47e-4349-9297-d86c1c376c01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\02.GameTool\TransformView">
+      <UniqueIdentifier>{b46c1ed3-d354-4b4d-a943-ef92ca7c4781}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\02.GameTool\ViewBase">
+      <UniqueIdentifier>{0bf6b0f8-774d-4ce2-b52b-07a8a7d02bb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\02.GameTool\Mediator">
+      <UniqueIdentifier>{1182e448-9f3a-4696-9518-0160744598f8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -156,9 +159,6 @@
     <ClInclude Include="..\Public\Level_GameTool.h">
       <Filter>01.Levels\02.GameTool</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\ImGUIManager.h">
-      <Filter>01.Levels\02.GameTool\ImGUIManager</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\ImGUI\imconfig.h">
       <Filter>01.Levels\02.GameTool\ImGUI</Filter>
     </ClInclude>
@@ -189,9 +189,6 @@
     <ClInclude Include="..\Public\PlayerController.h">
       <Filter>02.GameObjects\TempCube\01.Script</Filter>
     </ClInclude>
-    <ClInclude Include="..\Bin\ShaderFiles\Client_Shader_Defines.hpp">
-      <Filter>97.ShaderFiles</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\CollisionTest.h">
       <Filter>02.GameObjects\CollisionTestCube\00.GameObject</Filter>
     </ClInclude>
@@ -213,14 +210,26 @@
     <ClInclude Include="..\Public\StaticTest.h">
       <Filter>02.GameObjects\Static\StaticTestCube\00.GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\MapTool.h">
-      <Filter>01.Levels\02.GameTool\MapTool</Filter>
+    <ClInclude Include="..\Public\PrefabsView.h">
+      <Filter>01.Levels\02.GameTool\PrefabsView</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Tool.h">
-      <Filter>01.Levels\02.GameTool\ToolBase</Filter>
+    <ClInclude Include="..\Public\View.h">
+      <Filter>01.Levels\02.GameTool\ViewBase</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\FloorTiles_A.h">
-      <Filter>02.GameObjects\Static\FloorTiles_A</Filter>
+    <ClInclude Include="..\Public\StaticBase.h">
+      <Filter>02.GameObjects\Static\StaticBase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\LayersView.h">
+      <Filter>01.Levels\02.GameTool\LayerView</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TransformView.h">
+      <Filter>01.Levels\02.GameTool\TransformView</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ViewMediator.h">
+      <Filter>01.Levels\02.GameTool\Mediator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Bin\ShaderFiles\Client_Shader_Defines.hlsl">
+      <Filter>97.ShaderFiles</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -250,9 +259,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Level_GameTool.cpp">
       <Filter>01.Levels\02.GameTool</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\ImGUIManager.cpp">
-      <Filter>01.Levels\02.GameTool\ImGUIManager</Filter>
     </ClCompile>
     <ClCompile Include="..\Public\ImGUI\imgui.cpp">
       <Filter>01.Levels\02.GameTool\ImGUI</Filter>
@@ -302,14 +308,23 @@
     <ClCompile Include="..\Private\StaticTest.cpp">
       <Filter>02.GameObjects\Static\StaticTestCube\00.GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\MapTool.cpp">
-      <Filter>01.Levels\02.GameTool\MapTool</Filter>
+    <ClCompile Include="..\Private\PrefabsView.cpp">
+      <Filter>01.Levels\02.GameTool\PrefabsView</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Tool.cpp">
-      <Filter>01.Levels\02.GameTool\ToolBase</Filter>
+    <ClCompile Include="..\Private\View.cpp">
+      <Filter>01.Levels\02.GameTool\ViewBase</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\FloorTiles_A.cpp">
-      <Filter>02.GameObjects\Static\FloorTiles_A</Filter>
+    <ClCompile Include="..\Private\StaticBase.cpp">
+      <Filter>02.GameObjects\Static\StaticBase</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\LayersView.cpp">
+      <Filter>01.Levels\02.GameTool\LayerView</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TransformView.cpp">
+      <Filter>01.Levels\02.GameTool\TransformView</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ViewMediator.cpp">
+      <Filter>01.Levels\02.GameTool\Mediator</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -342,6 +357,12 @@
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxMesh.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnimModel.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

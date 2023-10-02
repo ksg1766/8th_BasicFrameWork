@@ -8,6 +8,10 @@
 #include "Renderer.h"
 #include "Mesh.h"
 #include "Model.h"
+
+#include "ModelEx.h"
+#include "MeshEx.h"
+
 #include "VIBuffer_Rect.h"
 #include "VIBuffer_Cube.h"
 #include "VIBuffer_Grid.h"

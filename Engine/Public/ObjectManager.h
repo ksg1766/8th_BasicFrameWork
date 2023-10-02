@@ -3,6 +3,8 @@
 #include "Base.h"
 #include "LevelManager.h"
 #include "PoolManager.h"
+#include "EventManager.h"
+#include "ObjectManager.h"
 /* 게임내에 사용될 객체들을 만들어내기위한 원형객체들을 보관한다.(원본) */
 /* 게임내에 사용될 객체들을 보관한다.(사본) */
 
@@ -41,6 +43,7 @@ private:
 	map<LAYERTAG, class CLayer*>*					m_pLayers = { nullptr };
 
 private:
+	friend CGameObject* CEventManager::CreateObject(const wstring& strPrototypeTag, const LAYERTAG& eLayer, void* pArg);
 	class CGameObject* Find_Prototype(const wstring& strPrototypeTag);
 	class CLayer* Find_Layer(_uint iLevelIndex, const LAYERTAG& eLayerTag);
 

@@ -23,7 +23,7 @@ HRESULT CFlyingCameraController::Initialize_Prototype()
 HRESULT CFlyingCameraController::Initialize(void* pArg)
 {
 	m_pTransform = static_cast<CTransform*>(m_pGameObject->GetTransform());
-	m_pTransform->Rotate(Vec3(45.f, 0.f, 0.f));
+	m_pTransform->RotateYAxisFixed(Vec3(45.f, 0.f, 0.f));
 	m_pTransform->Translate(Vec3(0.f, 200.f, -200.f));
 
 	m_fLinearSpeed = 100.f;
@@ -86,13 +86,13 @@ void CFlyingCameraController::Input(const _float& fTimeDelta)
 	if (dwMouseMove = pGameInstance->Get_DIMouseMove(DIMS_X))
 	{
 		if (pGameInstance->Mouse_Pressing(DIM_LB))
-			m_pTransform->Rotate(Vec3(0.f, -dwMouseMove * fTimeDelta * 4.f, 0.f));
+			m_pTransform->RotateYAxisFixed(Vec3(0.f, -dwMouseMove * fTimeDelta * 4.f, 0.f));
 	}
 
 	if (dwMouseMove = pGameInstance->Get_DIMouseMove(DIMS_Y))
 	{
 		if (pGameInstance->Mouse_Pressing(DIM_LB))
-			m_pTransform->Rotate(Vec3(-dwMouseMove * fTimeDelta * 4.f, 0.f, 0.f));
+			m_pTransform->RotateYAxisFixed(Vec3(-dwMouseMove * fTimeDelta * 4.f, 0.f, 0.f));
 	}
 
 	if (dwMouseMove = pGameInstance->Get_DIMouseMove(DIMS_X))

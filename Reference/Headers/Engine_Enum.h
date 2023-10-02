@@ -34,7 +34,31 @@ namespace Engine
 	{
 		DEFAULT_LAYER_COUNT = static_cast<_uint>(LAYERTAG::DEFAULT_LAYER_END),
 		DYNAMIC_LAYER_COUNT = static_cast<_uint>(LAYERTAG::DYNAMIC_LAYER_END) - DEFAULT_LAYER_COUNT - 1,
-		STATIC_LAYER_COUNT = static_cast<_uint>(LAYERTAG::STATIC_LAYER_END) - DYNAMIC_LAYER_COUNT - 1
+		STATIC_LAYER_COUNT = static_cast<_uint>(LAYERTAG::STATIC_LAYER_END) - (DYNAMIC_LAYER_COUNT + 1) - (DEFAULT_LAYER_COUNT + 1)
+	};
+
+	static const _char* LayerTag_string[] =
+	{
+		"DEFAULT",
+		"BACKGROUND",
+		"CAMERA",
+		"IGNORERAY",
+		"UI",
+		"DEFAULT_LAYER_END",
+
+		"PLAYER",
+		"UNIT_AIR",
+		"UNIT_GROUND",
+		"DYNAMIC_LAYER_END",
+
+		"TERRAIN",
+		"GROUND",
+		"WALL",
+		"TRIGGER",
+		"INTERACTABLE",
+		"STATIC_LAYER_END",
+
+		"LAYER_END",
 	};
 
 	enum class OBJECTTAG

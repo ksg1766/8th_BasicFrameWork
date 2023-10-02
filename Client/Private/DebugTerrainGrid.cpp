@@ -25,6 +25,7 @@ HRESULT CDebugTerrainGrid::Initialize(void* pArg)
 	//m_pBufferGrid = static_cast<CVIBuffer_Grid*>(m_pGameObject->GetBuffer());
 	m_pBufferGrid = dynamic_cast<CVIBuffer_Grid*>(pGameInstance->Clone_Component(m_pGameObject, LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Grid"), pArg));
 	m_pShader = dynamic_cast<CShader*>(pGameInstance->Clone_Component(m_pGameObject, LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxDebug"), pArg));
+	m_pShader->SetPassIndex(1);
 
 	RELEASE_INSTANCE(CGameInstance);
 
@@ -44,7 +45,7 @@ void CDebugTerrainGrid::DebugRender()
 {
 	Bind_ShaderResources();
 
-	m_pShader->Begin(1);
+	m_pShader->Begin();
 
 	m_pBufferGrid->Render();
 }

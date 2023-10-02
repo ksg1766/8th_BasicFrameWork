@@ -3,6 +3,8 @@
 
 BEGIN(Engine)
 
+class CGameObject;
+
 enum class EVENT_TYPE { CREATE_OBJECT, DELETE_OBJECT, LEVEL_CHANGE, EVENT_END };
 
 struct tagEvent
@@ -23,13 +25,16 @@ private:
 public:
 	void FinalTick();
 
-	void CreateObject(CGameObject* pObj, LAYERTAG eLayer);
-	void DeleteObject(CGameObject* pObj);
-	void LevelChange(class CLevel* pLevel, _uint iLevelId);
+	CGameObject* CreateObject(const wstring& strPrototypeTag, const LAYERTAG& eLayer, void* pArg);
+
+	void DeleteObject(CGameObject*& pObj);
+	void LevelChange(class CLevel*& pLevel, _uint& iLevelId);
 
 private:
 	void AddEvent(const tagEvent& eve) { m_vecEvent.push_back(eve); }
 	void Execute(const tagEvent& eve);
+
+	void CreateObject(CGameObject*& pObj, const LAYERTAG& eLayer);
 
 private:
 	vector<tagEvent> m_vecEvent;

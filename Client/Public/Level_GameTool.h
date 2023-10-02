@@ -28,13 +28,15 @@ private:
 
 	HRESULT			Ready_Tools();
 
-	class CMapTool*			m_pMapTool = nullptr;
+	class CViewMediator*	m_pMediator = nullptr;
+
+	class CPrefabsView*		m_pPrefabsView = nullptr;
+	class CLayersView*		m_pLayersView = nullptr;
+	class CTransformView*	m_pTransformView = nullptr;
 
 	class CBasicTerrain*	m_pBasicTerrain = nullptr;
 
 private:
-	class CImGUIManager* m_pImGUIInstance;
-
 	_bool	m_IsImGUIReady = false;
 	_bool	show_demo_window = true;
 	_bool	show_another_window = false;

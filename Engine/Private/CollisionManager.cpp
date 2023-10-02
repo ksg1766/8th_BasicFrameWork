@@ -44,7 +44,7 @@ HRESULT CCollisionManager::Reserve_Manager(_uint iNumLevels)
 {
 	Reset();
 
-	CheckGroup(LAYERTAG::DEFAULT, LAYERTAG::PLAYER);
+	CheckGroup(LAYERTAG::PLAYER, LAYERTAG::UNIT_GROUND);
 	//CheckGroup(LAYERTAG::DEFAULT, LAYERTAG::DEFAULT);
 
 	return S_OK;

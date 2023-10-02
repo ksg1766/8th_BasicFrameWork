@@ -26,9 +26,16 @@ void CTransform::Tick(const _float& fTimeDelta)
 {
 }
 
-
 void CTransform::SetScale(Vec3& vScale)
 {
+	/*Vec3 vRight = m_matWorld.Right();
+	Vec3 vUp = m_matWorld.Up();
+	Vec3 vLook = m_matWorld.Backward();
+
+	vRight.Normalize();
+	vUp.Normalize();
+	vLook.Normalize();*/
+
 	for (_int i = 0; i < 3; ++i)
 	{
 		Vec3 v(m_matWorld.m[i]);
@@ -50,10 +57,49 @@ void CTransform::Rotate(Vec3& vEulers)
 	Matrix matRotation = Matrix::Identity;
 	Quaternion quat = Quaternion::Identity;
 
+	vEulers.x = XMConvertToRadians(vEulers.x);
+	vEulers.y = XMConvertToRadians(vEulers.y);
+	vEulers.z = XMConvertToRadians(vEulers.z);
+
+	quat = Quaternion::CreateFromYawPitchRoll(vEulers.y, vEulers.x, vEulers.z);
+	Matrix::Transform(m_matWorld, quat, m_matWorld);
+	Matrix::Transform(m_matWorld, quat, m_matWorld);
+
+	/*if (0.f != vEulers.y)
+	{
+		Vec3 v(m_matWorld.m[1]);
+		quat = Quaternion::CreateFromAxisAngle(v, XMConvertToRadians(vEulers.y));
+	}
+	if (0.f != vEulers.x)
+	{
+		Vec3 v(m_matWorld.m[0]);
+		quat *= Quaternion::CreateFromAxisAngle(v, XMConvertToRadians(vEulers.x));
+	}
+	if (0.f != vEulers.z)
+	{
+		Vec3 v(m_matWorld.m[2]);
+		quat *= Quaternion::CreateFromAxisAngle(v, XMConvertToRadians(vEulers.z));
+	}
+	
+	matRotation = Matrix::CreateFromQuaternion(quat);
+
+	for (_uint i = 0; i < 3; ++i)
+	{
+		Vec3 v(m_matWorld.m[i]);
+		v = Vec3::TransformNormal(v, matRotation);
+
+		for (_uint j = 0; j < 3; ++j)
+			m_matWorld.m[i][j] = *((_float*)&v + j);
+	}*/
+}
+
+void CTransform::RotateYAxisFixed(Vec3& vEulers)
+{
+	Matrix matRotation = Matrix::Identity;
+	Quaternion quat = Quaternion::Identity;
+
 	if (0.f != vEulers.y)
 	{
-		/*Vec3 v(m_matWorld.m[1]);
-		quat = Quaternion::CreateFromAxisAngle(v, XMConvertToRadians(vEulers.y));*/
 		Vec3 v(m_matWorld.m[1]);
 		quat = Quaternion::CreateFromAxisAngle(Vec3(0.f, 1.f, 0.f), XMConvertToRadians(vEulers.y));
 	}
@@ -67,7 +113,7 @@ void CTransform::Rotate(Vec3& vEulers)
 		Vec3 v(m_matWorld.m[2]);
 		quat *= Quaternion::CreateFromAxisAngle(v, XMConvertToRadians(vEulers.z));
 	}
-	
+
 	matRotation = Matrix::CreateFromQuaternion(quat);
 
 	for (_uint i = 0; i < 3; ++i)
@@ -90,7 +136,7 @@ void CTransform::RotateAround(const Vec3& vPoint, const Vec3& vAxis, const _floa
 	quat = Quaternion::CreateFromAxisAngle(vAxis, XMConvertToRadians(fAngle));
 	matRotation = Matrix::CreateFromQuaternion(quat);
 
-	vOut.Transform(v - vPoint, matRotation);
+	vOut = Vec3::Transform(v - vPoint, matRotation);
 	m_matWorld *= matRotation;
 
 	Vec3 _v = vOut + vPoint;
@@ -125,14 +171,47 @@ void CTransform::RotateAround(const Vec3& vPoint, const Vec3& vAxis, const _floa
 	}*/
 }
 
+void CTransform::SetRotationQuaternion(Quaternion& quatRotation)
+{
+	Vec3 vScale;
+	Quaternion quatDummy;
+	Vec3 vPosition;
+	m_matWorld.Decompose(vScale, quatDummy, vPosition);
+
+	Matrix matScale = Matrix::CreateScale(vScale);
+	Matrix matRotation = Matrix::CreateFromQuaternion(quatRotation);
+	Matrix matTranslation = Matrix::CreateTranslation(vPosition);
+
+	m_matWorld = matScale * matRotation * matTranslation;
+}
+
+void CTransform::SetRotation(Vec3& vRotation)
+{
+	Vec3 vScale;
+	Quaternion quatDummy;
+	Vec3 vPosition;
+	m_matWorld.Decompose(vScale, quatDummy, vPosition);
+
+	vRotation.x = XMConvertToRadians(vRotation.x);
+	vRotation.y = XMConvertToRadians(vRotation.y);
+	vRotation.z = XMConvertToRadians(vRotation.z);
+
+	Matrix matScale = Matrix::CreateScale(vScale);
+	Matrix matRotation = Matrix::CreateFromYawPitchRoll(vRotation.y, vRotation.x, vRotation.z);
+	Matrix matTranslation = Matrix::CreateTranslation(vPosition);
+
+	m_matWorld = matScale * matRotation * matTranslation;
+}
+
 Vec3 CTransform::GetLocalScale()
 {
-	Vec3 vScale, vDummy;
-	Quaternion quatDummy;
-	m_matWorld.Decompose(vScale, quatDummy, vDummy);
+	Vec3 vScale;
 
-	/*Vec3 vScale;
-	for (_int i = 0; i < STATE_POSITION; ++i)
+	vScale.x = m_matWorld.Right().Length();
+	vScale.y = m_matWorld.Up().Length();
+	vScale.z = m_matWorld.Backward().Length();
+
+	/*for (_int i = 0; i < STATE_POSITION; ++i)
 		*(((_float*)&vScale) + i) = Vec3(m_matWorld.m[i]).Length();*/
 
 	return vScale;
@@ -143,9 +222,10 @@ Vec3 CTransform::GetRotation()
 	Vec3 vDummy;
 	Quaternion quat;
 	m_matWorld.Decompose(vDummy, quat, vDummy);
-	vDummy = ToEulerAngles(quat);
 
-	return vDummy;
+	//vDummy = ToEulerAngles(quat);
+
+	return ToEulerAngles(quat);
 }
 
 Quaternion CTransform::GetRotationQuaternion()

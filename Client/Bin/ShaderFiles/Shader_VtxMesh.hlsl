@@ -1,29 +1,24 @@
+#include "Client_Shader_Defines.hlsl"
 
 /* 상수테이블. */
 matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
 vector			g_vLightDir = vector(1.f, -1.f, 1.f, 0.f);
 vector			g_vLightPos = vector(0.f, 0.f, 0.f, 1.f);
-float			g_fLightRange = 0.f; 
+float			g_fLightRange = 0.f;
 vector			g_vLightDiffuse = vector(1.f, 1.f, 1.f, 1.f);
 vector			g_vLightAmbient = vector(1.f, 1.f, 1.f, 1.f);
 vector			g_vLightSpecular = vector(1.f, 1.f, 1.f, 1.f);
+vector			g_vLightEmissive = vector(1.f, 1.f, 1.f, 1.f);
 
 vector			g_vMtrlAmbient = vector(0.4f, 0.4f, 0.4f, 1.f);
 vector			g_vMtrlSpecular = vector(1.f, 1.f, 1.f, 1.f);
+vector			g_vMtrlEmissive = vector(1.f, 0.f, 0.f, 1.f);
 
 vector			g_vCamPosition;
 
-//Texture2D		g_DiffuseTexture[2];
 Texture2D		g_DiffuseTexture;
-Texture2D		g_MaskTexture;
-
-Texture2D		g_BrushTexture;
-
-vector			g_vBrushPos = vector(35.f, 0.f, 35.f, 1.f);
-float			g_fBrushRange = 15.0f;
-
-
+Texture2D		g_NormalTexture;
 
 sampler LinearSampler = sampler_state {
 	Filter = MIN_MAG_MIP_LINEAR;
@@ -49,10 +44,12 @@ struct VS_IN
 struct VS_OUT
 {
 	/* float4 : w값을 반드시 남겨야하는 이유는 w에 뷰스페이스 상의 깊이(z)를 보관하기 위해서다. */
-	float4		vPosition : SV_POSITION;
-	float4		vNormal : NORMAL;
-	float2		vTexcoord : TEXCOORD0;
-	float4		vWorldPos : TEXCOORD1;
+    float4 vPosition : SV_POSITION;
+    float4 vNormal : NORMAL;
+    float2 vTexcoord : TEXCOORD0;
+    float4 vWorldPos : TEXCOORD1;
+    float3 vTangent : TANGENT;
+    float3 vBinormal : BINORMAL;
 };
 
 
@@ -69,11 +66,13 @@ VS_OUT VS_MAIN(/* 정점 */VS_IN In)
 	matWV = mul(g_WorldMatrix, g_ViewMatrix);
 	matWVP = mul(matWV, g_ProjMatrix);
 
-	Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
-	Out.vTexcoord = In.vTexcoord;
-	Out.vNormal = mul(float4(In.vNormal, 0.f), g_WorldMatrix);
-	Out.vWorldPos = mul(float4(In.vPosition, 1.f), g_WorldMatrix);
-
+    Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
+    Out.vTexcoord = In.vTexcoord;
+    Out.vNormal = mul(float4(In.vNormal, 0.f), g_WorldMatrix);
+    Out.vWorldPos = mul(float4(In.vPosition, 1.f), g_WorldMatrix);
+    Out.vTangent = normalize(mul(float4(In.vTangent, 0.f), g_WorldMatrix)).xyz;
+    Out.vBinormal = normalize(cross(Out.vNormal.xyz, Out.vTangent));
+    
 	return Out;	
 }
 
@@ -85,10 +84,12 @@ VS_OUT VS_MAIN(/* 정점 */VS_IN In)
 struct PS_IN
 {
 	/* Viewport */
-	float4		vPosition : SV_POSITION;
-	float4		vNormal	: NORMAL;
-	float2		vTexcoord : TEXCOORD0;
-	float4		vWorldPos : TEXCOORD1;
+    float4 vPosition : SV_POSITION;
+    float4 vNormal : NORMAL;
+    float2 vTexcoord : TEXCOORD0;
+    float4 vWorldPos : TEXCOORD1;
+    float3 vTangent : TANGENT;
+    float3 vBinormal : BINORMAL;
 };
 
 /* 받아온 픽셀의 정보를 바탕으로 하여 화면에 그려질 픽셀의 최종적인 색을 결정하낟. */
@@ -97,36 +98,37 @@ struct PS_OUT
 	float4	vColor : SV_TARGET0;
 };
 
-//float4 Compute_TerrainPixelColor(PS_IN In)
-//{
-//	vector	vSourDiffuse = g_DiffuseTexture[0].Sample(LinearSampler, In.vTexcoord * 30.f);
-//	vector	vDestDiffuse = g_DiffuseTexture[1].Sample(LinearSampler, In.vTexcoord * 30.f);
-//	vector	vMaskColor = g_MaskTexture.Sample(LinearSampler, In.vTexcoord);
-//	vector	vBrushColor = vector(0.f, 0.f, 0.f, 1.f);
+void ComputeNormalMapping(inout float4 normal, float3 tangent, float2 texcoord)
+{
+	// [0,255] 범위에서 [0,1]로 변환
+    float4 map = g_NormalTexture.Sample(LinearSampler, texcoord);
+    if (any(map.rgb) == false)
+        return;
 
-//	if (g_vBrushPos.x - g_fBrushRange <= In.vWorldPos.x && In.vWorldPos.x < g_vBrushPos.x + g_fBrushRange &&
-//		g_vBrushPos.z - g_fBrushRange <= In.vWorldPos.z && In.vWorldPos.z < g_vBrushPos.z + g_fBrushRange)
-//	{
-//		float2	vUV;
+    float3 N = normalize(normal.xyz); // z
+    float3 T = normalize(tangent); // x
+    float3 B = normalize(cross(N, T)); // y
+    float3x3 TBN = float3x3(T, B, N); // TS -> WS
 
-//		vUV.x = (In.vWorldPos.x - (g_vBrushPos.x - g_fBrushRange)) / (2.f * g_fBrushRange);
-//		vUV.y = ((g_vBrushPos.z + g_fBrushRange) - In.vWorldPos.z) / (2.f * g_fBrushRange);
+	// [0,1] 범위에서 [-1,1] 범위로 변환
+    float3 tangentSpaceNormal = (map.rgb * 2.0f - 1.0f);
+    float3 worldNormal = mul(tangentSpaceNormal, TBN);
 
-//		vBrushColor = g_BrushTexture.Sample(LinearSampler, vUV);
-//	}
-
-//	return vDestDiffuse * vMaskColor + vSourDiffuse * (1.f - vMaskColor) + vBrushColor;
-//}
+    normal = float4(worldNormal, 0.f);
+};
 
 /* 전달받은 픽셀의 정보를 이용하여 픽셀의 최종적인 색을 결정하자. */
 PS_OUT PS_MAIN(PS_IN In)
 {
+    ComputeNormalMapping(In.vNormal, In.vTangent, In.vTexcoord);
+	
 	PS_OUT			Out = (PS_OUT)0;
 
-	//vector	vMtrlDiffuse = Compute_TerrainPixelColor(In);
-    //vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord * 30.f);
-    vector vMtrlDiffuse = vector(1.f, 0.f, 0.f, 1.f);
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
 
+    if (vMtrlDiffuse.a < 0.3f)
+        discard;
+	
 	vector	vShade = max(dot(normalize(g_vLightDir) * -1.f, normalize(In.vNormal)), 0.f) +
 		g_vLightAmbient * g_vMtrlAmbient;		
 
@@ -141,18 +143,68 @@ PS_OUT PS_MAIN(PS_IN In)
 	return Out;
 }
 
+PS_OUT PS_RIM_MAIN(PS_IN In)
+{
+    ComputeNormalMapping(In.vNormal, In.vTangent, In.vTexcoord);
+	
+    PS_OUT Out = (PS_OUT) 0;
+
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+
+    if (vMtrlDiffuse.a < 0.3f)
+        discard;
+	
+    vector vShade = max(dot(normalize(g_vLightDir) * -1.f, normalize(In.vNormal)), 0.f) +
+		g_vLightAmbient * g_vMtrlAmbient;
+
+    vector vReflect = reflect(normalize(g_vLightDir), normalize(In.vNormal));
+    vector vLook = In.vWorldPos - g_vCamPosition;
+	
+    float fSpecular = pow(max(dot(normalize(vLook) * -1.f, normalize(vReflect)), 0.f), 30.f);
+
+	// Rim Light
+    float3 E = normalize(-vLook);
+
+    float value = saturate(dot(E, float3(In.vNormal.xyz)));
+    float fEmissive = 1.0f - value;
+
+	// min, max, x
+    fEmissive = smoothstep(0.0f, 1.0f, fEmissive);
+    fEmissive = pow(fEmissive, 1);
+	//
+    Out.vColor = (g_vLightDiffuse * vMtrlDiffuse) * saturate(vShade) +
+		(g_vLightSpecular * g_vMtrlSpecular) * fSpecular +
+	(g_vLightEmissive * g_vMtrlEmissive) * fEmissive;
+	
+    return Out;
+}
+
 technique11 DefaultTechnique
 {
 	/* */
 	pass Mesh
-	{
+    {
+        SetRasterizerState(RS_Default);
+
 		/* 여러 셰이더에 대해서 각각 어떤 버젼으로 빌드하고 어떤 함수를 호출하여 해당 셰이더가 구동되는지를 설정한다. */
 		VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN();
-	}	
+	}
+
+    pass RimMesh
+    {
+        SetRasterizerState(RS_Default);
+
+		/* 여러 셰이더에 대해서 각각 어떤 버젼으로 빌드하고 어떤 함수를 호출하여 해당 셰이더가 구동되는지를 설정한다. */
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_RIM_MAIN();
+    }
 }
 
 
