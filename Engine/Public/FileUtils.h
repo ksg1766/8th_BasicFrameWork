@@ -9,7 +9,7 @@ enum FileMode : uint8
 	Read,
 };
 
-class FileUtils
+class ENGINE_DLL FileUtils
 {
 public:
 	FileUtils();
@@ -34,7 +34,7 @@ public:
 	void Write(const string& data);
 
 	template<typename T>
-	void Read(OUT T& data)
+	_bool Read(OUT T& data)
 	{
 		DWORD numOfBytes = 0;
 
@@ -43,6 +43,10 @@ public:
 #else
 		::ReadFile(_handle, &data, sizeof(T), (LPDWORD)&numOfBytes, nullptr);
 #endif
+
+		if (0 == numOfBytes)
+			return false;
+		return true;
 	}
 
 	template<typename T>

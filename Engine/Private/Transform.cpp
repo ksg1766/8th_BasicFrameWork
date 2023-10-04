@@ -62,24 +62,6 @@ void CTransform::Rotate(Vec3& vEulers)
 	vEulers.z = XMConvertToRadians(vEulers.z);
 
 	quat = Quaternion::CreateFromYawPitchRoll(vEulers.y, vEulers.x, vEulers.z);
-	Matrix::Transform(m_matWorld, quat, m_matWorld);
-	Matrix::Transform(m_matWorld, quat, m_matWorld);
-
-	/*if (0.f != vEulers.y)
-	{
-		Vec3 v(m_matWorld.m[1]);
-		quat = Quaternion::CreateFromAxisAngle(v, XMConvertToRadians(vEulers.y));
-	}
-	if (0.f != vEulers.x)
-	{
-		Vec3 v(m_matWorld.m[0]);
-		quat *= Quaternion::CreateFromAxisAngle(v, XMConvertToRadians(vEulers.x));
-	}
-	if (0.f != vEulers.z)
-	{
-		Vec3 v(m_matWorld.m[2]);
-		quat *= Quaternion::CreateFromAxisAngle(v, XMConvertToRadians(vEulers.z));
-	}
 	
 	matRotation = Matrix::CreateFromQuaternion(quat);
 
@@ -90,7 +72,7 @@ void CTransform::Rotate(Vec3& vEulers)
 
 		for (_uint j = 0; j < 3; ++j)
 			m_matWorld.m[i][j] = *((_float*)&v + j);
-	}*/
+	}
 }
 
 void CTransform::RotateYAxisFixed(Vec3& vEulers)

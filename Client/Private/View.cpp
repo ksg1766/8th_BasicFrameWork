@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "View.h"
+#include "ViewMediator.h"
 #include "GameInstance.h"
 
 CView::CView(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

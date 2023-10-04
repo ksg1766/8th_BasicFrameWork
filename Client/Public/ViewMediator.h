@@ -26,6 +26,7 @@ public:
 	void	SetPrefabsView(class CPrefabsView* pPrefabsView);
 	void	SetLayersView(class CLayersView* pLayersView);
 	void	SetTransformView(class CTransformView* pTransformView);
+	void	SetSaveLoadView(class CSaveLoadView* pSaveLoadView);
 
 protected:
 	CGameInstance*			m_pGameInstance = nullptr;
@@ -35,6 +36,7 @@ protected:
 	class CPrefabsView*		m_pPrefabsView = nullptr;
 	class CLayersView*		m_pLayersView = nullptr;
 	class CTransformView*	m_pTransformView = nullptr;
+	class CSaveLoadView*	m_pSaveLoadView = nullptr;
 
 public:
 	virtual void Free() override;

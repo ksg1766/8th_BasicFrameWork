@@ -150,7 +150,7 @@ HRESULT CGameObject::AddComponent(_uint iLevelIndex, const ComponentType& type, 
 	else
 		m_vecScripts.push_back(dynamic_cast<CMonoBehaviour*>(pComponent));
 
-	Safe_AddRef(pComponent);
+	//Safe_AddRef(pComponent);
 
 	Safe_Release(pGameInstance);
 

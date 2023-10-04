@@ -61,8 +61,10 @@ void CLayersView::InfoView()
 		ImGui::Text("Object Tag : %s", Utils::ToString(m_strPickedObject).data());
 
 		m_pMediator->OnNotifiedSelected(m_pCurPickedObject);
+
 		m_pCurPickedObject->GetShader()->SetPassIndex(1);
-		if (m_pPrePickedObject)	m_pPrePickedObject->GetShader()->SetPassIndex(0);
+		if (m_pPrePickedObject && !m_pPrePickedObject->IsDead())
+			m_pPrePickedObject->GetShader()->SetPassIndex(0);
 
 		m_pPrePickedObject = m_pCurPickedObject;
 	}
@@ -115,18 +117,20 @@ void CLayersView::TapGroups(_uint iIndex)
 	{
 		map<LAYERTAG, CLayer*>* mapLayers = m_pGameInstance->GetCurrentLevelLayers();
 
-		for (_uint i = iIndex; i < (_uint)LAYERTAG::LAYER_END; ++i)
+		for (_uint iLayer = iIndex; iLayer < (_uint)LAYERTAG::LAYER_END; ++iLayer)
 		{
-			if (i == static_cast<_uint>(LAYERTAG::DEFAULT_LAYER_END) ||
-				i == static_cast<_uint>(LAYERTAG::DYNAMIC_LAYER_END) ||
-				i == static_cast<_uint>(LAYERTAG::STATIC_LAYER_END))
+			LAYERTAG eLayer = static_cast<LAYERTAG>(iLayer);
+
+			if (eLayer == LAYERTAG::DEFAULT_LAYER_END ||
+				eLayer == LAYERTAG::DYNAMIC_LAYER_END ||
+				eLayer == LAYERTAG::STATIC_LAYER_END)
 				break;
 
-			if (i == static_cast<_uint>(LAYERTAG::TERRAIN))	continue;
+			if (eLayer == LAYERTAG::TERRAIN)	continue;
 
-			if (ImGui::BeginTabItem(LayerTag_string[i]))
+			if (ImGui::BeginTabItem(LayerTag_string[iLayer]))
 			{
-				map<LAYERTAG, class CLayer*>::iterator iter = mapLayers->find((LAYERTAG)i);
+				map<LAYERTAG, class CLayer*>::iterator iter = mapLayers->find(eLayer);
 				if (iter == mapLayers->end())
 				{
 					ImGui::EndTabItem();
@@ -151,11 +155,11 @@ void CLayersView::TapGroups(_uint iIndex)
 				if (m_Item_Current >= vecItems.size())
 					m_Item_Current = vecItems.size() - 1;
 
-				ImGui::ListBox(LayerTag_string[i], &m_Item_Current, vecItems.data(), vecItems.size(), 10);
+				ImGui::ListBox(LayerTag_string[iLayer], &m_Item_Current, vecItems.data(), vecItems.size(), 5);
 				
 				if (0 <= m_Item_Current)
 				{
-					m_ePickedLayerTag = (LAYERTAG)i;
+					m_ePickedLayerTag = eLayer;
 					m_strPickedObject = Utils::ToWString(vecItems[m_Item_Current]);
 					m_pCurPickedObject = vecObjects[m_Item_Current];
 				}

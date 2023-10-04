@@ -111,7 +111,7 @@ void CPrefabsView::TapGroups()
 			if (m_Item_Current >= IM_ARRAYSIZE(items))
 				m_Item_Current = IM_ARRAYSIZE(items) - 1;
 
-			ImGui::ListBox("Ground Objects", &m_Item_Current, items, IM_ARRAYSIZE(items), 10);
+			ImGui::ListBox("Ground Objects", &m_Item_Current, items, IM_ARRAYSIZE(items), 5);
 			m_ePickedLayerTag = LAYERTAG::GROUND;
 			m_strPickedObject = Utils::ToWString(items[m_Item_Current]);
 			ImGui::EndTabItem();
@@ -125,7 +125,7 @@ void CPrefabsView::TapGroups()
 			if (m_Item_Current >= IM_ARRAYSIZE(items))
 				m_Item_Current = IM_ARRAYSIZE(items) - 1;
 
-			ImGui::ListBox("Wall Objects", &m_Item_Current, items, IM_ARRAYSIZE(items), 10);
+			ImGui::ListBox("Wall Objects", &m_Item_Current, items, IM_ARRAYSIZE(items), 5);
 			m_ePickedLayerTag = LAYERTAG::WALL;
 			m_strPickedObject = Utils::ToWString(items[m_Item_Current]);
 			

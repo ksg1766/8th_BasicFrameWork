@@ -33,6 +33,7 @@ private:
 	class CPrefabsView*		m_pPrefabsView = nullptr;
 	class CLayersView*		m_pLayersView = nullptr;
 	class CTransformView*	m_pTransformView = nullptr;
+	class CSaveLoadView*	m_pSaveLoadView = nullptr;
 
 	class CBasicTerrain*	m_pBasicTerrain = nullptr;
 

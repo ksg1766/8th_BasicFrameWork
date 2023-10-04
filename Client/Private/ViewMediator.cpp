@@ -3,6 +3,7 @@
 #include "PrefabsView.h"
 #include "LayersView.h"
 #include "TransformView.h"
+#include "SaveLoadView.h"
 
 CViewMediator::CViewMediator()
 {
@@ -26,22 +27,29 @@ void CViewMediator::OnNotifiedSelected(CGameObject* pGameObject)
 void CViewMediator::SetPrefabsView(CPrefabsView* pPrefabsView)
 { 
 	m_pPrefabsView = pPrefabsView;
-	m_pPrefabsView->AddRef();
+	Safe_AddRef(m_pPrefabsView);
 	m_pPrefabsView->SetMediator(this);
 }
 
 void CViewMediator::SetLayersView(CLayersView* pLayersView)
 { 
 	m_pLayersView = pLayersView;
-	m_pLayersView->AddRef();
+	Safe_AddRef(m_pLayersView);
 	m_pLayersView->SetMediator(this);
 }
 
 void CViewMediator::SetTransformView(CTransformView* pTransformView)
 { 
 	m_pTransformView = pTransformView;
-	m_pTransformView->AddRef();
+	Safe_AddRef(m_pTransformView);
 	m_pTransformView->SetMediator(this);
+}
+
+void CViewMediator::SetSaveLoadView(CSaveLoadView* pSaveLoadView)
+{ 
+	m_pSaveLoadView = pSaveLoadView;
+	Safe_AddRef(m_pSaveLoadView);
+	m_pSaveLoadView->SetMediator(this);
 }
 
 void CViewMediator::Free()
@@ -49,4 +57,5 @@ void CViewMediator::Free()
 	Safe_Release(m_pPrefabsView);
 	Safe_Release(m_pLayersView);
 	Safe_Release(m_pTransformView);
+	Safe_Release(m_pSaveLoadView);
 }

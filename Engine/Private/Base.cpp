@@ -2,16 +2,14 @@
 
 CBase::CBase()
 {
-	int			iData = 10;
-
 }
 
-unsigned long CBase::AddRef()
+_ulong CBase::AddRef()
 {
 	return ++m_dwRefCnt;	
 }
 
-unsigned long CBase::Release()
+_ulong CBase::Release()
 {
 	/* ªË¡¶«œ≥Æ. */
 	if (0 == m_dwRefCnt)

@@ -103,20 +103,26 @@
     <Filter Include="02.GameObjects\Static\StaticBase">
       <UniqueIdentifier>{1b05fad7-47fa-4638-b885-25a871718926}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Levels\02.GameTool\PrefabsView">
-      <UniqueIdentifier>{16c8a98b-47ea-4c7b-8334-f9880d99f349}</UniqueIdentifier>
+    <Filter Include="01.Levels\02.GameTool\View">
+      <UniqueIdentifier>{6c765137-c226-4bbb-b3bd-6e7922a9b843}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Levels\02.GameTool\LayerView">
+    <Filter Include="01.Levels\02.GameTool\View\DataFilesView">
+      <UniqueIdentifier>{66f7e3a7-467b-497d-9833-b00708cdaf9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\02.GameTool\View\LayerView">
       <UniqueIdentifier>{e8297b84-e47e-4349-9297-d86c1c376c01}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Levels\02.GameTool\TransformView">
-      <UniqueIdentifier>{b46c1ed3-d354-4b4d-a943-ef92ca7c4781}</UniqueIdentifier>
+    <Filter Include="01.Levels\02.GameTool\View\PrefabsView">
+      <UniqueIdentifier>{16c8a98b-47ea-4c7b-8334-f9880d99f349}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Levels\02.GameTool\ViewBase">
-      <UniqueIdentifier>{0bf6b0f8-774d-4ce2-b52b-07a8a7d02bb1}</UniqueIdentifier>
+    <Filter Include="01.Levels\02.GameTool\View\TransformView">
+      <UniqueIdentifier>{b46c1ed3-d354-4b4d-a943-ef92ca7c4781}</UniqueIdentifier>
     </Filter>
     <Filter Include="01.Levels\02.GameTool\Mediator">
       <UniqueIdentifier>{1182e448-9f3a-4696-9518-0160744598f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\02.GameTool\View\ViewBase">
+      <UniqueIdentifier>{0bf6b0f8-774d-4ce2-b52b-07a8a7d02bb1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -211,25 +217,28 @@
       <Filter>02.GameObjects\Static\StaticTestCube\00.GameObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PrefabsView.h">
-      <Filter>01.Levels\02.GameTool\PrefabsView</Filter>
+      <Filter>01.Levels\02.GameTool\View\PrefabsView</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\View.h">
-      <Filter>01.Levels\02.GameTool\ViewBase</Filter>
+      <Filter>01.Levels\02.GameTool\View\ViewBase</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\StaticBase.h">
       <Filter>02.GameObjects\Static\StaticBase</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\LayersView.h">
-      <Filter>01.Levels\02.GameTool\LayerView</Filter>
+      <Filter>01.Levels\02.GameTool\View\LayerView</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\TransformView.h">
-      <Filter>01.Levels\02.GameTool\TransformView</Filter>
+      <Filter>01.Levels\02.GameTool\View\TransformView</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ViewMediator.h">
       <Filter>01.Levels\02.GameTool\Mediator</Filter>
     </ClInclude>
     <ClInclude Include="..\Bin\ShaderFiles\Client_Shader_Defines.hlsl">
       <Filter>97.ShaderFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SaveLoadView.h">
+      <Filter>01.Levels\02.GameTool\View\DataFilesView</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -309,22 +318,25 @@
       <Filter>02.GameObjects\Static\StaticTestCube\00.GameObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PrefabsView.cpp">
-      <Filter>01.Levels\02.GameTool\PrefabsView</Filter>
+      <Filter>01.Levels\02.GameTool\View\PrefabsView</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\View.cpp">
-      <Filter>01.Levels\02.GameTool\ViewBase</Filter>
+      <Filter>01.Levels\02.GameTool\View\ViewBase</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\StaticBase.cpp">
       <Filter>02.GameObjects\Static\StaticBase</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\LayersView.cpp">
-      <Filter>01.Levels\02.GameTool\LayerView</Filter>
+      <Filter>01.Levels\02.GameTool\View\LayerView</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\TransformView.cpp">
-      <Filter>01.Levels\02.GameTool\TransformView</Filter>
+      <Filter>01.Levels\02.GameTool\View\TransformView</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ViewMediator.cpp">
       <Filter>01.Levels\02.GameTool\Mediator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SaveLoadView.cpp">
+      <Filter>01.Levels\02.GameTool\View\DataFilesView</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -71,7 +71,7 @@ void CTransformView::TransformController()
 	Vec3 vRotation = Vec3::Zero;
 	Vec3 vScale = Vec3::One;
 
-	if (m_pGameObject)
+	if (m_pGameObject && !m_pGameObject->IsDead())
 	{
 		CTransform* pTransform = m_pGameObject->GetTransform();
 
@@ -108,7 +108,7 @@ void CTransformView::TransformController()
 		varrRotation[2] -= 5.f;
 	ImGui::InputFloat3("Scale", varrLocalScale);
 
-	if (m_pGameObject)
+	if (m_pGameObject && !m_pGameObject->IsDead())
 	{
 		CTransform* pTransform = m_pGameObject->GetTransform();
 
