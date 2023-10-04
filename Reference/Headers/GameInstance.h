@@ -27,7 +27,8 @@ public: /* For.TimerManager */
 
 public: /* For.GraphicDevice */
 	HRESULT Clear_BackBuffer_View(_float4 vClearColor);	
-	HRESULT Clear_DepthStencil_View();	
+	HRESULT Clear_DepthStencil_View();
+	Viewport& GetViewPort();
 	HRESULT Present();
 
 public: /* For.QuadTRee */
@@ -81,9 +82,13 @@ public:	/* For. KeyManager */
 	const POINT& GetMousePos();
 
 public: /* For.PipeLine */
-	HRESULT Bind_TransformToShader(class CShader* pShader, const char* pConstantName, CPipeLine::TRANSFORMSTATE eState);
+	HRESULT Bind_TransformToShader(class CShader* pShader, const _char* pConstantName, CPipeLine::TRANSFORMSTATE eState);
 	_float4 Get_CamPosition_Float4() const;
 	_vector Get_CamPosition_Vector() const;
+	_float4x4 Get_Transform_float4x4(CPipeLine::TRANSFORMSTATE eState) const;
+	_matrix Get_Transform_Matrix(CPipeLine::TRANSFORMSTATE eState) const;
+	_float4x4 Get_Transform_float4x4_Inverse(CPipeLine::TRANSFORMSTATE eState) const;
+	_matrix	Get_Transform_Matrix_Inverse(CPipeLine::TRANSFORMSTATE eState) const;
 
 private:
 	class CTimerManager*			m_pTimerManager = { nullptr };

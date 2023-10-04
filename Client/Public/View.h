@@ -29,6 +29,8 @@ public:
 	virtual HRESULT LateTick()		PURE;
 	virtual HRESULT	DebugRender()	PURE;
 
+	void	DeactivatePicking() { m_IsPickingActivated = false; }
+
 	void	SetMediator(CViewMediator* pMediator);
 
 protected:

@@ -21,7 +21,7 @@ public:
 
 public:
 	void	OnNotifiedSelected(CGameObject* pGameObject);
-	//void	OnNotifiedTransform(class CTransform* pTransform);
+	void	OnNotifiedPickingOn(class CView* pSender);
 
 	void	SetPrefabsView(class CPrefabsView* pPrefabsView);
 	void	SetLayersView(class CLayersView* pLayersView);

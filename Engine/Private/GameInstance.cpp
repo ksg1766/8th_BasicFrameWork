@@ -127,6 +127,7 @@ HRESULT CGameInstance::Clear_BackBuffer_View(_float4 vClearColor)
 {
 	if (nullptr == m_pGraphicDevice)
 		return E_FAIL;
+
 	return m_pGraphicDevice->Clear_BackBuffer_View(vClearColor);
 }
 
@@ -134,7 +135,13 @@ HRESULT CGameInstance::Clear_DepthStencil_View()
 {
 	if (nullptr == m_pGraphicDevice)
 		return E_FAIL;
+
 	return m_pGraphicDevice->Clear_DepthStencil_View();
+}
+
+Viewport& CGameInstance::GetViewPort()
+{
+	return m_pGraphicDevice->GetViewPort();
 }
 
 HRESULT CGameInstance::Present()
@@ -328,6 +335,26 @@ _float4 CGameInstance::Get_CamPosition_Float4() const
 _vector CGameInstance::Get_CamPosition_Vector() const
 {
 	return m_pPipeLine->Get_CamPosition_Vector();
+}
+
+_float4x4 CGameInstance::Get_Transform_float4x4(CPipeLine::TRANSFORMSTATE eState) const
+{
+	return m_pPipeLine->Get_Transform_float4x4(eState);
+}
+
+_matrix CGameInstance::Get_Transform_Matrix(CPipeLine::TRANSFORMSTATE eState) const
+{
+	return m_pPipeLine->Get_Transform_Matrix(eState);
+}
+
+_float4x4 CGameInstance::Get_Transform_float4x4_Inverse(CPipeLine::TRANSFORMSTATE eState) const
+{
+	return m_pPipeLine->Get_Transform_float4x4_Inverse(eState);
+}
+
+_matrix CGameInstance::Get_Transform_Matrix_Inverse(CPipeLine::TRANSFORMSTATE eState) const
+{
+	return m_pPipeLine->Get_Transform_Matrix_Inverse(eState);
 }
 
 

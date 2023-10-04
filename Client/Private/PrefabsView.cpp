@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "PrefabsView.h"
+#include "ViewMediator.h"
 #include "GameInstance.h"
 #include "GameObject.h"
 #include "Terrain.h"
@@ -89,7 +90,10 @@ void CPrefabsView::InfoView()
 	{
 		ImGui::SameLine();
 		if (ImGui::Button("Activate"))
+		{
 			m_IsPickingActivated = true;
+			m_pMediator->OnNotifiedPickingOn(this);
+		}
 	}
 	ImGui::NewLine();
 }

@@ -18,6 +18,18 @@ void CViewMediator::OnNotifiedSelected(CGameObject* pGameObject)
 	m_pTransformView->SetObject(pGameObject);
 }
 
+void CViewMediator::OnNotifiedPickingOn(CView* pSender)
+{
+	if(pSender == m_pPrefabsView)
+	{
+		m_pLayersView->DeactivatePicking();
+	}
+	else if (pSender == m_pLayersView)
+	{
+		m_pPrefabsView->DeactivatePicking();
+	}
+}
+
 //void CViewMediator::OnNotifiedTransform(CTransform* pTransform)
 //{
 //	//Safe_Release(m_pTransformView);

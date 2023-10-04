@@ -28,7 +28,8 @@ public:
 	CGameObject* SelectedObject() { return m_pCurPickedObject; }
 
 private:
-	void	Input();
+	void		Input();
+	CGameObject* Pick(_int screenX, _int screenY);
 
 private:
 	void	InfoView();
