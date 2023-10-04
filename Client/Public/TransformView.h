@@ -41,6 +41,9 @@ private:
 
 	_int				m_Item_Current = 0;
 
+	// Dissolve Test
+	_float				m_fDissolveAmount = 0.f;
+
 public:
 	static class CTransformView* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

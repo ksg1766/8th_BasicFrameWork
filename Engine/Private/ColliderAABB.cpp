@@ -1,8 +1,6 @@
 #include "Engine_Defines.h"
-#include "ColliderSphere.h"
-#include "ColliderAABB.h"
-#include "ColliderOBB.h"
-#include "ColliderCylinder.h"
+#include "GameObject.h"
+#include "ComponentManager.h"
 #include "DebugDraw.h"
 
 CAABBCollider::CAABBCollider(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -28,6 +26,9 @@ HRESULT CAABBCollider::Initialize(void* pArg)
 
 void CAABBCollider::Tick(const _float& fTimeDelta)
 {
+	CTransform* pTransform = GetGameObject()->GetTransform();
+
+	m_tBoundingBox.Center = pTransform->GetPosition();
 }
 
 void CAABBCollider::LateTick(const _float& fTimeDelta)

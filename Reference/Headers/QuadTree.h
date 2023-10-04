@@ -40,7 +40,7 @@ private:
     Vec3            m_vRootExtents = Vec3(1024.f, 0.f, 1024.f);
     CQuadTreeNode*  m_pQuadTreeRoot = nullptr;
 
-#ifdef _DEBUG
+#ifdef DEBUG
     HRESULT         InitDebugFrustum();
 
     PrimitiveBatch<VertexPositionColor>* m_pBatch = nullptr;

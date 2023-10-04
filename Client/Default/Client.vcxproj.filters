@@ -25,12 +25,6 @@
     <Filter Include="01.Levels\99.Loading\Loader">
       <UniqueIdentifier>{04c05968-cb34-4cec-89e2-639b898c25fc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects">
-      <UniqueIdentifier>{d435cd37-10c5-4f6c-a2f1-ee72504bbb59}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\BackGround">
-      <UniqueIdentifier>{327a42a0-45f0-4b4d-b8cd-bb209baedc94}</UniqueIdentifier>
-    </Filter>
     <Filter Include="97.ShaderFiles">
       <UniqueIdentifier>{a631185a-1555-4b19-8534-272c809d77b7}</UniqueIdentifier>
     </Filter>
@@ -39,69 +33,6 @@
     </Filter>
     <Filter Include="01.Levels\02.GameTool\ImGUI">
       <UniqueIdentifier>{0750d5ff-76a3-4d8d-b06d-a7f58ab341ea}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\BasicTerrain">
-      <UniqueIdentifier>{eb9b11a4-c3c9-4f3b-a50d-cbb0f833a983}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\TempCube">
-      <UniqueIdentifier>{23a6e04a-e4fc-4b28-b63a-f5716d9f8432}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\TempCube\01.Script">
-      <UniqueIdentifier>{f2e7a9aa-968f-4f22-a126-803d09d5cdd2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\TempCube\00.GameObject">
-      <UniqueIdentifier>{19ba0693-056c-4617-a870-a8b73617aef6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Camera">
-      <UniqueIdentifier>{548fcad8-b15c-480f-be95-7ac6cffde6c8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Camera\00.FlyingCamera">
-      <UniqueIdentifier>{58335612-64ea-4fb8-9646-d008b3eaed74}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Camera\00.FlyingCamera\GameObject">
-      <UniqueIdentifier>{bdcf4e26-ba9b-418c-93cf-9fe79e0e688c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Camera\00.FlyingCamera\Script">
-      <UniqueIdentifier>{dd15396f-49de-4631-a0d5-97aa141723a3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\CollisionTestCube">
-      <UniqueIdentifier>{e292aea5-e692-4d18-9fff-2738cfc049d9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\CollisionTestCube\00.GameObject">
-      <UniqueIdentifier>{b17b4c1b-b792-4db7-9b23-90940fce33a0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\CollisionTestCube\01.Script">
-      <UniqueIdentifier>{55bff19f-cc5b-4634-997a-3cd2a3a214de}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Camera\01.MainCamera">
-      <UniqueIdentifier>{957dc45a-e064-4c63-a0de-15a961b42e61}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Camera\01.MainCamera\GameObject">
-      <UniqueIdentifier>{939637c6-34cf-4fda-b60b-f7891e65c8c2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Camera\01.MainCamera\Script">
-      <UniqueIdentifier>{5c7e68d7-8b95-4ea2-868c-2f65d5a1612c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\BasicTerrain\GameObject">
-      <UniqueIdentifier>{79a39662-8215-4a70-b672-949f35bc41ba}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\BasicTerrain\Script">
-      <UniqueIdentifier>{c8081918-9961-4612-a3ca-15cf00eb28a3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Static">
-      <UniqueIdentifier>{c4e8b885-4768-40de-8227-7c9b20688169}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Static\StaticTestCube">
-      <UniqueIdentifier>{f5cd7116-71d1-4b30-9d70-4164654c1857}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Static\StaticTestCube\00.GameObject">
-      <UniqueIdentifier>{ca36102f-589a-4126-8c1f-ea8ba8c4f083}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Static\StaticTestCube\01.Script">
-      <UniqueIdentifier>{de5e19ca-de04-4b4b-955d-d8538e111663}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\Static\StaticBase">
-      <UniqueIdentifier>{1b05fad7-47fa-4638-b885-25a871718926}</UniqueIdentifier>
     </Filter>
     <Filter Include="01.Levels\02.GameTool\View">
       <UniqueIdentifier>{6c765137-c226-4bbb-b3bd-6e7922a9b843}</UniqueIdentifier>
@@ -123,6 +54,81 @@
     </Filter>
     <Filter Include="01.Levels\02.GameTool\View\ViewBase">
       <UniqueIdentifier>{0bf6b0f8-774d-4ce2-b52b-07a8a7d02bb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects">
+      <UniqueIdentifier>{d435cd37-10c5-4f6c-a2f1-ee72504bbb59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\BackGround">
+      <UniqueIdentifier>{327a42a0-45f0-4b4d-b8cd-bb209baedc94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\BasicTerrain">
+      <UniqueIdentifier>{eb9b11a4-c3c9-4f3b-a50d-cbb0f833a983}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\BasicTerrain\GameObject">
+      <UniqueIdentifier>{79a39662-8215-4a70-b672-949f35bc41ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\BasicTerrain\Script">
+      <UniqueIdentifier>{c8081918-9961-4612-a3ca-15cf00eb28a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\TempCube">
+      <UniqueIdentifier>{23a6e04a-e4fc-4b28-b63a-f5716d9f8432}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\TempCube\01.Script">
+      <UniqueIdentifier>{f2e7a9aa-968f-4f22-a126-803d09d5cdd2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\TempCube\00.GameObject">
+      <UniqueIdentifier>{19ba0693-056c-4617-a870-a8b73617aef6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\Camera">
+      <UniqueIdentifier>{548fcad8-b15c-480f-be95-7ac6cffde6c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\Camera\00.FlyingCamera">
+      <UniqueIdentifier>{58335612-64ea-4fb8-9646-d008b3eaed74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\Camera\00.FlyingCamera\GameObject">
+      <UniqueIdentifier>{bdcf4e26-ba9b-418c-93cf-9fe79e0e688c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\Camera\00.FlyingCamera\Script">
+      <UniqueIdentifier>{dd15396f-49de-4631-a0d5-97aa141723a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\Camera\01.MainCamera">
+      <UniqueIdentifier>{957dc45a-e064-4c63-a0de-15a961b42e61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\Camera\01.MainCamera\GameObject">
+      <UniqueIdentifier>{939637c6-34cf-4fda-b60b-f7891e65c8c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\Camera\01.MainCamera\Script">
+      <UniqueIdentifier>{5c7e68d7-8b95-4ea2-868c-2f65d5a1612c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\CollisionTestCube">
+      <UniqueIdentifier>{e292aea5-e692-4d18-9fff-2738cfc049d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\CollisionTestCube\00.GameObject">
+      <UniqueIdentifier>{b17b4c1b-b792-4db7-9b23-90940fce33a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\CollisionTestCube\01.Script">
+      <UniqueIdentifier>{55bff19f-cc5b-4634-997a-3cd2a3a214de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\Static">
+      <UniqueIdentifier>{c4e8b885-4768-40de-8227-7c9b20688169}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\Static\StaticTestCube">
+      <UniqueIdentifier>{f5cd7116-71d1-4b30-9d70-4164654c1857}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\Static\StaticTestCube\00.GameObject">
+      <UniqueIdentifier>{ca36102f-589a-4126-8c1f-ea8ba8c4f083}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\Static\StaticTestCube\01.Script">
+      <UniqueIdentifier>{de5e19ca-de04-4b4b-955d-d8538e111663}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\Static\StaticBase">
+      <UniqueIdentifier>{1b05fad7-47fa-4638-b885-25a871718926}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.ClientManagers">
+      <UniqueIdentifier>{91592fbc-d0e9-4b34-a846-d3a78316b95d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.ClientManagers\00. DissolveManager">
+      <UniqueIdentifier>{a6b76977-e714-49b4-abd7-42d081d38d26}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -159,9 +165,6 @@
     <ClInclude Include="..\public\Loader.h">
       <Filter>01.Levels\99.Loading\Loader</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\BackGround.h">
-      <Filter>02.GameObjects\BackGround</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Level_GameTool.h">
       <Filter>01.Levels\02.GameTool</Filter>
     </ClInclude>
@@ -190,31 +193,31 @@
       <Filter>01.Levels\02.GameTool\ImGUI</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\TempCube.h">
-      <Filter>02.GameObjects\TempCube\00.GameObject</Filter>
+      <Filter>03.GameObjects\TempCube\00.GameObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PlayerController.h">
-      <Filter>02.GameObjects\TempCube\01.Script</Filter>
+      <Filter>03.GameObjects\TempCube\01.Script</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CollisionTest.h">
-      <Filter>02.GameObjects\CollisionTestCube\00.GameObject</Filter>
+      <Filter>03.GameObjects\CollisionTestCube\00.GameObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\TestAIController.h">
-      <Filter>02.GameObjects\CollisionTestCube\01.Script</Filter>
+      <Filter>03.GameObjects\CollisionTestCube\01.Script</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\FlyingCamera.h">
-      <Filter>02.GameObjects\Camera\00.FlyingCamera\GameObject</Filter>
+      <Filter>03.GameObjects\Camera\00.FlyingCamera\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\FlyingCameraController.h">
-      <Filter>02.GameObjects\Camera\00.FlyingCamera\Script</Filter>
+      <Filter>03.GameObjects\Camera\00.FlyingCamera\Script</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\BasicTerrain.h">
-      <Filter>02.GameObjects\BasicTerrain\GameObject</Filter>
+      <Filter>03.GameObjects\BasicTerrain\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\DebugTerrainGrid.h">
-      <Filter>02.GameObjects\BasicTerrain\Script</Filter>
+      <Filter>03.GameObjects\BasicTerrain\Script</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\StaticTest.h">
-      <Filter>02.GameObjects\Static\StaticTestCube\00.GameObject</Filter>
+      <Filter>03.GameObjects\Static\StaticTestCube\00.GameObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PrefabsView.h">
       <Filter>01.Levels\02.GameTool\View\PrefabsView</Filter>
@@ -223,7 +226,7 @@
       <Filter>01.Levels\02.GameTool\View\ViewBase</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\StaticBase.h">
-      <Filter>02.GameObjects\Static\StaticBase</Filter>
+      <Filter>03.GameObjects\Static\StaticBase</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\LayersView.h">
       <Filter>01.Levels\02.GameTool\View\LayerView</Filter>
@@ -239,6 +242,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\SaveLoadView.h">
       <Filter>01.Levels\02.GameTool\View\DataFilesView</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\DissolveManager.h">
+      <Filter>02.ClientManagers\00. DissolveManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BackGround.h">
+      <Filter>03.GameObjects\BackGround</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -264,7 +273,7 @@
       <Filter>01.Levels\99.Loading\Loader</Filter>
     </ClCompile>
     <ClCompile Include="..\private\BackGround.cpp">
-      <Filter>02.GameObjects\BackGround</Filter>
+      <Filter>03.GameObjects\BackGround</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Level_GameTool.cpp">
       <Filter>01.Levels\02.GameTool</Filter>
@@ -291,31 +300,31 @@
       <Filter>01.Levels\02.GameTool\ImGUI</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\TempCube.cpp">
-      <Filter>02.GameObjects\TempCube\00.GameObject</Filter>
+      <Filter>03.GameObjects\TempCube\00.GameObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PlayerController.cpp">
-      <Filter>02.GameObjects\TempCube\01.Script</Filter>
+      <Filter>03.GameObjects\TempCube\01.Script</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CollisionTest.cpp">
-      <Filter>02.GameObjects\CollisionTestCube\00.GameObject</Filter>
+      <Filter>03.GameObjects\CollisionTestCube\00.GameObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\TestAIController.cpp">
-      <Filter>02.GameObjects\CollisionTestCube\01.Script</Filter>
+      <Filter>03.GameObjects\CollisionTestCube\01.Script</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\FlyingCamera.cpp">
-      <Filter>02.GameObjects\Camera\00.FlyingCamera\GameObject</Filter>
+      <Filter>03.GameObjects\Camera\00.FlyingCamera\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\FlyingCameraController.cpp">
-      <Filter>02.GameObjects\Camera\00.FlyingCamera\Script</Filter>
+      <Filter>03.GameObjects\Camera\00.FlyingCamera\Script</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\BasicTerrain.cpp">
-      <Filter>02.GameObjects\BasicTerrain\GameObject</Filter>
+      <Filter>03.GameObjects\BasicTerrain\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\DebugTerrainGrid.cpp">
-      <Filter>02.GameObjects\BasicTerrain\Script</Filter>
+      <Filter>03.GameObjects\BasicTerrain\Script</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\StaticTest.cpp">
-      <Filter>02.GameObjects\Static\StaticTestCube\00.GameObject</Filter>
+      <Filter>03.GameObjects\Static\StaticTestCube\00.GameObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PrefabsView.cpp">
       <Filter>01.Levels\02.GameTool\View\PrefabsView</Filter>
@@ -324,7 +333,7 @@
       <Filter>01.Levels\02.GameTool\View\ViewBase</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\StaticBase.cpp">
-      <Filter>02.GameObjects\Static\StaticBase</Filter>
+      <Filter>03.GameObjects\Static\StaticBase</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\LayersView.cpp">
       <Filter>01.Levels\02.GameTool\View\LayerView</Filter>
@@ -337,6 +346,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\SaveLoadView.cpp">
       <Filter>01.Levels\02.GameTool\View\DataFilesView</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\DissolveManager.cpp">
+      <Filter>02.ClientManagers\00. DissolveManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -369,12 +381,6 @@
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxMesh.hlsl">
-      <Filter>97.ShaderFiles</Filter>
-    </FxCompile>
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnimModel.hlsl">
-      <Filter>97.ShaderFiles</Filter>
-    </FxCompile>
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

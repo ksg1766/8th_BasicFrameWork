@@ -20,6 +20,9 @@ vector			g_vCamPosition;
 Texture2D		g_DiffuseTexture;
 Texture2D		g_NormalTexture;
 
+Texture2D		g_DissolveTexture;
+float           g_fDissolveAmount;
+
 sampler LinearSampler = sampler_state {
 	Filter = MIN_MAG_MIP_LINEAR;
 	AddressU = wrap;
@@ -32,6 +35,12 @@ sampler PointSampler = sampler_state {
 	AddressV = wrap;
 };
 
+sampler AlphaSampler = sampler_state
+{
+    Filter = MIN_MAG_MIP_LINEAR;
+    AddressU = wrap;
+    AddressV = wrap;
+};
 
 struct VS_IN
 {
@@ -117,6 +126,23 @@ void ComputeNormalMapping(inout float4 normal, float3 tangent, float2 texcoord)
     normal = float4(worldNormal, 0.f);
 };
 
+void ComputeDissolveColor(inout float4 color, float2 texcoord)
+{
+    float4 deffuseCol = g_DiffuseTexture.Sample(LinearSampler, texcoord);
+    float dissolveSample = g_DissolveTexture.Sample(AlphaSampler, texcoord * 0.5f).x;
+   
+	//Discard the pixel if the value is below zero
+    clip(dissolveSample - g_fDissolveAmount);
+    float4 emissive = { 0.f, 0.f, 0.f, 0.f };
+	//Make the pixel emissive if the value is below 0.05f
+    if (dissolveSample - g_fDissolveAmount < 0.05f)
+    {
+        emissive = float4(1.f, 0.4f, 0.f, 1.f);
+    }
+    
+    color = (color + emissive) * deffuseCol;
+};
+
 /* 전달받은 픽셀의 정보를 이용하여 픽셀의 최종적인 색을 결정하자. */
 PS_OUT PS_MAIN(PS_IN In)
 {
@@ -179,6 +205,39 @@ PS_OUT PS_RIM_MAIN(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_DISSOLVE_MAIN(PS_IN In)
+{
+    ComputeNormalMapping(In.vNormal, In.vTangent, In.vTexcoord);
+	
+    PS_OUT Out = (PS_OUT) 0;
+
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+
+    if (vMtrlDiffuse.a < 0.3f)
+        discard;
+	
+    vector vShade = max(dot(normalize(g_vLightDir) * -1.f, normalize(In.vNormal)), 0.f) +
+		g_vLightAmbient * g_vMtrlAmbient;
+
+    vector vReflect = reflect(normalize(g_vLightDir), normalize(In.vNormal));
+    vector vLook = In.vWorldPos - g_vCamPosition;
+	
+    float fSpecular = pow(max(dot(normalize(vLook) * -1.f, normalize(vReflect)), 0.f), 30.f);
+
+	//
+    Out.vColor = (g_vLightDiffuse * vMtrlDiffuse) * saturate(vShade) +
+		(g_vLightSpecular * g_vMtrlSpecular) * fSpecular;
+
+    //
+    //  Dissolve
+    
+    ComputeDissolveColor(Out.vColor, In.vTexcoord);
+    
+    //
+    
+    return Out;
+}
+
 technique11 DefaultTechnique
 {
 	/* */
@@ -204,6 +263,18 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_RIM_MAIN();
+    }
+
+    pass DissolveMesh
+    {
+        SetRasterizerState(RS_Default);
+
+		/* 여러 셰이더에 대해서 각각 어떤 버젼으로 빌드하고 어떤 함수를 호출하여 해당 셰이더가 구동되는지를 설정한다. */
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_DISSOLVE_MAIN();
     }
 }
 

@@ -15,7 +15,6 @@ CSphereCollider::CSphereCollider(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 
 CSphereCollider::CSphereCollider(const CSphereCollider& rhs)
 	:Super(rhs)
-	, m_fRadius(rhs.m_fRadius)
 	, m_tBoundingSphere(rhs.m_tBoundingSphere)
 {
 
@@ -44,7 +43,7 @@ void CSphereCollider::Tick(const _float& fTimeDelta)
 	CTransform* pTransform = GetGameObject()->GetTransform();
 
 	m_tBoundingSphere.Center = pTransform->GetPosition();
-	m_tBoundingSphere.Radius = pTransform->GetLocalScale().Length() / 2.f;
+	//m_tBoundingSphere.Radius = pTransform->GetLocalScale().Length() / 2.f;
 
 	//Vec3 scale = GetGameObject()->GetTransform()->GetLocalScale();
 	//m_tBoundingSphere.Radius = m_fRadius * max(max(scale.x, scale.y), scale.z);

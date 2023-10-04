@@ -6,7 +6,7 @@
 #include "Layer.h"
 #include "PipeLine.h"
 
-#ifdef _DEBUG
+#ifdef DEBUG
 #include "GraphicDevice.h"
 #include "PipeLine.h"
 #include "DebugDraw.h"
@@ -73,7 +73,7 @@ HRESULT CQuadTree::Build_QuadTree(_uint iNumLevels)
 
 void CQuadTree::Update_QuadTree()
 {
-#ifndef DEBUG
+#ifdef NDEBUG
     BoundingFrustum tFrustum;
     Update_Frustum(tFrustum);
     FrustumCull(tFrustum, m_pQuadTreeRoot);
@@ -85,7 +85,7 @@ void CQuadTree::Update_QuadTree()
 
 void CQuadTree::Update_Frustum(BoundingFrustum& tFrustum)
 {
-#ifndef DEBUG
+#ifdef NDEBUG
     BoundingFrustum::CreateFromMatrix(tFrustum, m_pPipeLine->Get_Transform_Matrix(CPipeLine::D3DTS_PROJ));
     tFrustum.Transform(tFrustum, m_pPipeLine->Get_Transform_Matrix_Inverse(CPipeLine::D3DTS_VIEW));
 #elif DEBUG

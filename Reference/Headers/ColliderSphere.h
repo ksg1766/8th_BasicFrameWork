@@ -21,15 +21,14 @@ public:
 	virtual _bool	Intersects(Ray& ray, OUT _float& distance)	override;
 	virtual _bool	Intersects(Super* other)					override;
 
-	void			SetRadius(_float radius)	{ m_fRadius = radius; }
-	BoundingSphere&	GetBoundingSphere()		{ return m_tBoundingSphere; }
+	void			SetRadius(_float radius)		{ m_tBoundingSphere.Radius = radius; }
+	BoundingSphere&	GetBoundingSphere()				{ return m_tBoundingSphere; }
 
 	virtual void	OnTriggerEnter(const CCollider* pOther)	override;
 	virtual void	OnTriggerStay(const CCollider* pOther)	override;
 	virtual void	OnTriggerExit(const CCollider* pOther)	override;
 
 private:
-	_float			m_fRadius = 1.f;
 	BoundingSphere	m_tBoundingSphere;
 
 public:

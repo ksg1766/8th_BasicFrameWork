@@ -5,6 +5,7 @@
 #include "GameObject.h"
 #include "Utils.h"
 #include "Layer.h"
+#include "DissolveManager.h"
 
 CLayersView::CLayersView(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:Super(pDevice, pContext)
@@ -80,9 +81,11 @@ void CLayersView::InfoView()
 
 	if (ImGui::Button("Delete This Object"))
 	{
-		if (m_pCurPickedObject)
-			//Safe_Release(m_pPickedObject); // EventManager로 넘기자.
-			m_pGameInstance->DeleteObject(m_pCurPickedObject);
+		if (m_pCurPickedObject)	// TODO : DYING State 추가되면 예외처리 해줄 것.
+		{
+			CDissolveManager::GetInstance()->AddDissolve(m_pCurPickedObject);
+			m_pCurPickedObject = m_pPrePickedObject;
+		}
 	}
 
 	ImGui::NewLine();

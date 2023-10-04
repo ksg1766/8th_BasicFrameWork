@@ -2,7 +2,7 @@
 #include "..\Public\MainApp.h"
 
 #include "GameInstance.h"
-#include "EventManager.h"
+#include "DissolveManager.h"
 #include "Level_Loading.h"
 #include "FlyingCameraController.h"
 #include "DebugTerrainGrid.h"
@@ -47,6 +47,9 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(m_pGameInstance->Initialize_Engine(LEVEL_END, GraphicDesc, &m_pDevice, &m_pContext, g_hInstance)))
 		return E_FAIL;
 
+	if (FAILED(Reserve_Client_Managers()))
+		return E_FAIL;
+
 	if (FAILED(Ready_Prototype_Components()))
 		return E_FAIL;
 
@@ -67,6 +70,9 @@ void CMainApp::Tick(const _float& fTimeDelta)
 	/* 게임내에 존재하는 여러 객체들의 갱신. */
 	/* 레벨의 갱신 */
 	m_pGameInstance->Tick(fTimeDelta);
+	
+	// Temp
+	CDissolveManager::GetInstance()->Tick_Dissolve(fTimeDelta);
 }
 
 HRESULT CMainApp::Render()
@@ -113,6 +119,14 @@ HRESULT CMainApp::Open_Level(LEVELID eLevelID)
 	return S_OK;
 }
 
+HRESULT CMainApp::Reserve_Client_Managers()
+{
+	if (FAILED(CDissolveManager::GetInstance()->Reserve_Manager(m_pDevice)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 HRESULT CMainApp::Ready_Prototype_Components()
 {
 	/* For.Prototype_Component_Renderer */
@@ -128,16 +142,6 @@ HRESULT CMainApp::Ready_Prototype_Components()
 	/* For.Prototype_Component_Shader_VtxMesh */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxMesh"),
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxMesh.hlsl"), VTXMESH::Elements, VTXMESH::iNumElements))))
-		return E_FAIL;
-
-	/* For.Prototype_Component_Shader_VtxModel */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxModel"),
-		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxModel.hlsl"), VTXMESH::Elements, VTXMESH::iNumElements))))
-		return E_FAIL;
-
-	/* For.Prototype_Component_Shader_VtxAnimModel */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxAnimModel"),
-		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxAnimModel.hlsl"), VTXANIMMODEL::Elements, VTXANIMMODEL::iNumElements))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Shader_VtxPosTex */
@@ -221,6 +225,12 @@ HRESULT CMainApp::Ready_Prototype_Components()
 		CCamera::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	//
+	/* For.Prototype_Component_Texture_Dissolve */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Dissolve"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/DissolvePattern%d.dds"), 4))))
+		return E_FAIL;
+
 	Safe_AddRef(m_pRenderer);
 	
 	return S_OK;
@@ -264,6 +274,8 @@ void Client::CMainApp::Free()
 	Safe_Release(m_pContext);
 
 	Safe_Release(m_pGameInstance);
+
+	CDissolveManager::GetInstance()->Free();
 
 	CGameInstance::Release_Engine();
 	

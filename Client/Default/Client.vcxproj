@@ -175,6 +175,7 @@
     <ClInclude Include="..\Bin\ShaderFiles\Client_Shader_Defines.hlsl" />
     <ClInclude Include="..\public\BackGround.h" />
     <ClInclude Include="..\Public\BasicTerrain.h" />
+    <ClInclude Include="..\Public\DissolveManager.h" />
     <ClInclude Include="..\Public\SaveLoadView.h" />
     <ClInclude Include="..\Public\DebugTerrainGrid.h" />
     <ClInclude Include="..\Public\FlyingCameraController.h" />
@@ -213,6 +214,7 @@
   <ItemGroup>
     <ClCompile Include="..\private\BackGround.cpp" />
     <ClCompile Include="..\Private\BasicTerrain.cpp" />
+    <ClCompile Include="..\Private\DissolveManager.cpp" />
     <ClCompile Include="..\Private\SaveLoadView.cpp" />
     <ClCompile Include="..\Private\DebugTerrainGrid.cpp" />
     <ClCompile Include="..\Private\FlyingCameraController.cpp" />
@@ -298,11 +300,9 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnimModel.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxCubeNom.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxCubeTex.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxMesh.hlsl" />
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxModel.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex.hlsl">
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>

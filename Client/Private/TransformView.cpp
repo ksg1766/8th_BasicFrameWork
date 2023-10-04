@@ -5,6 +5,8 @@
 #include "Transform.h"
 #include "Terrain.h"
 #include "Utils.h"
+//
+#include "StaticBase.h"
 
 CTransformView::CTransformView(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:Super(pDevice, pContext)

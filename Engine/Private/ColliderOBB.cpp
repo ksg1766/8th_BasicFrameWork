@@ -47,7 +47,6 @@ void COBBCollider::Tick(const _float& fTimeDelta)
 	CTransform* pTransform = GetGameObject()->GetTransform();
 
 	m_tBoundingBox.Center = pTransform->GetPosition();
-	m_tBoundingBox.Extents = 0.5f * pTransform->GetLocalScale();
 	m_tBoundingBox.Orientation = pTransform->GetRotationQuaternion();
 }
 
