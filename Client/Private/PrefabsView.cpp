@@ -143,14 +143,15 @@ void CPrefabsView::PlaceObject(const LAYERTAG& eLayerTag, const wstring& strObje
 {
 	if (eLayerTag == LAYERTAG::LAYER_END) return;
 
-	//const wstring strPrototypeTag = TEXT("Prototype_GameObject_") + strObjectTag;
+	const wstring strPrototypeTag = TEXT("Prototype_GameObject_") + strObjectTag;
 
-	CGameObject* pGameObject = m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_StaticBase"), eLayerTag);
-	pGameObject->SetObjectTag(strObjectTag);
+	CGameObject* pGameObject = m_pGameInstance->CreateObject(strPrototypeTag, eLayerTag);
+	//pGameObject->SetObjectTag(strObjectTag);
 
-	_matrix ModelInitialMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
-	const wstring strFilePath = TEXT("../Bin/Resources/Models/") + strObjectTag + TEXT("/") + strObjectTag + TEXT(".fbx");
-	pGameObject->GetModel()->InitializeWithFile(strFilePath, ModelInitialMatrix);
+	//_matrix ModelInitialMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
+	//const wstring strFilePath = TEXT("../Bin/Resources/Models/") + strObjectTag + TEXT("/") + strObjectTag + TEXT(".fbx");
+	//const wstring strFilePath = TEXT("../Bin/Resources/Models/Static/") + strObjectTag;
+	//pGameObject->GetModel()->InitializeWithFile(strFilePath, ModelInitialMatrix);
 	
 	pGameObject->GetTransform()->Translate(vPickPosition);
 }

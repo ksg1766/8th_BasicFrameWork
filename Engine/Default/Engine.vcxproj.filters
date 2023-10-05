@@ -133,14 +133,20 @@
     <Filter Include="01.Utiltiy\04.Component\11.Model">
       <UniqueIdentifier>{27942782-b4a2-499e-9b48-2e41cce64985}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utiltiy\04.Component\11.Model\Mesh">
+    <Filter Include="01.Utiltiy\04.Component\11.Model\00.Bone">
+      <UniqueIdentifier>{8e7de421-9933-411e-944f-e4f2db0b4482}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utiltiy\04.Component\11.Model\01.Mesh">
       <UniqueIdentifier>{ca11ab3f-e0c9-44a0-9e86-9f5eafa4d113}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utiltiy\04.Component\11.Model\Animation">
+    <Filter Include="01.Utiltiy\04.Component\11.Model\02.Animation">
       <UniqueIdentifier>{1b419f23-da88-4885-af05-f5f653656b54}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utiltiy\04.Component\11.Model\HeirarchyNode">
-      <UniqueIdentifier>{8e7de421-9933-411e-944f-e4f2db0b4482}</UniqueIdentifier>
+    <Filter Include="01.Utiltiy\04.Component\11.Model\02.Animation\Channel">
+      <UniqueIdentifier>{5fadecdb-ec3b-46a0-828a-662acf5a62bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utiltiy\04.Component\11.Model\02.Animation\Animation">
+      <UniqueIdentifier>{e1b6659f-0502-4a65-90bb-2eb89005b1ff}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -273,15 +279,6 @@
     <ClInclude Include="..\Public\InputDevice.h">
       <Filter>00.System\01.Device\01.Input</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\ModelConverter.h">
-      <Filter>98.Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\AsTypes.h">
-      <Filter>98.Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\tinyxml2.h">
-      <Filter>98.Utils</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\EventManager.h">
       <Filter>01.Utiltiy\01.Managers\03.EventManager</Filter>
     </ClInclude>
@@ -313,19 +310,16 @@
       <Filter>01.Utiltiy\04.Component\11.Model</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Mesh.h">
-      <Filter>01.Utiltiy\04.Component\11.Model\Mesh</Filter>
+      <Filter>01.Utiltiy\04.Component\11.Model\01.Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\ModelEx.h">
-      <Filter>01.Utiltiy\04.Component\11.Model</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\MeshEx.h">
-      <Filter>01.Utiltiy\04.Component\11.Model\Mesh</Filter>
+    <ClInclude Include="..\Public\Bone.h">
+      <Filter>01.Utiltiy\04.Component\11.Model\00.Bone</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Animation.h">
-      <Filter>01.Utiltiy\04.Component\11.Model\Animation</Filter>
+      <Filter>01.Utiltiy\04.Component\11.Model\02.Animation\Animation</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\HierarchyNode.h">
-      <Filter>01.Utiltiy\04.Component\11.Model\HeirarchyNode</Filter>
+    <ClInclude Include="..\Public\Channel.h">
+      <Filter>01.Utiltiy\04.Component\11.Model\02.Animation\Channel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -443,12 +437,6 @@
     <ClCompile Include="..\Private\InputDevice.cpp">
       <Filter>00.System\01.Device\01.Input</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\ModelConverter.cpp">
-      <Filter>98.Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\tinyxml2.cpp">
-      <Filter>98.Utils</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\EventManager.cpp">
       <Filter>01.Utiltiy\01.Managers\03.EventManager</Filter>
     </ClCompile>
@@ -480,19 +468,16 @@
       <Filter>01.Utiltiy\04.Component\11.Model</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Mesh.cpp">
-      <Filter>01.Utiltiy\04.Component\11.Model\Mesh</Filter>
+      <Filter>01.Utiltiy\04.Component\11.Model\01.Mesh</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\MeshEx.cpp">
-      <Filter>01.Utiltiy\04.Component\11.Model\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\ModelEx.cpp">
-      <Filter>01.Utiltiy\04.Component\11.Model</Filter>
+    <ClCompile Include="..\Private\Bone.cpp">
+      <Filter>01.Utiltiy\04.Component\11.Model\00.Bone</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Animation.cpp">
-      <Filter>01.Utiltiy\04.Component\11.Model\Animation</Filter>
+      <Filter>01.Utiltiy\04.Component\11.Model\02.Animation\Animation</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\HierarchyNode.cpp">
-      <Filter>01.Utiltiy\04.Component\11.Model\HeirarchyNode</Filter>
+    <ClCompile Include="..\Private\Channel.cpp">
+      <Filter>01.Utiltiy\04.Component\11.Model\02.Animation\Channel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -53,7 +53,7 @@ void CTransformView::SetObject(CGameObject* pGameObject)
 
 void CTransformView::Input()
 {
-	if (ImGui::GetIO().WantCaptureMouse)
+	if (ImGui::GetIO().WantCaptureMouse && ImGui::IsMouseClicked(0))
 		return;
 
 

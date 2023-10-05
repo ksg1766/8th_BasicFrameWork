@@ -134,8 +134,8 @@ void ComputeDissolveColor(inout float4 color, float2 texcoord)
 	//Discard the pixel if the value is below zero
     clip(dissolveSample - g_fDissolveAmount);
     float4 emissive = { 0.f, 0.f, 0.f, 0.f };
-	//Make the pixel emissive if the value is below 0.05f
-    if (dissolveSample - g_fDissolveAmount < 0.05f)
+	//Make the pixel emissive if the value is below ~f
+    if (dissolveSample - g_fDissolveAmount < 0.08f)
     {
         emissive = float4(1.f, 0.4f, 0.f, 1.f);
     }

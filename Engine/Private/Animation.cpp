@@ -1,7 +1,7 @@
 #include "..\Public\Animation.h"
 #include "Model.h"
-#include "Shader.h"
-#include "Utils.h"
+#include "Bone.h"
+#include "Channel.h"
 
 CAnimation::CAnimation()
 {
@@ -9,179 +9,83 @@ CAnimation::CAnimation()
 
 CAnimation::CAnimation(const CAnimation & rhs)
 	: m_fDuration(rhs.m_fDuration)
+	, m_Channels(rhs.m_Channels)
 	, m_fTickPerSecond(rhs.m_fTickPerSecond)
 	, m_fPlayTime(rhs.m_fPlayTime)
-	, m_iFrameCount(rhs.m_iFrameCount)
-	, m_fSpeed(rhs.m_fSpeed)
-	, m_KeyFrameBones(m_KeyFrameBones)
-	, m_tKeyDesc(rhs.m_tKeyDesc)
 {
-	ZeroMemory(&m_tKeyDesc, sizeof(KEY_DESC));
-	m_tKeyDesc.iNextFrame = 1;
+	for (auto& pChannel : m_Channels)
+		Safe_AddRef(pChannel);
 }
 
-HRESULT CAnimation::Initialize_Prototype()
+HRESULT CAnimation::Initialize_Prototype(const _float& fDuration, const _float& fTickPerSecond, vector<class CChannel*>& Channels)
 {
-	
+	m_fDuration = fDuration;
+	m_fTickPerSecond = fTickPerSecond;
+
+	/* 벡터에 사이즈도 안 채우고 멤카피 하면 큰일난다. */
+	//memcpy(&m_Channels, &Channels, sizeof(Channels)); 
+
+	m_Channels.reserve(Channels.size());
+	for (auto& iter : Channels)
+		m_Channels.push_back(iter);
+
 	return S_OK;
 }
 
 HRESULT CAnimation::Initialize(CModel* pModel)
 {
-	Reset_Animation();
-	return S_OK;
-}
-
-HRESULT CAnimation::LoadData_FromAnimationFile(FileUtils* pFileUtils, Matrix PivotMatrix)
-{
-	m_szName = Utils::ToWString(pFileUtils->Read<string>());
-	m_fDuration = pFileUtils->Read<_float>();
-	m_fTickPerSecond = pFileUtils->Read<_float>();
-	m_iFrameCount = pFileUtils->Read<uint32>();
-
-	uint32 iKeyframesCount = pFileUtils->Read<uint32>();
-	vector<shared_ptr<ModelKeyframe>>	KeyFrames;
-
-	for (uint32 i = 0; i < iKeyframesCount; i++)
+	/* 애니메이션을 재생하기 위해 사용되는 뼈를 모두 저장한다.  */
+	for (_uint i = 0; i < m_Channels.size(); ++i)
 	{
-		shared_ptr<ModelKeyframe> Keyframe = make_shared<ModelKeyframe>();
-		Keyframe->szBoneName = Utils::ToWString(pFileUtils->Read<string>());
+		m_ChannelKeyFrames.push_back(0);
 
-		uint32 iSize = pFileUtils->Read<uint32>();
-
-		if (iSize > 0)
+		CBone*	pBone = pModel->GetBone(m_Channels[i]->Get_Name().c_str());
 		{
-			Keyframe->KeyData.resize(iSize);
-			void* ptr = &Keyframe->KeyData[0];
-			pFileUtils->Read(&ptr, sizeof(ModelKeyframeData) * iSize);
+			if (nullptr == pBone)
+				return E_FAIL;		
+
+			m_Bones.push_back(pBone);
 		}
-
-		KeyFrames.push_back(Keyframe);
+		Safe_AddRef(pBone);
 	}
-
-	Make_KeyframeData(KeyFrames);
-
-	for (auto& ModelKey : KeyFrames)
-	{
-		ModelKey->KeyData.clear();
-		ModelKey = nullptr;
-	}
-
 	return S_OK;
 }
-
-HRESULT CAnimation::LoadData_FromConverter(shared_ptr<asAnimation> pAnimation, Matrix PivotMatrix)
-{
-	m_szName = Utils::ToWString(pAnimation->name);
-	m_fDuration = pAnimation->duration;
-	m_fTickPerSecond = pAnimation->frameRate;
-	m_iFrameCount = pAnimation->frameCount;
-
-	uint32 iKeyframesCount = pAnimation->keyframes.size();
-	vector<shared_ptr<ModelKeyframe>>	KeyFrames;
-
-	for (uint32 i = 0; i < iKeyframesCount; i++)
-	{
-		shared_ptr<ModelKeyframe> Keyframe = make_shared<ModelKeyframe>();
-		Keyframe->szBoneName = Utils::ToWString(pAnimation->keyframes[i]->boneName);
-
-		uint32 iSize = pAnimation->keyframes[i]->transforms.size();
-
-		if (iSize > 0)
-		{
-			Keyframe->KeyData.resize(iSize);
-			void* ptr = &Keyframe->KeyData[0];
-			memcpy(ptr, pAnimation->keyframes[i]->transforms.data(), sizeof(ModelKeyframeData) * iSize);
-		}
-
-		KeyFrames.push_back(Keyframe);
-	}
-
-	Make_KeyframeData(KeyFrames);
-
-	for (auto& ModelKey : KeyFrames)
-	{
-		ModelKey->KeyData.clear();
-		ModelKey = nullptr;
-	}
-
-	return S_OK;
-}
-
 
 HRESULT CAnimation::Play_Animation(_float fTimeDelta)
 {
-	m_tKeyDesc.fSumTime += fTimeDelta * m_fSpeed;
-	
-	float fTimePerFrame = 1.f / (m_fTickPerSecond);
-	if (m_tKeyDesc.fSumTime >= fTimePerFrame)
+	/* 현재 재생 시간을 구한다. */
+	m_fPlayTime += m_fTickPerSecond * fTimeDelta;
+
+	/* 애니메이션이 끝났다면 */
+	if (m_fPlayTime >= m_fDuration)
 	{
-		m_tKeyDesc.fSumTime -= fTimePerFrame;
-		m_tKeyDesc.iCurrFrame = (m_tKeyDesc.iCurrFrame + 1) % m_iFrameCount;
-		m_tKeyDesc.iNextFrame = (m_tKeyDesc.iCurrFrame + 1) % m_iFrameCount;
+		m_fPlayTime = 0.f;
 
-		if (m_tKeyDesc.iCurrFrame == m_iFrameCount - 2)
-			m_bEnd = true;
-	}
-
-	m_tKeyDesc.fRatio = (m_tKeyDesc.fSumTime / fTimePerFrame);
-
-	return S_OK;
-}
-
-_float CAnimation::Get_MaxFrameRatio()
-{
-	return (m_tKeyDesc.iCurrFrame % m_iFrameCount) / (_float)m_iFrameCount;
-}
-
-void CAnimation::Set_Frame(_uint iFrame)
-{
-	m_tKeyDesc.iCurrFrame = iFrame % m_iFrameCount;
-	m_tKeyDesc.iNextFrame = (m_tKeyDesc.iCurrFrame + 1) % m_iFrameCount;
-}
-
-
-HRESULT CAnimation::Make_KeyframeData(vector<shared_ptr<ModelKeyframe>>& KeyFrames)
-{
-	m_KeyFrameBones.resize(m_iFrameCount);
-	for (auto& Bones : m_KeyFrameBones)
-		Bones.reserve(KeyFrames.size());
-
-	for (_uint i = 0; i < m_iFrameCount; ++i)
-	{
-		for (_uint j = 0; j < KeyFrames.size(); ++j)
+		for (auto& pChannel : m_Channels)
 		{
-			ModelKeyframeData tModelKey;
-			tModelKey = KeyFrames[j]->KeyData[i];
-
-			m_KeyFrameBones[i].push_back(tModelKey);
+			for (auto& iCurrentKeyFrame : m_ChannelKeyFrames)
+				iCurrentKeyFrame = 0;			
 		}
 	}
+
+	/* 이 애니메이션의 모든 채널의 키프레임을 보간한다. (아직 부모 기준)*/
+	_uint iChannelIndex = 0;
+	for (auto& pChannel : m_Channels)
+	{
+		m_ChannelKeyFrames[iChannelIndex] 
+			= pChannel->Update_Transformation(m_fPlayTime, m_ChannelKeyFrames[iChannelIndex], m_Bones[iChannelIndex]);
+
+		++iChannelIndex;
+	}
+
 	return S_OK;
 }
 
-HRESULT CAnimation::SetUpAnimation_OnShader(CShader* pShader, const char* strMapname)
+CAnimation* CAnimation::Create(const _float& fDuration, const _float& fTickPerSecond, vector<class CChannel*>& Channels)
 {
+	CAnimation* pInstance = new CAnimation();
 
-	return S_OK;
-}
-
-void CAnimation::Reset_Animation()
-{
-	m_tKeyDesc.fRatio = 0.0f;
-	m_tKeyDesc.fSumTime = 0.0f;
-	m_tKeyDesc.iCurrFrame = 0;
-	m_tKeyDesc.iNextFrame = 1;
-	m_bEnd = false;
-}
-
-
-
-CAnimation * CAnimation::Create()
-{
-	CAnimation*			pInstance = new CAnimation();
-
-	if (FAILED(pInstance->Initialize_Prototype()))
+	if (FAILED(pInstance->Initialize_Prototype(fDuration, fTickPerSecond, Channels)))
 	{
 		MSG_BOX("Failed To Created : CAnimation");
 		Safe_Release(pInstance);
@@ -196,7 +100,7 @@ CAnimation * CAnimation::Clone(CModel* pModel)
 
 	if (FAILED(pInstance->Initialize(pModel)))
 	{
-		MSG_BOX("Failed To Created : CAnimation");
+		MSG_BOX("Failed To Cloned : CAnimation");
 		Safe_Release(pInstance);
 	}
 
@@ -205,6 +109,13 @@ CAnimation * CAnimation::Clone(CModel* pModel)
 
 void CAnimation::Free()
 {
-	for (auto& KeyData : m_KeyFrameBones)
-		KeyData.clear();
+	/* Channel */
+	for (auto& pChannel : m_Channels)
+		Safe_Release(pChannel);
+	m_Channels.clear();
+
+	/* HierarachyNode */
+	for (auto& pBone : m_Bones)
+		Safe_Release(pBone);
+	m_Bones.clear();
 }

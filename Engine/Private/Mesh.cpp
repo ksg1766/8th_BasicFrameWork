@@ -1,61 +1,137 @@
 #include "..\Public\Mesh.h"
+#include "Model.h"
+#include "Bone.h"
 
-CMesh::CMesh(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CMesh::CMesh(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CVIBuffer(pDevice, pContext)
 {
 }
 
-CMesh::CMesh(const CMesh & rhs)
+CMesh::CMesh(const CMesh& rhs)
 	: CVIBuffer(rhs)
+	, m_iMaterialIndex(rhs.m_iMaterialIndex)
+	, m_BoneIndices(rhs.m_BoneIndices)
 {
+	strcpy_s(m_szName, rhs.m_szName);
 }
 
-HRESULT CMesh::Initialize_Prototype(const aiMesh * pAIMesh, _fmatrix& matPivot)
+HRESULT CMesh::Initialize_Prototype(string& strName, vector<VTXMESH>& Vertices, vector<_int>& Indices,
+	_uint iMatIndex, vector<_int>& Bones, Matrix& matPivot, CModel* pModel)
 {
-	m_iMaterialIndex = pAIMesh->mMaterialIndex;
+	/* 이 메시와 이름이 같은 뼈가 존재한다면. 이 뼈의 행렬을 메시를 구성하는 정점에 곱해질 수 있도록 유도한다. */
+	strcpy_s(m_szName, strName.c_str());
 
-	m_iStride = sizeof(VTXMESH); /* 정점하나의 크기 .*/
-	m_iNumVertices = pAIMesh->mNumVertices;
-	m_iIndexSizeofPrimitive = sizeof(FACEINDICES32);
-	m_iNumIndicesofPrimitive = 3;
-	m_iNumPrimitives = pAIMesh->mNumFaces;
-	
-	//m_iIndexStride = 4; /* 인덱스 하나의 크기. 2 or 4 */
-	//m_iNumIndices = pAIMesh->mNumFaces * 3;
-	
-	m_eIndexFormat = m_iIndexSizeofPrimitive == 6 ? DXGI_FORMAT_R16_UINT : DXGI_FORMAT_R32_UINT;
-	m_eTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	m_iMaterialIndex = iMatIndex;
+
+	if (FAILED(Ready_StaticVertices(Vertices, matPivot)))
+		return E_FAIL;
+
+	if (FAILED(Ready_Indices(Indices)))
+		return E_FAIL;
+
+	/* 이 메시에서 사용하는 본의 인덱스를 저장한다. */
+	m_BoneIndices.reserve((_uint)Bones.size());
+	for (_int index : Bones)
+		m_BoneIndices.push_back(index);
+
+	return S_OK;
+}
+
+HRESULT CMesh::Initialize_Prototype(string& strName, vector<VTXANIMMESH>& Vertices, vector<_int>& Indices,
+	_uint iMatIndex, vector<_int>& Bones, CModel* pModel)
+{
+	strcpy_s(m_szName, strName.c_str());
+
+	m_iMaterialIndex = iMatIndex;
+
+	if (FAILED(Ready_AnimVertices(Vertices)))
+		return E_FAIL;
+
+	if (FAILED(Ready_Indices(Indices)))
+		return E_FAIL;
+
+	/* 이 메시에서 사용하는 본의 인덱스를 저장한다. */
+	m_BoneIndices.reserve((_uint)Bones.size());
+	for (_int index : Bones)
+		m_BoneIndices.push_back(index);
+
+	return S_OK;
+}
+
+HRESULT CMesh::Initialize(void* pArg)
+{
+	/* 프로토타입에서 저장한 본 인덱스를 바탕으로 모델에서 본을 가져온다. */
+	if (nullptr != pArg)
+	{
+		CModel* pModel = static_cast<CModel*>(pArg);
+
+		for (size_t i = 0; i < m_BoneIndices.size(); i++)
+		{
+			CBone* pBone = pModel->GetBone(m_BoneIndices[i]);
+			if (nullptr != pBone)
+			{
+				m_Bones.push_back(pBone);
+				Safe_AddRef(pBone);
+			}
+		}
+
+		m_BoneIndices.clear();
+		m_BoneIndices.shrink_to_fit();
+	}
+	return S_OK;
+}
+
+void CMesh::SetUp_BoneMatrices(_float4x4* pBoneMatrices, _fmatrix PivotMatrix)
+{
+	if (0 == m_Bones.size())
+	{
+		XMStoreFloat4x4(&pBoneMatrices[0], XMMatrixIdentity());
+		return;
+	}
+
+	for (_uint i = 0; i < m_Bones.size(); ++i)
+	{
+		/* 셰이더에 행렬 던질 때는 전치 꼭 */
+		/* 최종 트랜스폼 계산*/
+
+		XMStoreFloat4x4(&pBoneMatrices[i], XMMatrixTranspose(m_Bones[i]->Get_OffSetMatrix() * m_Bones[i]->Get_CombinedTransformation() * PivotMatrix));
+	}
+}
+
+HRESULT CMesh::Ready_StaticVertices(vector<VTXMESH>& Vertices, _fmatrix& PivotMatrix)
+{
 	m_iNumVBs = 1;
+	m_iNumVertices = (_int)Vertices.size();
+	m_iNumPrimitives = m_iNumVertices / 3;
+	m_iNumIndicesofPrimitive = 3;
+	m_iStride = sizeof(VTXMESH);
 
-#pragma region VERTEX_BUFFER
-
-	/* 정점버퍼와 인덱스 버퍼를 만드낟. */
-	ZeroMemory(&m_BufferDesc, sizeof m_BufferDesc);
-
-	// m_BufferDesc.ByteWidth = 정점하나의 크기(Byte) * 정점의 갯수;
-	m_BufferDesc.ByteWidth = m_iStride * m_iNumVertices;
-	m_BufferDesc.Usage = D3D11_USAGE_DEFAULT; /* 정적버퍼로 할당한다. (Lock, unLock 호출 불가)*/
+	ZeroMemory(&m_BufferDesc, sizeof(D3D11_BUFFER_DESC));
+	m_BufferDesc.ByteWidth = m_iNumVertices * m_iStride;
+	m_BufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	m_BufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	m_BufferDesc.CPUAccessFlags = 0;
 	m_BufferDesc.MiscFlags = 0;
 	m_BufferDesc.StructureByteStride = m_iStride;
 
-	VTXMESH*		pVertices = new VTXMESH[m_iNumVertices];
+	VTXMESH* pVertices = new VTXMESH[m_iNumVertices];
 	ZeroMemory(pVertices, sizeof(VTXMESH) * m_iNumVertices);
 
-	for (size_t i = 0; i < m_iNumVertices; i++)
+	for (_uint i = 0; i < m_iNumVertices; ++i)
 	{
-		::CopyMemory(&pVertices[i].vPosition, &pAIMesh->mVertices[i], sizeof(_float3));
-		XMStoreFloat3(&pVertices[i].vPosition, XMVector3TransformCoord(XMLoadFloat3(&pVertices[i].vPosition), matPivot));
-		
-		::CopyMemory(&pVertices[i].vNormal, &pAIMesh->mNormals[i], sizeof(_float3));
-		XMStoreFloat3(&pVertices[i].vNormal, XMVector3TransformNormal(XMLoadFloat3(&pVertices[i].vNormal), matPivot));
+		memcpy(&pVertices[i].vPosition, &Vertices[i].vPosition, sizeof(_float3));
+		XMStoreFloat3(&pVertices[i].vPosition, XMVector3TransformCoord(XMLoadFloat3(&pVertices[i].vPosition), PivotMatrix));
 
-		::CopyMemory(&pVertices[i].vTexcoord, &pAIMesh->mTextureCoords[0][i], sizeof(_float2));
-		::CopyMemory(&pVertices[i].vTangent, &pAIMesh->mTangents[i], sizeof(_float3));
+		memcpy(&pVertices[i].vNormal, &Vertices[i].vNormal, sizeof(_float3));
+		XMStoreFloat3(&pVertices[i].vNormal, XMVector3TransformNormal(XMLoadFloat3(&pVertices[i].vNormal), PivotMatrix));
+
+		memcpy(&pVertices[i].vTexcoord, &Vertices[i].vTexcoord, sizeof(_float2));
+
+		memcpy(&pVertices[i].vTangent, &Vertices[i].vTangent, sizeof(_float3));
+		XMStoreFloat3(&pVertices[i].vTangent, XMVector3TransformNormal(XMLoadFloat3(&pVertices[i].vTangent), PivotMatrix));
 	}
 
-	::ZeroMemory(&m_SubResourceData, sizeof m_SubResourceData);
+	ZeroMemory(&m_SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
 	m_SubResourceData.pSysMem = pVertices;
 
 	if (FAILED(Super::Create_Buffer(&m_pVB)))
@@ -63,69 +139,124 @@ HRESULT CMesh::Initialize_Prototype(const aiMesh * pAIMesh, _fmatrix& matPivot)
 
 	Safe_Delete_Array(pVertices);
 
-#pragma endregion
+	return S_OK;
+}
 
-#pragma region INDEX_BUFFER
+HRESULT CMesh::Ready_AnimVertices(vector<VTXANIMMESH>& Vertices)
+{
+	/* 기본 정점 버퍼 세팅 */
+	m_iNumVBs = 1;
+	m_iNumVertices = (_int)Vertices.size();
+	m_iNumPrimitives = m_iNumVertices / 3;
+	m_iStride = sizeof(VTXANIMMESH);
 
-	/* 정점버퍼와 인덱스 버퍼를 만드낟. */
-	ZeroMemory(&m_BufferDesc, sizeof m_BufferDesc);
-	m_BufferDesc.ByteWidth = m_iIndexSizeofPrimitive * m_iNumPrimitives;
-	m_BufferDesc.Usage = D3D11_USAGE_DEFAULT; /* 정적버퍼로 할당한다. (Lock, unLock 호출 불가)*/
+	ZeroMemory(&m_BufferDesc, sizeof(D3D11_BUFFER_DESC));
+	m_BufferDesc.ByteWidth = m_iNumVertices * m_iStride;
+	m_BufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	m_BufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	m_BufferDesc.CPUAccessFlags = 0;
+	m_BufferDesc.MiscFlags = 0;
+	m_BufferDesc.StructureByteStride = m_iStride;
+
+	VTXANIMMESH* pVertices = new VTXANIMMESH[m_iNumVertices];
+	ZeroMemory(pVertices, sizeof(VTXANIMMESH) * m_iNumVertices);
+
+	for (_uint i = 0; i < m_iNumVertices; ++i)
+	{
+		/* NoneAnim 모델과 달리 사전변환을 진행하지 않는다. */
+		memcpy(&pVertices[i].vPosition, &Vertices[i].vPosition, sizeof(_float3));
+		memcpy(&pVertices[i].vNormal, &Vertices[i].vNormal, sizeof(_float3));
+		memcpy(&pVertices[i].vTexture, &Vertices[i].vTexture, sizeof(_float2));
+		memcpy(&pVertices[i].vTangent, &Vertices[i].vTangent, sizeof(_float3));
+		memcpy(&pVertices[i].vBlendIndex, &Vertices[i].vBlendIndex, sizeof(XMUINT4));
+		memcpy(&pVertices[i].vBlendWeight, &Vertices[i].vBlendWeight, sizeof(Vec4));
+	}
+
+	ZeroMemory(&m_SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
+	m_SubResourceData.pSysMem = pVertices;
+
+	if (FAILED(Super::Create_Buffer(&m_pVB)))
+		return E_FAIL;
+
+	Safe_Delete_Array(pVertices);
+
+	return S_OK;
+}
+
+HRESULT CMesh::Ready_Indices(vector<_int>& Indices)
+{
+	m_iNumPrimitives = ((_int)Indices.size()) / 3;
+	m_iIndexSizeofPrimitive = sizeof(FACEINDICES32);
+	m_iNumIndicesofPrimitive = 3;
+
+	m_eIndexFormat = DXGI_FORMAT_R32_UINT;
+	m_eTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+
+	::ZeroMemory(&m_BufferDesc, sizeof(D3D11_BUFFER_DESC));
+	m_BufferDesc.ByteWidth = m_iNumPrimitives * m_iIndexSizeofPrimitive;
+	m_BufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	m_BufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	m_BufferDesc.CPUAccessFlags = 0;
 	m_BufferDesc.MiscFlags = 0;
 	m_BufferDesc.StructureByteStride = 0;
 
-	FACEINDICES32*		pIndices = new FACEINDICES32[m_iNumPrimitives];
+	FACEINDICES32* pIndices = new FACEINDICES32[m_iNumPrimitives];
 	::ZeroMemory(pIndices, sizeof(FACEINDICES32) * m_iNumPrimitives);
 
-	_uint		iNumIndices = 0;
-
-	for (size_t i = 0; i < pAIMesh->mNumFaces; ++i)
+	for (_uint i = 0, j = 0; i < m_iNumPrimitives; ++i, ++j)
 	{
-		pIndices[i]._0 = pAIMesh->mFaces[i].mIndices[0];
-		pIndices[i]._1 = pAIMesh->mFaces[i].mIndices[1];
-		pIndices[i]._2 = pAIMesh->mFaces[i].mIndices[2];
+		pIndices[i]._0 = Indices[j];
+		pIndices[i]._1 = Indices[++j];
+		pIndices[i]._2 = Indices[++j];
 	}
-	
-	::ZeroMemory(&m_SubResourceData, sizeof m_SubResourceData);
+
+	ZeroMemory(&m_SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
 	m_SubResourceData.pSysMem = pIndices;
 
 	if (FAILED(Super::Create_Buffer(&m_pIB)))
 		return E_FAIL;
 
 	Safe_Delete_Array(pIndices);
-#pragma endregion
 
 	return S_OK;
 }
 
-HRESULT CMesh::Initialize(void * pArg)
+CMesh* CMesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, string& strName,
+	vector<VTXMESH>& Vertices, vector<_int>& Indices, _uint iMatIndex, vector<_int>& Bones, Matrix& PivotMatrix, CModel* pModel)
 {
-	return S_OK;
-}
+	CMesh* pInstance = new CMesh(pDevice, pContext);
 
-CMesh * CMesh::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const aiMesh * pAIMesh, _fmatrix& matPivot)
-{
-	CMesh*	pInstance = new CMesh(pDevice, pContext);
-
-	if (FAILED(pInstance->Initialize_Prototype(pAIMesh, matPivot)))
+	if (FAILED(pInstance->Initialize_Prototype(strName, Vertices, Indices, iMatIndex, Bones, PivotMatrix, pModel)))
 	{
-		MSG_BOX("Failed to Created : CMesh");
+		MSG_BOX("Failed To Created : CMesh");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CComponent * CMesh::Clone(CGameObject* pGameObject, void* pArg)
+CMesh* CMesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, string& strName,
+	vector<VTXANIMMESH>& Vertices, vector<_int>& Indices, _uint iMatIndex, vector<_int>& Bones, CModel* pModel)
 {
-	CMesh*	pInstance = new CMesh(*this);
+	CMesh* pInstance = new CMesh(pDevice, pContext);
+
+	if (FAILED(pInstance->Initialize_Prototype(strName, Vertices, Indices, iMatIndex, Bones, pModel)))
+	{
+		MSG_BOX("Failed To Created : CMesh");
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
+}
+
+CComponent* CMesh::Clone(CGameObject* pGameObject, void* pArg)
+{
+	CMesh* pInstance = new CMesh(*this);
 	pInstance->m_pGameObject = pGameObject;
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CMesh");
+		MSG_BOX("Failed To Cloned : CMesh");
 		Safe_Release(pInstance);
 	}
 
@@ -136,5 +267,8 @@ void CMesh::Free()
 {
 	Super::Free();
 
+	for (auto& pBone : m_Bones)
+		Safe_Release(pBone);
 
+	m_Bones.clear();
 }

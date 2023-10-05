@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "..\Public\MainApp.h"
+#include <filesystem>
 
 #include "GameInstance.h"
 #include "DissolveManager.h"
@@ -190,14 +191,9 @@ HRESULT CMainApp::Ready_Prototype_Components()
 		return E_FAIL;
 
 	/* For.Prototype_Component_Model */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model"),
+	/*if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model"),
 		CModel::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-
-	/* For.Prototype_Component_ModelEx */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_ModelEx"),
-		CModelEx::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
+		return E_FAIL;*/
 
 	/* For.Prototype_Component_RigidStatic */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_RigidStatic"),
@@ -225,11 +221,21 @@ HRESULT CMainApp::Ready_Prototype_Components()
 		CCamera::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	//
 	/* For.Prototype_Component_Texture_Dissolve */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Dissolve"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/DissolvePattern%d.dds"), 4))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/DissolvePattern%d.dds"), 5))))
 		return E_FAIL;
+
+	/* For.Prototype_Component_Model_Static */
+	wstring strStaticFilePath = TEXT("../Bin/Resources/Models/Static/");
+	for (const auto& entry : filesystem::directory_iterator(strStaticFilePath))
+	{
+		const wstring& strFileName = entry.path().stem();
+
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_" + strFileName),
+			CModel::Create(m_pDevice, m_pContext, strStaticFilePath + strFileName))))
+			return E_FAIL;
+	}
 
 	Safe_AddRef(m_pRenderer);
 	

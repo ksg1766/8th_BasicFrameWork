@@ -13,7 +13,7 @@ namespace Engine
 
 	}GRAPHIC_DESC;
 
-	typedef struct tagMaterialDesc
+	/*typedef struct tagMaterialDesc
 	{
 		_char		strName[MAX_PATH];
 
@@ -22,7 +22,22 @@ namespace Engine
 		Vec4		vSpecular;
 		Vec4		vEmissive;
 		class CTexture*	pTextures[AI_TEXTURE_TYPE_MAX];
-	}MATERIALDESC;
+	}MATERIALDESC;*/
+
+	typedef struct tagMeshMaterial
+	{
+		class CTexture* pTextures[AI_TEXTURE_TYPE_MAX];
+	}MESH_MATERIAL;
+
+	typedef struct tagKeyFrame
+	{
+		float		fTime;
+
+		XMFLOAT3	vScale;
+		XMFLOAT4	vRotation;
+		XMFLOAT3	vPosition;
+
+	}KEYFRAME;
 
 	typedef struct tagFaceIndices16
 	{
@@ -34,10 +49,6 @@ namespace Engine
 		_ulong		_0, _1, _2;
 	}FACEINDICES32;
 
-	typedef struct tagMeshMaterial
-	{
-		class CTexture* pTextures[AI_TEXTURE_TYPE_MAX];
-	}MESH_MATERIAL;
 
 	typedef struct ENGINE_DLL tagVertex_Position
 	{
@@ -102,7 +113,7 @@ namespace Engine
 
 	}VTXMESH;
 
-	typedef struct ENGINE_DLL tagVertexAnimModel
+	typedef struct ENGINE_DLL tagVertex_Anim_Mesh
 	{
 		XMFLOAT3		vPosition;
 		XMFLOAT3		vNormal;
@@ -113,7 +124,7 @@ namespace Engine
 
 		static const _uint iNumElements = 6;
 		static const D3D11_INPUT_ELEMENT_DESC Elements[iNumElements];
-	}VTXANIMMODEL;
+	}VTXANIMMESH;
 
 	typedef struct tagCollision
 	{

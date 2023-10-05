@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\Public\Loader.h"
 
+#include <filesystem>
 #include "GameInstance.h"
 #include "BackGround.h"
 //
@@ -299,10 +300,15 @@ HRESULT CLoader::Loading_GameObjects_For_Level_GameTool()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_StaticTest"), CStaticTest::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	/* For.Prototype_GameObject_StaticBase */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_StaticBase"), CStaticBase::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
+	/* For.Prototype_GameObject_Static */
+	wstring strStaticFilePath = TEXT("../Bin/Resources/Models/Static/");
+	for (const auto& entry : filesystem::directory_iterator(strStaticFilePath))
+	{
+		const wstring& strFileName = entry.path().stem();
 
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_") + strFileName, CStaticBase::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+	}
 
 	RELEASE_INSTANCE(CGameInstance);
 

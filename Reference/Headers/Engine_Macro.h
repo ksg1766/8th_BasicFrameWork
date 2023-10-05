@@ -1,3 +1,5 @@
+#include <format>
+
 #ifndef Engine_Macro_h__
 #define Engine_Macro_h__
 
@@ -24,9 +26,18 @@
 	pInstance->Release();}														\
 	}();
 
+#ifndef			MSG
+#define			MSG(_message)			MessageBox(nullptr, _message, L"System Message", MB_OK)
+#endif
+
 #ifndef			MSG_BOX
 #define			MSG_BOX(_message)			MessageBox(nullptr, TEXT(_message), L"System Message", MB_OK)
 #endif
+
+#define			ASSERT_LOG()			{ const std::string message{ std::format("Error! \n\nFunction Name : {} \n\nLien Number : {}", __FUNCTION__, __LINE__ - 1) };\
+											MSG(Engine::Utils::ToWString(message).c_str()); } // 사용시  #include "Utils_String.h" 필수
+
+#define			LOG(_message) { cout << _message; }
 
 #define			BEGIN(NAMESPACE)		namespace NAMESPACE {
 #define			END						}

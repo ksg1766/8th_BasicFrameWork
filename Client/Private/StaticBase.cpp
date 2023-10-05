@@ -59,8 +59,8 @@ HRESULT CStaticBase::Render()
 
 	for (_uint i = 0; i < iNumMeshes; i++)
 	{
-		GetModel()->Bind_MaterialTexture(GetShader(), "g_DiffuseTexture", i, aiTextureType_DIFFUSE);
-		GetModel()->Bind_MaterialTexture(GetShader(), "g_NormalTexture", i, aiTextureType_NORMALS);
+		GetModel()->BindMaterialTexture(GetShader(), "g_DiffuseTexture", i, aiTextureType_DIFFUSE);
+		GetModel()->BindMaterialTexture(GetShader(), "g_NormalTexture", i, aiTextureType_NORMALS);
 
 		GetShader()->Begin();
 
@@ -77,7 +77,7 @@ HRESULT CStaticBase::Render()
 HRESULT CStaticBase::Ready_FixedComponents()
 {
 	/* Com_Model */
-	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Model, TEXT("Prototype_Component_Model"))))
+	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Model, TEXT("Prototype_Component_Model_") + GetObjectTag())))
 		return E_FAIL;
 
 	/* Com_Transform */

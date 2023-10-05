@@ -5,6 +5,7 @@
 #include "Utils.h"
 #include <filesystem>
 #include "Layer.h"
+#include "FileUtils.h"
 
 CSaveLoadView::CSaveLoadView(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:Super(pDevice, pContext)
@@ -126,13 +127,9 @@ HRESULT CSaveLoadView::Load()
 		if (static_cast<_uint>(LAYERTAG::DYNAMIC_LAYER_END) < static_cast<_uint>(eLayer) &&
 			static_cast<_uint>(LAYERTAG::STATIC_LAYER_END) > static_cast<_uint>(eLayer))
 		{
-			CGameObject* pGameObject = m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_StaticBase"), eLayer);
-			wstring strObjectTag = Utils::ToWString(tempObjectTag);
-			pGameObject->SetObjectTag(strObjectTag);
+			const wstring strPrototypeTag = TEXT("Prototype_GameObject_") + Utils::ToWString(tempObjectTag);
 
-			_matrix ModelInitialMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
-			const wstring strFilePath = TEXT("../Bin/Resources/Models/") + strObjectTag + TEXT("/") + strObjectTag + TEXT(".fbx");
-			pGameObject->GetModel()->InitializeWithFile(strFilePath, ModelInitialMatrix);
+			CGameObject* pGameObject = m_pGameInstance->CreateObject(strPrototypeTag, eLayer);
 
 			pGameObject->GetTransform()->Set_WorldMatrix(matWorld);
 		}

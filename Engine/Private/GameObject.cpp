@@ -16,6 +16,7 @@ CGameObject::CGameObject(const CGameObject & rhs)
 	, m_pContext(rhs.m_pContext)
 	, m_IsDead(rhs.m_IsDead)
 	, m_eLayerTag(rhs.m_eLayerTag)
+	, m_strObjectTag(rhs.m_strObjectTag)
 {
 	Safe_AddRef(m_pDevice);
 	Safe_AddRef(m_pContext);
@@ -88,12 +89,6 @@ CModel* CGameObject::GetModel()
 {
 	CComponent* pComponent = GetFixedComponent(ComponentType::Model);
 	return static_cast<CModel*>(pComponent);
-}
-
-CModelEx* CGameObject::GetModelEx()
-{
-	CComponent* pComponent = GetFixedComponent(ComponentType::Model);
-	return static_cast<CModelEx*>(pComponent);
 }
 
 CRenderer* CGameObject::GetRenderer()

@@ -27,6 +27,8 @@ HRESULT CObjectManager::Add_Prototype(const wstring& strPrototypeTag, CGameObjec
 	if (nullptr != Find_Prototype(strPrototypeTag))
 		return E_FAIL;
 
+	pPrototype->SetObjectTag(strPrototypeTag.substr(21));
+
 	m_Prototypes.emplace(strPrototypeTag, pPrototype);
 
 	return S_OK;

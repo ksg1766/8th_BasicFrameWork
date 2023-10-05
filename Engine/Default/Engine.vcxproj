@@ -169,9 +169,10 @@ call Copy.bat</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Animation.h" />
-    <ClInclude Include="..\Public\AsTypes.h" />
     <ClInclude Include="..\public\Base.h" />
+    <ClInclude Include="..\Public\Bone.h" />
     <ClInclude Include="..\Public\Camera.h" />
+    <ClInclude Include="..\Public\Channel.h" />
     <ClInclude Include="..\Public\ColliderAABB.h" />
     <ClInclude Include="..\Public\ColliderBase.h" />
     <ClInclude Include="..\Public\ColliderCylinder.h" />
@@ -184,19 +185,14 @@ call Copy.bat</Command>
     <ClInclude Include="..\Public\Engine_Enum.h" />
     <ClInclude Include="..\Public\EventManager.h" />
     <ClInclude Include="..\Public\FileUtils.h" />
-    <ClInclude Include="..\Public\HierarchyNode.h" />
     <ClInclude Include="..\Public\InputDevice.h" />
     <ClInclude Include="..\Public\KeyManager.h" />
     <ClInclude Include="..\Public\Mesh.h" />
-    <ClInclude Include="..\Public\MeshEx.h" />
     <ClInclude Include="..\Public\Model.h" />
-    <ClInclude Include="..\Public\ModelConverter.h" />
-    <ClInclude Include="..\Public\ModelEx.h" />
     <ClInclude Include="..\Public\MurmurHash3.h" />
     <ClInclude Include="..\Public\PipeLine.h" />
     <ClInclude Include="..\Public\PoolManager.h" />
     <ClInclude Include="..\Public\Terrain.h" />
-    <ClInclude Include="..\Public\tinyxml2.h" />
     <ClInclude Include="..\Public\Transform.h" />
     <ClInclude Include="..\Public\TransformBurger.h" />
     <ClInclude Include="..\Public\Engine_Defines.h" />
@@ -233,7 +229,9 @@ call Copy.bat</Command>
   <ItemGroup>
     <ClCompile Include="..\Private\Animation.cpp" />
     <ClCompile Include="..\private\Base.cpp" />
+    <ClCompile Include="..\Private\Bone.cpp" />
     <ClCompile Include="..\Private\Camera.cpp" />
+    <ClCompile Include="..\Private\Channel.cpp" />
     <ClCompile Include="..\Private\ColliderAABB.cpp" />
     <ClCompile Include="..\Private\ColliderBase.cpp" />
     <ClCompile Include="..\Private\ColliderCylinder.cpp" />
@@ -245,19 +243,14 @@ call Copy.bat</Command>
     <ClCompile Include="..\Private\DebugDraw.cpp" />
     <ClCompile Include="..\Private\EventManager.cpp" />
     <ClCompile Include="..\Private\FileUtils.cpp" />
-    <ClCompile Include="..\Private\HierarchyNode.cpp" />
     <ClCompile Include="..\Private\InputDevice.cpp" />
     <ClCompile Include="..\Private\KeyManager.cpp" />
     <ClCompile Include="..\Private\Mesh.cpp" />
-    <ClCompile Include="..\Private\MeshEx.cpp" />
     <ClCompile Include="..\Private\Model.cpp" />
-    <ClCompile Include="..\Private\ModelConverter.cpp" />
-    <ClCompile Include="..\Private\ModelEx.cpp" />
     <ClCompile Include="..\Private\MurmurHash3.cpp" />
     <ClCompile Include="..\Private\PipeLine.cpp" />
     <ClCompile Include="..\Private\PoolManager.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
-    <ClCompile Include="..\Private\tinyxml2.cpp" />
     <ClCompile Include="..\Private\Transform.cpp" />
     <ClCompile Include="..\Private\TransformBurger.cpp" />
     <ClCompile Include="..\Private\Engine_Struct.cpp" />

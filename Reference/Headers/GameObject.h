@@ -13,7 +13,6 @@ class CTexture;
 class CVIBuffer;
 class CRigidBody;
 class CModel;
-class CModelEx;
 
 class ENGINE_DLL CGameObject abstract : public CBase
 {
@@ -42,7 +41,6 @@ public:
 	//CModelRenderer*		GetModelRenderer();
 	//CModelAnimator*		GetModelAnimator();
 	CModel*					GetModel();
-	CModelEx*				GetModelEx();
 	CRenderer*				GetRenderer();
 	CShader*				GetShader();
 	CTexture*				GetTexture();
