@@ -1,3 +1,5 @@
+#ifndef _CLIENT_SHADER_DEFINES_HLSL_
+#define _CLIENT_SHADER_DEFINES_HLSL_
 
 RasterizerState RS_Skybox
 {
@@ -49,6 +51,4 @@ BlendState BS_AlphaBlend
 	BlendOp = Add;
 };
 
-
-
-
+#endif

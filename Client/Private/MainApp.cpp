@@ -145,6 +145,11 @@ HRESULT CMainApp::Ready_Prototype_Components()
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxMesh.hlsl"), VTXMESH::Elements, VTXMESH::iNumElements))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_Shader_VtxAnimMesh */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxAnimMesh"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxAnimMesh.hlsl"), VTXANIMMESH::Elements, VTXANIMMESH::iNumElements))))
+		return E_FAIL;
+
 	/* For.Prototype_Component_Shader_VtxPosTex */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxPosTex"),
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxPosTex.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements))))
@@ -227,14 +232,29 @@ HRESULT CMainApp::Ready_Prototype_Components()
 		return E_FAIL;
 
 	/* For.Prototype_Component_Model_Static */
-	wstring strStaticFilePath = TEXT("../Bin/Resources/Models/Static/");
-	for (const auto& entry : filesystem::directory_iterator(strStaticFilePath))
 	{
-		const wstring& strFileName = entry.path().stem();
+		wstring strStaticFilePath = TEXT("../Bin/Resources/Models/Static/");
+		for (const auto& entry : filesystem::directory_iterator(strStaticFilePath))
+		{
+			const wstring& strFileName = entry.path().stem();
 
-		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_" + strFileName),
-			CModel::Create(m_pDevice, m_pContext, strStaticFilePath + strFileName))))
-			return E_FAIL;
+			if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_" + strFileName),
+				CModel::Create(m_pDevice, m_pContext, strStaticFilePath + strFileName))))
+				return E_FAIL;
+		}
+	}
+
+	/* For.Prototype_Component_Model_Skeletal */
+	{
+		wstring strSkeletalFilePath = TEXT("../Bin/Resources/Models/Skeletal/");
+		for (const auto& entry : filesystem::directory_iterator(strSkeletalFilePath))
+		{
+			const wstring& strFileName = entry.path().stem();
+
+			if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_" + strFileName),
+				CModel::Create(m_pDevice, m_pContext, strSkeletalFilePath + strFileName))))
+				return E_FAIL;
+		}
 	}
 
 	Safe_AddRef(m_pRenderer);

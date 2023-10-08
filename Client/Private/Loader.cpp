@@ -13,6 +13,7 @@
 #include "FlyingCamera.h"
 #include "StaticTest.h"
 #include "StaticBase.h"
+#include "P_Strife.h"
 
 CLoader::CLoader(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: m_pDevice(pDevice)
@@ -223,7 +224,12 @@ HRESULT CLoader::Loading_GameObjects_For_Level_GamePlay()
 	/* For.Prototype_GameObject_StaticTest */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_StaticTest"), CStaticTest::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
-	
+
+	/* For.Prototype_GameObject_P_Strife */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_P_Strife"), CP_Strife::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
 	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
@@ -309,6 +315,10 @@ HRESULT CLoader::Loading_GameObjects_For_Level_GameTool()
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_") + strFileName, CStaticBase::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 	}
+
+	/* For.Prototype_GameObject_P_Strife */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_P_Strife"), CP_Strife::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
 	RELEASE_INSTANCE(CGameInstance);
 

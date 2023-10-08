@@ -92,7 +92,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player()
 	CGameObject* pGameObject = nullptr;
 	LAYERTAG	eLayerTag = LAYERTAG::PLAYER;
 
-	pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_TempCube"));
+	/*pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_TempCube"));
+	if (nullptr == pGameObject)	return E_FAIL;*/
+	pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_P_Strife"));
 	if (nullptr == pGameObject)	return E_FAIL;
 
 	return S_OK;

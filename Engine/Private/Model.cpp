@@ -1,4 +1,6 @@
 #include "..\Public\Model.h"
+#include "GameObject.h"
+#include "Shader.h"
 #include "Bone.h"
 #include "Mesh.h"
 #include "Animation.h"
@@ -16,22 +18,31 @@ CModel::CModel(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 CModel::CModel(const CModel& rhs)
 	: Super(rhs)
 	, m_iNumMeshes(rhs.m_iNumMeshes)
+	, m_eModelType(rhs.m_eModelType)
+	, m_matPivot(rhs.m_matPivot)
+	, m_Bones(rhs.m_Bones)
 	, m_Meshes(rhs.m_Meshes)
 	, m_iNumMaterials(rhs.m_iNumMaterials)
 	, m_Materials(rhs.m_Materials)
+	, m_Animations(rhs.m_Animations)
+	, m_iCurrentAnimIndex(rhs.m_iCurrentAnimIndex)
 {
-	for (auto& Material : m_Materials)
-	{
-		for (size_t i = 0; i < AI_TEXTURE_TYPE_MAX; i++)
-		{
-			Safe_AddRef(Material.pTextures[i]);
-		}
-	}
+	/* Bones */
+	for (auto& pBone : m_Bones)
+		Safe_AddRef(pBone);
 
+	/* Meshes */
 	for (auto& pMesh : m_Meshes)
-	{
 		Safe_AddRef(pMesh);
-	}
+
+	/* Materials */
+	for (auto& Material : m_Materials)
+		for (_uint i = 0; i < AI_TEXTURE_TYPE_MAX; ++i) /* TODO 이거 어차피 3개만 쓰는데 ? */
+			Safe_AddRef(Material.pTextures[i]);
+
+	/* Animations */
+	for (auto& pAnimation : m_Animations)
+		Safe_AddRef(pAnimation);
 }
 
 HRESULT CModel::Initialize_Prototype(const wstring& strModelFilePath, _fmatrix& matPivot)
@@ -161,6 +172,15 @@ void CModel::DebugRender()
 
 HRESULT CModel::Render(_uint& iMeshIndex)
 {
+	if (TYPE_ANIM == m_eModelType)
+	{
+		/* 본의 최종 트랜스폼 계산 : <오프셋 * 루트 기준 * 사전변환> */
+		m_Meshes[iMeshIndex]->SetUp_BoneMatrices(m_BoneMatrices, XMLoadFloat4x4(&m_matPivot));
+
+		if (FAILED(m_pGameObject->GetShader()->Bind_RawValue("g_BoneMatrices", m_BoneMatrices, sizeof(_float4x4) * MAX_BONES)))
+			return E_FAIL;
+	}
+
 	m_Meshes[iMeshIndex]->Render();
 
 	return S_OK;
@@ -175,6 +195,21 @@ HRESULT CModel::BindMaterialTexture(CShader* pShader, const _char* pConstantName
 		return S_OK;
 
 	return m_Materials[iMaterialIndex].pTextures[eType]->Bind_ShaderResource(pShader, pConstantName, 0);
+}
+
+HRESULT CModel::UpdateAnimation(const _float& fTimeDelta)
+{
+	if (m_iCurrentAnimIndex >= m_Animations.size()) return E_FAIL;
+
+	/* 현재 애니메이션의 모든 채널 키프레임 보간 (아직 부모 기준) - Relative */
+	m_Animations[m_iCurrentAnimIndex]->Play_Animation(fTimeDelta);
+
+	/* 모든 뼈를 순회하며 루트 기준 트랜스폼을 계산하여 세팅한다.(루트 기준) - Global */
+	/* cf. m_Bones은 부모에서 자식 순으로 순차적으로 정렬되어 있는 상태다. */
+	for (auto& pHierarchyNode : m_Bones)
+		pHierarchyNode->Set_CombinedTransformation();
+
+	return S_OK;
 }
 
 CBone* CModel::GetBone(const _char* pNodeName)

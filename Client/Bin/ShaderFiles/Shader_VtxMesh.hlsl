@@ -1,4 +1,5 @@
 #include "Client_Shader_Defines.hlsl"
+#include "Shader_Lighting_Functions.hlsl"
 
 /* 상수테이블. */
 matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
@@ -17,29 +18,10 @@ vector			g_vMtrlEmissive = vector(1.f, 0.f, 0.f, 1.f);
 
 vector			g_vCamPosition;
 
-Texture2D		g_DiffuseTexture;
-Texture2D		g_NormalTexture;
-
-Texture2D		g_DissolveTexture;
-float           g_fDissolveAmount;
-
-sampler LinearSampler = sampler_state {
-	Filter = MIN_MAG_MIP_LINEAR;
-	AddressU = wrap;
-	AddressV = wrap;
-};
-
 sampler PointSampler = sampler_state {
 	Filter = MIN_MAG_MIP_POINT;
 	AddressU = wrap;
 	AddressV = wrap;
-};
-
-sampler AlphaSampler = sampler_state
-{
-    Filter = MIN_MAG_MIP_LINEAR;
-    AddressU = wrap;
-    AddressV = wrap;
 };
 
 struct VS_IN
@@ -58,7 +40,6 @@ struct VS_OUT
     float2 vTexcoord : TEXCOORD0;
     float4 vWorldPos : TEXCOORD1;
     float3 vTangent : TANGENT;
-    float3 vBinormal : BINORMAL;
 };
 
 
@@ -80,8 +61,7 @@ VS_OUT VS_MAIN(/* 정점 */VS_IN In)
     Out.vNormal = mul(float4(In.vNormal, 0.f), g_WorldMatrix);
     Out.vWorldPos = mul(float4(In.vPosition, 1.f), g_WorldMatrix);
     Out.vTangent = normalize(mul(float4(In.vTangent, 0.f), g_WorldMatrix)).xyz;
-    Out.vBinormal = normalize(cross(Out.vNormal.xyz, Out.vTangent));
-    
+
 	return Out;	
 }
 
@@ -98,49 +78,12 @@ struct PS_IN
     float2 vTexcoord : TEXCOORD0;
     float4 vWorldPos : TEXCOORD1;
     float3 vTangent : TANGENT;
-    float3 vBinormal : BINORMAL;
 };
 
 /* 받아온 픽셀의 정보를 바탕으로 하여 화면에 그려질 픽셀의 최종적인 색을 결정하낟. */
 struct PS_OUT
 {
 	float4	vColor : SV_TARGET0;
-};
-
-void ComputeNormalMapping(inout float4 normal, float3 tangent, float2 texcoord)
-{
-	// [0,255] 범위에서 [0,1]로 변환
-    float4 map = g_NormalTexture.Sample(LinearSampler, texcoord);
-    if (any(map.rgb) == false)
-        return;
-
-    float3 N = normalize(normal.xyz); // z
-    float3 T = normalize(tangent); // x
-    float3 B = normalize(cross(N, T)); // y
-    float3x3 TBN = float3x3(T, B, N); // TS -> WS
-
-	// [0,1] 범위에서 [-1,1] 범위로 변환
-    float3 tangentSpaceNormal = (map.rgb * 2.0f - 1.0f);
-    float3 worldNormal = mul(tangentSpaceNormal, TBN);
-
-    normal = float4(worldNormal, 0.f);
-};
-
-void ComputeDissolveColor(inout float4 color, float2 texcoord)
-{
-    float4 deffuseCol = g_DiffuseTexture.Sample(LinearSampler, texcoord);
-    float dissolveSample = g_DissolveTexture.Sample(AlphaSampler, texcoord * 0.5f).x;
-   
-	//Discard the pixel if the value is below zero
-    clip(dissolveSample - g_fDissolveAmount);
-    float4 emissive = { 0.f, 0.f, 0.f, 0.f };
-	//Make the pixel emissive if the value is below ~f
-    if (dissolveSample - g_fDissolveAmount < 0.08f)
-    {
-        emissive = float4(1.f, 0.4f, 0.f, 1.f);
-    }
-    
-    color = (color + emissive) * deffuseCol;
 };
 
 /* 전달받은 픽셀의 정보를 이용하여 픽셀의 최종적인 색을 결정하자. */
@@ -196,7 +139,7 @@ PS_OUT PS_RIM_MAIN(PS_IN In)
 
 	// min, max, x
     fEmissive = smoothstep(0.0f, 1.0f, fEmissive);
-    fEmissive = pow(fEmissive, 1);
+    fEmissive = pow(fEmissive, 2);
 	//
     Out.vColor = (g_vLightDiffuse * vMtrlDiffuse) * saturate(vShade) +
 		(g_vLightSpecular * g_vMtrlSpecular) * fSpecular +
@@ -277,7 +220,3 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_DISSOLVE_MAIN();
     }
 }
-
-
-
-

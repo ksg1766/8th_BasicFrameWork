@@ -30,6 +30,7 @@ public:
 
 public:
 	HRESULT			BindMaterialTexture(class CShader* pShader, const _char* pConstantName, _uint iMaterialIndex, aiTextureType eType);
+	HRESULT			UpdateAnimation(const _float& fTimeDelta);
 
 private:
 	TYPE						m_eModelType = TYPE_END;

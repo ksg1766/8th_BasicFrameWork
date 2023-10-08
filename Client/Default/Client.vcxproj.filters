@@ -130,6 +130,12 @@
     <Filter Include="02.ClientManagers\00. DissolveManager">
       <UniqueIdentifier>{a6b76977-e714-49b4-abd7-42d081d38d26}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.GameObjects\Playable">
+      <UniqueIdentifier>{5dff5009-41f4-424a-bffb-51a193eb5a78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\Playable\01.Script">
+      <UniqueIdentifier>{cc513126-8d06-4a05-86f2-19b84d62430f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -249,6 +255,9 @@
     <ClInclude Include="..\public\BackGround.h">
       <Filter>03.GameObjects\BackGround</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\P_Strife.h">
+      <Filter>03.GameObjects\Playable</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -350,6 +359,9 @@
     <ClCompile Include="..\Private\DissolveManager.cpp">
       <Filter>02.ClientManagers\00. DissolveManager</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\P_Strife.cpp">
+      <Filter>03.GameObjects\Playable</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -381,6 +393,12 @@
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxMesh.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnimMesh.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Lighting_Functions.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

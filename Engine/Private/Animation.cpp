@@ -71,9 +71,8 @@ HRESULT CAnimation::Play_Animation(_float fTimeDelta)
 	/* 이 애니메이션의 모든 채널의 키프레임을 보간한다. (아직 부모 기준)*/
 	_uint iChannelIndex = 0;
 	for (auto& pChannel : m_Channels)
-	{
-		m_ChannelKeyFrames[iChannelIndex] 
-			= pChannel->Update_Transformation(m_fPlayTime, m_ChannelKeyFrames[iChannelIndex], m_Bones[iChannelIndex]);
+	{	// iChannelIndex를 늘려가며 순회하면서 트랜스폼 업데이트 해 주고, 현재 키프레임도 다시 계산해서 저장 해 주는듯.
+		m_ChannelKeyFrames[iChannelIndex] = pChannel->Update_Transformation(m_fPlayTime, m_ChannelKeyFrames[iChannelIndex], m_Bones[iChannelIndex]);
 
 		++iChannelIndex;
 	}

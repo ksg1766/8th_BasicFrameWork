@@ -146,13 +146,7 @@ void CPrefabsView::PlaceObject(const LAYERTAG& eLayerTag, const wstring& strObje
 	const wstring strPrototypeTag = TEXT("Prototype_GameObject_") + strObjectTag;
 
 	CGameObject* pGameObject = m_pGameInstance->CreateObject(strPrototypeTag, eLayerTag);
-	//pGameObject->SetObjectTag(strObjectTag);
 
-	//_matrix ModelInitialMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f));
-	//const wstring strFilePath = TEXT("../Bin/Resources/Models/") + strObjectTag + TEXT("/") + strObjectTag + TEXT(".fbx");
-	//const wstring strFilePath = TEXT("../Bin/Resources/Models/Static/") + strObjectTag;
-	//pGameObject->GetModel()->InitializeWithFile(strFilePath, ModelInitialMatrix);
-	
 	pGameObject->GetTransform()->Translate(vPickPosition);
 }
 

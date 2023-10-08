@@ -176,6 +176,7 @@
     <ClInclude Include="..\public\BackGround.h" />
     <ClInclude Include="..\Public\BasicTerrain.h" />
     <ClInclude Include="..\Public\DissolveManager.h" />
+    <ClInclude Include="..\Public\P_Strife.h" />
     <ClInclude Include="..\Public\SaveLoadView.h" />
     <ClInclude Include="..\Public\DebugTerrainGrid.h" />
     <ClInclude Include="..\Public\FlyingCameraController.h" />
@@ -215,6 +216,7 @@
     <ClCompile Include="..\private\BackGround.cpp" />
     <ClCompile Include="..\Private\BasicTerrain.cpp" />
     <ClCompile Include="..\Private\DissolveManager.cpp" />
+    <ClCompile Include="..\Private\P_Strife.cpp" />
     <ClCompile Include="..\Private\SaveLoadView.cpp" />
     <ClCompile Include="..\Private\DebugTerrainGrid.cpp" />
     <ClCompile Include="..\Private\FlyingCameraController.cpp" />
@@ -300,6 +302,15 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Lighting_Functions.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </EntryPointName>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnimMesh.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxCubeNom.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxCubeTex.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxMesh.hlsl" />
