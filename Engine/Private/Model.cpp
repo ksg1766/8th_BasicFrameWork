@@ -51,35 +51,7 @@ HRESULT CModel::Initialize_Prototype(const wstring& strModelFilePath, _fmatrix& 
 
 	/* DirectX로 그려낼 수 있도록 데이터들을 정리한다. */
 
-	for (const auto& entry : filesystem::directory_iterator(strModelFilePath))
-	{
-		wstring strExtension = entry.path().extension();
-		if (TEXT(".bone") == strExtension)
-		{
-			if (FAILED(Ready_Bones(strModelFilePath)))
-				return E_FAIL;
-		}
-		else if (TEXT(".mesh") == strExtension)
-		{
-			if (FAILED(Ready_Meshes(strModelFilePath, m_matPivot)))
-				return E_FAIL;
-		}
-		else if (TEXT(".mat") == strExtension)
-		{
-			if (FAILED(Ready_Materials(strModelFilePath)))
-				return E_FAIL;
-		}
-		else if (TEXT(".anim") == strExtension)
-		{
-			XMStoreFloat4x4(&m_matPivot, XMMatrixRotationY(XMConvertToRadians(90.0f)) * XMMatrixRotationZ(XMConvertToRadians(-90.0f)));
-			if (FAILED(Ready_Animations(strModelFilePath)))
-				return E_FAIL;
-
-			m_eModelType = TYPE_ANIM;
-		}
-	}
-
-	/*if (FAILED(Ready_Bones(strModelFilePath)))
+	if (FAILED(Ready_Bones(strModelFilePath)))
 		return E_FAIL;
 
 	if (FAILED(Ready_Meshes(strModelFilePath, m_matPivot)))
@@ -90,9 +62,14 @@ HRESULT CModel::Initialize_Prototype(const wstring& strModelFilePath, _fmatrix& 
 
 	if (TYPE_ANIM == m_eModelType)
 	{
+		XMStoreFloat4x4(&m_matPivot, XMMatrixRotationY(XMConvertToRadians(90.0f)) * XMMatrixRotationZ(XMConvertToRadians(-90.0f)));
 		if (FAILED(Ready_Animations(strModelFilePath)))
 			return E_FAIL;
-	}*/
+
+		/*for (auto& pMesh : m_Meshes)
+			if (FAILED(pMesh->Initialize_VTF()))
+				return E_FAIL;*/
+	}
 
 	return S_OK;
 }
@@ -133,8 +110,6 @@ HRESULT CModel::Initialize(void * pArg)
 		CMesh* pMesh = (CMesh*)pPrototype->Clone(m_pGameObject, this);
 		if (nullptr == pMesh)
 			return E_FAIL;
-
-		pMesh->SetModel(this);
 
 		Meshes.push_back(pMesh);
 		Safe_Release(pPrototype);
@@ -187,7 +162,7 @@ HRESULT CModel::Render(_uint& iMeshIndex)
 	if (TYPE_ANIM == m_eModelType)
 	{
 		/* 본의 최종 트랜스폼 계산 : <오프셋 * 루트 기준 * 사전변환> */
-		if (FAILED(m_pGameObject->GetShader()->Bind_RawValue("g_Keyframes", &m_Meshes[iMeshIndex]->Get_KeyFrameDesc(), sizeof(KEYFRAMEDESC))))
+		if (FAILED(m_pGameObject->GetShader()->Bind_RawValue("g_Tweenframes", &m_Meshes[iMeshIndex]->Get_TweenFrameDesc(), sizeof(TWEENDESC))))
 			return E_FAIL;
 		
 		//m_Meshes[iMeshIndex]->SetUp_BoneMatrices(m_BoneMatrices, XMLoadFloat4x4(&m_matPivot));
@@ -251,6 +226,15 @@ CBone* CModel::GetBone(const _int& iIndex)
 _uint CModel::GetMaterialIndex(_uint iMeshIndex)
 {
 	return m_Meshes[iMeshIndex]->Get_MaterialIndex();
+}
+
+void CModel::SetNextAnimationIndex(_int iAnimIndex)
+{
+	m_iNextAnimIndex = iAnimIndex;
+	for (auto& pMesh : m_Meshes)
+	{
+		pMesh->ReserveNextAnim();
+	}
 }
 
 HRESULT CModel::Ready_Bones(const wstring& strModelFilePath)
@@ -494,7 +478,7 @@ HRESULT CModel::Ready_Animations(const wstring& strModelFilePath)
 			Channels.push_back(pChannel);
 		}
 
-		CAnimation* pAnimation = CAnimation::Create(fDuration, fTickPerSecond, Channels);
+		CAnimation* pAnimation = CAnimation::Create(fDuration, fTickPerSecond, Channels, this);
 		if (nullptr == pAnimation)
 			return E_FAIL;
 

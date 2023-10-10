@@ -16,9 +16,12 @@ CMesh::CMesh(const CMesh& rhs)
 	: CVIBuffer(rhs)
 	, m_iMaterialIndex(rhs.m_iMaterialIndex)
 	, m_BoneIndices(rhs.m_BoneIndices)
-	, m_pTexture(rhs.m_pTexture)
-	, m_pSRV(rhs.m_pSRV)
 {
+	if (!m_vecTextures.empty())
+		m_vecTextures = rhs.m_vecTextures;
+	if (!m_vecSRVs.empty())
+		m_vecSRVs = rhs.m_vecSRVs;
+
 	strcpy_s(m_szName, rhs.m_szName);
 }
 
@@ -40,6 +43,11 @@ HRESULT CMesh::Initialize_Prototype(string& strName, vector<VTXMESH>& Vertices, 
 	m_BoneIndices.reserve((_uint)Bones.size());
 	for (_int index : Bones)
 		m_BoneIndices.push_back(index);
+
+	if (m_vecTextures.empty())
+	{
+		CreateTexture2D();
+	}
 
 	return S_OK;
 }
@@ -91,35 +99,84 @@ HRESULT CMesh::Initialize(void* pArg)
 
 void CMesh::Tick(const _float& fTimeDelta)
 {
-	/*if (!m_pTexture)
-	{
-		CreateTexture2DArray();
-	}*/
 	if (m_vecTextures.empty())
-	{
 		CreateTexture2D();
-	}
 
-	m_KeyFrameDesc.sumTime += fTimeDelta;
-	
-	_uint iCurrentAnimIndex = m_pModel->GetCurAnimationIndex();
-	CAnimation* current = m_pModel->GetAnimations()[iCurrentAnimIndex];
-	if (current)
+	_int iCurrentAnimIndex = m_pModel->GetCurAnimationIndex();
+
+	if (iCurrentAnimIndex < 0)
+		m_pModel->SetAnimation(m_pModel->GetAnimationCount());
+
+	TWEENDESC& desc = m_TweenDesc;
+
+	CAnimation* currentAnim = m_pModel->GetAnimations()[iCurrentAnimIndex];
+
+	desc.curr.sumTime += fTimeDelta;
+
 	{
-		_float timePerFrame = 1 / current->GetTickPerSecond();
-		if (m_KeyFrameDesc.sumTime >= timePerFrame)
+		if (currentAnim)
 		{
-			m_KeyFrameDesc.sumTime = 0.f;
-			m_KeyFrameDesc.currFrame = (m_KeyFrameDesc.currFrame + 1) % current->GetMaxFrameCount();
-			m_KeyFrameDesc.nextFrame = (m_KeyFrameDesc.currFrame + 1) % current->GetMaxFrameCount();
+			_float timePerFrame = 1 / currentAnim->GetTickPerSecond();
+			if (desc.curr.sumTime >= timePerFrame)
+			{
+				desc.curr.sumTime = 0.f;
+				desc.curr.currFrame = (desc.curr.currFrame + 1) % currentAnim->GetMaxFrameCount();
+				desc.curr.nextFrame = (desc.curr.currFrame + 1) % currentAnim->GetMaxFrameCount();
+			}
+
+			desc.curr.ratio = (desc.curr.sumTime / timePerFrame);
 		}
-	
-		m_KeyFrameDesc.ratio = (m_KeyFrameDesc.sumTime / timePerFrame);
 	}
 
-	//if (FAILED(m_pGameObject->GetShader()->Bind_Texture("g_TransformMap", m_pSRV)))
-	if (FAILED(m_pGameObject->GetShader()->Bind_Texture("g_TransformMap", m_vecSRVs[iCurrentAnimIndex])))
+	// 다음 애니메이션이 예약 되어 있다면
+	if (desc.next.animIndex >= 0)
+	{
+		desc.tweenSumTime += fTimeDelta;
+		desc.tweenRatio = desc.tweenSumTime / desc.tweenDuration;
+
+		if (desc.tweenRatio >= 1.f)
+		{
+			// 애니메이션 교체 성공
+			desc.curr = desc.next;
+			m_pModel->SetAnimation(desc.next.animIndex);
+			desc.ClearNextAnim();
+			m_pModel->SetNextAnimationIndex(-1);
+		}
+		else
+		{
+			// 교체중
+			CAnimation* nextAnim = m_pModel->GetAnimations()[desc.next.animIndex];
+			desc.next.sumTime += fTimeDelta;
+
+			_float timePerFrame = 1.f / nextAnim->GetTickPerSecond();
+
+			if (desc.next.ratio >= 1.f)
+			{
+				desc.next.sumTime = 0;
+
+				desc.next.currFrame = (desc.next.currFrame + 1) % nextAnim->GetMaxFrameCount();
+				desc.next.nextFrame = (desc.next.currFrame + 1) % nextAnim->GetMaxFrameCount();
+			}
+
+			desc.next.ratio = desc.next.sumTime / timePerFrame;
+		}
+	}
+
+	if (m_IsNextAnimReserved)
+	{
+		desc.ClearNextAnim(); // 기존꺼 밀어주기
+		desc.next.animIndex = m_pModel->GetNextAnimationIndex();
+
+		m_IsNextAnimReserved = false;
+	}
+
+	if (FAILED(m_pGameObject->GetShader()->Bind_Texture("g_CurTransformMap", m_vecSRVs[iCurrentAnimIndex])))
 		__debugbreak();
+	if (desc.next.animIndex >= 0)
+	{
+		if (FAILED(m_pGameObject->GetShader()->Bind_Texture("g_NextTransformMap", m_vecSRVs[desc.next.animIndex])))
+			__debugbreak();
+	}
 }
 
 void CMesh::SetUp_BoneMatrices(_float4x4* pBoneMatrices, _fmatrix PivotMatrix)
@@ -139,83 +196,6 @@ void CMesh::SetUp_BoneMatrices(_float4x4* pBoneMatrices, _fmatrix PivotMatrix)
 	}
 }
 
-HRESULT CMesh::CreateTexture2DArray()
-{
-	_uint iAnimCount = m_pModel->GetAnimationCount();
-	if (0 == iAnimCount)
-		return S_OK;
-
-	vector<AnimTransform>	_animTransforms;
-	_animTransforms.resize(iAnimCount);
-
-	//m_animTransforms.resize(iAnimCount);
-	for (uint32 i = 0; i < iAnimCount; i++)
-		CreateAnimationTransform(i, _animTransforms);
-
-	// Creature Texture
-	{
-		D3D11_TEXTURE2D_DESC desc;
-		ZeroMemory(&desc, sizeof(D3D11_TEXTURE2D_DESC));
-		desc.Width = MAX_BONES * 4;
-		desc.Height = MAX_KEYFRAMES;
-		desc.ArraySize = iAnimCount;
-		desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT; // 16바이트
-		desc.Usage = D3D11_USAGE_IMMUTABLE;
-		desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-		desc.MipLevels = 1;
-		desc.SampleDesc.Count = 1;
-
-		const uint32 dataSize = MAX_BONES * sizeof(Matrix);
-		const uint32 pageSize = dataSize * MAX_KEYFRAMES;
-		void* mallocPtr = ::malloc(pageSize * iAnimCount);
-
-		// 파편화된 데이터를 조립한다.
-		for (uint32 c = 0; c < iAnimCount; c++)
-		{
-			uint32 startOffset = c * pageSize;
-
-			BYTE* pageStartPtr = reinterpret_cast<BYTE*>(mallocPtr) + startOffset;
-
-			for (uint32 f = 0; f < MAX_KEYFRAMES; f++)
-			{
-				void* ptr = pageStartPtr + dataSize * f;
-				::memcpy(ptr, m_animTransforms[c].transforms[f].data(), dataSize);
-			}
-		}
-
-		// 리소스 만들기
-		vector<D3D11_SUBRESOURCE_DATA> subResources(iAnimCount);
-
-		for (uint32 c = 0; c < iAnimCount; c++)
-		{
-			void* ptr = (BYTE*)mallocPtr + c * pageSize;
-			subResources[c].pSysMem = ptr;
-			subResources[c].SysMemPitch = dataSize;
-			subResources[c].SysMemSlicePitch = pageSize;
-		}
-
-		if(FAILED(CGraphicDevice::GetInstance()->GetDevice()->CreateTexture2D(&desc, subResources.data(), &m_pTexture)))
-			return E_FAIL;
-
-		::free(mallocPtr);
-	}
-
-	// Create SRV
-	{
-		D3D11_SHADER_RESOURCE_VIEW_DESC desc;
-		ZeroMemory(&desc, sizeof(desc));
-		desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-		desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
-		desc.Texture2DArray.MipLevels = 1;
-		desc.Texture2DArray.ArraySize = iAnimCount;
-
-		if (FAILED(CGraphicDevice::GetInstance()->GetDevice()->CreateShaderResourceView(m_pTexture, &desc, &m_pSRV)))
-			return E_FAIL;
-	}
-
-	return S_OK;
-}
-
 HRESULT CMesh::CreateTexture2D()
 {
 	_uint iAnimCount = m_pModel->GetAnimationCount();
@@ -230,7 +210,7 @@ HRESULT CMesh::CreateTexture2D()
 
 	for (uint32 i = 0; i < iAnimCount; i++)
 	{
-		_uint iMaxFrameCount = m_pModel->GetAnimations()[m_pModel->GetCurAnimationIndex()]->GetMaxFrameCount();
+		_uint iMaxFrameCount = m_pModel->GetAnimations()[i]->GetMaxFrameCount();
 		CreateAnimationTransform(i, _animTransforms);
 
 		// Creature Texture
@@ -436,10 +416,20 @@ HRESULT CMesh::Ready_Indices(vector<_int>& Indices)
 	return S_OK;
 }
 
+HRESULT CMesh::Initialize_VTF()
+{
+	if (m_vecTextures.empty())
+		if(FAILED(CreateTexture2D()))
+			return E_FAIL;
+
+	return S_OK;
+}
+
 CMesh* CMesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, string& strName,
 	vector<VTXMESH>& Vertices, vector<_int>& Indices, _uint iMatIndex, vector<_int>& Bones, Matrix& PivotMatrix, CModel* pModel)
 {
 	CMesh* pInstance = new CMesh(pDevice, pContext);
+	pInstance->m_pModel = pModel;
 
 	if (FAILED(pInstance->Initialize_Prototype(strName, Vertices, Indices, iMatIndex, Bones, PivotMatrix, pModel)))
 	{
@@ -454,6 +444,7 @@ CMesh* CMesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, strin
 	vector<VTXANIMMESH>& Vertices, vector<_int>& Indices, _uint iMatIndex, vector<_int>& Bones, CModel* pModel)
 {
 	CMesh* pInstance = new CMesh(pDevice, pContext);
+	pInstance->m_pModel = pModel;
 
 	if (FAILED(pInstance->Initialize_Prototype(strName, Vertices, Indices, iMatIndex, Bones, pModel)))
 	{
@@ -468,6 +459,7 @@ CComponent* CMesh::Clone(CGameObject* pGameObject, void* pArg)
 {
 	CMesh* pInstance = new CMesh(*this);
 	pInstance->m_pGameObject = pGameObject;
+	pInstance->m_pModel = static_cast<CModel*>(pArg);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{

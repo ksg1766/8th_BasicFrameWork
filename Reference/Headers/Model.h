@@ -46,21 +46,24 @@ private:
 
 	_float4x4					m_matPivot;
 	/* Cache */
-	_uint						m_iCurrentAnimIndex = 37;
+	_int						m_iCurrentAnimIndex = 0;
+	_int						m_iNextAnimIndex = -1;
 	_float4x4					m_BoneMatrices[MAX_BONES] = {};
 
 public:
-	_uint		GetNumMeshes() const			{ return (_uint)m_Meshes.size(); }
+	_uint		GetNumMeshes() const					{ return (_uint)m_Meshes.size(); }
 	_uint		GetMaterialIndex(_uint iMeshIndex);
-	_matrix		GetPivotMatrix()				{ return XMLoadFloat4x4(&m_matPivot); }
+	_matrix		GetPivotMatrix()						{ return XMLoadFloat4x4(&m_matPivot); }
 	CBone*		GetBone(const _char* pNodeName);
 	CBone*		GetBone(const _int& iIndex);
-	vector<CAnimation*>& GetAnimations()		{ return m_Animations; }
-	const _uint GetAnimationCount() const		{ return (_uint)m_Animations.size(); }
-	const _uint GetCurAnimationIndex() const	{ return m_iCurrentAnimIndex; }
+	vector<CAnimation*>& GetAnimations()				{ return m_Animations; }
+	const _int	GetAnimationCount() const				{ return (_int)m_Animations.size(); }
+	const _int	GetCurAnimationIndex() const			{ return m_iCurrentAnimIndex; }
+	const _int	GetNextAnimationIndex() const			{ return m_iNextAnimIndex; }
 
 public:
-	void		SetAnimation(_uint iAnimIndex)	{ m_iCurrentAnimIndex = iAnimIndex; }
+	void		SetAnimation(_int iAnimIndex)			{ m_iCurrentAnimIndex = iAnimIndex; }
+	void		SetNextAnimationIndex(_int iAnimIndex);
 
 private:
 	HRESULT Ready_Bones(const wstring& strModelFilePath);

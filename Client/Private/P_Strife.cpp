@@ -37,11 +37,11 @@ void CP_Strife::Tick(const _float& fTimeDelta)
 
 	if (KEY_DOWN(KEY::NUM_9))
 	{
-
+		GetModel()->SetNextAnimationIndex(-1 + GetModel()->GetCurAnimationIndex());
 	}
 	if (KEY_DOWN(KEY::NUM_0))
 	{
-
+		GetModel()->SetNextAnimationIndex(1 + GetModel()->GetCurAnimationIndex());
 	}
 }
 

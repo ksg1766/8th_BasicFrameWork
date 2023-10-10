@@ -75,7 +75,7 @@ void CChannel::Update_Transformation_NotLerp(_uint iCurrentKeyFrame, CBone* pNod
 	_matrix	TransformationMatrix = Matrix::Identity;
 
 	/* 마지막 키프레임이상으로 넘어갔을때 : 마지막 키프레임 자세로 고정할 수 있도록 한다. */
-	if (iCurrentKeyFrame < m_KeyFrames.size() && iCurrentKeyFrame == m_KeyFrames[iCurrentKeyFrame].fTime)
+	if (iCurrentKeyFrame < m_KeyFrames.size())
 	{
 		vScale = m_KeyFrames[iCurrentKeyFrame].vScale;
 		vRotation = m_KeyFrames[iCurrentKeyFrame].vRotation;

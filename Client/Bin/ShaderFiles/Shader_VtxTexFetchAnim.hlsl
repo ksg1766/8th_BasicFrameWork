@@ -28,17 +28,20 @@ struct tagKeyframeDesc
     float2 padding;
 };
 
-//struct tagBoneMatrices
-//{
-//    matrix BoneMatrix[250];
-//};
+struct tagTweenFrameDesc
+{
+    float tweenDuration;
+    float tweenRatio;
+    float tweenSumTime;
+    float padding;
+    tagKeyframeDesc curr;
+    tagKeyframeDesc next;
+};
 
-//tagBoneMatrices g_BoneMatrices;
+tagTweenFrameDesc g_Tweenframes;
 
-tagKeyframeDesc g_Keyframes;
-
-//Texture2DArray g_TransformMap;
-Texture2D g_TransformMap;
+Texture2D g_CurTransformMap;
+Texture2D g_NextTransformMap;
 
 struct VS_IN
 {
@@ -64,10 +67,17 @@ matrix GetAnimationMatrix(VS_IN input)
     float indices[4] = { input.vBlendIndex.x, input.vBlendIndex.y, input.vBlendIndex.z, input.vBlendIndex.w };
     float weights[4] = { input.vBlendWeight.x, input.vBlendWeight.y, input.vBlendWeight.z, input.vBlendWeight.w };
 
-    //int animIndex = g_Keyframes.animIndex;
-    int currFrame = g_Keyframes.currFrame;
-    int nextFrame = g_Keyframes.nextFrame;
-    float ratio = g_Keyframes.ratio;
+    int currFrame[2];
+    int nextFrame[2];
+    float ratio[2];
+    
+    currFrame[0] = g_Tweenframes.curr.currFrame;
+    nextFrame[0] = g_Tweenframes.curr.nextFrame;
+    ratio[0] = g_Tweenframes.curr.ratio;
+    
+    currFrame[1] = g_Tweenframes.next.currFrame;
+    nextFrame[1] = g_Tweenframes.next.nextFrame;
+    ratio[1] = g_Tweenframes.next.ratio;
     
     float4 c0, c1, c2, c3;
     float4 n0, n1, n2, n3;
@@ -78,19 +88,37 @@ matrix GetAnimationMatrix(VS_IN input)
 
     for (int i = 0; i < 4; i++)
     {
-        c0 = g_TransformMap.Load(int3(indices[i] * 4 + 0, currFrame, 0));
-        c1 = g_TransformMap.Load(int3(indices[i] * 4 + 1, currFrame, 0));
-        c2 = g_TransformMap.Load(int3(indices[i] * 4 + 2, currFrame, 0));
-        c3 = g_TransformMap.Load(int3(indices[i] * 4 + 3, currFrame, 0));
+        c0 = g_CurTransformMap.Load(int3(indices[i] * 4 + 0, currFrame[0], 0));
+        c1 = g_CurTransformMap.Load(int3(indices[i] * 4 + 1, currFrame[0], 0));
+        c2 = g_CurTransformMap.Load(int3(indices[i] * 4 + 2, currFrame[0], 0));
+        c3 = g_CurTransformMap.Load(int3(indices[i] * 4 + 3, currFrame[0], 0));
         curr = matrix(c0, c1, c2, c3);
         
-        n0 = g_TransformMap.Load(int3(indices[i] * 4 + 0, nextFrame, 0));
-        n1 = g_TransformMap.Load(int3(indices[i] * 4 + 1, nextFrame, 0));
-        n2 = g_TransformMap.Load(int3(indices[i] * 4 + 2, nextFrame, 0));
-        n3 = g_TransformMap.Load(int3(indices[i] * 4 + 3, nextFrame, 0));
+        n0 = g_CurTransformMap.Load(int3(indices[i] * 4 + 0, nextFrame[0], 0));
+        n1 = g_CurTransformMap.Load(int3(indices[i] * 4 + 1, nextFrame[0], 0));
+        n2 = g_CurTransformMap.Load(int3(indices[i] * 4 + 2, nextFrame[0], 0));
+        n3 = g_CurTransformMap.Load(int3(indices[i] * 4 + 3, nextFrame[0], 0));
         next = matrix(n0, n1, n2, n3);
         
-        matrix result = lerp(curr, next, ratio);
+        matrix result = lerp(curr, next, ratio[0]);
+        
+        if (g_Tweenframes.next.animIndex >= 0)
+        {
+            c0 = g_NextTransformMap.Load(int3(indices[i] * 4 + 0, currFrame[1], 0));
+            c1 = g_NextTransformMap.Load(int3(indices[i] * 4 + 1, currFrame[1], 0));
+            c2 = g_NextTransformMap.Load(int3(indices[i] * 4 + 2, currFrame[1], 0));
+            c3 = g_NextTransformMap.Load(int3(indices[i] * 4 + 3, currFrame[1], 0));
+            curr = matrix(c0, c1, c2, c3);
+
+            n0 = g_NextTransformMap.Load(int3(indices[i] * 4 + 0, nextFrame[1], 0));
+            n1 = g_NextTransformMap.Load(int3(indices[i] * 4 + 1, nextFrame[1], 0));
+            n2 = g_NextTransformMap.Load(int3(indices[i] * 4 + 2, nextFrame[1], 0));
+            n3 = g_NextTransformMap.Load(int3(indices[i] * 4 + 3, nextFrame[1], 0));
+            next = matrix(n0, n1, n2, n3);
+
+            matrix nextResult = lerp(curr, next, ratio[1]);
+            result = lerp(result, nextResult, g_Tweenframes.tweenRatio);
+        }
         
         transform += mul(weights[i], result);
     }

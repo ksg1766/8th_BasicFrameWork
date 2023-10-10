@@ -18,7 +18,7 @@ CAnimation::CAnimation(const CAnimation & rhs)
 		Safe_AddRef(pChannel);
 }
 
-HRESULT CAnimation::Initialize_Prototype(const _float& fDuration, const _float& fTickPerSecond, vector<class CChannel*>& Channels)
+HRESULT CAnimation::Initialize_Prototype(const _float& fDuration, const _float& fTickPerSecond, vector<class CChannel*>& Channels, CModel* pModel)
 {
 	m_fDuration = fDuration;
 	m_fTickPerSecond = fTickPerSecond;
@@ -30,9 +30,20 @@ HRESULT CAnimation::Initialize_Prototype(const _float& fDuration, const _float& 
 	for (auto& iter : Channels)
 		m_Channels.push_back(iter);
 
-	for (auto& pChannel : Channels)
+	for (_uint i = 0; i < m_Channels.size(); ++i)
 	{
-		m_iMaxFrameCount = ::max(m_iMaxFrameCount, (_uint)pChannel->Get_KeyFrames().size());
+		m_iMaxFrameCount = ::max(m_iMaxFrameCount, (_uint)m_Channels[i]->Get_KeyFrames().size());
+
+		m_ChannelKeyFrames.push_back(0);
+
+		CBone* pBone = pModel->GetBone(m_Channels[i]->Get_Name().c_str());
+		{
+			if (nullptr == pBone)
+				return E_FAIL;
+
+			m_Bones.push_back(pBone);
+		}
+		Safe_AddRef(pBone);
 	}
 
 	return S_OK;
@@ -106,11 +117,11 @@ HRESULT CAnimation::Calculate_Animation(_uint iFrame)
 	return S_OK;
 }
 
-CAnimation* CAnimation::Create(const _float& fDuration, const _float& fTickPerSecond, vector<class CChannel*>& Channels)
+CAnimation* CAnimation::Create(const _float& fDuration, const _float& fTickPerSecond, vector<class CChannel*>& Channels, CModel* pModel)
 {
 	CAnimation* pInstance = new CAnimation();
 
-	if (FAILED(pInstance->Initialize_Prototype(fDuration, fTickPerSecond, Channels)))
+	if (FAILED(pInstance->Initialize_Prototype(fDuration, fTickPerSecond, Channels, pModel)))
 	{
 		MSG_BOX("Failed To Created : CAnimation");
 		Safe_Release(pInstance);
