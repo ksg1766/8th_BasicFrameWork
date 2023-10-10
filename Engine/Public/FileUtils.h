@@ -38,7 +38,7 @@ public:
 	{
 		DWORD numOfBytes = 0;
 
-#ifdef DEBUG
+#ifdef _DEBUG
 		assert(::ReadFile(_handle, &data, sizeof(T), (LPDWORD)&numOfBytes, nullptr));
 #else
 		::ReadFile(_handle, &data, sizeof(T), (LPDWORD)&numOfBytes, nullptr);

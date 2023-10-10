@@ -32,7 +32,7 @@ HRESULT CAnimation::Initialize_Prototype(const _float& fDuration, const _float& 
 
 	for (_uint i = 0; i < m_Channels.size(); ++i)
 	{
-		m_iMaxFrameCount = ::max(m_iMaxFrameCount, (_uint)m_Channels[i]->Get_KeyFrames().size());
+		m_iMaxFrameCount = max(m_iMaxFrameCount, (_uint)m_Channels[i]->Get_KeyFrames().size());
 
 		m_ChannelKeyFrames.push_back(0);
 

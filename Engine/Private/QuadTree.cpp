@@ -6,7 +6,7 @@
 #include "Layer.h"
 #include "PipeLine.h"
 
-#ifdef DEBUG
+#ifdef _DEBUG
 #include "GraphicDevice.h"
 #include "PipeLine.h"
 #include "DebugDraw.h"
@@ -63,7 +63,7 @@ HRESULT CQuadTree::Build_QuadTree(_uint iNumLevels)
 
     RELEASE_INSTANCE(CObjectManager)
 
-#ifdef DEBUG
+#ifdef _DEBUG
         InitDebugFrustum();
 #endif // DEBUG
 
@@ -77,7 +77,7 @@ void CQuadTree::Update_QuadTree()
     BoundingFrustum tFrustum;
     Update_Frustum(tFrustum);
     FrustumCull(tFrustum, m_pQuadTreeRoot);
-#elif DEBUG
+#elif _DEBUG
     Update_Frustum(m_tBoundingFrustum);
     FrustumCull(m_tBoundingFrustum, m_pQuadTreeRoot);
 #endif
@@ -88,7 +88,7 @@ void CQuadTree::Update_Frustum(BoundingFrustum& tFrustum)
 #ifdef NDEBUG
     BoundingFrustum::CreateFromMatrix(tFrustum, m_pPipeLine->Get_Transform_Matrix(CPipeLine::D3DTS_PROJ));
     tFrustum.Transform(tFrustum, m_pPipeLine->Get_Transform_Matrix_Inverse(CPipeLine::D3DTS_VIEW));
-#elif DEBUG
+#elif _DEBUG
     BoundingFrustum::CreateFromMatrix(m_tBoundingFrustum, m_pPipeLine->Get_Transform_Matrix(CPipeLine::D3DTS_PROJ));
     m_tBoundingFrustum.Transform(m_tBoundingFrustum, m_pPipeLine->Get_Transform_Matrix_Inverse(CPipeLine::D3DTS_VIEW));
 #endif
@@ -98,7 +98,7 @@ void CQuadTree::Render_QuadTree()
 {
     m_pQuadTreeRoot->Render_QuadTreeNode();
 
-#ifdef DEBUG
+#ifdef _DEBUG
     m_pEffect->SetWorld(XMMatrixIdentity());
 
     CGraphicDevice* pGrahicDevice = GET_INSTANCE(CGraphicDevice);
@@ -203,7 +203,7 @@ void CQuadTree::FrustumCull(BoundingFrustum& tFrustum, CQuadTreeNode* pNode)
             FrustumCull(tFrustum, vecChildren[i]);
 }
 
-#ifdef DEBUG
+#ifdef _DEBUG
 HRESULT CQuadTree::InitDebugFrustum()
 {
     CGraphicDevice* pGrahicDevice = GET_INSTANCE(CGraphicDevice);

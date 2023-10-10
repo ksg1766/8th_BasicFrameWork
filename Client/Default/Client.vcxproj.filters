@@ -136,6 +136,9 @@
     <Filter Include="03.GameObjects\Playable\01.Script">
       <UniqueIdentifier>{cc513126-8d06-4a05-86f2-19b84d62430f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Levels\02.GameTool\View\AnimationView">
+      <UniqueIdentifier>{13c85ca6-1738-412d-bdc4-c574d1d87906}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

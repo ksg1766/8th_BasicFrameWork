@@ -92,7 +92,7 @@ HRESULT CMainApp::Render()
 	/* 게임내에 존재하는 여러 객체들의 렌더링. */
 	m_pGameInstance->Clear_BackBuffer_View(_float4(0.9f, 0.9f, 0.9f, 1.f));
 	m_pGameInstance->Clear_DepthStencil_View();
-#ifdef DEBUG
+#ifdef _DEBUG
 	if(LEVEL_GAMEPLAY == m_pGameInstance->GetCurrentLevelIndex())
 		m_pGameInstance->Render_QuadTree();
 #endif

@@ -50,7 +50,7 @@ void FileUtils::Open(wstring filePath, FileMode mode)
 void FileUtils::Write(void* data, _uint dataSize)
 {
 	_uint numOfBytes = 0;
-#ifdef DEBUG
+#ifdef _DEBUG
 	assert(::WriteFile(_handle, data, dataSize, reinterpret_cast<LPDWORD>(&numOfBytes), nullptr));
 #else
 	::WriteFile(_handle, data, dataSize, reinterpret_cast<LPDWORD>(&numOfBytes), nullptr);
@@ -72,7 +72,7 @@ void FileUtils::Write(const string& data)
 void FileUtils::Read(void** data, _uint dataSize)
 {
 	_uint numOfBytes = 0;
-#ifdef DEBUG
+#ifdef _DEBUG
 	assert(::ReadFile(_handle, *data, dataSize, reinterpret_cast<LPDWORD>(&numOfBytes), nullptr));
 #else
 	::ReadFile(_handle, *data, dataSize, reinterpret_cast<LPDWORD>(&numOfBytes), nullptr);
