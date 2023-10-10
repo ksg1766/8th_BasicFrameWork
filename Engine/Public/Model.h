@@ -5,7 +5,7 @@
 
 BEGIN(Engine)
 
-#define MAX_BONES 500 /* 셰이더 파일에서도 똑같이 정의 해줘야한다. */
+#define MAX_BONES 250 /* 셰이더 파일에서도 똑같이 정의 해줘야한다. */
 
 class CBone;
 class CMesh;
@@ -23,9 +23,10 @@ private:
 
 public:
 	virtual HRESULT Initialize_Prototype(const wstring& strModelFilePath, _fmatrix& matPivot);
-	virtual HRESULT Initialize(void* pArg) override;
+	virtual HRESULT Initialize(void* pArg)			override;
 	HRESULT			InitializeWithFile(const wstring& strModelFilePath, _fmatrix& matPivot);
-	void			DebugRender()	override;
+	virtual void	Tick(const _float& fTimeDelta)	override;
+	void			DebugRender()					override;
 	HRESULT			Render(_uint& iMeshIndex);
 
 public:
@@ -45,7 +46,7 @@ private:
 
 	_float4x4					m_matPivot;
 	/* Cache */
-	_uint						m_iCurrentAnimIndex = 0;
+	_uint						m_iCurrentAnimIndex = 37;
 	_float4x4					m_BoneMatrices[MAX_BONES] = {};
 
 public:
@@ -54,6 +55,7 @@ public:
 	_matrix		GetPivotMatrix()				{ return XMLoadFloat4x4(&m_matPivot); }
 	CBone*		GetBone(const _char* pNodeName);
 	CBone*		GetBone(const _int& iIndex);
+	vector<CAnimation*>& GetAnimations()		{ return m_Animations; }
 	const _uint GetAnimationCount() const		{ return (_uint)m_Animations.size(); }
 	const _uint GetCurAnimationIndex() const	{ return m_iCurrentAnimIndex; }
 

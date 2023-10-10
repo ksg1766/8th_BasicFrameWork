@@ -1,6 +1,11 @@
 #include "..\Public\Mesh.h"
 #include "Model.h"
+#include "Shader.h"
 #include "Bone.h"
+#include "Channel.h"
+#include "Animation.h"
+#include "GameObject.h"
+#include "GraphicDevice.h"
 
 CMesh::CMesh(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CVIBuffer(pDevice, pContext)
@@ -11,6 +16,8 @@ CMesh::CMesh(const CMesh& rhs)
 	: CVIBuffer(rhs)
 	, m_iMaterialIndex(rhs.m_iMaterialIndex)
 	, m_BoneIndices(rhs.m_BoneIndices)
+	, m_pTexture(rhs.m_pTexture)
+	, m_pSRV(rhs.m_pSRV)
 {
 	strcpy_s(m_szName, rhs.m_szName);
 }
@@ -78,7 +85,41 @@ HRESULT CMesh::Initialize(void* pArg)
 		m_BoneIndices.clear();
 		m_BoneIndices.shrink_to_fit();
 	}
+
 	return S_OK;
+}
+
+void CMesh::Tick(const _float& fTimeDelta)
+{
+	/*if (!m_pTexture)
+	{
+		CreateTexture2DArray();
+	}*/
+	if (m_vecTextures.empty())
+	{
+		CreateTexture2D();
+	}
+
+	m_KeyFrameDesc.sumTime += fTimeDelta;
+	
+	_uint iCurrentAnimIndex = m_pModel->GetCurAnimationIndex();
+	CAnimation* current = m_pModel->GetAnimations()[iCurrentAnimIndex];
+	if (current)
+	{
+		_float timePerFrame = 1 / current->GetTickPerSecond();
+		if (m_KeyFrameDesc.sumTime >= timePerFrame)
+		{
+			m_KeyFrameDesc.sumTime = 0.f;
+			m_KeyFrameDesc.currFrame = (m_KeyFrameDesc.currFrame + 1) % current->GetMaxFrameCount();
+			m_KeyFrameDesc.nextFrame = (m_KeyFrameDesc.currFrame + 1) % current->GetMaxFrameCount();
+		}
+	
+		m_KeyFrameDesc.ratio = (m_KeyFrameDesc.sumTime / timePerFrame);
+	}
+
+	//if (FAILED(m_pGameObject->GetShader()->Bind_Texture("g_TransformMap", m_pSRV)))
+	if (FAILED(m_pGameObject->GetShader()->Bind_Texture("g_TransformMap", m_vecSRVs[iCurrentAnimIndex])))
+		__debugbreak();
 }
 
 void CMesh::SetUp_BoneMatrices(_float4x4* pBoneMatrices, _fmatrix PivotMatrix)
@@ -94,7 +135,181 @@ void CMesh::SetUp_BoneMatrices(_float4x4* pBoneMatrices, _fmatrix PivotMatrix)
 		/* 셰이더에 행렬 던질 때는 전치 꼭 */
 		/* 최종 트랜스폼 계산*/
 
-		XMStoreFloat4x4(&pBoneMatrices[i], XMMatrixTranspose(m_Bones[i]->Get_OffSetMatrix() * m_Bones[i]->Get_CombinedTransformation() * PivotMatrix));
+		XMStoreFloat4x4(&pBoneMatrices[i], m_Bones[i]->Get_OffSetMatrix() * m_Bones[i]->Get_CombinedTransformation() * PivotMatrix);
+	}
+}
+
+HRESULT CMesh::CreateTexture2DArray()
+{
+	_uint iAnimCount = m_pModel->GetAnimationCount();
+	if (0 == iAnimCount)
+		return S_OK;
+
+	vector<AnimTransform>	_animTransforms;
+	_animTransforms.resize(iAnimCount);
+
+	//m_animTransforms.resize(iAnimCount);
+	for (uint32 i = 0; i < iAnimCount; i++)
+		CreateAnimationTransform(i, _animTransforms);
+
+	// Creature Texture
+	{
+		D3D11_TEXTURE2D_DESC desc;
+		ZeroMemory(&desc, sizeof(D3D11_TEXTURE2D_DESC));
+		desc.Width = MAX_BONES * 4;
+		desc.Height = MAX_KEYFRAMES;
+		desc.ArraySize = iAnimCount;
+		desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT; // 16바이트
+		desc.Usage = D3D11_USAGE_IMMUTABLE;
+		desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+		desc.MipLevels = 1;
+		desc.SampleDesc.Count = 1;
+
+		const uint32 dataSize = MAX_BONES * sizeof(Matrix);
+		const uint32 pageSize = dataSize * MAX_KEYFRAMES;
+		void* mallocPtr = ::malloc(pageSize * iAnimCount);
+
+		// 파편화된 데이터를 조립한다.
+		for (uint32 c = 0; c < iAnimCount; c++)
+		{
+			uint32 startOffset = c * pageSize;
+
+			BYTE* pageStartPtr = reinterpret_cast<BYTE*>(mallocPtr) + startOffset;
+
+			for (uint32 f = 0; f < MAX_KEYFRAMES; f++)
+			{
+				void* ptr = pageStartPtr + dataSize * f;
+				::memcpy(ptr, m_animTransforms[c].transforms[f].data(), dataSize);
+			}
+		}
+
+		// 리소스 만들기
+		vector<D3D11_SUBRESOURCE_DATA> subResources(iAnimCount);
+
+		for (uint32 c = 0; c < iAnimCount; c++)
+		{
+			void* ptr = (BYTE*)mallocPtr + c * pageSize;
+			subResources[c].pSysMem = ptr;
+			subResources[c].SysMemPitch = dataSize;
+			subResources[c].SysMemSlicePitch = pageSize;
+		}
+
+		if(FAILED(CGraphicDevice::GetInstance()->GetDevice()->CreateTexture2D(&desc, subResources.data(), &m_pTexture)))
+			return E_FAIL;
+
+		::free(mallocPtr);
+	}
+
+	// Create SRV
+	{
+		D3D11_SHADER_RESOURCE_VIEW_DESC desc;
+		ZeroMemory(&desc, sizeof(desc));
+		desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
+		desc.Texture2DArray.MipLevels = 1;
+		desc.Texture2DArray.ArraySize = iAnimCount;
+
+		if (FAILED(CGraphicDevice::GetInstance()->GetDevice()->CreateShaderResourceView(m_pTexture, &desc, &m_pSRV)))
+			return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+HRESULT CMesh::CreateTexture2D()
+{
+	_uint iAnimCount = m_pModel->GetAnimationCount();
+	if (0 == iAnimCount)
+		return S_OK;
+
+	m_vecTextures.resize(iAnimCount);
+	m_vecSRVs.resize(iAnimCount);
+
+	vector<AnimTransform>	_animTransforms;
+	_animTransforms.resize(iAnimCount);
+
+	for (uint32 i = 0; i < iAnimCount; i++)
+	{
+		_uint iMaxFrameCount = m_pModel->GetAnimations()[m_pModel->GetCurAnimationIndex()]->GetMaxFrameCount();
+		CreateAnimationTransform(i, _animTransforms);
+
+		// Creature Texture
+		{
+			D3D11_TEXTURE2D_DESC desc;
+			ZeroMemory(&desc, sizeof(D3D11_TEXTURE2D_DESC));
+			desc.Width = m_Bones.size() * 4;
+			desc.Height = iMaxFrameCount;
+			desc.ArraySize = 1;
+			desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT; // 16바이트
+			desc.Usage = D3D11_USAGE_IMMUTABLE;
+			desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+			desc.MipLevels = 1;
+			desc.SampleDesc.Count = 1;
+
+			const uint32 dataSize = m_Bones.size() * sizeof(Matrix);
+			const uint32 pageSize = dataSize * iMaxFrameCount;
+			void* mallocPtr = ::malloc(pageSize);
+
+			// 파편화된 데이터를 조립한다.
+
+			BYTE* pageStartPtr = reinterpret_cast<BYTE*>(mallocPtr);
+
+			for (uint32 f = 0; f < iMaxFrameCount; f++)
+			{
+				void* ptr = pageStartPtr + f * dataSize;
+				::memcpy(ptr, _animTransforms[i].transforms[f].data(), dataSize);
+			}
+
+			// 리소스 만들기
+			D3D11_SUBRESOURCE_DATA subResource;
+
+			void* ptr = (BYTE*)mallocPtr;
+			subResource.pSysMem = ptr;
+			subResource.SysMemPitch = dataSize;
+
+			if (FAILED(CGraphicDevice::GetInstance()->GetDevice()->CreateTexture2D(&desc, &subResource, &m_vecTextures[i])))
+				return E_FAIL;
+
+			::free(mallocPtr);
+		}
+
+		// Create SRV
+		{
+			D3D11_SHADER_RESOURCE_VIEW_DESC desc;
+			ZeroMemory(&desc, sizeof(desc));
+			desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+			desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+			desc.Texture2DArray.MipLevels = 1;
+			desc.Texture2DArray.ArraySize = iAnimCount;
+
+			if (FAILED(CGraphicDevice::GetInstance()->GetDevice()->CreateShaderResourceView(m_vecTextures[i], &desc, &m_vecSRVs[i])))
+				return E_FAIL;
+		}
+	}
+
+	return S_OK;
+}
+
+void CMesh::CreateAnimationTransform(uint32 index, vector<AnimTransform>& animTransforms)
+{
+	CAnimation* pAnimation = m_pModel->GetAnimations()[index];
+
+	for (uint32 f = 0; f < pAnimation->GetMaxFrameCount(); f++)
+	{
+		pAnimation->Calculate_Animation(f);
+
+		for (uint32 b = 0; b < m_Bones.size(); b++)
+		{
+			m_Bones[b]->Set_CombinedTransformation();
+
+			if (0 == m_Bones.size())
+			{
+				XMStoreFloat4x4(&animTransforms[index].transforms[f][b], XMMatrixIdentity());
+				return;
+			}
+			
+			XMStoreFloat4x4(&animTransforms[index].transforms[f][b], m_Bones[b]->Get_OffSetMatrix() * m_Bones[b]->Get_CombinedTransformation() * m_pModel->GetPivotMatrix());
+		}
 	}
 }
 

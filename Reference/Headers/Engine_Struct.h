@@ -24,6 +24,46 @@ namespace Engine
 		class CTexture*	pTextures[AI_TEXTURE_TYPE_MAX];
 	}MATERIALDESC;*/
 
+	// VTF
+	// Animation
+	typedef struct KeyframeDesc
+	{
+		int32 animIndex = 0;
+		uint32 currFrame = 0;
+		uint32 nextFrame = 0;
+		float ratio = 0.f;
+		float sumTime = 0.f;
+		float speed = 1.f;
+		Vec2 padding;
+	}KEYFRAMEDESC;
+
+	typedef struct TweenDesc
+	{
+		TweenDesc()
+		{
+			curr.animIndex = 0;
+			next.animIndex = -1;
+		}
+
+		void ClearNextAnim()
+		{
+			next.animIndex = -1;
+			next.currFrame = 0;
+			next.nextFrame = 0;
+			next.sumTime = 0;
+			tweenSumTime = 0;
+			tweenRatio = 0;
+		}
+
+		float tweenDuration = 1.0f;
+		float tweenRatio = 0.f;
+		float tweenSumTime = 0.f;
+		float padding = 0.f;
+		KeyframeDesc curr;
+		KeyframeDesc next;
+	}TWEENDESC;
+	//
+
 	typedef struct tagMeshMaterial
 	{
 		class CTexture* pTextures[AI_TEXTURE_TYPE_MAX];

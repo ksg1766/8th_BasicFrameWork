@@ -19,6 +19,7 @@ public:
 	_uint			Get_Depth() const { return m_iDepth; }
 	const _int&		Get_Index() const { return m_iIndex; }
 	const _int&		Get_ParentIndex() const { return m_iParentIndex; }
+	_matrix			Get_Transformation() { return XMLoadFloat4x4(&m_Transformation); }
 	_matrix			Get_OffSetMatrix() { return XMLoadFloat4x4(&m_OffsetMatrix); }
 	_matrix			Get_CombinedTransformation() { return XMLoadFloat4x4(&m_CombinedTransformation); }
 

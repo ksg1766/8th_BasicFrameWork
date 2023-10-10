@@ -71,6 +71,7 @@ HRESULT CModel::Initialize_Prototype(const wstring& strModelFilePath, _fmatrix& 
 		}
 		else if (TEXT(".anim") == strExtension)
 		{
+			XMStoreFloat4x4(&m_matPivot, XMMatrixRotationY(XMConvertToRadians(90.0f)) * XMMatrixRotationZ(XMConvertToRadians(-90.0f)));
 			if (FAILED(Ready_Animations(strModelFilePath)))
 				return E_FAIL;
 
@@ -133,6 +134,8 @@ HRESULT CModel::Initialize(void * pArg)
 		if (nullptr == pMesh)
 			return E_FAIL;
 
+		pMesh->SetModel(this);
+
 		Meshes.push_back(pMesh);
 		Safe_Release(pPrototype);
 	}
@@ -166,6 +169,15 @@ HRESULT CModel::InitializeWithFile(const wstring& strModelFilePath, _fmatrix& ma
 	return S_OK;
 }
 
+void CModel::Tick(const _float& fTimeDelta)
+{
+	if (TYPE_ANIM == m_eModelType)
+	{
+		for (auto& pMesh : m_Meshes)
+			pMesh->Tick(fTimeDelta);
+	}
+}
+
 void CModel::DebugRender()
 {
 }
@@ -175,10 +187,13 @@ HRESULT CModel::Render(_uint& iMeshIndex)
 	if (TYPE_ANIM == m_eModelType)
 	{
 		/* 본의 최종 트랜스폼 계산 : <오프셋 * 루트 기준 * 사전변환> */
-		m_Meshes[iMeshIndex]->SetUp_BoneMatrices(m_BoneMatrices, XMLoadFloat4x4(&m_matPivot));
-
-		if (FAILED(m_pGameObject->GetShader()->Bind_RawValue("g_BoneMatrices", m_BoneMatrices, sizeof(_float4x4) * MAX_BONES)))
+		if (FAILED(m_pGameObject->GetShader()->Bind_RawValue("g_Keyframes", &m_Meshes[iMeshIndex]->Get_KeyFrameDesc(), sizeof(KEYFRAMEDESC))))
 			return E_FAIL;
+		
+		//m_Meshes[iMeshIndex]->SetUp_BoneMatrices(m_BoneMatrices, XMLoadFloat4x4(&m_matPivot));
+
+		//if (FAILED(m_pGameObject->GetShader()->Bind_RawValue("g_BoneMatrices", m_BoneMatrices, sizeof(_float4x4) * MAX_BONES)))
+		//	return E_FAIL;
 	}
 
 	m_Meshes[iMeshIndex]->Render();

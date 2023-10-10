@@ -12,6 +12,7 @@ CAnimation::CAnimation(const CAnimation & rhs)
 	, m_Channels(rhs.m_Channels)
 	, m_fTickPerSecond(rhs.m_fTickPerSecond)
 	, m_fPlayTime(rhs.m_fPlayTime)
+	, m_iMaxFrameCount(rhs.m_iMaxFrameCount)
 {
 	for (auto& pChannel : m_Channels)
 		Safe_AddRef(pChannel);
@@ -28,6 +29,11 @@ HRESULT CAnimation::Initialize_Prototype(const _float& fDuration, const _float& 
 	m_Channels.reserve(Channels.size());
 	for (auto& iter : Channels)
 		m_Channels.push_back(iter);
+
+	for (auto& pChannel : Channels)
+	{
+		m_iMaxFrameCount = ::max(m_iMaxFrameCount, (_uint)pChannel->Get_KeyFrames().size());
+	}
 
 	return S_OK;
 }
@@ -73,6 +79,26 @@ HRESULT CAnimation::Play_Animation(_float fTimeDelta)
 	for (auto& pChannel : m_Channels)
 	{	// iChannelIndex를 늘려가며 순회하면서 트랜스폼 업데이트 해 주고, 현재 키프레임도 다시 계산해서 저장 해 주는듯.
 		m_ChannelKeyFrames[iChannelIndex] = pChannel->Update_Transformation(m_fPlayTime, m_ChannelKeyFrames[iChannelIndex], m_Bones[iChannelIndex]);
+
+		++iChannelIndex;
+	}
+
+	return S_OK;
+}
+
+HRESULT CAnimation::Calculate_Animation(_uint iFrame)
+{
+	for (auto& pChannel : m_Channels)
+	{
+		for (auto& iCurrentKeyFrame : m_ChannelKeyFrames)
+			iCurrentKeyFrame = iFrame;
+	}
+
+	/* 이 애니메이션의 모든 채널의 키프레임을 보간한다. (아직 부모 기준)*/
+	_uint iChannelIndex = 0;
+	for (auto& pChannel : m_Channels)
+	{	// iChannelIndex를 늘려가며 순회하면서 트랜스폼 업데이트 해 주고, 현재 키프레임도 다시 계산해서 저장 해 주는듯.
+		pChannel->Update_Transformation_NotLerp(m_ChannelKeyFrames[iChannelIndex], m_Bones[iChannelIndex]);
 
 		++iChannelIndex;
 	}

@@ -49,7 +49,7 @@ void CP_Strife::LateTick(const _float& fTimeDelta)
 {
 	Super::LateTick(fTimeDelta);
 
-	GetModel()->UpdateAnimation(fTimeDelta);
+	//GetModel()->UpdateAnimation(fTimeDelta);
 
 	GetRenderer()->Add_RenderGroup(CRenderer::RG_NONBLEND, this);
 }
@@ -99,8 +99,11 @@ HRESULT CP_Strife::Ready_FixedComponents()
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Renderer, TEXT("Prototype_Component_Renderer"))))
 		return E_FAIL;
 
+	///* Com_Shader */
+	//if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Shader, TEXT("Prototype_Component_Shader_VtxAnimMesh"))))
+	//	return E_FAIL;
 	/* Com_Shader */
-	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Shader, TEXT("Prototype_Component_Shader_VtxAnimMesh"))))
+	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Shader, TEXT("Prototype_Component_Shader_VtxTexFetchAnim"))))
 		return E_FAIL;
 
 	/* Com_RigidBody */
