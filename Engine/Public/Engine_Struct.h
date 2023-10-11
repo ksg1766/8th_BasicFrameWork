@@ -55,13 +55,24 @@ namespace Engine
 			tweenRatio = 0;
 		}
 
-		float tweenDuration = 0.3f;
+		float tweenDuration = 0.1f;
 		float tweenRatio = 0.f;
 		float tweenSumTime = 0.f;
 		float padding = 0.f;
 		KeyframeDesc curr;
 		KeyframeDesc next;
 	}TWEENDESC;
+
+	struct InstancingData
+	{
+		Matrix matWorld;
+	};
+
+	#define MAX_INSTANCE 500
+	struct InstancedTweenDesc
+	{
+		TweenDesc tweens[MAX_INSTANCE];
+	};
 	//
 
 	typedef struct tagMeshMaterial

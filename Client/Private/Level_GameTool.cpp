@@ -11,6 +11,7 @@
 #include "LayersView.h"
 #include "TransformView.h"
 #include "SaveLoadView.h"
+#include "AnimationView.h"
 
 CLevel_GameTool::CLevel_GameTool(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -77,6 +78,8 @@ HRESULT CLevel_GameTool::Tick(const _float& fTimeDelta)
 		m_pTransformView->Tick();
 	if (m_pSaveLoadView)
 		m_pSaveLoadView->Tick();
+	if (m_pAnimationView)
+		m_pAnimationView->Tick();
 
 	//
 
@@ -156,6 +159,9 @@ HRESULT CLevel_GameTool::Ready_Tools()
 	m_pSaveLoadView = CSaveLoadView::Create(m_pDevice, m_pContext);
 	m_pMediator->SetSaveLoadView(m_pSaveLoadView);
 
+	m_pAnimationView = CAnimationView::Create(m_pDevice, m_pContext);
+	m_pMediator->SetAnimationView(m_pAnimationView);
+
 	return S_OK;
 }
 
@@ -218,6 +224,7 @@ void CLevel_GameTool::Free()
 	Safe_Release(m_pLayersView);
 	Safe_Release(m_pTransformView);
 	Safe_Release(m_pSaveLoadView);
+	Safe_Release(m_pAnimationView);
 	Safe_Release(m_pMediator);
 	Safe_Release(m_pBasicTerrain);
 

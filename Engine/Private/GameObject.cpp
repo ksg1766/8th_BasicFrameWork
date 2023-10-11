@@ -61,6 +61,11 @@ HRESULT CGameObject::Render()
 	return S_OK;
 }
 
+HRESULT CGameObject::RenderInstance()
+{
+	return S_OK;
+}
+
 CTransform* CGameObject::GetTransform()
 {
 	CComponent* pComponent = GetFixedComponent(ComponentType::Transform);

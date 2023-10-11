@@ -66,9 +66,9 @@ HRESULT CP_Strife::Render()
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
-	_uint		iNumMeshes = GetModel()->GetNumMeshes();
+	//_uint		iNumMeshes = GetModel()->GetNumMeshes();
 
-	for (_uint i = 0; i < iNumMeshes; i++)
+	/*for (_uint i = 0; i < iNumMeshes; i++)
 	{
 		GetModel()->BindMaterialTexture(GetShader(), "g_DiffuseTexture", i, aiTextureType_DIFFUSE);
 		GetModel()->BindMaterialTexture(GetShader(), "g_NormalTexture", i, aiTextureType_NORMALS);
@@ -76,7 +76,10 @@ HRESULT CP_Strife::Render()
 		GetShader()->Begin();
 
 		GetModel()->Render(i);
-	}
+	}*/
+	//for (_uint i = 0; i < iNumMeshes; i++)
+
+	GetModel()->Render();
 
 #ifdef _DEBUG
 	Super::DebugRender();
@@ -87,6 +90,10 @@ HRESULT CP_Strife::Render()
 
 HRESULT CP_Strife::Ready_FixedComponents()
 {
+	///* Com_Shader */
+	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Shader, TEXT("Prototype_Component_Shader_VtxTexFetchAnim"))))
+		return E_FAIL;
+
 	/* Com_Model */
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Model, TEXT("Prototype_Component_Model_") + GetObjectTag())))
 		return E_FAIL;
@@ -97,13 +104,6 @@ HRESULT CP_Strife::Ready_FixedComponents()
 
 	/* Com_Renderer */
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Renderer, TEXT("Prototype_Component_Renderer"))))
-		return E_FAIL;
-
-	///* Com_Shader */
-	//if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Shader, TEXT("Prototype_Component_Shader_VtxAnimMesh"))))
-	//	return E_FAIL;
-	/* Com_Shader */
-	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Shader, TEXT("Prototype_Component_Shader_VtxTexFetchAnim"))))
 		return E_FAIL;
 
 	/* Com_RigidBody */

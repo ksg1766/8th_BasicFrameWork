@@ -34,6 +34,7 @@ private:
 	/* Bones */
 	void	Read_BoneData(aiNode* node, _int index, _int parent, _int depth);
 	HRESULT Write_BoneData(wstring savePath);
+	_int	Find_BoneIndex(const _char* szBoneName);
 
 	/* Meshes */
 	HRESULT Read_MeshData(MODEL_TYPE modelType);

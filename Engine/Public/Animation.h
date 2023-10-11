@@ -28,13 +28,13 @@ public:
 	_float	GetTickPerSecond() { return m_fTickPerSecond; }
 
 private:
-	vector<CChannel*>		m_Channels;			/* 사용되는 채널 집합 */
+	vector<CChannel*>			m_Channels;			/* 사용되는 채널 집합 */
 
 	_float						m_fDuration = 0.f;	/* 전체 재생 시간 */
 	_float						m_fPlayTime = 0.f;	/* 현재 재생 시간 */
 	_float						m_fTickPerSecond = 0.f; /* 초당 재생 속도 */
 
-	vector<CBone*>		m_Bones;			/* 이 애니메이션을 재생하는데 필요한 뼈들 */
+	vector<CBone*>				m_Bones;			/* 이 애니메이션을 재생하는데 필요한 뼈들 */
 	vector<_uint>				m_ChannelKeyFrames;
 	_uint						m_iMaxFrameCount = 0;
 

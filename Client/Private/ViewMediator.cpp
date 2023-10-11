@@ -4,6 +4,7 @@
 #include "LayersView.h"
 #include "TransformView.h"
 #include "SaveLoadView.h"
+#include "AnimationView.h"
 
 CViewMediator::CViewMediator()
 {
@@ -64,10 +65,18 @@ void CViewMediator::SetSaveLoadView(CSaveLoadView* pSaveLoadView)
 	m_pSaveLoadView->SetMediator(this);
 }
 
+void CViewMediator::SetAnimationView(CAnimationView* pAnimationView)
+{
+	m_pAnimationView = pAnimationView;
+	Safe_AddRef(m_pAnimationView);
+	m_pAnimationView->SetMediator(this);
+}
+
 void CViewMediator::Free()
 {
 	Safe_Release(m_pPrefabsView);
 	Safe_Release(m_pLayersView);
 	Safe_Release(m_pTransformView);
 	Safe_Release(m_pSaveLoadView);
+	Safe_Release(m_pAnimationView);
 }

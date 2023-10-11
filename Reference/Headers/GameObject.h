@@ -31,6 +31,7 @@ public:
 	virtual void			LateTick(const _float& fTimeDelta);
 	virtual void			DebugRender();
 	virtual HRESULT			Render();
+	virtual HRESULT			RenderInstance();
 
 	CComponent*				GetFixedComponent(const ComponentType& type);
 	CTransform*				GetTransform();

@@ -27,6 +27,7 @@ public:
 	void	SetLayersView(class CLayersView* pLayersView);
 	void	SetTransformView(class CTransformView* pTransformView);
 	void	SetSaveLoadView(class CSaveLoadView* pSaveLoadView);
+	void	SetAnimationView(class CAnimationView* pAnimationView);
 
 protected:
 	CGameInstance*			m_pGameInstance = nullptr;
@@ -37,6 +38,7 @@ protected:
 	class CLayersView*		m_pLayersView = nullptr;
 	class CTransformView*	m_pTransformView = nullptr;
 	class CSaveLoadView*	m_pSaveLoadView = nullptr;
+	class CAnimationView*	m_pAnimationView = nullptr;
 
 public:
 	virtual void Free() override;

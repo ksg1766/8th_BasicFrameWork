@@ -321,6 +321,9 @@
     <ClInclude Include="..\Public\Channel.h">
       <Filter>01.Utiltiy\04.Component\11.Model\02.Animation\Channel</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Instance.h">
+      <Filter>01.Utiltiy\04.Component\05.VIBuffer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -478,6 +481,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Channel.cpp">
       <Filter>01.Utiltiy\04.Component\11.Model\02.Animation\Channel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Instance.cpp">
+      <Filter>01.Utiltiy\04.Component\05.VIBuffer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

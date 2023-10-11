@@ -57,15 +57,9 @@ HRESULT CStaticBase::Render()
 
 	_uint		iNumMeshes = GetModel()->GetNumMeshes();
 
-	for (_uint i = 0; i < iNumMeshes; i++)
-	{
-		GetModel()->BindMaterialTexture(GetShader(), "g_DiffuseTexture", i, aiTextureType_DIFFUSE);
-		GetModel()->BindMaterialTexture(GetShader(), "g_NormalTexture", i, aiTextureType_NORMALS);
+	GetShader()->Begin();
 
-		GetShader()->Begin();
-
-		GetModel()->Render(i);
-	}
+	GetModel()->Render();
 
 #ifdef _DEBUG
 	Super::DebugRender();

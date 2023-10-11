@@ -241,6 +241,17 @@ HRESULT CConverter::Write_BoneData(wstring savePath)
 	return S_OK;
 }
 
+_int CConverter::Find_BoneIndex(const _char* szBoneName)
+{
+	for (_int i = 0; i < _bones.size(); ++i)
+	{
+		if (!strcmp(_bones[i]->name.c_str(), szBoneName))
+			return i;
+	}
+
+	return 0;
+}
+
 HRESULT CConverter::Read_MeshData(MODEL_TYPE modelType)
 {
 	if (nullptr == _scene)
@@ -300,25 +311,25 @@ HRESULT CConverter::Read_MeshData(MODEL_TYPE modelType)
 
 					if (0.0f == mesh->verticesAnim[iVertexIndex].vBlendWeight.x)
 					{
-						mesh->verticesAnim[iVertexIndex].vBlendIndex.x = j;
+						mesh->verticesAnim[iVertexIndex].vBlendIndex.x = Find_BoneIndex(pAIBone->mName.C_Str());
 						mesh->verticesAnim[iVertexIndex].vBlendWeight.x = pAIBone->mWeights[k].mWeight;
 					}
 
 					else if (0.0f == mesh->verticesAnim[iVertexIndex].vBlendWeight.y)
 					{
-						mesh->verticesAnim[iVertexIndex].vBlendIndex.y = j;
+						mesh->verticesAnim[iVertexIndex].vBlendIndex.y = Find_BoneIndex(pAIBone->mName.C_Str());
 						mesh->verticesAnim[iVertexIndex].vBlendWeight.y = pAIBone->mWeights[k].mWeight;
 					}
 
 					else if (0.0f == mesh->verticesAnim[iVertexIndex].vBlendWeight.z)
 					{
-						mesh->verticesAnim[iVertexIndex].vBlendIndex.z = j;
+						mesh->verticesAnim[iVertexIndex].vBlendIndex.z = Find_BoneIndex(pAIBone->mName.C_Str());
 						mesh->verticesAnim[iVertexIndex].vBlendWeight.z = pAIBone->mWeights[k].mWeight;
 					}
 
 					else if (0.0f == mesh->verticesAnim[iVertexIndex].vBlendWeight.w)
 					{
-						mesh->verticesAnim[iVertexIndex].vBlendIndex.w = j;
+						mesh->verticesAnim[iVertexIndex].vBlendIndex.w = Find_BoneIndex(pAIBone->mName.C_Str());
 						mesh->verticesAnim[iVertexIndex].vBlendWeight.w = pAIBone->mWeights[k].mWeight;
 					}
 				}

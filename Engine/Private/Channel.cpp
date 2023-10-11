@@ -68,11 +68,9 @@ _uint CChannel::Update_Transformation(_float fPlayTime, _uint iCurrentKeyFrame, 
 
 void CChannel::Update_Transformation_NotLerp(_uint iCurrentKeyFrame, CBone* pNode)
 {
-	_float3			vScale;
-	_float4			vRotation;
-	_float3			vPosition;
-
-	_matrix	TransformationMatrix = Matrix::Identity;
+	_float3			vScale = _float3(1.f, 1.f, 1.f);
+	_float4			vRotation = _float4(0.f, 0.f, 0.f, 0.f);
+	_float3			vPosition = _float3(0.f, 0.f, 0.f);
 
 	/* 마지막 키프레임이상으로 넘어갔을때 : 마지막 키프레임 자세로 고정할 수 있도록 한다. */
 	if (iCurrentKeyFrame < m_KeyFrames.size())
@@ -88,7 +86,7 @@ void CChannel::Update_Transformation_NotLerp(_uint iCurrentKeyFrame, CBone* pNod
 		vPosition = m_KeyFrames.back().vPosition;
 	}
 
-	TransformationMatrix = XMMatrixAffineTransformation(XMLoadFloat3(&vScale), XMVectorSet(0.f, 0.f, 0.f, 1.f), XMLoadFloat4(&vRotation), XMVectorSetW(XMLoadFloat3(&vPosition), 1.f));
+	_matrix TransformationMatrix = XMMatrixAffineTransformation(XMLoadFloat3(&vScale), XMVectorSet(0.f, 0.f, 0.f, 1.f), XMLoadFloat4(&vRotation), XMVectorSetW(XMLoadFloat3(&vPosition), 1.f));
 
 	if (nullptr != pNode)
 		pNode->Set_Transformation(TransformationMatrix);

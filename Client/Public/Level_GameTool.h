@@ -34,6 +34,7 @@ private:
 	class CLayersView*		m_pLayersView = nullptr;
 	class CTransformView*	m_pTransformView = nullptr;
 	class CSaveLoadView*	m_pSaveLoadView = nullptr;
+	class CAnimationView*	m_pAnimationView = nullptr;
 
 	class CBasicTerrain*	m_pBasicTerrain = nullptr;
 

@@ -62,13 +62,8 @@ HRESULT CModel::Initialize_Prototype(const wstring& strModelFilePath, _fmatrix& 
 
 	if (TYPE_ANIM == m_eModelType)
 	{
-		XMStoreFloat4x4(&m_matPivot, XMMatrixRotationY(XMConvertToRadians(90.0f)) * XMMatrixRotationZ(XMConvertToRadians(-90.0f)));
 		if (FAILED(Ready_Animations(strModelFilePath)))
 			return E_FAIL;
-
-		/*for (auto& pMesh : m_Meshes)
-			if (FAILED(pMesh->Initialize_VTF()))
-				return E_FAIL;*/
 	}
 
 	return S_OK;
@@ -136,11 +131,11 @@ HRESULT CModel::Initialize(void * pArg)
 		m_Animations = Animations;
 	}
 
-	return S_OK;
-}
+	if (m_vecTextures.empty())
+		CreateVertexTexture2D();
 
-HRESULT CModel::InitializeWithFile(const wstring& strModelFilePath, _fmatrix& matPivot)
-{
+	m_pShader = m_pGameObject->GetShader();
+
 	return S_OK;
 }
 
@@ -148,8 +143,15 @@ void CModel::Tick(const _float& fTimeDelta)
 {
 	if (TYPE_ANIM == m_eModelType)
 	{
-		for (auto& pMesh : m_Meshes)
-			pMesh->Tick(fTimeDelta);
+		UpdateTweenData(fTimeDelta);
+
+		/*if (FAILED(m_pGameObject->GetShader()->Bind_Texture("g_CurTransformMap", m_vecSRVs[m_iCurrentAnimIndex])))
+			__debugbreak();
+		if (desc.next.animIndex >= 0)
+		{
+			if (FAILED(m_pGameObject->GetShader()->Bind_Texture("g_NextTransformMap", m_vecSRVs[desc.next.animIndex])))
+				__debugbreak();
+		}*/
 	}
 }
 
@@ -157,23 +159,59 @@ void CModel::DebugRender()
 {
 }
 
-HRESULT CModel::Render(_uint& iMeshIndex)
+HRESULT CModel::Render()
 {
 	if (TYPE_ANIM == m_eModelType)
 	{
-		/* 본의 최종 트랜스폼 계산 : <오프셋 * 루트 기준 * 사전변환> */
-		if (FAILED(m_pGameObject->GetShader()->Bind_RawValue("g_Tweenframes", &m_Meshes[iMeshIndex]->Get_TweenFrameDesc(), sizeof(TWEENDESC))))
-			return E_FAIL;
-		
-		//m_Meshes[iMeshIndex]->SetUp_BoneMatrices(m_BoneMatrices, XMLoadFloat4x4(&m_matPivot));
+		if (FAILED(m_pShader->Bind_Texture("g_CurTransformMap", m_vecSRVs[m_iCurrentAnimIndex])))
+			__debugbreak();
+		if (m_TweenDesc.next.animIndex >= 0)
+		{
+			if (FAILED(m_pShader->Bind_Texture("g_NextTransformMap", m_vecSRVs[m_TweenDesc.next.animIndex])))
+				__debugbreak();
+		}
 
-		//if (FAILED(m_pGameObject->GetShader()->Bind_RawValue("g_BoneMatrices", m_BoneMatrices, sizeof(_float4x4) * MAX_BONES)))
-		//	return E_FAIL;
+		/* 본의 최종 트랜스폼 계산 : <오프셋 * 루트 기준 * 사전변환> */
+		if (FAILED(m_pShader->Bind_RawValue("g_Tweenframes", &m_TweenDesc, sizeof(TWEENDESC))))
+			return E_FAIL;
 	}
 
-	m_Meshes[iMeshIndex]->Render();
+	for (_uint i = 0; i < m_iNumMeshes; i++)
+	{
+		BindMaterialTexture(m_pShader, "g_DiffuseTexture", i, aiTextureType_DIFFUSE);
+		BindMaterialTexture(m_pShader, "g_NormalTexture", i, aiTextureType_NORMALS);
+	
+		m_pShader->Begin();
+
+		m_Meshes[i]->Render();
+	}
 
 	return S_OK;
+}
+
+HRESULT CModel::RenderInstancing(CVIBuffer_Instance*& buffer)
+{
+	if (TYPE_ANIM == m_eModelType)
+	{
+		if (TYPE_ANIM == m_eModelType)
+		{
+			if (FAILED(m_pGameObject->GetShader()->Bind_Texture("g_CurTransformMap", m_vecSRVs[m_iCurrentAnimIndex])))
+				__debugbreak();
+			if (m_TweenDesc.next.animIndex >= 0)
+			{
+				if (FAILED(m_pGameObject->GetShader()->Bind_Texture("g_NextTransformMap", m_vecSRVs[m_TweenDesc.next.animIndex])))
+					__debugbreak();
+			}
+		}
+	}
+
+	return S_OK;
+}
+
+void CModel::PushTweenData(const InstancedTweenDesc& desc)
+{
+	/* 본의 최종 트랜스폼 계산 : <오프셋 * 루트 기준 * 사전변환> */
+	m_pGameObject->GetShader()->Bind_RawValue("g_TweenInstances", &desc, MAX_INSTANCE * sizeof(TweenDesc));
 }
 
 HRESULT CModel::BindMaterialTexture(CShader* pShader, const _char* pConstantName, _uint iMaterialIndex, aiTextureType eType)
@@ -202,6 +240,76 @@ HRESULT CModel::UpdateAnimation(const _float& fTimeDelta)
 	return S_OK;
 }
 
+HRESULT CModel::UpdateTweenData(const _float& fTimeDelta)
+{
+	if (m_iCurrentAnimIndex < 0)
+		m_iCurrentAnimIndex = m_Animations.size() - 1;
+
+	TWEENDESC& desc = m_TweenDesc;
+
+	CAnimation* currentAnim = m_Animations[m_iCurrentAnimIndex];
+
+	desc.curr.sumTime += fTimeDelta;
+
+	{
+		if (currentAnim)
+		{
+			_float timePerFrame = 1 / currentAnim->GetTickPerSecond();
+			if (desc.curr.sumTime >= timePerFrame)
+			{
+				desc.curr.sumTime = 0.f;
+				desc.curr.currFrame = (desc.curr.currFrame + 1) % currentAnim->GetMaxFrameCount();
+				desc.curr.nextFrame = (desc.curr.currFrame + 1) % currentAnim->GetMaxFrameCount();
+			}
+
+			desc.curr.ratio = (desc.curr.sumTime / timePerFrame);
+		}
+	}
+
+	// 다음 애니메이션이 예약 되어 있다면
+	if (desc.next.animIndex >= 0)
+	{
+		desc.tweenSumTime += fTimeDelta;
+		desc.tweenRatio = desc.tweenSumTime / desc.tweenDuration;
+
+		if (desc.tweenRatio >= 1.f)
+		{
+			// 애니메이션 교체 성공
+			desc.curr = desc.next;
+			m_iCurrentAnimIndex = desc.next.animIndex;
+			desc.ClearNextAnim();
+		}
+		else
+		{
+			// 교체중
+			CAnimation* nextAnim = m_Animations[desc.next.animIndex];
+			desc.next.sumTime += fTimeDelta;
+
+			_float timePerFrame = 1.f / nextAnim->GetTickPerSecond();
+
+			if (desc.next.ratio >= 1.f)
+			{
+				desc.next.sumTime = 0;
+
+				desc.next.currFrame = (desc.next.currFrame + 1) % nextAnim->GetMaxFrameCount();
+				desc.next.nextFrame = (desc.next.currFrame + 1) % nextAnim->GetMaxFrameCount();
+			}
+
+			desc.next.ratio = desc.next.sumTime / timePerFrame;
+		}
+	}
+
+	if (0 <= m_iNextAnimIndex)
+	{
+		desc.ClearNextAnim(); // 기존꺼 밀어주기
+		desc.next.animIndex = m_iNextAnimIndex;
+
+		m_iNextAnimIndex = -1;
+	}
+
+	return S_OK;
+}
+
 CBone* CModel::GetBone(const _char* pNodeName)
 {
 	auto	iter = find_if(m_Bones.begin(), m_Bones.end(), [&](CBone* pNode)
@@ -223,6 +331,12 @@ CBone* CModel::GetBone(const _int& iIndex)
 	return m_Bones[iIndex];
 }
 
+InstanceID CModel::GetInstanceID()
+{
+	// TODO : 아이디 뭘로할지 생각해보자
+	return InstanceID();
+}
+
 _uint CModel::GetMaterialIndex(_uint iMeshIndex)
 {
 	return m_Meshes[iMeshIndex]->Get_MaterialIndex();
@@ -231,10 +345,6 @@ _uint CModel::GetMaterialIndex(_uint iMeshIndex)
 void CModel::SetNextAnimationIndex(_int iAnimIndex)
 {
 	m_iNextAnimIndex = iAnimIndex;
-	for (auto& pMesh : m_Meshes)
-	{
-		pMesh->ReserveNextAnim();
-	}
 }
 
 HRESULT CModel::Ready_Bones(const wstring& strModelFilePath)
@@ -369,6 +479,9 @@ HRESULT CModel::Ready_Meshes(const wstring& strModelFilePath, Matrix matPivot)
 		}
 		m_Meshes.push_back(pMesh);
 	}
+
+	m_iNumMeshes = iNumMeshes;
+
 	return S_OK;
 }
 
@@ -486,6 +599,103 @@ HRESULT CModel::Ready_Animations(const wstring& strModelFilePath)
 	}
 
 	return S_OK;
+}
+
+HRESULT CModel::CreateVertexTexture2D()
+{
+	_uint iAnimCount = (_int)m_Animations.size();
+	if (0 == iAnimCount)
+		return S_OK;
+
+	m_vecTextures.resize(iAnimCount);
+	m_vecSRVs.resize(iAnimCount);
+
+	vector<AnimTransform>	_animTransforms;
+	_animTransforms.resize(iAnimCount);
+
+	for (uint32 i = 0; i < iAnimCount; i++)
+	{
+		_uint iMaxFrameCount = m_Animations[i]->GetMaxFrameCount();
+		CreateAnimationTransform(i, _animTransforms);
+
+		// Creature Texture
+		{
+			D3D11_TEXTURE2D_DESC desc;
+			ZeroMemory(&desc, sizeof(D3D11_TEXTURE2D_DESC));
+			desc.Width = m_Bones.size() * 4;
+			desc.Height = iMaxFrameCount;
+			desc.ArraySize = 1;
+			desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT; // 16바이트
+			desc.Usage = D3D11_USAGE_IMMUTABLE;
+			desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+			desc.MipLevels = 1;
+			desc.SampleDesc.Count = 1;
+
+			const uint32 dataSize = m_Bones.size() * sizeof(Matrix);
+			const uint32 pageSize = dataSize * iMaxFrameCount;
+			void* mallocPtr = ::malloc(pageSize);
+
+			// 파편화된 데이터를 조립한다.
+
+			BYTE* pageStartPtr = reinterpret_cast<BYTE*>(mallocPtr);
+
+			for (uint32 f = 0; f < iMaxFrameCount; f++)
+			{
+				void* ptr = pageStartPtr + f * dataSize;
+				::memcpy(ptr, _animTransforms[i].transforms[f].data(), dataSize);
+			}
+
+			// 리소스 만들기
+			D3D11_SUBRESOURCE_DATA subResource;
+
+			void* ptr = (BYTE*)mallocPtr;
+			subResource.pSysMem = ptr;
+			subResource.SysMemPitch = dataSize;
+
+			if (FAILED(m_pDevice->CreateTexture2D(&desc, &subResource, &m_vecTextures[i])))
+				return E_FAIL;
+
+			::free(mallocPtr);
+		}
+
+		// Create SRV
+		{
+			D3D11_SHADER_RESOURCE_VIEW_DESC desc;
+			ZeroMemory(&desc, sizeof(desc));
+			desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+			desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+			desc.Texture2DArray.MipLevels = 1;
+			desc.Texture2DArray.ArraySize = iAnimCount;
+
+			if (FAILED(m_pDevice->CreateShaderResourceView(m_vecTextures[i], &desc, &m_vecSRVs[i])))
+				return E_FAIL;
+		}
+	}
+
+	return S_OK;
+}
+
+void CModel::CreateAnimationTransform(_uint index, vector<AnimTransform>& animTransforms)
+{
+	CAnimation* pAnimation = m_Animations[index];
+
+	for (uint32 f = 0; f < pAnimation->GetMaxFrameCount(); f++)
+	{
+		pAnimation->Calculate_Animation(f);
+
+		for (uint32 b = 0; b < m_Bones.size(); b++)
+		{
+			m_Bones[b]->Set_CombinedTransformation();
+
+			if (0 == m_Bones.size())
+			{
+				XMStoreFloat4x4(&animTransforms[index].transforms[f][b], XMMatrixIdentity());
+				return;
+			}
+
+			XMStoreFloat4x4(&animTransforms[index].transforms[f][b], m_Bones[b]->Get_OffSetMatrix() * m_Bones[b]->Get_CombinedTransformation() * m_matPivot);
+		}
+	}
 }
 
 CModel * CModel::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strModelFilePath, _fmatrix matPivot)

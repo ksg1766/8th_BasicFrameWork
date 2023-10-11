@@ -5,7 +5,17 @@
 
 BEGIN(Engine)
 
-#define MAX_BONES 250 /* 셰이더 파일에서도 똑같이 정의 해줘야한다. */
+// Bone
+#define MAX_BONES 200
+#define MAX_KEYFRAMES 300
+
+struct AnimTransform
+{
+	// [ ][ ][ ][ ][ ][ ][ ] ... 200개
+	using TransformArrayType = array<Matrix, MAX_BONES>;
+	// [ ][ ][ ][ ][ ][ ][ ] ... 300 개
+	array<TransformArrayType, MAX_KEYFRAMES> transforms;
+};
 
 class CBone;
 class CMesh;
@@ -24,14 +34,17 @@ private:
 public:
 	virtual HRESULT Initialize_Prototype(const wstring& strModelFilePath, _fmatrix& matPivot);
 	virtual HRESULT Initialize(void* pArg)			override;
-	HRESULT			InitializeWithFile(const wstring& strModelFilePath, _fmatrix& matPivot);
 	virtual void	Tick(const _float& fTimeDelta)	override;
 	void			DebugRender()					override;
-	HRESULT			Render(_uint& iMeshIndex);
+	HRESULT			Render();
+	HRESULT			RenderInstancing(class CVIBuffer_Instance*& buffer);
 
 public:
-	HRESULT			BindMaterialTexture(class CShader* pShader, const _char* pConstantName, _uint iMaterialIndex, aiTextureType eType);
 	HRESULT			UpdateAnimation(const _float& fTimeDelta);
+	HRESULT			UpdateTweenData(const _float& fTimeDelta);
+
+	void			PushTweenData(const InstancedTweenDesc& desc);
+	HRESULT			BindMaterialTexture(class CShader* pShader, const _char* pConstantName, _uint iMaterialIndex, aiTextureType eType);
 
 private:
 	TYPE						m_eModelType = TYPE_END;
@@ -45,37 +58,45 @@ private:
 	vector<MESH_MATERIAL>		m_Materials;
 
 	_float4x4					m_matPivot;
-	/* Cache */
+
 	_int						m_iCurrentAnimIndex = 0;
 	_int						m_iNextAnimIndex = -1;
-	_float4x4					m_BoneMatrices[MAX_BONES] = {};
-
-public:
-	_uint		GetNumMeshes() const					{ return (_uint)m_Meshes.size(); }
-	_uint		GetMaterialIndex(_uint iMeshIndex);
-	_matrix		GetPivotMatrix()						{ return XMLoadFloat4x4(&m_matPivot); }
-	CBone*		GetBone(const _char* pNodeName);
-	CBone*		GetBone(const _int& iIndex);
-	vector<CAnimation*>& GetAnimations()				{ return m_Animations; }
-	const _int	GetAnimationCount() const				{ return (_int)m_Animations.size(); }
-	const _int	GetCurAnimationIndex() const			{ return m_iCurrentAnimIndex; }
-	const _int	GetNextAnimationIndex() const			{ return m_iNextAnimIndex; }
-
-public:
-	void		SetAnimation(_int iAnimIndex)			{ m_iCurrentAnimIndex = iAnimIndex; }
-	void		SetNextAnimationIndex(_int iAnimIndex);
 
 private:
-	HRESULT Ready_Bones(const wstring& strModelFilePath);
-	HRESULT Ready_Meshes(const wstring& strModelFilePath, Matrix matPivot);
-	//HRESULT Ready_Skeletal_Meshes(const wstring& strModelFilePath);
-	//HRESULT Ready_Static_Meshes(const wstring& strModelFilePath, Matrix matPivot);
-	HRESULT Ready_Materials(const wstring& strModelFilePath);
-	HRESULT Ready_Animations(const wstring& strModelFilePath);
+	TWEENDESC					m_TweenDesc;
+
+	vector<ID3D11Texture2D*>	m_vecTextures;
+	vector<ID3D11ShaderResourceView*> m_vecSRVs;
+
+	class CShader*				m_pShader;
 
 public:
-	//static	CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	static	CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPath, _fmatrix matPivot = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f)));
+	_uint			GetNumMeshes() const					{ return (_uint)m_Meshes.size(); }
+	_uint			GetMaterialIndex(_uint iMeshIndex);
+	CBone*			GetBone(const _char* pNodeName);
+	CBone*			GetBone(const _int& iIndex);
+	const _int		GetCurAnimationIndex() const			{ return m_iCurrentAnimIndex; }
+	const _int		GetNextAnimationIndex() const			{ return m_iNextAnimIndex; }
+	
+	InstanceID		GetInstanceID();
+	TweenDesc&		GetTweenDesc() { return m_TweenDesc; }
+
+public:
+	void			SetAnimation(_int iAnimIndex)			{ m_iCurrentAnimIndex = iAnimIndex; }
+	void			SetNextAnimationIndex(_int iAnimIndex);
+
+private:
+	HRESULT			Ready_Bones(const wstring& strModelFilePath);
+	HRESULT			Ready_Meshes(const wstring& strModelFilePath, Matrix matPivot);
+	HRESULT			Ready_Materials(const wstring& strModelFilePath);
+	HRESULT			Ready_Animations(const wstring& strModelFilePath);
+
+private:
+	HRESULT			CreateVertexTexture2D();
+	void			CreateAnimationTransform(_uint index, vector<AnimTransform>& animTransforms);
+
+public:
+	static	CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPath, _fmatrix matPivot = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(90.0f)));
 	virtual CComponent* Clone(CGameObject* pGameObject, void* pArg) override;
 	virtual void Free() override;
 };
