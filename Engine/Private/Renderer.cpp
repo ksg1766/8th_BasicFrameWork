@@ -33,6 +33,8 @@ HRESULT CRenderer::Add_RenderGroup(RENDERGROUP eRenderGroup, CGameObject * pGame
 
 HRESULT CRenderer::Draw_RenderObjects()
 {
+	ClearInstanceData();
+
 	if (FAILED(Render_Priority()))
 		return S_OK;
 	if (FAILED(Render_NonLight()))
@@ -108,31 +110,36 @@ HRESULT CRenderer::Render_NonBlend_Instance()
 		Safe_Release(pGameObject);
 	}
 
-	for (auto& pair : cache)
+	for (auto& mapIter : cache)
 	{
 		InstancedTweenDesc* tweenDesc = new InstancedTweenDesc;
 
-		vector<CGameObject*>& vec = pair.second;
+		vector<CGameObject*>& vecInstances = mapIter.second;
 
-		const InstanceID instanceId = pair.first;
+		const InstanceID instanceId = mapIter.first;
 
-		for (_int i = 0; i < vec.size(); i++)
+		for (_int i = 0; i < vecInstances.size(); i++)
 		{
-			CGameObject*& pGameObject = vec[i];
+			CGameObject*& pGameObject = vecInstances[i];
 			InstancingData data;
-			data.matWorld = pGameObject->GetTransform()->WorldMatrix();
+			data.matWorld = pGameObject->GetTransform()->WorldMatrix().Transpose();
 
 			AddInstanceData(instanceId, data);
 
 			// INSTANCING
-			pGameObject->GetModel()->UpdateTweenData(0.01f);	// TODO: deltatime을 전달할 수 없다... InstancingManager가 필요한가...
-			tweenDesc->tweens[i] = pGameObject->GetModel()->GetTweenDesc();
+			if(CModel::TYPE_ANIM == instanceId.first)
+				tweenDesc->tweens[i] = pGameObject->GetModel()->GetTweenDesc();
 		}
 
-		vec[0]->GetModel()->PushTweenData(*tweenDesc);
+		if (CModel::TYPE_ANIM == instanceId.first)
+			vecInstances[0]->GetModel()->PushTweenData(*tweenDesc);
 
+		//Safe_Delete(tweenDesc);
+
+		vecInstances[0]->Render();	// BindShaderResource 호출을 위함.
+									// 이 경우 수업 코드와 다른 점은 InstanceID당 view, proj matrix 한번만 binding
 		CVIBuffer_Instance*& buffer = m_InstanceBuffers[instanceId];
-		vec[0]->GetModel()->RenderInstancing(buffer);
+		vecInstances[0]->GetModel()->RenderInstancing(buffer);
 	}
 	
 	m_RenderObjects[RG_NONBLEND_INSTANCE].clear();
@@ -195,7 +202,7 @@ void CRenderer::ClearInstanceData()
 {
 	for (auto& pair : m_InstanceBuffers)
 	{
-		CVIBuffer_Instance*& pBuffer = pair.second;
+		CVIBuffer_Instance* pBuffer = pair.second;
 		pBuffer->ClearData();
 	}
 }
@@ -222,6 +229,6 @@ CComponent * CRenderer::Clone(CGameObject* pGameObject, void * pArg)
 
 void CRenderer::Free()
 {
-	__super::Free();
-
+	ClearInstanceData();
+	Super::Free();
 }

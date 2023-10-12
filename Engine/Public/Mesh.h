@@ -3,6 +3,7 @@
 /* 모델의 특정 파츠를 의미하는 메시. */
 /* 각 파츠(메시)마다 정점, 인덱스버퍼를 가진다. */
 #include "VIBuffer.h"
+#include "VIBuffer_Instance.h"
 
 BEGIN(Engine)
 
@@ -33,6 +34,7 @@ private:
 private:
 	vector<class CBone*>	m_Bones;			/* 이 메시에 영향을 주는 뼈 집합 (메시별로 렌더링시, 해당 메시에 영향을 주는 뼈 행렬을 모아서 토스 */
 	vector<_int>			m_BoneIndices;		/* Cache (Initialize에서 뼈를 찾아오기 위한 인덱스들) */
+	friend HRESULT CVIBuffer_Instance::Render(CMesh* pMesh);
 
 private:
 	HRESULT Ready_StaticVertices(vector<VTXMESH>& Vertices, _fmatrix& PivotMatrix);

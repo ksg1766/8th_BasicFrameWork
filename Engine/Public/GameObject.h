@@ -52,7 +52,7 @@ public:
 	_bool					IsDead()		const			{ return m_IsDead; }
 	LAYERTAG				GetLayerTag()	const			{ return m_eLayerTag; }
 	const wstring&			GetObjectTag()	const			{ return m_strObjectTag; }
-
+	
 	void					SetLayerTag(LAYERTAG eLayerTag) { m_eLayerTag = eLayerTag; }
 	void					SetObjectTag(const wstring& strObjectTag) { m_strObjectTag = strObjectTag; }
 	void					SetDeadState(_bool bDead)		{ m_IsDead = bDead; }

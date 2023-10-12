@@ -7,7 +7,7 @@ BEGIN(Engine)
 class ENGINE_DLL CVIBuffer_Instance final : public CVIBuffer
 {
 	using Super = CVIBuffer;
-protected:
+private:
 	CVIBuffer_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CVIBuffer_Instance(const CVIBuffer_Instance& rhs);
 	virtual ~CVIBuffer_Instance() = default;
@@ -15,7 +15,7 @@ protected:
 public:
 	virtual HRESULT Initialize_Prototype()	override;
 	virtual HRESULT Initialize(void* pArg)	override;
-	virtual HRESULT Render()				override;
+	HRESULT Render(class CMesh* pMesh);
 
 protected:
 	//ID3D11Buffer* m_pVB = { nullptr };
@@ -40,23 +40,14 @@ protected:
 	//DXGI_FORMAT				m_eIndexFormat;
 
 private:
-	HRESULT Create_Buffer(_uint maxCount = MAX_INSTANCE);
+	HRESULT Create_Buffer(_uint iMaxCount = MAX_INSTANCE);
 
 public:
 	void ClearData();
 	void AddData(InstancingData& data);
-	void PushData();
-
-public:
-	_uint			GetCount()			{ return static_cast<_uint>(m_vecData.size()); }
-	ID3D11Buffer*	GetBuffer()			{ return m_pVB; }
-
-	void	SetID(uint64 instanceId)	{ m_iInstanceId = instanceId; }
-	uint64	GetID()						{ return m_iInstanceId; }
 
 private:
-	uint64						m_iInstanceId = 0;
-	_uint						m_maxCount = 0;
+	_uint						m_iMaxCount = 0;
 	vector<InstancingData>		m_vecData;
 
 public:

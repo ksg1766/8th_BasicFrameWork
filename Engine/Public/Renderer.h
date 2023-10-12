@@ -9,6 +9,7 @@ BEGIN(Engine)
 
 class ENGINE_DLL CRenderer final : public CComponent
 {
+	using Super = CComponent;
 public:
 	/* RG_NONBLEND : 이후 그려지는 Blend오브젝트들의 섞는 연산을 위해 반드시 불투명한 애들을 먼저 그려야한다. */
 	/* RG_BLEND : 반투명하게 그려지는 객체들도 반드시 멀리있는 놈부터 그린다. */

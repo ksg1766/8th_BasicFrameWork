@@ -6,7 +6,7 @@
 BEGIN(Engine)
 
 // Bone
-#define MAX_BONES 200
+#define MAX_BONES 150
 #define MAX_KEYFRAMES 300
 
 struct AnimTransform
@@ -37,7 +37,7 @@ public:
 	virtual void	Tick(const _float& fTimeDelta)	override;
 	void			DebugRender()					override;
 	HRESULT			Render();
-	HRESULT			RenderInstancing(class CVIBuffer_Instance*& buffer);
+	HRESULT			RenderInstancing(class CVIBuffer_Instance*& pInstanceBuffer);
 
 public:
 	HRESULT			UpdateAnimation(const _float& fTimeDelta);
@@ -65,10 +65,14 @@ private:
 private:
 	TWEENDESC					m_TweenDesc;
 
-	vector<ID3D11Texture2D*>	m_vecTextures;
-	vector<ID3D11ShaderResourceView*> m_vecSRVs;
+	static _bool				m_VTFCreated;	// TODO:다른곳에 텍스쳐를 가지고 있는지 기록할 수 있도록 하자.
+	
+	ID3D11Texture2D*			m_pTexture = nullptr;
+	ID3D11ShaderResourceView*	m_pSRV = nullptr;
 
 	class CShader*				m_pShader;
+
+	static _int					m_iInstanceID;
 
 public:
 	_uint			GetNumMeshes() const					{ return (_uint)m_Meshes.size(); }
@@ -78,8 +82,9 @@ public:
 	const _int		GetCurAnimationIndex() const			{ return m_iCurrentAnimIndex; }
 	const _int		GetNextAnimationIndex() const			{ return m_iNextAnimIndex; }
 	
-	InstanceID		GetInstanceID();
-	TweenDesc&		GetTweenDesc() { return m_TweenDesc; }
+	// Instancing
+	TweenDesc&		GetTweenDesc()							{ return m_TweenDesc; }
+	const InstanceID& GetInstanceID() const					{ return make_pair((_int)m_eModelType, m_iInstanceID); }
 
 public:
 	void			SetAnimation(_int iAnimIndex)			{ m_iCurrentAnimIndex = iAnimIndex; }
@@ -92,7 +97,7 @@ private:
 	HRESULT			Ready_Animations(const wstring& strModelFilePath);
 
 private:
-	HRESULT			CreateVertexTexture2D();
+	HRESULT			CreateVertexTexture2DArray();
 	void			CreateAnimationTransform(_uint index, vector<AnimTransform>& animTransforms);
 
 public:

@@ -68,7 +68,7 @@ namespace Engine
 		Matrix matWorld;
 	};
 
-	#define MAX_INSTANCE 500
+	#define MAX_INSTANCE 100
 	struct InstancedTweenDesc
 	{
 		TweenDesc tweens[MAX_INSTANCE];
@@ -164,6 +164,19 @@ namespace Engine
 
 	}VTXMESH;
 
+	//typedef struct ENGINE_DLL tagVertex_Anim_Mesh
+	//{
+	//	XMFLOAT3		vPosition;
+	//	XMFLOAT3		vNormal;
+	//	XMFLOAT2		vTexture;
+	//	XMFLOAT3		vTangent;
+	//	XMUINT4			vBlendIndex; /* 이 정점에 영향을 주는 뼈의 인덱스 네개. */
+	//	XMFLOAT4		vBlendWeight; /* 영향르 주고 있는 각 뼈대의 영향 비율 */
+
+	//	static const _uint iNumElements = 6;
+	//	static const D3D11_INPUT_ELEMENT_DESC Elements[iNumElements];
+	//}VTXANIMMESH;
+
 	typedef struct ENGINE_DLL tagVertex_Anim_Mesh
 	{
 		XMFLOAT3		vPosition;
@@ -172,8 +185,11 @@ namespace Engine
 		XMFLOAT3		vTangent;
 		XMUINT4			vBlendIndex; /* 이 정점에 영향을 주는 뼈의 인덱스 네개. */
 		XMFLOAT4		vBlendWeight; /* 영향르 주고 있는 각 뼈대의 영향 비율 */
+		// Instance
+		_int			iInstanceID;
+		XMFLOAT4X4		matWorld;
 
-		static const _uint iNumElements = 6;
+		static const _uint iNumElements = 10;
 		static const D3D11_INPUT_ELEMENT_DESC Elements[iNumElements];
 	}VTXANIMMESH;
 

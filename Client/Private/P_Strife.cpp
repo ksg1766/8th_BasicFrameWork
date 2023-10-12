@@ -51,11 +51,13 @@ void CP_Strife::LateTick(const _float& fTimeDelta)
 
 	//GetModel()->UpdateAnimation(fTimeDelta);
 
-	GetRenderer()->Add_RenderGroup(CRenderer::RG_NONBLEND, this);
+	//GetRenderer()->Add_RenderGroup(CRenderer::RG_NONBLEND, this);
+	GetRenderer()->Add_RenderGroup(CRenderer::RG_NONBLEND_INSTANCE, this);
 }
 
 void CP_Strife::DebugRender()
 {
+	Super::DebugRender();
 }
 
 HRESULT CP_Strife::Render()
@@ -66,23 +68,10 @@ HRESULT CP_Strife::Render()
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
-	//_uint		iNumMeshes = GetModel()->GetNumMeshes();
-
-	/*for (_uint i = 0; i < iNumMeshes; i++)
-	{
-		GetModel()->BindMaterialTexture(GetShader(), "g_DiffuseTexture", i, aiTextureType_DIFFUSE);
-		GetModel()->BindMaterialTexture(GetShader(), "g_NormalTexture", i, aiTextureType_NORMALS);
-
-		GetShader()->Begin();
-
-		GetModel()->Render(i);
-	}*/
-	//for (_uint i = 0; i < iNumMeshes; i++)
-
-	GetModel()->Render();
+	//GetModel()->Render();
 
 #ifdef _DEBUG
-	Super::DebugRender();
+	DebugRender();
 #endif
 
 	return S_OK;
@@ -90,8 +79,12 @@ HRESULT CP_Strife::Render()
 
 HRESULT CP_Strife::Ready_FixedComponents()
 {
-	///* Com_Shader */
-	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Shader, TEXT("Prototype_Component_Shader_VtxTexFetchAnim"))))
+	/* Com_Shader */
+	/*if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Shader, TEXT("Prototype_Component_Shader_VtxTexFetchAnim"))))
+		return E_FAIL;*/
+
+	/* Com_Shader */
+	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Shader, TEXT("Prototype_Component_Shader_VtxAnimInstancing"))))
 		return E_FAIL;
 
 	/* Com_Model */
@@ -124,7 +117,7 @@ HRESULT CP_Strife::Bind_ShaderResources()
 	/* 셰이더 전역변수로 던져야 할 값들을 던지자. */
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	if (FAILED(GetTransform()->Bind_ShaderResources(GetShader(), "g_WorldMatrix")) ||
+	if (/*FAILED(GetTransform()->Bind_ShaderResources(GetShader(), "g_WorldMatrix")) ||*/
 		FAILED(pGameInstance->Bind_TransformToShader(GetShader(), "g_ViewMatrix", CPipeLine::D3DTS_VIEW)) ||
 		FAILED(pGameInstance->Bind_TransformToShader(GetShader(), "g_ProjMatrix", CPipeLine::D3DTS_PROJ)) ||
 		FAILED(GetShader()->Bind_RawValue("g_vCamPosition", &static_cast<const _float4&>(pGameInstance->Get_CamPosition_Float4()), sizeof(_float4))))

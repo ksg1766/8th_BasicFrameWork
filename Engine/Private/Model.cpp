@@ -10,6 +10,9 @@
 #include "FileUtils.h"
 #include <filesystem>
 
+_int CModel::m_iInstanceID = 0;
+_bool CModel::m_VTFCreated = false;
+
 CModel::CModel(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: Super(pDevice, pContext, ComponentType::Model)
 {
@@ -47,7 +50,8 @@ CModel::CModel(const CModel& rhs)
 
 HRESULT CModel::Initialize_Prototype(const wstring& strModelFilePath, _fmatrix& matPivot)
 {
-	XMStoreFloat4x4(&m_matPivot, matPivot);
+	//XMStoreFloat4x4(&m_matPivot, matPivot);
+	XMStoreFloat4x4(&m_matPivot, XMMatrixScaling(0.2f, 0.2f, 0.2f) * XMMatrixRotationY(XMConvertToRadians(90.0f)));
 
 	/* DirectX로 그려낼 수 있도록 데이터들을 정리한다. */
 
@@ -131,8 +135,11 @@ HRESULT CModel::Initialize(void * pArg)
 		m_Animations = Animations;
 	}
 
-	if (m_vecTextures.empty())
-		CreateVertexTexture2D();
+	if (!m_VTFCreated && !m_pTexture) // TODO: 지우자!
+	{
+		CreateVertexTexture2DArray();
+		m_VTFCreated = true;
+	}
 
 	m_pShader = m_pGameObject->GetShader();
 
@@ -144,14 +151,6 @@ void CModel::Tick(const _float& fTimeDelta)
 	if (TYPE_ANIM == m_eModelType)
 	{
 		UpdateTweenData(fTimeDelta);
-
-		/*if (FAILED(m_pGameObject->GetShader()->Bind_Texture("g_CurTransformMap", m_vecSRVs[m_iCurrentAnimIndex])))
-			__debugbreak();
-		if (desc.next.animIndex >= 0)
-		{
-			if (FAILED(m_pGameObject->GetShader()->Bind_Texture("g_NextTransformMap", m_vecSRVs[desc.next.animIndex])))
-				__debugbreak();
-		}*/
 	}
 }
 
@@ -163,13 +162,8 @@ HRESULT CModel::Render()
 {
 	if (TYPE_ANIM == m_eModelType)
 	{
-		if (FAILED(m_pShader->Bind_Texture("g_CurTransformMap", m_vecSRVs[m_iCurrentAnimIndex])))
+		if (FAILED(m_pShader->Bind_Texture("g_TransformMap", m_pSRV)))
 			__debugbreak();
-		if (m_TweenDesc.next.animIndex >= 0)
-		{
-			if (FAILED(m_pShader->Bind_Texture("g_NextTransformMap", m_vecSRVs[m_TweenDesc.next.animIndex])))
-				__debugbreak();
-		}
 
 		/* 본의 최종 트랜스폼 계산 : <오프셋 * 루트 기준 * 사전변환> */
 		if (FAILED(m_pShader->Bind_RawValue("g_Tweenframes", &m_TweenDesc, sizeof(TWEENDESC))))
@@ -189,20 +183,22 @@ HRESULT CModel::Render()
 	return S_OK;
 }
 
-HRESULT CModel::RenderInstancing(CVIBuffer_Instance*& buffer)
+HRESULT CModel::RenderInstancing(CVIBuffer_Instance*& pInstanceBuffer)
 {
 	if (TYPE_ANIM == m_eModelType)
 	{
-		if (TYPE_ANIM == m_eModelType)
-		{
-			if (FAILED(m_pGameObject->GetShader()->Bind_Texture("g_CurTransformMap", m_vecSRVs[m_iCurrentAnimIndex])))
-				__debugbreak();
-			if (m_TweenDesc.next.animIndex >= 0)
-			{
-				if (FAILED(m_pGameObject->GetShader()->Bind_Texture("g_NextTransformMap", m_vecSRVs[m_TweenDesc.next.animIndex])))
-					__debugbreak();
-			}
-		}
+		if (FAILED(m_pGameObject->GetShader()->Bind_Texture("g_TransformMap", m_pSRV)))
+			__debugbreak();
+	}
+
+	for (_uint i = 0; i < m_iNumMeshes; i++)
+	{
+		BindMaterialTexture(m_pShader, "g_DiffuseTexture", i, aiTextureType_DIFFUSE);
+		BindMaterialTexture(m_pShader, "g_NormalTexture", i, aiTextureType_NORMALS);
+
+		m_pShader->Begin();
+
+		pInstanceBuffer->Render(m_Meshes[i]);
 	}
 
 	return S_OK;
@@ -211,7 +207,8 @@ HRESULT CModel::RenderInstancing(CVIBuffer_Instance*& buffer)
 void CModel::PushTweenData(const InstancedTweenDesc& desc)
 {
 	/* 본의 최종 트랜스폼 계산 : <오프셋 * 루트 기준 * 사전변환> */
-	m_pGameObject->GetShader()->Bind_RawValue("g_TweenInstances", &desc, MAX_INSTANCE * sizeof(TweenDesc));
+	if(FAILED(m_pGameObject->GetShader()->Bind_RawValue("g_TweenInstances", &desc, MAX_INSTANCE * sizeof(TweenDesc))))
+		__debugbreak();
 }
 
 HRESULT CModel::BindMaterialTexture(CShader* pShader, const _char* pConstantName, _uint iMaterialIndex, aiTextureType eType)
@@ -329,12 +326,6 @@ CBone* CModel::GetBone(const _int& iIndex)
 		return nullptr;
 
 	return m_Bones[iIndex];
-}
-
-InstanceID CModel::GetInstanceID()
-{
-	// TODO : 아이디 뭘로할지 생각해보자
-	return InstanceID();
 }
 
 _uint CModel::GetMaterialIndex(_uint iMeshIndex)
@@ -601,79 +592,85 @@ HRESULT CModel::Ready_Animations(const wstring& strModelFilePath)
 	return S_OK;
 }
 
-HRESULT CModel::CreateVertexTexture2D()
+HRESULT CModel::CreateVertexTexture2DArray()
 {
 	_uint iAnimCount = (_int)m_Animations.size();
 	if (0 == iAnimCount)
 		return S_OK;
-
-	m_vecTextures.resize(iAnimCount);
-	m_vecSRVs.resize(iAnimCount);
 
 	vector<AnimTransform>	_animTransforms;
 	_animTransforms.resize(iAnimCount);
 
 	for (uint32 i = 0; i < iAnimCount; i++)
 	{
-		_uint iMaxFrameCount = m_Animations[i]->GetMaxFrameCount();
+		//_uint iMaxFrameCount = m_Animations[i]->GetMaxFrameCount();
 		CreateAnimationTransform(i, _animTransforms);
+	}
 
-		// Creature Texture
+	// Creature Texture
+	{
+		D3D11_TEXTURE2D_DESC desc;
+		ZeroMemory(&desc, sizeof(D3D11_TEXTURE2D_DESC));
+		desc.Width = MAX_BONES * 4;
+		desc.Height = MAX_KEYFRAMES;
+		desc.ArraySize = iAnimCount;
+		desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT; // 16바이트
+		desc.Usage = D3D11_USAGE_IMMUTABLE;
+		desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+		desc.MipLevels = 1;
+		desc.SampleDesc.Count = 1;
+
+		const _uint dataSize = MAX_BONES * sizeof(Matrix);
+		const _uint pageSize = dataSize * MAX_KEYFRAMES;
+		void* mallocPtr = ::malloc(pageSize * iAnimCount);
+
+		// 파편화된 데이터를 조립한다.
+		for (_uint c = 0; c < iAnimCount; c++)
 		{
-			D3D11_TEXTURE2D_DESC desc;
-			ZeroMemory(&desc, sizeof(D3D11_TEXTURE2D_DESC));
-			desc.Width = m_Bones.size() * 4;
-			desc.Height = iMaxFrameCount;
-			desc.ArraySize = 1;
-			desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT; // 16바이트
-			desc.Usage = D3D11_USAGE_IMMUTABLE;
-			desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-			desc.MipLevels = 1;
-			desc.SampleDesc.Count = 1;
+			_uint startOffset = c * pageSize;
 
-			const uint32 dataSize = m_Bones.size() * sizeof(Matrix);
-			const uint32 pageSize = dataSize * iMaxFrameCount;
-			void* mallocPtr = ::malloc(pageSize);
-
-			// 파편화된 데이터를 조립한다.
-
-			BYTE* pageStartPtr = reinterpret_cast<BYTE*>(mallocPtr);
-
-			for (uint32 f = 0; f < iMaxFrameCount; f++)
+			BYTE* pageStartPtr = reinterpret_cast<BYTE*>(mallocPtr) + startOffset;
+		
+			for (_uint f = 0; f < MAX_KEYFRAMES; f++)
 			{
 				void* ptr = pageStartPtr + f * dataSize;
-				::memcpy(ptr, _animTransforms[i].transforms[f].data(), dataSize);
+				::memcpy(ptr, _animTransforms[c].transforms[f].data(), dataSize);
 			}
-
-			// 리소스 만들기
-			D3D11_SUBRESOURCE_DATA subResource;
-
-			void* ptr = (BYTE*)mallocPtr;
-			subResource.pSysMem = ptr;
-			subResource.SysMemPitch = dataSize;
-
-			if (FAILED(m_pDevice->CreateTexture2D(&desc, &subResource, &m_vecTextures[i])))
-				return E_FAIL;
-
-			::free(mallocPtr);
 		}
 
-		// Create SRV
+		// 리소스 만들기
+		vector<D3D11_SUBRESOURCE_DATA> subResources(iAnimCount);
+
+		for (_uint c = 0; c < iAnimCount; c++)
 		{
-			D3D11_SHADER_RESOURCE_VIEW_DESC desc;
-			ZeroMemory(&desc, sizeof(desc));
-			desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-			desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-			desc.Texture2DArray.MipLevels = 1;
-			desc.Texture2DArray.ArraySize = iAnimCount;
-
-			if (FAILED(m_pDevice->CreateShaderResourceView(m_vecTextures[i], &desc, &m_vecSRVs[i])))
-				return E_FAIL;
+			void* ptr = (BYTE*)mallocPtr + c * pageSize;
+			subResources[c].pSysMem = ptr;
+			subResources[c].SysMemPitch = dataSize;
+			subResources[c].SysMemSlicePitch = pageSize;
 		}
+
+		if (FAILED(m_pDevice->CreateTexture2D(&desc, subResources.data(), &m_pTexture)))
+			return E_FAIL;
+
+		::free(mallocPtr);
+	}
+
+	// Create SRV
+	{
+		D3D11_SHADER_RESOURCE_VIEW_DESC desc;
+		ZeroMemory(&desc, sizeof(desc));
+		desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
+		desc.Texture2DArray.MipLevels = 1;
+		desc.Texture2DArray.ArraySize = iAnimCount;
+
+		if (FAILED(m_pDevice->CreateShaderResourceView(m_pTexture, &desc, &m_pSRV)))
+			return E_FAIL;
 	}
 
 	return S_OK;
 }
+
 
 void CModel::CreateAnimationTransform(_uint index, vector<AnimTransform>& animTransforms)
 {
@@ -701,6 +698,7 @@ void CModel::CreateAnimationTransform(_uint index, vector<AnimTransform>& animTr
 CModel * CModel::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strModelFilePath, _fmatrix matPivot)
 {
 	CModel*	pInstance = new CModel(pDevice, pContext);
+	m_iInstanceID++;
 
 	if (FAILED(pInstance->Initialize_Prototype(strModelFilePath, matPivot)))
 	{

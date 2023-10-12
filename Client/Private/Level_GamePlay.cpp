@@ -94,8 +94,16 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player()
 
 	/*pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_TempCube"));
 	if (nullptr == pGameObject)	return E_FAIL;*/
-	pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_P_Strife"));
-	if (nullptr == pGameObject)	return E_FAIL;
+	for (_int i = 0; i < 50; ++i)
+	{
+		pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_P_Strife"));
+		if (nullptr == pGameObject)	return E_FAIL;
+		_int iRandomPosX = (rand() * i) % 512 - 256;
+		_int iRandomPosZ = (rand() * i) % 512 - 256;
+		_int iRandomAnimIndex = (abs(rand()) * i) % 344;
+		pGameObject->GetModel()->SetNextAnimationIndex(iRandomAnimIndex);
+		pGameObject->GetTransform()->Translate(Vec3(iRandomPosX, 0.f, iRandomPosZ));
+	}
 
 	return S_OK;
 }
