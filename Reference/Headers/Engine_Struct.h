@@ -68,7 +68,7 @@ namespace Engine
 		Matrix matWorld;
 	};
 
-	#define MAX_INSTANCE 100
+	#define MAX_INSTANCE 500
 	struct InstancedTweenDesc
 	{
 		TweenDesc tweens[MAX_INSTANCE];

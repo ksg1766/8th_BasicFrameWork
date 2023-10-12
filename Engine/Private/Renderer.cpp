@@ -134,7 +134,7 @@ HRESULT CRenderer::Render_NonBlend_Instance()
 		if (CModel::TYPE_ANIM == instanceId.first)
 			vecInstances[0]->GetModel()->PushTweenData(*tweenDesc);
 
-		//Safe_Delete(tweenDesc);
+		Safe_Delete(tweenDesc);
 
 		vecInstances[0]->Render();	// BindShaderResource 호출을 위함.
 									// 이 경우 수업 코드와 다른 점은 InstanceID당 view, proj matrix 한번만 binding
