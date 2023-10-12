@@ -10,8 +10,8 @@
 #include "FileUtils.h"
 #include <filesystem>
 
-_int CModel::m_iInstanceID = 0;
-_bool CModel::m_VTFCreated = false;
+_int CModel::m_iNextInstanceID = 0;
+map<_int, _bool> CModel::m_mapVTFExist;
 
 CModel::CModel(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: Super(pDevice, pContext, ComponentType::Model)
@@ -29,6 +29,7 @@ CModel::CModel(const CModel& rhs)
 	, m_Materials(rhs.m_Materials)
 	, m_Animations(rhs.m_Animations)
 	, m_iCurrentAnimIndex(rhs.m_iCurrentAnimIndex)
+	, m_iInstanceID(rhs.m_iInstanceID)
 {
 	/* Bones */
 	for (auto& pBone : m_Bones)
@@ -69,6 +70,8 @@ HRESULT CModel::Initialize_Prototype(const wstring& strModelFilePath, _fmatrix& 
 		if (FAILED(Ready_Animations(strModelFilePath)))
 			return E_FAIL;
 	}
+
+	m_iInstanceID = m_iNextInstanceID++;
 
 	return S_OK;
 }
@@ -133,12 +136,14 @@ HRESULT CModel::Initialize(void * pArg)
 		}
 		m_Animations.clear();
 		m_Animations = Animations;
-	}
 
-	if (!m_VTFCreated && !m_pTexture) // TODO: 지우자!
-	{
-		CreateVertexTexture2DArray();
-		m_VTFCreated = true;
+		if (m_Animations.size() && !m_mapVTFExist[m_iInstanceID] && !m_pTexture) // TODO: 크흠...
+		{
+			if (FAILED(CreateVertexTexture2DArray()))
+				return E_FAIL;
+
+			m_mapVTFExist[m_iInstanceID] = true;
+		}
 	}
 
 	m_pShader = m_pGameObject->GetShader();
@@ -299,6 +304,7 @@ HRESULT CModel::UpdateTweenData(const _float& fTimeDelta)
 	if (0 <= m_iNextAnimIndex)
 	{
 		desc.ClearNextAnim(); // 기존꺼 밀어주기
+		m_iNextAnimIndex %= m_Animations.size();
 		desc.next.animIndex = m_iNextAnimIndex;
 
 		m_iNextAnimIndex = -1;
@@ -698,7 +704,6 @@ void CModel::CreateAnimationTransform(_uint index, vector<AnimTransform>& animTr
 CModel * CModel::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strModelFilePath, _fmatrix matPivot)
 {
 	CModel*	pInstance = new CModel(pDevice, pContext);
-	m_iInstanceID++;
 
 	if (FAILED(pInstance->Initialize_Prototype(strModelFilePath, matPivot)))
 	{

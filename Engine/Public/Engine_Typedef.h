@@ -56,7 +56,7 @@ namespace Engine
 	using Matrix = DirectX::SimpleMath::Matrix;
 	using Quaternion = DirectX::SimpleMath::Quaternion;
 
-	using InstanceID = std::pair<_int, _int>;
+	using InstanceID = std::pair<_int, _int>; // <MODEL_TYPE, iInstanceID>
 }
 
 #endif // Engine_Typedef_h__

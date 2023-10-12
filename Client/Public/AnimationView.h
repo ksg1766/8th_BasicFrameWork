@@ -31,16 +31,28 @@ private:
 	void		Input();
 
 private:
-	void	InfoView();
-	void	ItemGroup();
+	void		InfoView();
+	void		ItemGroup();
+	void		AnimationGroup();
+	void		DeleteReservedGroup();
+
+	HRESULT		LoadAnimations(const wstring& strModelFilePath);
+	HRESULT		ExportAnimations(const wstring& strModelFilePath);
 
 private:
-	LAYERTAG			m_ePickedLayerTag = LAYERTAG::LAYER_END;
-	wstring				m_strPickedObject;
+	CGameObject*		m_pAnimModelObject = nullptr;
+	string				m_strSelectedObject;
+	string				m_strSelectedAnimation;
+
 	CGameObject*		m_pCurPickedObject = nullptr;
 	CGameObject*		m_pPrePickedObject = nullptr;
 
 	_int				m_Item_Current = 0;
+	_int				m_Animation_Current = 0;
+	_int				m_Delete_Current = 0;
+
+	vector<const _char*> m_vecAnimationNames;
+	vector<const _char*> m_vecDeleteReserved;
 
 public:
 	static class CAnimationView* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

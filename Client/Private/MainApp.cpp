@@ -54,7 +54,7 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(Ready_Prototype_Components()))
 		return E_FAIL;
 
-	if (FAILED(Ready_Prototype_Scrpts()))
+	if (FAILED(Ready_Prototype_Scripts()))
 		return E_FAIL;
 
 	/* 1-4. 게임내에서 사용할 레벨(씬)을 생성한다.   */
@@ -274,7 +274,7 @@ HRESULT CMainApp::Ready_Prototype_Components()
 	return S_OK;
 }
 
-HRESULT CMainApp::Ready_Prototype_Scrpts()
+HRESULT CMainApp::Ready_Prototype_Scripts()
 {
 	/* For.Prototype_Component_FlyingCameraController */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_FlyingCameraController"),

@@ -65,14 +65,15 @@ private:
 private:
 	TWEENDESC					m_TweenDesc;
 
-	static _bool				m_VTFCreated;	// TODO:다른곳에 텍스쳐를 가지고 있는지 기록할 수 있도록 하자.
 	
 	ID3D11Texture2D*			m_pTexture = nullptr;
 	ID3D11ShaderResourceView*	m_pSRV = nullptr;
 
 	class CShader*				m_pShader;
 
-	static _int					m_iInstanceID;
+	static map<_int, _bool>		m_mapVTFExist;	// TODO:다른곳에 텍스쳐를 가지고 있는지 기록할 수 있도록 하자.
+	static _int					m_iNextInstanceID;
+	_int						m_iInstanceID;
 
 public:
 	_uint			GetNumMeshes() const					{ return (_uint)m_Meshes.size(); }

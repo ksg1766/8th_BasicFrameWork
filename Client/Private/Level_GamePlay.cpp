@@ -94,16 +94,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player()
 
 	/*pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_TempCube"));
 	if (nullptr == pGameObject)	return E_FAIL;*/
-	for (_int i = 0; i < 500; ++i)
-	{
-		pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_P_Strife"));
-		if (nullptr == pGameObject)	return E_FAIL;
-		_int iRandomPosX = (rand() * i) % 512 - 256;
-		_int iRandomPosZ = (rand() * i) % 512 - 256;
-		_int iRandomAnimIndex = (abs(rand()) * i) % 344;
-		pGameObject->GetModel()->SetNextAnimationIndex(iRandomAnimIndex);
-		pGameObject->GetTransform()->Translate(Vec3(iRandomPosX, 0.f, iRandomPosZ));
-	}
+	
+	pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_P_Strife"));
+	if (nullptr == pGameObject)	return E_FAIL;
 
 	return S_OK;
 }
@@ -164,6 +157,17 @@ HRESULT CLevel_GamePlay::Ready_Layer_UnitGround()
 		pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_CollisionTest"));
 		if (nullptr == pGameObject)	return E_FAIL;
 		pGameObject->GetTransform()->Translate(Vec3(230.f - (_float)i, 100.f, -180.f - (_float)i));
+	}
+
+	for (_int i = 0; i < 150; ++i)
+	{
+		pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_HellHound"));
+		if (nullptr == pGameObject)	return E_FAIL;
+		_int iRandomPosX = (rand() * i) % 1024 - 512;
+		_int iRandomPosZ = (rand() * i) % 1024 - 512;
+		_int iRandomAnimIndex = (abs(rand()) * i) % 344;
+		pGameObject->GetModel()->SetNextAnimationIndex(iRandomAnimIndex);
+		pGameObject->GetTransform()->Translate(Vec3(iRandomPosX, 0.f, iRandomPosZ));
 	}
 
 	return S_OK;

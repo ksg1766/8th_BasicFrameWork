@@ -17,6 +17,7 @@ public:
 
 public:
 	HRESULT Binarize_All_Model();
+	HRESULT Binarize_One_Model(wstring fileName, wstring savePath, const MODEL_TYPE& modelType);
 	HRESULT Binarize_Model(wstring fileName, wstring savePath, const MODEL_TYPE& modelType);
 
 private:

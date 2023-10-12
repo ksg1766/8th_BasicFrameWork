@@ -70,7 +70,7 @@ private:
 	/* 모든레벨에서 사용되는 컴포넌트 원형. */
 	HRESULT Reserve_Client_Managers();
 	HRESULT Ready_Prototype_Components(); 
-	HRESULT Ready_Prototype_Scrpts(); 
+	HRESULT Ready_Prototype_Scripts(); 
 
 public:
 	static CMainApp* Create();

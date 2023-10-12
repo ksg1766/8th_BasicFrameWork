@@ -64,7 +64,7 @@ HRESULT CConverterMain::Convert_Static(wstring fileName, wstring savePath)
 	const CConverter::MODEL_TYPE eType = CConverter::MODEL_TYPE::NONANIM;
 	{
 		shared_ptr<CConverter> converter = make_shared<CConverter>();
-		if (FAILED(converter->Binarize_Model(fileName, savePath, eType)))
+		if (FAILED(converter->Binarize_One_Model(fileName, savePath, eType)))
 			ASSERT_LOG();
 	}
 
@@ -76,7 +76,7 @@ HRESULT CConverterMain::Convert_Skeletal(wstring fileName, wstring savePath)
 	const CConverter::MODEL_TYPE eType = CConverter::MODEL_TYPE::ANIM;
 	{
 		shared_ptr<CConverter> converter = make_shared<CConverter>();
-		if (FAILED(converter->Binarize_Model(fileName, savePath, eType)))
+		if (FAILED(converter->Binarize_One_Model(fileName, savePath, eType)))
 			ASSERT_LOG();
 	}
 

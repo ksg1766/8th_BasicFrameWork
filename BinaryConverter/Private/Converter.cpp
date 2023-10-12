@@ -111,7 +111,9 @@ HRESULT CConverter::Binarize_All_Model()
 			if (TEXT(".fbx") == entry.path().extension())
 			{
 				wstring strFileName(entry.path().stem());
-				Binarize_Model(strFileName, strFileName, MODEL_TYPE::NONANIM);
+				if (FAILED(Binarize_Model(strFileName, strFileName, MODEL_TYPE::NONANIM)))
+					return E_FAIL;
+				
 				Free();
 			}
 		}
@@ -125,8 +127,36 @@ HRESULT CConverter::Binarize_All_Model()
 			if (TEXT(".fbx") == entry.path().extension())
 			{
 				wstring strFileName(entry.path().stem());
-				Binarize_Model(strFileName, strFileName, MODEL_TYPE::ANIM);
+				if (FAILED(Binarize_Model(strFileName, strFileName, MODEL_TYPE::ANIM)))
+					return E_FAIL;
+
 				Free();
+			}
+		}
+	}
+
+	return S_OK;
+}
+
+HRESULT CConverter::Binarize_One_Model(wstring fileName, wstring savePath, const MODEL_TYPE& modelType)
+{
+	if (MODEL_TYPE::NONANIM == modelType)
+		sourceUpperPath += TEXT("Static/");
+	else
+		sourceUpperPath += TEXT("Skeletal/");
+
+	for (const auto& entry : filesystem::recursive_directory_iterator(sourceUpperPath))
+	{
+		if (entry.is_regular_file())
+		{
+			if (TEXT(".fbx") == entry.path().extension() && fileName == entry.path().stem())
+			{
+				if (FAILED(Binarize_Model(fileName, savePath, modelType)))
+					return E_FAIL;
+
+				Free();
+
+				return S_OK;
 			}
 		}
 	}
