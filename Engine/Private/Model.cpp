@@ -213,7 +213,7 @@ HRESULT CModel::RenderInstancing(CVIBuffer_Instance*& pInstanceBuffer)
 {
 	if (TYPE_ANIM == m_eModelType)
 	{
-		if (FAILED(m_pGameObject->GetShader()->Bind_Texture("g_TransformMap", m_pSRV)))
+		if (FAILED(m_pShader->Bind_Texture("g_TransformMap", m_pSRV)))
 			__debugbreak();
 	}
 
@@ -665,6 +665,58 @@ HRESULT CModel::CreateVertexTexture2DArray()
 		if (FAILED(m_pDevice->CreateTexture2D(&desc, subResources.data(), &m_pTexture)))
 			return E_FAIL;
 
+		/////////////////////////////////////////////////////////////////////////////////////////////////////////
+		//                                         Socket Texture, SRV                                         //
+		/////////////////////////////////////////////////////////////////////////////////////////////////////////
+		{
+			D3D11_TEXTURE2D_DESC desc;
+			ZeroMemory(&desc, sizeof(D3D11_TEXTURE2D_DESC));
+			desc.Width = m_SocketBones.size() * 4;
+			desc.Height = m_iMaxFrameCount;	//////////
+			desc.ArraySize = iAnimCount;
+			desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT; // 16바이트
+			desc.Usage = D3D11_USAGE_IMMUTABLE;
+			desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+			desc.MipLevels = 1;
+			desc.SampleDesc.Count = 1;
+
+			const _uint dataSize = m_SocketBones.size() * sizeof(Matrix);
+			const _uint pageSize = dataSize * m_iMaxFrameCount;	//////////
+			void* mallocPtr = ::malloc(pageSize * iAnimCount);
+
+			// 파편화된 데이터를 조립한다.
+			for (_uint c = 0; c < iAnimCount; c++)
+			{
+				_uint startOffset = c * pageSize;
+
+				BYTE* pageStartPtr = reinterpret_cast<BYTE*>(mallocPtr) + startOffset;
+
+				for (_uint f = 0; f < m_iMaxFrameCount; f++)
+				{
+					void* ptr = pageStartPtr + f * dataSize;
+
+					for(_int*& iter : m_SocketBones)
+					{
+						::memcpy(ptr, &_animTransforms[c].transforms[f][*iter], sizeof(Matrix));
+					}
+				}
+			}
+
+			// 리소스 만들기
+			vector<D3D11_SUBRESOURCE_DATA> subResources(iAnimCount);
+
+			for (_uint c = 0; c < iAnimCount; c++)
+			{
+				void* ptr = (BYTE*)mallocPtr + c * pageSize;
+				subResources[c].pSysMem = ptr;
+				subResources[c].SysMemPitch = dataSize;
+				subResources[c].SysMemSlicePitch = pageSize;
+			}
+
+			if (FAILED(m_pDevice->CreateTexture2D(&desc, subResources.data(), &m_pSocketTexture)))
+				return E_FAIL;
+		}
+		
 		::free(mallocPtr);
 	}
 
@@ -677,7 +729,7 @@ HRESULT CModel::CreateVertexTexture2DArray()
 		desc.Texture2DArray.MipLevels = 1;
 		desc.Texture2DArray.ArraySize = iAnimCount;
 
-		if (FAILED(m_pDevice->CreateShaderResourceView(m_pTexture, &desc, &m_pSRV)))
+		if (FAILED(m_pDevice->CreateShaderResourceView(m_pTexture, &desc, &m_pSocketSRV)))
 			return E_FAIL;
 	}
 

@@ -11,13 +11,14 @@ BEGIN(Engine)
 
 struct AnimTransform
 {
-	// [ ][ ][ ][ ][ ][ ][ ] ... 200개
+	// [ ][ ][ ][ ][ ][ ][ ] ... 150개
 	using TransformArrayType = array<Matrix, MAX_BONES>;
 	// [ ][ ][ ][ ][ ][ ][ ] ... 300 개
 	array<TransformArrayType, MAX_KEYFRAMES> transforms;
 };
 
 class CBone;
+class CSocket;
 class CMesh;
 class CAnimation;
 class ENGINE_DLL CModel final : public CComponent
@@ -40,7 +41,7 @@ public:
 	HRESULT			RenderInstancing(class CVIBuffer_Instance*& pInstanceBuffer);
 
 public:
-	//HRESULT			UpdateAnimation(const _float& fTimeDelta);
+	//HRESULT		UpdateAnimation(const _float& fTimeDelta);
 	HRESULT			UpdateTweenData(const _float& fTimeDelta);
 
 	void			PushTweenData(const InstancedTweenDesc& desc);
@@ -66,9 +67,12 @@ private:
 private:
 	TWEENDESC					m_TweenDesc;
 
-	
 	ID3D11Texture2D*			m_pTexture = nullptr;
 	ID3D11ShaderResourceView*	m_pSRV = nullptr;
+
+	vector<pair<_int, CSocket*>>m_SocketBones;	// TODO:소켓이 Bone index를 갖게 할지, 아니면 pair로 인덱스와 함께 저장할지 고민
+	ID3D11Texture2D*			m_pSocketTexture = nullptr;
+	ID3D11ShaderResourceView*	m_pSocketSRV = nullptr;
 
 	class CShader*				m_pShader;
 

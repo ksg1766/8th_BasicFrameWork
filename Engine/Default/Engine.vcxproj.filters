@@ -148,6 +148,9 @@
     <Filter Include="01.Utiltiy\04.Component\11.Model\02.Animation\Animation">
       <UniqueIdentifier>{e1b6659f-0502-4a65-90bb-2eb89005b1ff}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utiltiy\04.Component\11.Model\00.Bone\Socket">
+      <UniqueIdentifier>{22da5036-a8c8-4fe7-b35c-bd6c3a914c1c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -324,6 +327,9 @@
     <ClInclude Include="..\Public\VIBuffer_Instance.h">
       <Filter>01.Utiltiy\04.Component\05.VIBuffer</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Socket.h">
+      <Filter>01.Utiltiy\04.Component\11.Model\00.Bone\Socket</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -484,6 +490,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_Instance.cpp">
       <Filter>01.Utiltiy\04.Component\05.VIBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Socket.cpp">
+      <Filter>01.Utiltiy\04.Component\11.Model\00.Bone\Socket</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

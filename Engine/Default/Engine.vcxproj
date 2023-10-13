@@ -192,6 +192,7 @@ call Copy.bat</Command>
     <ClInclude Include="..\Public\MurmurHash3.h" />
     <ClInclude Include="..\Public\PipeLine.h" />
     <ClInclude Include="..\Public\PoolManager.h" />
+    <ClInclude Include="..\Public\Socket.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\Public\Transform.h" />
     <ClInclude Include="..\Public\TransformBurger.h" />
@@ -251,6 +252,7 @@ call Copy.bat</Command>
     <ClCompile Include="..\Private\MurmurHash3.cpp" />
     <ClCompile Include="..\Private\PipeLine.cpp" />
     <ClCompile Include="..\Private\PoolManager.cpp" />
+    <ClCompile Include="..\Private\Socket.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\Private\Transform.cpp" />
     <ClCompile Include="..\Private\TransformBurger.cpp" />

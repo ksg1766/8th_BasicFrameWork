@@ -55,7 +55,7 @@ namespace Engine
 			tweenRatio = 0;
 		}
 
-		_float tweenDuration = 0.3f;
+		_float tweenDuration = 0.1f;
 		_float tweenRatio = 0.f;
 		_float tweenSumTime = 0.f;
 		_float padding = 0.f;
