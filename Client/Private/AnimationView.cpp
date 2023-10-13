@@ -1,8 +1,9 @@
 #include "stdafx.h"
-#include "ViewMediator.h"
 #include "AnimationView.h"
 #include "GameInstance.h"
 #include "GameObject.h"
+#include "Animation.h"
+#include "Channel.h"
 #include <filesystem>
 #include "Utils.h"
 #include "FileUtils.h"
@@ -37,13 +38,11 @@ HRESULT CAnimationView::Tick()
 
 HRESULT CAnimationView::LateTick()
 {
-
 	return S_OK;
 }
 
 HRESULT CAnimationView::DebugRender()
 {
-
 	return S_OK;
 }
 
@@ -51,7 +50,6 @@ void CAnimationView::Input()
 {
 	if (ImGui::GetIO().WantCaptureMouse)
 		return;
-
 }
 
 void CAnimationView::InfoView()
@@ -61,10 +59,19 @@ void CAnimationView::InfoView()
 
 	ImGui::Text("Current Object :"); ImGui::SameLine(); ImGui::Text(m_strSelectedObject.c_str());
 	
+	_int iAnimCount = 0;
+	if (m_pAnimModelObject)
+		iAnimCount = m_pAnimModelObject->GetModel()->m_Animations.size();
+	
+	ImGui::Text("Number of Animation :  %d", iAnimCount);
+	
 	ImGui::NewLine();
 
 	if (ImGui::Button("Load Model"))
 	{
+		if(m_pAnimModelObject)
+			m_pGameInstance->DeleteObject(m_pAnimModelObject);
+			
 		m_vecAnimationNames.clear();
 		m_vecDeleteReserved.clear();
 
@@ -74,36 +81,24 @@ void CAnimationView::InfoView()
 		
 		m_pAnimModelObject = m_pGameInstance->CreateObject(strPrototype, LAYERTAG::DEFAULT);
 		
-		LoadAnimations(strDirectory);
-
-		//
-
-		
+		LoadAnimations();	
 	}
 	ImGui::SameLine();
-	if (ImGui::Button("Reload VTF"))
+	if (ImGui::Button("Export Anim"))
 	{
-		/*if (m_pAnimModelObject)
+		ExportAnimations(TEXT("../Bin/Resources/Models/Skeletal/") + Utils::ToWString(m_strSelectedObject));
+
+		if (m_pAnimModelObject)
+		{
 			m_pGameInstance->DeleteObject(m_pAnimModelObject);
-
-
-
-		wstring strPrototype = TEXT("Prototype_GameObject_") + Utils::ToWString(m_strSelectedObject);
-		m_pAnimModelObject = m_pGameInstance->CreateObject(strPrototype, LAYERTAG::DEFAULT);
-		
-		wstring strDirectory = TEXT("../Bin/Resources/Models/Skeletal/") + Utils::ToWString(m_strSelectedObject);
-		LoadAnimations(strDirectory);*/
-	}
-	ImGui::SameLine();
-	if (ImGui::Button("Save Anim"))
-	{
-
+			m_pAnimModelObject = nullptr;
+		}
 	}
 
 	if (m_pAnimModelObject)
 	{
 		Matrix matTransformCam = m_pGameInstance->Get_Transform_float4x4_Inverse(CPipeLine::D3DTS_VIEW);
-		m_pAnimModelObject->GetTransform()->SetPosition(matTransformCam.Translation() + 400.f * matTransformCam.Backward());
+		m_pAnimModelObject->GetTransform()->SetPosition(matTransformCam.Translation() + 300.f * matTransformCam.Backward());
 	}
 
 	ImGui::NewLine();
@@ -151,7 +146,7 @@ void CAnimationView::AnimationGroup()
 	if (ImGui::Button("Delete"))
 	{
 		m_vecDeleteReserved.push_back(m_vecAnimationNames[m_Animation_Current]);
-		m_vecAnimationNames[m_Animation_Current] = "---Deleted---";
+		m_vecAnimationNames[m_Animation_Current] = "-----Deleted-----";
 	}
 }
 
@@ -178,54 +173,17 @@ void CAnimationView::DeleteReservedGroup()
 	}*/
 }
 
-HRESULT CAnimationView::LoadAnimations(const wstring& strModelFilePath)
+HRESULT CAnimationView::LoadAnimations()
 {
-	/* 파일 셋업 */
-	wstring folderName, filePath;
-	shared_ptr<FileUtils> file = make_shared<FileUtils>();
+	for (auto& iter : m_pAnimModelObject->GetModel()->m_Animations)
 	{
-		folderName = filesystem::path(strModelFilePath).stem();
-		filePath = (filesystem::path(strModelFilePath) / wstring(folderName + TEXT(".anim")));
-		Utils::Replace(filePath, TEXT("\\"), TEXT("/"));
-
-		if (!filesystem::exists(filePath))
-			return E_FAIL;
-
-		file->Open(filePath, FileMode::Read);
-	}
-
-	/* 모든 애니메이션 순회 */
-	size_t iNumAnims = file->Read<size_t>();
-	for (size_t i = 0; i < iNumAnims; i++)
-	{
-		file->Read<_float>(); // Duration
-		file->Read<_float>(); // TickPerSecond
-
-		/* 모든 채널 순회 */
-		size_t iNumChannels = file->Read<size_t>();
-
-		for (size_t j = 0; j < iNumChannels; j++)
-		{
-			string strName = file->Read<string>();
-
-			/* 모든 키프레임 순회 */
-			size_t iNumKeyframes = file->Read<size_t>();
-			
-			for (size_t k = 0; k < iNumKeyframes; k++)
-			{
-				file->Read<_float>();	// Time
-				file->Read<Vec3>();		// Scale
-				file->Read<Vec4>();		// Rotation
-				file->Read<Vec3>();		// Position
-			}
-
-			const _char* szSrc = strName.c_str();
-			size_t len = strlen(szSrc) + 1;
-			_char* szCopy = new _char[len];
-			strcpy_s(szCopy, len, szSrc);
-
-			m_vecAnimationNames.push_back(szCopy);
-		}
+		string strCopy = iter->m_strName.substr(iter->m_strName.find_last_of("|") + 1);
+		const _char* szSrc = strCopy.c_str();
+		size_t len = strlen(szSrc) + 1; // NULL 문자 포함
+		_char* szCopy = new _char[len];
+		strcpy_s(szCopy, len, szSrc);
+		
+		m_vecAnimationNames.push_back(szCopy);
 	}
 
 	return S_OK;
@@ -233,31 +191,64 @@ HRESULT CAnimationView::LoadAnimations(const wstring& strModelFilePath)
 
 HRESULT CAnimationView::ExportAnimations(const wstring& strModelFilePath)
 {
-	//shared_ptr<FileUtils> file = make_shared<FileUtils>();
-	//file->Open(strModelFilePath, FileMode::Write);
+	wstring folderName = filesystem::path(strModelFilePath).stem();
+	wstring filePath = (filesystem::path(strModelFilePath) / wstring(folderName + TEXT(".anim")));
+	Utils::Replace(filePath, TEXT("\\"), TEXT("/"));
 
-	//file->Write<size_t>(_animations.size());
-	//for (shared_ptr<asAnimation>& animation : _animations)
-	//{
-	//	//file->Write<string>(animation->name);
-	//	file->Write<float>(animation->fDuration);
-	//	file->Write<float>(animation->fTickPerSecond);
+	if (!filesystem::exists(filePath))
+		return E_FAIL;
 
-	//	file->Write<size_t>(animation->channels.size());
-	//	for (shared_ptr<asChannel>& channel : animation->channels)
-	//	{
-	//		file->Write<string>(channel->name);
+	vector<CAnimation*>& vecAnimations = m_pAnimModelObject->GetModel()->m_Animations;
 
-	//		file->Write<size_t>(channel->keyframes.size());
-	//		for (shared_ptr<asKeyFrame>& keyframe : channel->keyframes)
-	//		{
-	//			file->Write<float>(keyframe->fTime);
-	//			file->Write<Vec3>(keyframe->vScale);
-	//			file->Write<Quaternion>(keyframe->quatRotation);
-	//			file->Write<Vec3>(keyframe->vPosition);
-	//		}
-	//	}
-	//}
+	// Export
+	shared_ptr<FileUtils> file = make_shared<FileUtils>();
+	file->Open(filePath, FileMode::Write);
+
+	file->Write<size_t>(vecAnimations.size() - m_vecDeleteReserved.size());
+	for (CAnimation*& pAnimation : vecAnimations)
+	{
+		_bool isDelete = false;
+		for (const _char* szName : m_vecDeleteReserved)
+		{
+			string strCopy = pAnimation->m_strName.substr(pAnimation->m_strName.find_last_of("|") + 1);
+			const _char* szSrc = strCopy.c_str();
+
+			if (!strcmp(szSrc, szName))
+			{
+				isDelete = true;
+				break;
+			}
+		}
+		if (isDelete) continue;
+
+		/*if (*find_if(m_vecDeleteReserved.begin(), m_vecDeleteReserved.end(), [&](const _char* szName)
+		{
+			string strCopy = pAnimation->m_strName.substr(pAnimation->m_strName.find_last_of("|") + 1);
+			const _char* szSrc = strCopy.c_str();
+
+			return !strcmp(szSrc, szName);
+		}))	continue;*/
+
+		file->Write<string>(pAnimation->m_strName);
+		file->Write<_float>(pAnimation->m_fDuration);
+		file->Write<_float>(pAnimation->m_fTickPerSecond);
+
+		vector<CChannel*>& vecChannels = pAnimation->m_Channels;
+		file->Write<size_t>(vecChannels.size());
+		for (CChannel*& pChannel : vecChannels)
+		{
+			file->Write<string>(pChannel->Get_Name());
+
+			file->Write<size_t>(pChannel->Get_KeyFrames().size());
+			for (const KEYFRAME& tKeyframe : pChannel->Get_KeyFrames())
+			{
+				file->Write<_float>(tKeyframe.fTime);
+				file->Write<Vec3>(tKeyframe.vScale);
+				file->Write<Quaternion>(tKeyframe.vRotation);
+				file->Write<Vec3>(tKeyframe.vPosition);
+			}
+		}
+	}
 	return S_OK;
 }
 

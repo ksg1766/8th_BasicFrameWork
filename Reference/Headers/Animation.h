@@ -15,7 +15,7 @@ private:
 	virtual ~CAnimation() = default;
 
 public:
-	HRESULT Initialize_Prototype(const _float& fDuration, const _float& fTickPerSecond, vector<CChannel*>& Channels, CModel* pModel);
+	HRESULT Initialize_Prototype(const _float& fDuration, const _float& fTickPerSecond, vector<CChannel*>& Channels, CModel* pModel, string strName);
 	HRESULT Initialize(CModel* pModel);
 
 public:
@@ -28,6 +28,7 @@ public:
 	_float	GetTickPerSecond() { return m_fTickPerSecond; }
 
 private:
+	string						m_strName;
 	vector<CChannel*>			m_Channels;			/* 사용되는 채널 집합 */
 
 	_float						m_fDuration = 0.f;	/* 전체 재생 시간 */
@@ -39,9 +40,11 @@ private:
 	_uint						m_iMaxFrameCount = 0;
 
 public:
-	static CAnimation* Create(const _float& fDuration, const _float& fTickPerSecond, vector<CChannel*>& Channels, CModel* pModel);
+	static CAnimation* Create(const _float& fDuration, const _float& fTickPerSecond, vector<CChannel*>& Channels, CModel* pModel, string strName);
 	CAnimation* Clone(CModel* pModel);
 	virtual void Free() override;
+
+	friend class CAnimationView;
 };
 
 END

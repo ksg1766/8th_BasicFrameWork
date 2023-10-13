@@ -11,7 +11,7 @@ END
 
 BEGIN(Client)
 
-class CAnimationView : public CView
+class CAnimationView final : public CView
 {
     using Super = CView;
 private:
@@ -36,7 +36,7 @@ private:
 	void		AnimationGroup();
 	void		DeleteReservedGroup();
 
-	HRESULT		LoadAnimations(const wstring& strModelFilePath);
+	HRESULT		LoadAnimations();
 	HRESULT		ExportAnimations(const wstring& strModelFilePath);
 
 private:

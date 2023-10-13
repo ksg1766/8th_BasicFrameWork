@@ -638,9 +638,9 @@ HRESULT CConverter::Write_AnimData(wstring savePath)
 	file->Write<size_t>(_animations.size());
 	for (shared_ptr<asAnimation>& animation : _animations)
 	{
-		//file->Write<string>(animation->name);
-		file->Write<float>(animation->fDuration);
-		file->Write<float>(animation->fTickPerSecond);
+		file->Write<string>(animation->name);
+		file->Write<_float>(animation->fDuration);
+		file->Write<_float>(animation->fTickPerSecond);
 
 		file->Write<size_t>(animation->channels.size());
 		for (shared_ptr<asChannel>& channel : animation->channels)
@@ -650,7 +650,7 @@ HRESULT CConverter::Write_AnimData(wstring savePath)
 			file->Write<size_t>(channel->keyframes.size());
 			for (shared_ptr<asKeyFrame>& keyframe : channel->keyframes)
 			{
-				file->Write<float>(keyframe->fTime);
+				file->Write<_float>(keyframe->fTime);
 				file->Write<Vec3>(keyframe->vScale);
 				file->Write<Quaternion>(keyframe->quatRotation);
 				file->Write<Vec3>(keyframe->vPosition);

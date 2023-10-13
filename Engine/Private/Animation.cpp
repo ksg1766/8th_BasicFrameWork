@@ -7,8 +7,9 @@ CAnimation::CAnimation()
 {
 }
 
-CAnimation::CAnimation(const CAnimation & rhs)
-	: m_fDuration(rhs.m_fDuration)
+CAnimation::CAnimation(const CAnimation& rhs)
+	: m_strName(rhs.m_strName)
+	, m_fDuration(rhs.m_fDuration)
 	, m_Channels(rhs.m_Channels)
 	, m_fTickPerSecond(rhs.m_fTickPerSecond)
 	, m_fPlayTime(rhs.m_fPlayTime)
@@ -18,8 +19,9 @@ CAnimation::CAnimation(const CAnimation & rhs)
 		Safe_AddRef(pChannel);
 }
 
-HRESULT CAnimation::Initialize_Prototype(const _float& fDuration, const _float& fTickPerSecond, vector<class CChannel*>& Channels, CModel* pModel)
+HRESULT CAnimation::Initialize_Prototype(const _float& fDuration, const _float& fTickPerSecond, vector<class CChannel*>& Channels, CModel* pModel, string strName)
 {
+	m_strName = strName;
 	m_fDuration = fDuration;
 	m_fTickPerSecond = fTickPerSecond;
 
@@ -117,11 +119,11 @@ HRESULT CAnimation::Calculate_Animation(_uint iFrame)
 	return S_OK;
 }
 
-CAnimation* CAnimation::Create(const _float& fDuration, const _float& fTickPerSecond, vector<class CChannel*>& Channels, CModel* pModel)
+CAnimation* CAnimation::Create(const _float& fDuration, const _float& fTickPerSecond, vector<class CChannel*>& Channels, CModel* pModel, string strName)
 {
 	CAnimation* pInstance = new CAnimation();
 
-	if (FAILED(pInstance->Initialize_Prototype(fDuration, fTickPerSecond, Channels, pModel)))
+	if (FAILED(pInstance->Initialize_Prototype(fDuration, fTickPerSecond, Channels, pModel, strName)))
 	{
 		MSG_BOX("Failed To Created : CAnimation");
 		Safe_Release(pInstance);

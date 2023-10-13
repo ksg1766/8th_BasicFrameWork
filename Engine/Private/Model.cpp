@@ -147,6 +147,7 @@ HRESULT CModel::Initialize(void * pArg)
 	}
 
 	m_pShader = m_pGameObject->GetShader();
+	Safe_AddRef(m_pShader);
 
 	return S_OK;
 }
@@ -554,6 +555,7 @@ HRESULT CModel::Ready_Animations(const wstring& strModelFilePath)
 	size_t iNumAnims = file->Read<size_t>();
 	for (size_t i = 0; i < iNumAnims; i++)
 	{
+		string strAnimName = file->Read<string>();
 		_float fDuration = file->Read<_float>();
 		_float fTickPerSecond = file->Read<_float>();
 
@@ -588,7 +590,7 @@ HRESULT CModel::Ready_Animations(const wstring& strModelFilePath)
 			Channels.push_back(pChannel);
 		}
 
-		CAnimation* pAnimation = CAnimation::Create(fDuration, fTickPerSecond, Channels, this);
+		CAnimation* pAnimation = CAnimation::Create(fDuration, fTickPerSecond, Channels, this, strAnimName);
 		if (nullptr == pAnimation)
 			return E_FAIL;
 
@@ -754,4 +756,8 @@ void CModel::Free()
 	for (auto& pAnimation : m_Animations)
 		Safe_Release(pAnimation);
 	m_Animations.clear();
+
+	//Safe_Release(m_pTexture);
+	//Safe_Release(m_pSRV);
+	Safe_Release(m_pShader);
 }

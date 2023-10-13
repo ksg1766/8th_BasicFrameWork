@@ -1,6 +1,11 @@
 #pragma once
 #include "Base.h"
 #include "Client_Defines.h"
+#include "AnimationView.h"
+#include "PrefabsView.h"
+#include "LayersView.h"
+#include "TransformView.h"
+#include "SaveLoadView.h"
 
 BEGIN(Engine)
 
@@ -21,24 +26,24 @@ public:
 
 public:
 	void	OnNotifiedSelected(CGameObject* pGameObject);
-	void	OnNotifiedPickingOn(class CView* pSender);
+	void	OnNotifiedPickingOn(CView* pSender);
 
-	void	SetPrefabsView(class CPrefabsView* pPrefabsView);
-	void	SetLayersView(class CLayersView* pLayersView);
-	void	SetTransformView(class CTransformView* pTransformView);
-	void	SetSaveLoadView(class CSaveLoadView* pSaveLoadView);
-	void	SetAnimationView(class CAnimationView* pAnimationView);
+	void	SetPrefabsView(CPrefabsView* pPrefabsView);
+	void	SetLayersView(CLayersView* pLayersView);
+	void	SetTransformView(CTransformView* pTransformView);
+	void	SetSaveLoadView(CSaveLoadView* pSaveLoadView);
+	void	SetAnimationView(CAnimationView* pAnimationView);
 
 protected:
 	CGameInstance*			m_pGameInstance = nullptr;
 
 	_bool					m_IsPickingActivated = false;
 
-	class CPrefabsView*		m_pPrefabsView = nullptr;
-	class CLayersView*		m_pLayersView = nullptr;
-	class CTransformView*	m_pTransformView = nullptr;
-	class CSaveLoadView*	m_pSaveLoadView = nullptr;
-	class CAnimationView*	m_pAnimationView = nullptr;
+	CPrefabsView*		m_pPrefabsView = nullptr;
+	CLayersView*		m_pLayersView = nullptr;
+	CTransformView*	m_pTransformView = nullptr;
+	CSaveLoadView*	m_pSaveLoadView = nullptr;
+	CAnimationView*	m_pAnimationView = nullptr;
 
 public:
 	virtual void Free() override;
