@@ -33,7 +33,6 @@ HRESULT CP_Strife::Initialize(void* pArg)
 
 void CP_Strife::Tick(const _float& fTimeDelta)
 {
-	Super::Tick(fTimeDelta);
 
 	if (KEY_DOWN(KEY::NUM_9))
 	{
@@ -43,6 +42,8 @@ void CP_Strife::Tick(const _float& fTimeDelta)
 	{
 		GetModel()->SetNextAnimationIndex(1 + GetModel()->GetCurAnimationIndex());
 	}
+
+	Super::Tick(fTimeDelta);
 }
 
 void CP_Strife::LateTick(const _float& fTimeDelta)

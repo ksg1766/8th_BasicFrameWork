@@ -89,7 +89,7 @@ matrix GetAnimationMatrix(VS_IN input)
     nextFrame[0] = g_TweenInstances.TweenFrames[input.iInstanceID].curr.nextFrame;
     ratio[0] = g_TweenInstances.TweenFrames[input.iInstanceID].curr.ratio;
     
-    animIndex[1] = g_TweenInstances.TweenFrames[input.iInstanceID].curr.animIndex;
+    animIndex[1] = g_TweenInstances.TweenFrames[input.iInstanceID].next.animIndex;
     currFrame[1] = g_TweenInstances.TweenFrames[input.iInstanceID].next.currFrame;
     nextFrame[1] = g_TweenInstances.TweenFrames[input.iInstanceID].next.nextFrame;
     ratio[1] = g_TweenInstances.TweenFrames[input.iInstanceID].next.ratio;
@@ -117,7 +117,7 @@ matrix GetAnimationMatrix(VS_IN input)
         
         matrix result = lerp(curr, next, ratio[0]);
         
-        if (g_TweenInstances.TweenFrames[input.iInstanceID].next.animIndex >= 0)
+        if (animIndex[1] >= 0)
         {
             c0 = g_TransformMap.Load(int4(indices[i] * 4 + 0, currFrame[1], animIndex[1], 0));
             c1 = g_TransformMap.Load(int4(indices[i] * 4 + 1, currFrame[1], animIndex[1], 0));

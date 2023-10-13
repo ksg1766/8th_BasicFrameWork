@@ -189,16 +189,6 @@ HRESULT CConverter::Read_AssetFile(wstring srcPath, const MODEL_TYPE& modelType)
 	return S_OK;
 }
 
-//HRESULT CConverter::Export_BoneData(string savePath)
-//{
-//	Read_BoneData(_scene->mRootNode, 0, 0, 0);
-//
-//	if (FAILED(Write_BoneData(savePath)))
-//		return E_FAIL;
-//
-//	return S_OK;
-//}
-
 HRESULT CConverter::Export_MeshData(wstring savePath, const MODEL_TYPE& modelType)
 {
 	if (FAILED(Read_MeshData(modelType)))
@@ -609,11 +599,18 @@ HRESULT CConverter::Read_AnimData()
 					quatRotation.y = key.mValue.y;
 					quatRotation.z = key.mValue.z;
 					quatRotation.w = key.mValue.w;
-					keyframe->fTime = (float)key.mTime;
+					keyframe->fTime = (_float)key.mTime;
 				}
 				if (k < srcNode->mNumPositionKeys)
 				{
-					memcpy(&vPosition, &srcNode->mPositionKeys[k].mValue, sizeof(Vec3));
+					if ("Root" == channel->name.substr(channel->name.find_last_of("_") + 1))
+					{
+						Vec3 Zero = Vec3(0.f, 0.f, 0.f);
+						memcpy(&vPosition, &Zero, sizeof(Vec3));
+					}
+					else
+						memcpy(&vPosition, &srcNode->mPositionKeys[k].mValue, sizeof(Vec3));
+					
 					keyframe->fTime = srcNode->mPositionKeys[k].mTime;
 				}
 

@@ -107,6 +107,8 @@ CChannel* CChannel::Create(const string strName, vector<KEYFRAME>& Keyframes)
 
 void CChannel::Free()
 {
+	m_KeyFrames.clear();
+
 	Super::Free();
 }
 

@@ -40,7 +40,7 @@ public:
 	HRESULT			RenderInstancing(class CVIBuffer_Instance*& pInstanceBuffer);
 
 public:
-	HRESULT			UpdateAnimation(const _float& fTimeDelta);
+	//HRESULT			UpdateAnimation(const _float& fTimeDelta);
 	HRESULT			UpdateTweenData(const _float& fTimeDelta);
 
 	void			PushTweenData(const InstancedTweenDesc& desc);
@@ -61,6 +61,7 @@ private:
 
 	_int						m_iCurrentAnimIndex = 0;
 	_int						m_iNextAnimIndex = -1;
+	_uint						m_iMaxFrameCount = 0;
 
 private:
 	TWEENDESC					m_TweenDesc;

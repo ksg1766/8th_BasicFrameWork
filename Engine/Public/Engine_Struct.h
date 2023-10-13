@@ -28,12 +28,12 @@ namespace Engine
 	// Animation
 	typedef struct KeyframeDesc
 	{
-		int32 animIndex = -1;
-		uint32 currFrame = 0;
-		uint32 nextFrame = 0;
-		float ratio = 0.f;
-		float sumTime = 0.f;
-		float speed = 1.f;
+		_int animIndex = -1;
+		_uint currFrame = 0;
+		_uint nextFrame = 0;
+		_float ratio = 0.f;
+		_float sumTime = 0.f;
+		_float speed = 1.f;
 		Vec2 padding;
 	}KEYFRAMEDESC;
 
@@ -55,10 +55,10 @@ namespace Engine
 			tweenRatio = 0;
 		}
 
-		float tweenDuration = 0.1f;
-		float tweenRatio = 0.f;
-		float tweenSumTime = 0.f;
-		float padding = 0.f;
+		_float tweenDuration = 0.3f;
+		_float tweenRatio = 0.f;
+		_float tweenSumTime = 0.f;
+		_float padding = 0.f;
 		KeyframeDesc curr;
 		KeyframeDesc next;
 	}TWEENDESC;

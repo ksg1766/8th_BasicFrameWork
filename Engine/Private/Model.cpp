@@ -9,6 +9,7 @@
 #include "Utils.h"
 #include "FileUtils.h"
 #include <filesystem>
+#include "LevelManager.h"
 
 _int CModel::m_iNextInstanceID = 0;
 map<_int, _bool> CModel::m_mapVTFExist;
@@ -125,15 +126,20 @@ HRESULT CModel::Initialize(void * pArg)
 		vector<CAnimation*>		Animations;
 		Animations.reserve(m_Animations.size());
 
+		_uint iMax = 0;
 		for (auto& pPrototype : m_Animations)
 		{
 			CAnimation* pAnimation = pPrototype->Clone(this);
 			if (nullptr == pAnimation)
 				return E_FAIL;
 
+			iMax = max(iMax, pPrototype->GetMaxFrameCount());
+
 			Animations.push_back(pAnimation);
 			Safe_Release(pPrototype);
 		}
+		m_iMaxFrameCount = iMax;
+
 		m_Animations.clear();
 		m_Animations = Animations;
 
@@ -142,6 +148,20 @@ HRESULT CModel::Initialize(void * pArg)
 			if (FAILED(CreateVertexTexture2DArray()))
 				return E_FAIL;
 
+			CLevelManager* pInstance = GET_INSTANCE(CLevelManager);
+			if (3/*LEVEL_GAMETOOL*/ != pInstance->GetCurrentLevelIndex())
+			{
+				for (auto& pAnimation : m_Animations)
+				{
+					for (auto& pChannel : pAnimation->GetChannels())
+						Safe_Release(pChannel);
+
+					//m_Bones
+
+					pAnimation->GetChannels().clear();
+				}
+			}
+			RELEASE_INSTANCE(CLevelManager);
 			m_mapVTFExist[m_iInstanceID] = true;
 		}
 	}
@@ -226,21 +246,6 @@ HRESULT CModel::BindMaterialTexture(CShader* pShader, const _char* pConstantName
 		return S_OK;
 
 	return m_Materials[iMaterialIndex].pTextures[eType]->Bind_ShaderResource(pShader, pConstantName, 0);
-}
-
-HRESULT CModel::UpdateAnimation(const _float& fTimeDelta)
-{
-	if (m_iCurrentAnimIndex >= m_Animations.size()) return E_FAIL;
-
-	/* 현재 애니메이션의 모든 채널 키프레임 보간 (아직 부모 기준) - Relative */
-	m_Animations[m_iCurrentAnimIndex]->Play_Animation(fTimeDelta);
-
-	/* 모든 뼈를 순회하며 루트 기준 트랜스폼을 계산하여 세팅한다.(루트 기준) - Global */
-	/* cf. m_Bones은 부모에서 자식 순으로 순차적으로 정렬되어 있는 상태다. */
-	for (auto& pHierarchyNode : m_Bones)
-		pHierarchyNode->Set_CombinedTransformation();
-
-	return S_OK;
 }
 
 HRESULT CModel::UpdateTweenData(const _float& fTimeDelta)
@@ -619,8 +624,8 @@ HRESULT CModel::CreateVertexTexture2DArray()
 	{
 		D3D11_TEXTURE2D_DESC desc;
 		ZeroMemory(&desc, sizeof(D3D11_TEXTURE2D_DESC));
-		desc.Width = MAX_BONES * 4;
-		desc.Height = MAX_KEYFRAMES;
+		desc.Width = m_Bones.size() * 4;
+		desc.Height = m_iMaxFrameCount;
 		desc.ArraySize = iAnimCount;
 		desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT; // 16바이트
 		desc.Usage = D3D11_USAGE_IMMUTABLE;
@@ -628,8 +633,8 @@ HRESULT CModel::CreateVertexTexture2DArray()
 		desc.MipLevels = 1;
 		desc.SampleDesc.Count = 1;
 
-		const _uint dataSize = MAX_BONES * sizeof(Matrix);
-		const _uint pageSize = dataSize * MAX_KEYFRAMES;
+		const _uint dataSize = m_Bones.size() * sizeof(Matrix);
+		const _uint pageSize = dataSize * m_iMaxFrameCount;
 		void* mallocPtr = ::malloc(pageSize * iAnimCount);
 
 		// 파편화된 데이터를 조립한다.
@@ -639,7 +644,7 @@ HRESULT CModel::CreateVertexTexture2DArray()
 
 			BYTE* pageStartPtr = reinterpret_cast<BYTE*>(mallocPtr) + startOffset;
 		
-			for (_uint f = 0; f < MAX_KEYFRAMES; f++)
+			for (_uint f = 0; f < m_iMaxFrameCount; f++)
 			{
 				void* ptr = pageStartPtr + f * dataSize;
 				::memcpy(ptr, _animTransforms[c].transforms[f].data(), dataSize);
