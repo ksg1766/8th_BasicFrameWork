@@ -16,7 +16,7 @@ CShader::CShader(const CShader & rhs)
 	Safe_AddRef(m_pEffect);
 }
 
-HRESULT CShader::Initialize_Prototype(const wstring & strShaderFilePath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements)
+HRESULT CShader::Initialize_Prototype(const wstring & strShaderFilePath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements, _bool pArg)
 {
 	_uint		iHlslFlag = 0;
 
@@ -24,8 +24,9 @@ HRESULT CShader::Initialize_Prototype(const wstring & strShaderFilePath, const D
 	iHlslFlag = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
 #else
 	iHlslFlag = D3DCOMPILE_OPTIMIZATION_LEVEL1;
-
 #endif	
+
+	if (pArg) iHlslFlag |= D3DCOMPILE_ENABLE_BACKWARDS_COMPATIBILITY;
 
 	/* 해당 경로에 셰이더 파일을 컴파일하여 객체화한다. */
 	if (FAILED(D3DX11CompileEffectFromFile(strShaderFilePath.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, iHlslFlag, 0, m_pDevice, &m_pEffect, nullptr)))
@@ -152,11 +153,47 @@ HRESULT CShader::Bind_Textures(const _char * pConstantName, ID3D11ShaderResource
 	return pSRVariable->SetResourceArray(ppSRVs, 0, iNumTextures);	
 }
 
-CShader * CShader::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring & strShaderFilePath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements)
+HRESULT CShader::Get_RawValue(const _char* pConstantName, OUT void* pData, _uint iLength) const
+{
+	ID3DX11EffectVariable* pVariable = m_pEffect->GetVariableByName(pConstantName);
+	if (nullptr == pVariable)
+		return E_FAIL;
+
+	return pVariable->GetRawValue(pData, 0, iLength);
+}
+
+HRESULT CShader::Get_Matrix(const _char* pConstantName, OUT _float4x4* pMatrix) const
+{
+	/* pConstantName이름에 해당하는 타입을 고려하지않은 전역변수를 컨트롤하는 객체를 얻어온다 .*/
+	ID3DX11EffectVariable* pVariable = m_pEffect->GetVariableByName(pConstantName);
+	if (nullptr == pVariable)
+		return E_FAIL;
+
+	ID3DX11EffectMatrixVariable* pMatrixVariable = pVariable->AsMatrix();
+	if (nullptr == pMatrixVariable)
+		return E_FAIL;
+
+	return pMatrixVariable->GetMatrix((_float*)pMatrix);
+}
+
+HRESULT CShader::Get_Matrices(const _char* pConstantName, OUT _float4x4* pMatrices, _uint iNumMatrices) const
+{
+	ID3DX11EffectVariable* pVariable = m_pEffect->GetVariableByName(pConstantName);
+	if (nullptr == pVariable)
+		return E_FAIL;
+
+	ID3DX11EffectMatrixVariable* pMatrix = pVariable->AsMatrix();
+	if (nullptr == pMatrix)
+		return E_FAIL;
+
+	return pMatrix->GetMatrixArray((_float*)pMatrices, 0, iNumMatrices);
+}
+
+CShader * CShader::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring & strShaderFilePath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements, _bool pArg)
 {
 	CShader*	pInstance = new CShader(pDevice, pContext);
 
-	if (FAILED(pInstance->Initialize_Prototype(strShaderFilePath, pElements, iNumElements)))
+	if (FAILED(pInstance->Initialize_Prototype(strShaderFilePath, pElements, iNumElements, pArg)))
 	{
 		MSG_BOX("Failed to Created : CShader");
 		Safe_Release(pInstance);

@@ -7,7 +7,6 @@ CBone::CBone()
 CBone::CBone(const CBone& rhs)
 	: m_iIndex(rhs.m_iIndex)
 	, m_iParentIndex(rhs.m_iParentIndex)
-	, m_iDepth(rhs.m_iDepth)
 	//, m_pParent(rhs.m_pParent)
 {
 	strcpy_s(m_szName, rhs.m_szName);
@@ -29,7 +28,6 @@ HRESULT CBone::Initialize_Prototype(string strName, Matrix transformMatrix, Matr
 
 	m_iIndex = iBoneIndex;
 	m_iParentIndex = iParentIndex;
-	m_iDepth = iDepth;
 
 	return S_OK;
 }

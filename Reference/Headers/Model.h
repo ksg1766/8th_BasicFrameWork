@@ -17,6 +17,11 @@ struct AnimTransform
 	array<TransformArrayType, MAX_KEYFRAMES> transforms;
 };
 
+typedef struct tagSocketDesc
+{
+	vector<string> vecSocketBoneNames;
+}SOCKETDESC;
+
 class CBone;
 class CSocket;
 class CMesh;
@@ -33,7 +38,7 @@ private:
 	virtual ~CModel() = default;
 
 public:
-	virtual HRESULT Initialize_Prototype(const wstring& strModelFilePath, _fmatrix& matPivot);
+	virtual HRESULT Initialize_Prototype(const wstring& strModelFilePath, const SOCKETDESC& desc, _fmatrix& matPivot);
 	virtual HRESULT Initialize(void* pArg)			override;
 	virtual void	Tick(const _float& fTimeDelta)	override;
 	void			DebugRender()					override;
@@ -70,9 +75,7 @@ private:
 	ID3D11Texture2D*			m_pTexture = nullptr;
 	ID3D11ShaderResourceView*	m_pSRV = nullptr;
 
-	vector<pair<_int, CSocket*>>m_SocketBones;	// TODO:소켓이 Bone index를 갖게 할지, 아니면 pair로 인덱스와 함께 저장할지 고민
-	ID3D11Texture2D*			m_pSocketTexture = nullptr;
-	ID3D11ShaderResourceView*	m_pSocketSRV = nullptr;
+	vector<CSocket*>			m_Sockets;	// TODO:소켓이 Bone index를 갖게 할지, 아니면 pair로 인덱스와 함께 저장할지 고민
 
 	class CShader*				m_pShader;
 
@@ -95,9 +98,12 @@ public:
 public:
 	void			SetAnimation(_int iAnimIndex)			{ m_iCurrentAnimIndex = iAnimIndex; }
 	void			SetNextAnimationIndex(_int iAnimIndex);
+	void			SetTweenDesc(TweenDesc& TweenDesc)		{ m_TweenDesc = TweenDesc; }
+	void			SetSRV(ID3D11ShaderResourceView*& pSRV)	{ m_pSRV = pSRV; }
+	HRESULT			EquipParts(const _int& iSocketIndex, CModel* pModel);
 
 private:
-	HRESULT			Ready_Bones(const wstring& strModelFilePath);
+	HRESULT			Ready_Bones(const wstring& strModelFilePath, const SOCKETDESC& desc);
 	HRESULT			Ready_Meshes(const wstring& strModelFilePath, Matrix matPivot);
 	HRESULT			Ready_Materials(const wstring& strModelFilePath);
 	HRESULT			Ready_Animations(const wstring& strModelFilePath);
@@ -107,11 +113,12 @@ private:
 	void			CreateAnimationTransform(_uint index, vector<AnimTransform>& animTransforms);
 
 public:
-	static	CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPath, _fmatrix matPivot = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(90.0f)));
+	static	CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPath, const SOCKETDESC& desc = SOCKETDESC(), _fmatrix matPivot = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(90.0f)));
 	virtual CComponent* Clone(CGameObject* pGameObject, void* pArg) override;
 	virtual void Free() override;
 
 	friend class CAnimationView;
+	//friend class CSocket;
 };
 
 END

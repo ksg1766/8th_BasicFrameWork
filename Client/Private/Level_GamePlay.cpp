@@ -31,6 +31,9 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_UnitAir()))
 		return E_FAIL;
 
+	if (FAILED(Ready_Layer_Equipment()))
+		return E_FAIL;
+
 	if (FAILED(Ready_Layer_Camera()))
 		return E_FAIL;
 
@@ -98,6 +101,15 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player()
 	pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_P_Strife"));
 	if (nullptr == pGameObject)	return E_FAIL;
 
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_Equipment()
+{
+	/* 원형객체를 복제하여 사본객체를 생성하고 레이어에 추가한다. */
+	CGameObject* pGameObject = nullptr;
+	LAYERTAG	eLayerTag = LAYERTAG::EQUIPMENT;
+	
 	return S_OK;
 }
 

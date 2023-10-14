@@ -151,6 +151,9 @@
     <Filter Include="03.GameObjects\02.Monster\HellHound\Script">
       <UniqueIdentifier>{b89f1ef8-48f4-4cde-9a89-2548fc76681c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.GameObjects\01.Playable\00.P_Strife\Parts">
+      <UniqueIdentifier>{9d79ba9a-4824-49a3-a4b1-6e45ce8401da}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -279,6 +282,12 @@
     <ClInclude Include="..\Public\HellHound.h">
       <Filter>03.GameObjects\02.Monster\HellHound</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Strife_GunL.h">
+      <Filter>03.GameObjects\01.Playable\00.P_Strife\Parts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Strife_GunR.h">
+      <Filter>03.GameObjects\01.Playable\00.P_Strife\Parts</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -388,6 +397,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\HellHound.cpp">
       <Filter>03.GameObjects\02.Monster\HellHound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Strife_GunL.cpp">
+      <Filter>03.GameObjects\01.Playable\00.P_Strife\Parts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Strife_GunR.cpp">
+      <Filter>03.GameObjects\01.Playable\00.P_Strife\Parts</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

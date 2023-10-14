@@ -150,6 +150,11 @@ HRESULT CMainApp::Ready_Prototype_Components()
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxAnimMesh.hlsl"), VTXANIMMESH::Elements, VTXANIMMESH::iNumElements))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_Shader_VTFSocket */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VTFSocket"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VTFSocket.hlsl"), VTXMESH::Elements, VTXMESH::iNumElements, true))))
+		return E_FAIL;
+
 	/* For.Prototype_Component_Shader_VtxTexFetchAnim */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxTexFetchAnim"),
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxTexFetchAnim.hlsl"), VTXANIMMESH::Elements, VTXANIMMESH::iNumElements))))
@@ -263,9 +268,22 @@ HRESULT CMainApp::Ready_Prototype_Components()
 		{
 			const wstring& strFileName = entry.path().stem();
 
-			if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_" + strFileName),
-				CModel::Create(m_pDevice, m_pContext, strSkeletalFilePath + strFileName))))
-				return E_FAIL;
+			if (TEXT("P_Strife") == strFileName)
+			{
+				SOCKETDESC desc;
+				desc.vecSocketBoneNames.push_back("Bone_Strife_Hand_L");
+				desc.vecSocketBoneNames.push_back("Bone_Strife_Hand_R");
+
+				if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_" + strFileName),
+					CModel::Create(m_pDevice, m_pContext, strSkeletalFilePath + strFileName, desc))))
+					return E_FAIL;
+			}
+			else
+			{
+				if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_" + strFileName),
+					CModel::Create(m_pDevice, m_pContext, strSkeletalFilePath + strFileName))))
+					return E_FAIL;
+			}
 		}
 	}
 

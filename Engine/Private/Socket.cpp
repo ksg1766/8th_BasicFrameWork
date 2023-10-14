@@ -1,39 +1,76 @@
 #include "..\Public\Socket.h"
+#include "GameObject.h"
+#include "Model.h"
+#include "Shader.h"
+#include "Transform.h"
 
 CSocket::CSocket()
 {
 }
 
-HRESULT CSocket::Initialize(const _char* szName)
+HRESULT CSocket::Initialize(const _int iBoneIndex)
 {
-	strcpy_s(m_szName, strlen(szName), szName);
+	m_iBoneIndex = iBoneIndex;
 
 	return S_OK;
 }
 
-HRESULT CSocket::Render()
+HRESULT CSocket::Equip(CModel* pParts)
 {
-	return S_OK;
-}
-
-HRESULT CSocket::Load_VTF(ID3D11Texture2D* pSocketTexture, ID3D11ShaderResourceView* pSocketSRV)
-{
-	if (!pSocketTexture || !pSocketSRV)
+	if(m_pPartsModel)
 		return E_FAIL;
 
-	m_pSocketTexture = pSocketTexture; m_pSocketSRV = pSocketSRV;
+	m_pPartsModel = const_cast<CModel*>(pParts);
+	m_pPartsModel->SetSRV(m_pSocketSRV);
+	
+	return S_OK;
+}
 
-	Safe_AddRef(m_pSocketTexture);
-	Safe_AddRef(m_pSocketSRV);
+HRESULT CSocket::UnEquip()
+{
+	if (!m_pPartsModel)
+		return E_FAIL;
+
+	m_pPartsModel = nullptr;
 
 	return S_OK;
 }
 
-CSocket * CSocket::Create(const _char* szName)
+HRESULT CSocket::LoadSRV(ID3D11ShaderResourceView*& pSocketSRV)
 {
-	CSocket*			pInstance = new CSocket();
+	if (m_pSocketSRV)
+		return E_FAIL;
 
-	if (FAILED(pInstance->Initialize(szName)))
+	m_pSocketSRV = pSocketSRV;
+
+	return S_OK;
+}
+
+HRESULT CSocket::LoadTweenDescFromBone(TWEENDESC& tweenDec)
+{
+	m_pPartsModel->SetTweenDesc(tweenDec);
+
+	return S_OK;
+}
+
+HRESULT CSocket::LoadTrasformFromBone(Matrix& matSocketWorld)
+{
+	const Matrix& matWorld = m_pPartsModel->GetTransform()->WorldMatrix();
+	m_pPartsModel->GetTransform()->Set_WorldMatrix(matSocketWorld * matWorld);
+
+	return S_OK;
+}
+
+HRESULT CSocket::BindBoneIndex()
+{
+	return m_pPartsModel->GetGameObject()->GetShader()->Bind_RawValue("g_iSocketBoneIndex", &m_iBoneIndex, sizeof(_int));
+}
+
+CSocket* CSocket::Create(const _int iBoneIndex)
+{
+	CSocket* pInstance = new CSocket();
+
+	if (FAILED(pInstance->Initialize(iBoneIndex)))
 	{
 		MSG_BOX("Failed To Created : CSocket");
 		Safe_Release(pInstance);
@@ -44,6 +81,5 @@ CSocket * CSocket::Create(const _char* szName)
 
 void CSocket::Free()
 {
-	Safe_Release(m_pSocketTexture);
 	Safe_Release(m_pSocketSRV);
 }

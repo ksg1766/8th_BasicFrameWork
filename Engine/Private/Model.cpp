@@ -3,8 +3,10 @@
 #include "Shader.h"
 #include "Bone.h"
 #include "Mesh.h"
+#include "Transform.h"
 #include "Animation.h"
 #include "Channel.h"
+#include "Socket.h"
 #include "Texture.h"
 #include "Utils.h"
 #include "FileUtils.h"
@@ -29,6 +31,7 @@ CModel::CModel(const CModel& rhs)
 	, m_iNumMaterials(rhs.m_iNumMaterials)
 	, m_Materials(rhs.m_Materials)
 	, m_Animations(rhs.m_Animations)
+	, m_Sockets(rhs.m_Sockets)
 	, m_iCurrentAnimIndex(rhs.m_iCurrentAnimIndex)
 	, m_iInstanceID(rhs.m_iInstanceID)
 {
@@ -50,14 +53,14 @@ CModel::CModel(const CModel& rhs)
 		Safe_AddRef(pAnimation);
 }
 
-HRESULT CModel::Initialize_Prototype(const wstring& strModelFilePath, _fmatrix& matPivot)
+HRESULT CModel::Initialize_Prototype(const wstring& strModelFilePath, const SOCKETDESC& desc, _fmatrix& matPivot)
 {
 	//XMStoreFloat4x4(&m_matPivot, matPivot);
 	XMStoreFloat4x4(&m_matPivot, XMMatrixScaling(0.2f, 0.2f, 0.2f) * XMMatrixRotationY(XMConvertToRadians(90.0f)));
 
 	/* DirectX로 그려낼 수 있도록 데이터들을 정리한다. */
 
-	if (FAILED(Ready_Bones(strModelFilePath)))
+	if (FAILED(Ready_Bones(strModelFilePath, desc)))
 		return E_FAIL;
 
 	if (FAILED(Ready_Meshes(strModelFilePath, m_matPivot)))
@@ -148,6 +151,9 @@ HRESULT CModel::Initialize(void * pArg)
 			if (FAILED(CreateVertexTexture2DArray()))
 				return E_FAIL;
 
+			for (auto& pSocket : m_Sockets)
+				pSocket->LoadSRV(m_pSRV);
+
 			CLevelManager* pInstance = GET_INSTANCE(CLevelManager);
 			if (3/*LEVEL_GAMETOOL*/ != pInstance->GetCurrentLevelIndex())
 			{
@@ -177,7 +183,13 @@ void CModel::Tick(const _float& fTimeDelta)
 	if (TYPE_ANIM == m_eModelType)
 	{
 		UpdateTweenData(fTimeDelta);
+
+		for (auto& socket : m_Sockets)
+		{
+			socket->LoadTweenDescFromBone(m_TweenDesc);
+		}
 	}
+	// Socket은 NonAnim 모델일테니 어차피 Tick이 안도는거나 마찬가지.
 }
 
 void CModel::DebugRender()
@@ -186,7 +198,8 @@ void CModel::DebugRender()
 
 HRESULT CModel::Render()
 {
-	if (TYPE_ANIM == m_eModelType)
+	//if (TYPE_ANIM == m_eModelType)
+	if (m_pSRV)
 	{
 		if (FAILED(m_pShader->Bind_Texture("g_TransformMap", m_pSRV)))
 			__debugbreak();
@@ -194,6 +207,21 @@ HRESULT CModel::Render()
 		/* 본의 최종 트랜스폼 계산 : <오프셋 * 루트 기준 * 사전변환> */
 		if (FAILED(m_pShader->Bind_RawValue("g_Tweenframes", &m_TweenDesc, sizeof(TWEENDESC))))
 			return E_FAIL;
+	}
+
+	// 소켓은 NonAnim이니까 여기로 빠질거임. 따라서 g_TransformMap과 g_Tweenframes를 바인딩 해줄 수 있도록 소켓의 바인딩함수에 해당 기능을 넣어서 호출하거나
+	// 위의 if (TYPE_ANIM == m_eModelType) 부분을 빼고 nullptr로 바꾸자. 다만 m_TweenDesc를 null check 못하는게 문제긴한데...
+	// -> m_pSRV가 nullptr이 아니라면 TWEENDESC가 있을테니  간단히 문제 해결.
+	// 소켓의 인덱스는 어디서 바인딩하지...?
+
+	// 내가 파츠 모델이라면 소켓본인덱스를 바인딩
+	// 소켓의 바인딩함수 호출해서 파츠 모델의 셰이더에 본인덱스 바인딩하도록
+	if (!m_Sockets.empty())
+	{
+		for (CSocket* pSocket : m_Sockets)
+		{
+			pSocket->BindBoneIndex();
+		}
 	}
 
 	for (_uint i = 0; i < m_iNumMeshes; i++)
@@ -206,12 +234,30 @@ HRESULT CModel::Render()
 		m_Meshes[i]->Render();
 	}
 
+
+	// 파츠모델은 부모모델 이후에 렌더링되는게 맞다.
+
+	//////////////////////////////////////////////////////////////////
+	if (!m_Sockets.empty())
+	//{	// 월드 매트릭스 바인딩은 파츠오브젝트가 알아서 할것임. 렌더링 이후에 가져와서 쓰기만 하면됨.
+	//	// 다만 실제 상태는 렌더링 상태보다 한 프레임 전의 월드 상태일 것임.
+	//	Matrix matSocketWorld;
+	//	m_pShader->Get_Matrix("g_SocketWorld", &matSocketWorld);
+
+		for (CSocket* pSocket : m_Sockets)
+		{
+			//pSocket->LoadTrasformFromBone(matSocketWorld);
+			Matrix tempMatrix = GetTransform()->WorldMatrix();
+			pSocket->LoadTrasformFromBone(tempMatrix);
+		}
+	//}
+
 	return S_OK;
 }
 
 HRESULT CModel::RenderInstancing(CVIBuffer_Instance*& pInstanceBuffer)
 {
-	if (TYPE_ANIM == m_eModelType)
+	if (m_pSRV)
 	{
 		if (FAILED(m_pShader->Bind_Texture("g_TransformMap", m_pSRV)))
 			__debugbreak();
@@ -350,7 +396,16 @@ void CModel::SetNextAnimationIndex(_int iAnimIndex)
 	m_iNextAnimIndex = iAnimIndex;
 }
 
-HRESULT CModel::Ready_Bones(const wstring& strModelFilePath)
+HRESULT CModel::EquipParts(const _int& iSocketIndex, CModel* pModel)
+{
+	if (iSocketIndex >= m_Sockets.size())
+		return E_FAIL;
+
+	m_Sockets[iSocketIndex]->Equip(pModel);
+	return S_OK;
+}
+
+HRESULT CModel::Ready_Bones(const wstring& strModelFilePath, const SOCKETDESC& desc)
 {
 	/* 파일 셋업 */
 	wstring folderName, filePath;
@@ -380,6 +435,17 @@ HRESULT CModel::Ready_Bones(const wstring& strModelFilePath)
 		CBone* pBone = CBone::Create(strName, transformMat, offsetMat, iBoneIndex, iParentIndex, iDepth);
 		if (nullptr == pBone)
 			return E_FAIL;
+
+		if (!desc.vecSocketBoneNames.empty())
+		{
+			for (auto& strSocket : desc.vecSocketBoneNames)
+			{
+				if (strSocket == strName)
+				{	// Initialize에서 해줘야하나?
+					m_Sockets.push_back(CSocket::Create(iBoneIndex));
+				}
+			}
+		}
 
 		m_Bones.push_back(pBone);
 	}
@@ -668,54 +734,54 @@ HRESULT CModel::CreateVertexTexture2DArray()
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////
 		//                                         Socket Texture, SRV                                         //
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////
-		{
-			D3D11_TEXTURE2D_DESC desc;
-			ZeroMemory(&desc, sizeof(D3D11_TEXTURE2D_DESC));
-			desc.Width = m_SocketBones.size() * 4;
-			desc.Height = m_iMaxFrameCount;	//////////
-			desc.ArraySize = iAnimCount;
-			desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT; // 16바이트
-			desc.Usage = D3D11_USAGE_IMMUTABLE;
-			desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-			desc.MipLevels = 1;
-			desc.SampleDesc.Count = 1;
+		//{
+		//	D3D11_TEXTURE2D_DESC desc;
+		//	ZeroMemory(&desc, sizeof(D3D11_TEXTURE2D_DESC));
+		//	desc.Width = m_SocketBones.size() * 4;
+		//	desc.Height = m_iMaxFrameCount;	//////////
+		//	desc.ArraySize = iAnimCount;
+		//	desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT; // 16바이트
+		//	desc.Usage = D3D11_USAGE_IMMUTABLE;
+		//	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+		//	desc.MipLevels = 1;
+		//	desc.SampleDesc.Count = 1;
 
-			const _uint dataSize = m_SocketBones.size() * sizeof(Matrix);
-			const _uint pageSize = dataSize * m_iMaxFrameCount;	//////////
-			void* mallocPtr = ::malloc(pageSize * iAnimCount);
+		//	const _uint dataSize = m_SocketBones.size() * sizeof(Matrix);
+		//	const _uint pageSize = dataSize * m_iMaxFrameCount;	//////////
+		//	void* mallocPtr = ::malloc(pageSize * iAnimCount);
 
-			// 파편화된 데이터를 조립한다.
-			for (_uint c = 0; c < iAnimCount; c++)
-			{
-				_uint startOffset = c * pageSize;
+		//	// 파편화된 데이터를 조립한다.
+		//	for (_uint c = 0; c < iAnimCount; c++)
+		//	{
+		//		_uint startOffset = c * pageSize;
 
-				BYTE* pageStartPtr = reinterpret_cast<BYTE*>(mallocPtr) + startOffset;
+		//		BYTE* pageStartPtr = reinterpret_cast<BYTE*>(mallocPtr) + startOffset;
 
-				for (_uint f = 0; f < m_iMaxFrameCount; f++)
-				{
-					void* ptr = pageStartPtr + f * dataSize;
+		//		for (_uint f = 0; f < m_iMaxFrameCount; f++)
+		//		{
+		//			void* ptr = pageStartPtr + f * dataSize;
 
-					for(_int*& iter : m_SocketBones)
-					{
-						::memcpy(ptr, &_animTransforms[c].transforms[f][*iter], sizeof(Matrix));
-					}
-				}
-			}
+		//			for(_int*& iter : m_SocketBones)
+		//			{
+		//				::memcpy(ptr, &_animTransforms[c].transforms[f][*iter], sizeof(Matrix));
+		//			}
+		//		}
+		//	}
 
-			// 리소스 만들기
-			vector<D3D11_SUBRESOURCE_DATA> subResources(iAnimCount);
+		//	// 리소스 만들기
+		//	vector<D3D11_SUBRESOURCE_DATA> subResources(iAnimCount);
 
-			for (_uint c = 0; c < iAnimCount; c++)
-			{
-				void* ptr = (BYTE*)mallocPtr + c * pageSize;
-				subResources[c].pSysMem = ptr;
-				subResources[c].SysMemPitch = dataSize;
-				subResources[c].SysMemSlicePitch = pageSize;
-			}
+		//	for (_uint c = 0; c < iAnimCount; c++)
+		//	{
+		//		void* ptr = (BYTE*)mallocPtr + c * pageSize;
+		//		subResources[c].pSysMem = ptr;
+		//		subResources[c].SysMemPitch = dataSize;
+		//		subResources[c].SysMemSlicePitch = pageSize;
+		//	}
 
-			if (FAILED(m_pDevice->CreateTexture2D(&desc, subResources.data(), &m_pSocketTexture)))
-				return E_FAIL;
-		}
+		//	if (FAILED(m_pDevice->CreateTexture2D(&desc, subResources.data(), &m_pSocketTexture)))
+		//		return E_FAIL;
+		//}
 		
 		::free(mallocPtr);
 	}
@@ -729,13 +795,12 @@ HRESULT CModel::CreateVertexTexture2DArray()
 		desc.Texture2DArray.MipLevels = 1;
 		desc.Texture2DArray.ArraySize = iAnimCount;
 
-		if (FAILED(m_pDevice->CreateShaderResourceView(m_pTexture, &desc, &m_pSocketSRV)))
+		if (FAILED(m_pDevice->CreateShaderResourceView(m_pTexture, &desc, &m_pSRV)))
 			return E_FAIL;
 	}
 
 	return S_OK;
 }
-
 
 void CModel::CreateAnimationTransform(_uint index, vector<AnimTransform>& animTransforms)
 {
@@ -760,11 +825,11 @@ void CModel::CreateAnimationTransform(_uint index, vector<AnimTransform>& animTr
 	}
 }
 
-CModel * CModel::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strModelFilePath, _fmatrix matPivot)
+CModel * CModel::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strModelFilePath, const SOCKETDESC& desc, _fmatrix matPivot)
 {
 	CModel*	pInstance = new CModel(pDevice, pContext);
 
-	if (FAILED(pInstance->Initialize_Prototype(strModelFilePath, matPivot)))
+	if (FAILED(pInstance->Initialize_Prototype(strModelFilePath, desc, matPivot)))
 	{
 		MSG_BOX("Failed to Created : CModel");
 		Safe_Release(pInstance);
@@ -814,7 +879,17 @@ void CModel::Free()
 		Safe_Release(pAnimation);
 	m_Animations.clear();
 
-	//Safe_Release(m_pTexture);
-	//Safe_Release(m_pSRV);
+	if (TYPE_ANIM == m_eModelType)
+	{
+		Safe_Release(m_pTexture);
+		Safe_Release(m_pSRV);
+	}
+
+	Safe_Release(m_pShader);
+
+	for (auto& pSockets : m_Sockets)
+		Safe_Release(pSockets);
+	m_Sockets.clear();
+
 	Safe_Release(m_pShader);
 }

@@ -16,7 +16,6 @@ public:
 	HRESULT Initialize(void* pArg);
 public:
 	const _char*	Get_Name() const { return m_szName; }
-	_uint			Get_Depth() const { return m_iDepth; }
 	const _int&		Get_Index() const { return m_iIndex; }
 	const _int&		Get_ParentIndex() const { return m_iParentIndex; }
 	_matrix			Get_Transformation() { return XMLoadFloat4x4(&m_Transformation); }
@@ -39,7 +38,6 @@ private:
 	CBone*			m_pParent = nullptr;
 	_int			m_iParentIndex = 0;
 	_int			m_iIndex = 0;
-	_uint			m_iDepth = 0; 
 
 public:
 	static CBone* Create(string strName, Matrix transformMatrix, Matrix offsetMatrix, _int iBoneIndex, _int iParentIndex, _uint iDepth);

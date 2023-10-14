@@ -24,6 +24,9 @@ HRESULT CP_Strife::Initialize(void* pArg)
 
 	if (FAILED(Ready_Scripts()))
 		return E_FAIL;
+	
+	if (FAILED(Ready_Parts()))
+		return E_FAIL;
 
 	GetRigidBody()->GetSphereCollider()->SetRadius(10.f);
 	GetRigidBody()->GetOBBCollider()->SetExtents(Vec3(5.f, 5.f, 5.f));
@@ -110,6 +113,24 @@ HRESULT CP_Strife::Ready_FixedComponents()
 
 HRESULT CP_Strife::Ready_Scripts()
 {
+	return S_OK;
+}
+
+HRESULT CP_Strife::Ready_Parts()
+{
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
+
+	CGameObject* pGameObject = pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, LAYERTAG::EQUIPMENT, TEXT("Prototype_GameObject_Strife_GunL"));
+	if (nullptr == pGameObject)	return E_FAIL;
+	m_vecParts.push_back(pGameObject);
+	GetModel()->EquipParts(0, pGameObject->GetModel());
+
+	pGameObject = pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, LAYERTAG::EQUIPMENT, TEXT("Prototype_GameObject_Strife_GunR"));
+	if (nullptr == pGameObject)	return E_FAIL;
+	m_vecParts.push_back(pGameObject);
+	GetModel()->EquipParts(1, pGameObject->GetModel());
+
+	RELEASE_INSTANCE(CGameInstance);
 	return S_OK;
 }
 

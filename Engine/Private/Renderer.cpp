@@ -39,10 +39,12 @@ HRESULT CRenderer::Draw_RenderObjects()
 		return S_OK;
 	if (FAILED(Render_NonLight()))
 		return S_OK;
+
+	if (FAILED(Render_NonBlend_Instance()))	// 플레이어를 이걸로 해놔가지고 일단 앞에 둠. 파츠는 나중에 렌더링돼야 하기에..
+		return S_OK;
 	if (FAILED(Render_NonBlend()))
 		return S_OK;
-	if (FAILED(Render_NonBlend_Instance()))
-		return S_OK;
+
 	if (FAILED(Render_Blend()))
 		return S_OK;
 	if (FAILED(Render_Blend_Instance()))
@@ -97,7 +99,7 @@ HRESULT CRenderer::Render_NonBlend()
 
 HRESULT CRenderer::Render_NonBlend_Instance()
 {
-	map<InstanceID, vector<CGameObject*>> cache;	// TODO: InstanceID는 ObjectTag같은걸로
+	map<InstanceID, vector<CGameObject*>> cache;
 
 	for (auto& pGameObject : m_RenderObjects[RG_NONBLEND_INSTANCE])
 	{
@@ -128,7 +130,7 @@ HRESULT CRenderer::Render_NonBlend_Instance()
 
 			// INSTANCING
 			if(CModel::TYPE_ANIM == instanceId.first)
-				tweenDesc->tweens[i] = pGameObject->GetModel()->GetTweenDesc();
+				tweenDesc->tweens[i] = pGameObject->GetModel()->GetTweenDesc();	// 소켓 아이템의 경우 어떻게 할지.(굳이 인스턴싱이 필요 없을 듯 함 근데.)
 		}
 
 		if (CModel::TYPE_ANIM == instanceId.first)

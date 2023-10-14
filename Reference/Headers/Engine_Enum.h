@@ -16,6 +16,7 @@ namespace Engine
 		PLAYER,
 		UNIT_AIR,
 		UNIT_GROUND,
+		EQUIPMENT,	// DYNAMIC이 맞을까 잘 모르겠다.
 		DYNAMIC_LAYER_END,
 
 		// STATIC_LAYER
