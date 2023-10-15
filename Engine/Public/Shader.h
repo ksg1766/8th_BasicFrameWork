@@ -23,7 +23,7 @@ public:
 	HRESULT Bind_Textures(const _char* pConstantName, ID3D11ShaderResourceView** ppSRVs, _uint iNumTextures) const;
 	
 	HRESULT Get_RawValue(const _char* pConstantName, OUT void* pData, _uint iLength) const;
-	HRESULT Get_Matrix(const _char* pConstantName, OUT _float4x4* pMatrix) const;
+	HRESULT Get_Matrix(const _char* pConstantName, OUT _matrix* pMatrix) const;
 	HRESULT Get_Matrices(const _char* pConstantName, OUT _float4x4* pMatrices, _uint iNumMatrices) const;
 
 	void	SetPassIndex(_uint iPassIndex)	{ m_iPassIndex = iPassIndex; }

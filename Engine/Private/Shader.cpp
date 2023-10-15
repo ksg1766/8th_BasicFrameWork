@@ -162,7 +162,7 @@ HRESULT CShader::Get_RawValue(const _char* pConstantName, OUT void* pData, _uint
 	return pVariable->GetRawValue(pData, 0, iLength);
 }
 
-HRESULT CShader::Get_Matrix(const _char* pConstantName, OUT _float4x4* pMatrix) const
+HRESULT CShader::Get_Matrix(const _char* pConstantName, OUT _matrix* pMatrix) const
 {
 	/* pConstantName이름에 해당하는 타입을 고려하지않은 전역변수를 컨트롤하는 객체를 얻어온다 .*/
 	ID3DX11EffectVariable* pVariable = m_pEffect->GetVariableByName(pConstantName);
@@ -173,7 +173,10 @@ HRESULT CShader::Get_Matrix(const _char* pConstantName, OUT _float4x4* pMatrix) 
 	if (nullptr == pMatrixVariable)
 		return E_FAIL;
 
-	return pMatrixVariable->GetMatrix((_float*)pMatrix);
+	if (FAILED(pMatrixVariable->GetMatrix((_float*)pMatrix)))
+		return E_FAIL;
+
+	return S_OK;
 }
 
 HRESULT CShader::Get_Matrices(const _char* pConstantName, OUT _float4x4* pMatrices, _uint iNumMatrices) const

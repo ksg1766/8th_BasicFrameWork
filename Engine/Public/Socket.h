@@ -27,7 +27,7 @@ public:									// 전부 private으로 해놓고 모델의 특정 함수에만 friend 로 열어 �
 
 	HRESULT			LoadSRV(ID3D11ShaderResourceView*& pSocketSRV);
 	HRESULT			LoadTweenDescFromBone(TWEENDESC& tweenDec);
-	HRESULT			LoadTrasformFromBone(Matrix& matPartsWorld);	// 소켓은 부모->파츠 일방향으로 트위닝과 srv를 전달해주는 통로 역할만 함.
+	HRESULT			LoadTrasformFromBone(const Matrix& matPartsWorld);	// 소켓은 부모->파츠 일방향으로 트위닝과 srv를 전달해주는 통로 역할만 함.
 
 	HRESULT			BindBoneIndex();
 

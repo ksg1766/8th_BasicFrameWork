@@ -17,6 +17,17 @@ HRESULT CObjectManager::Reserve_Manager(_uint iNumLevels)
 
 	m_pLayers = new LAYERS[iNumLevels];
 
+	/*CLayer* pLayer = CLayer::Create();
+	for (_int i = 0; (LAYERTAG)i < LAYERTAG::LAYER_END; ++i)
+	{
+		LAYERTAG e = (LAYERTAG)i;
+		if (e == LAYERTAG::DEFAULT_LAYER_END || e == LAYERTAG::DYNAMIC_LAYER_END || e == LAYERTAG::STATIC_LAYER_END)
+			continue;
+
+		pLayer->SetLayerTag(e);
+
+		m_pLayers[iNumLevels][e] = pLayer;
+	}*/
 	m_iNumLevels = iNumLevels;
 
 	return S_OK;
@@ -45,6 +56,20 @@ CGameObject* CObjectManager::Add_GameObject(_uint iLevelIndex, const LAYERTAG& e
 	CGameObject*		pGameObject = pPrototype->Clone(pArg);
 	if (nullptr == pGameObject)
 		return nullptr;
+
+	if (m_pLayers[iLevelIndex].size() < (_uint)LAYERTAG::LAYER_END)
+	{
+		CLayer* pLayer = CLayer::Create();
+
+		for (_uint i = 0; i < (_uint)LAYERTAG::LAYER_END; ++i)
+		{
+			LAYERTAG e = (LAYERTAG)i;
+
+			pLayer->SetLayerTag(e);
+
+			m_pLayers[iLevelIndex].emplace(eLayerTag, pLayer);
+		}
+	}
 
 	CLayer*		pLayer = Find_Layer(iLevelIndex, eLayerTag);
 

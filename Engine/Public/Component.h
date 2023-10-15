@@ -17,8 +17,6 @@ enum class ComponentType
 	Shader,
 	Renderer,
 	Texture,
-	//MeshRenderer,
-	//ModelRenderer,
 	Camera,
 	Animator,
 	Light,

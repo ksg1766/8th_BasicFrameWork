@@ -39,12 +39,10 @@ HRESULT CRenderer::Draw_RenderObjects()
 		return S_OK;
 	if (FAILED(Render_NonLight()))
 		return S_OK;
-
-	if (FAILED(Render_NonBlend_Instance()))	// 플레이어를 이걸로 해놔가지고 일단 앞에 둠. 파츠는 나중에 렌더링돼야 하기에..
-		return S_OK;
 	if (FAILED(Render_NonBlend()))
 		return S_OK;
-
+	if (FAILED(Render_NonBlend_Instance()))
+		return S_OK;
 	if (FAILED(Render_Blend()))
 		return S_OK;
 	if (FAILED(Render_Blend_Instance()))

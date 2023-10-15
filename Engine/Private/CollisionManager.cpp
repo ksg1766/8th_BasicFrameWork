@@ -14,12 +14,13 @@ IMPLEMENT_SINGLETON(CCollisionManager);
 
 CCollisionManager::CCollisionManager()
 {
+	Reset();
 }
 
 void CCollisionManager::LateTick_Collision(const _float& fTimeDelta)
 {
-	pCurrentLevelLayers = CObjectManager::GetInstance()->GetCurrentLevelLayers();
-	if (pCurrentLevelLayers->empty())	return;
+	m_pCurrentLevelLayers = CObjectManager::GetInstance()->GetCurrentLevelLayers();
+	if (m_pCurrentLevelLayers->empty())	return;
 
 	_uint iOffset = (_uint)LAYERTAG::DEFAULT_LAYER_END;
 
@@ -52,8 +53,10 @@ HRESULT CCollisionManager::Reserve_Manager(_uint iNumLevels)
 
 void CCollisionManager::CheckGroup(LAYERTAG eLeft, LAYERTAG eRight)
 {
-	_uint iRow = (_uint)eLeft;
-	_uint iCol = (_uint)eRight;
+	_uint iOffset = (_uint)LAYERTAG::DEFAULT_LAYER_END;
+
+	_uint iRow = (_uint)eLeft - iOffset;
+	_uint iCol = (_uint)eRight - iOffset;
 
 	if (iCol < iRow)
 	{
@@ -89,11 +92,11 @@ bool CCollisionManager::IsCollided(CCollider* pLeft, CCollider* pRight)
 
 void CCollisionManager::CheckDynamicCollision(LAYERTAG& eLayerLeft, LAYERTAG& eLayerRight , const _float& fTimeDelta)
 {
-	if (!(*pCurrentLevelLayers)[eLayerLeft] || !(*pCurrentLevelLayers)[eLayerRight])
+	if (!(*m_pCurrentLevelLayers)[eLayerLeft] || !(*m_pCurrentLevelLayers)[eLayerRight])
 		return;
 
-	vector<CGameObject*>& vecLeft = (*pCurrentLevelLayers)[eLayerLeft]->GetGameObjects();
-	vector<CGameObject*>& vecRight = (*pCurrentLevelLayers)[eLayerRight]->GetGameObjects();
+	vector<CGameObject*>& vecLeft = (*m_pCurrentLevelLayers)[eLayerLeft]->GetGameObjects();
+	vector<CGameObject*>& vecRight = (*m_pCurrentLevelLayers)[eLayerRight]->GetGameObjects();
 	
 	if (!m_arrSorted[(_uint)eLayerRight])
 	{	// sweep and prune
@@ -146,7 +149,7 @@ void CCollisionManager::CheckDynamicCollision(LAYERTAG& eLayerLeft, LAYERTAG& eL
 
 				if (m_hashColInfo.end() == iter)
 				{
-					m_hashColInfo.insert(make_pair(ID.ID, false));
+					m_hashColInfo.emplace(ID.ID, false);
 					iter = m_hashColInfo.find(ID.ID);
 				}
 
@@ -220,7 +223,7 @@ void CCollisionManager::CheckDynamicCollision(LAYERTAG& eLayerLeft, LAYERTAG& eL
 
 void CCollisionManager::CheckStaticCollision(LAYERTAG& eDynamicLayer, const _float& fTimeDelta)
 {
-	vector<CGameObject*>& vecLeft = (*pCurrentLevelLayers)[eDynamicLayer]->GetGameObjects();
+	vector<CGameObject*>& vecLeft = (*m_pCurrentLevelLayers)[eDynamicLayer]->GetGameObjects();
 	
 	CQuadTree* pQuadTreeInstance = CQuadTree::GetInstance();
 	

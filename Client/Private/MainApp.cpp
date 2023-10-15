@@ -152,7 +152,7 @@ HRESULT CMainApp::Ready_Prototype_Components()
 
 	/* For.Prototype_Component_Shader_VTFSocket */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VTFSocket"),
-		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VTFSocket.hlsl"), VTXMESH::Elements, VTXMESH::iNumElements, true))))
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VTFSocket.hlsl"), VTXMESH::Elements, VTXMESH::iNumElements))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Shader_VtxTexFetchAnim */
@@ -253,11 +253,30 @@ HRESULT CMainApp::Ready_Prototype_Components()
 		wstring strStaticFilePath = TEXT("../Bin/Resources/Models/Static/");
 		for (const auto& entry : filesystem::directory_iterator(strStaticFilePath))
 		{
+			Matrix matPivot = Matrix::Identity;
 			const wstring& strFileName = entry.path().stem();
+			SOCKETDESC desc = SOCKETDESC();
 
-			if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_" + strFileName),
-				CModel::Create(m_pDevice, m_pContext, strStaticFilePath + strFileName))))
-				return E_FAIL;
+			if (TEXT("Strife_GunL") == strFileName)
+			{
+				XMStoreFloat4x4(&matPivot, XMMatrixScaling(0.007f, 0.007f, 0.007f) * XMMatrixRotationY(XMConvertToRadians(270.0f))  * XMMatrixRotationX(XMConvertToRadians(90.0f)));
+				if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_" + strFileName),
+					CModel::Create(m_pDevice, m_pContext, strStaticFilePath + strFileName, desc, matPivot))))
+					return E_FAIL;
+			}
+			else if (TEXT("Strife_GunR") == strFileName)
+			{
+				XMStoreFloat4x4(&matPivot, XMMatrixScaling(0.007f, 0.007f, 0.007f) * XMMatrixRotationY(XMConvertToRadians(90.0f))  * XMMatrixRotationX(XMConvertToRadians(270.0f)));
+				if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_" + strFileName),
+					CModel::Create(m_pDevice, m_pContext, strStaticFilePath + strFileName, desc, matPivot))))
+					return E_FAIL;
+			}
+			else
+			{
+				if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_" + strFileName),
+					CModel::Create(m_pDevice, m_pContext, strStaticFilePath + strFileName))))
+					return E_FAIL;
+			}
 		}
 	}
 
@@ -268,20 +287,24 @@ HRESULT CMainApp::Ready_Prototype_Components()
 		{
 			const wstring& strFileName = entry.path().stem();
 
+			SOCKETDESC desc = SOCKETDESC();
+			Matrix matPivot = Matrix::Identity;
+			XMStoreFloat4x4(&matPivot, XMMatrixScaling(0.2f, 0.2f, 0.2f) * XMMatrixRotationY(XMConvertToRadians(90.0f)));
 			if (TEXT("P_Strife") == strFileName)
 			{
-				SOCKETDESC desc;
-				desc.vecSocketBoneNames.push_back("Bone_Strife_Hand_L");
-				desc.vecSocketBoneNames.push_back("Bone_Strife_Hand_R");
+				desc.vecSocketBoneNames.push_back("Bone_Strife_Fing_Index3_L_end");
+				desc.vecSocketBoneNames.push_back("Bone_Strife_Fing_Index3_R_end");
+				desc.vecSocketBoneNames.push_back("Bone_Strife_Weapon_Dagger_L_end");
+				desc.vecSocketBoneNames.push_back("Bone_Strife_Weapon_Dagger_R_end");
 
 				if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_" + strFileName),
-					CModel::Create(m_pDevice, m_pContext, strSkeletalFilePath + strFileName, desc))))
+					CModel::Create(m_pDevice, m_pContext, strSkeletalFilePath + strFileName, desc, matPivot))))
 					return E_FAIL;
 			}
 			else
 			{
 				if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_" + strFileName),
-					CModel::Create(m_pDevice, m_pContext, strSkeletalFilePath + strFileName))))
+					CModel::Create(m_pDevice, m_pContext, strSkeletalFilePath + strFileName, desc, matPivot))))
 					return E_FAIL;
 			}
 		}

@@ -178,6 +178,8 @@
     <ClInclude Include="..\Public\BasicTerrain.h" />
     <ClInclude Include="..\Public\DissolveManager.h" />
     <ClInclude Include="..\Public\HellHound.h" />
+    <ClInclude Include="..\Public\MainCamera.h" />
+    <ClInclude Include="..\Public\MainCameraController.h" />
     <ClInclude Include="..\Public\P_Strife.h" />
     <ClInclude Include="..\Public\SaveLoadView.h" />
     <ClInclude Include="..\Public\DebugTerrainGrid.h" />
@@ -222,6 +224,8 @@
     <ClCompile Include="..\Private\BasicTerrain.cpp" />
     <ClCompile Include="..\Private\DissolveManager.cpp" />
     <ClCompile Include="..\Private\HellHound.cpp" />
+    <ClCompile Include="..\Private\MainCamera.cpp" />
+    <ClCompile Include="..\Private\MainCameraController.cpp" />
     <ClCompile Include="..\Private\P_Strife.cpp" />
     <ClCompile Include="..\Private\SaveLoadView.cpp" />
     <ClCompile Include="..\Private\DebugTerrainGrid.cpp" />
@@ -319,9 +323,7 @@
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       </EntryPointName>
     </FxCompile>
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_VTFSocket.hlsl">
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">/Gec %(AdditionalOptions)</AdditionalOptions>
-    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VTFSocket.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnimInstancing.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnimMesh.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxCubeNom.hlsl" />

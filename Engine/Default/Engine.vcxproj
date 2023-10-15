@@ -172,6 +172,7 @@ call Copy.bat</Command>
     <ClInclude Include="..\public\Base.h" />
     <ClInclude Include="..\Public\Bone.h" />
     <ClInclude Include="..\Public\Camera.h" />
+    <ClInclude Include="..\Public\CameraManager.h" />
     <ClInclude Include="..\Public\Channel.h" />
     <ClInclude Include="..\Public\ColliderAABB.h" />
     <ClInclude Include="..\Public\ColliderBase.h" />
@@ -185,6 +186,7 @@ call Copy.bat</Command>
     <ClInclude Include="..\Public\Engine_Enum.h" />
     <ClInclude Include="..\Public\EventManager.h" />
     <ClInclude Include="..\Public\FileUtils.h" />
+    <ClInclude Include="..\Public\Hasher.h" />
     <ClInclude Include="..\Public\InputDevice.h" />
     <ClInclude Include="..\Public\KeyManager.h" />
     <ClInclude Include="..\Public\Mesh.h" />
@@ -233,6 +235,7 @@ call Copy.bat</Command>
     <ClCompile Include="..\private\Base.cpp" />
     <ClCompile Include="..\Private\Bone.cpp" />
     <ClCompile Include="..\Private\Camera.cpp" />
+    <ClCompile Include="..\Private\CameraManager.cpp" />
     <ClCompile Include="..\Private\Channel.cpp" />
     <ClCompile Include="..\Private\ColliderAABB.cpp" />
     <ClCompile Include="..\Private\ColliderBase.cpp" />

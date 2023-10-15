@@ -1,33 +1,33 @@
 #include "stdafx.h"
-#include "FlyingCameraController.h"
+#include "MainCameraController.h"
 #include "GameInstance.h"
 #include "GameObject.h"
 #include "Transform.h"
 #include "Camera.h"
 
-CFlyingCameraController::CFlyingCameraController(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CMainCameraController::CMainCameraController(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:Super(pDevice, pContext)
 {
 }
 
-CFlyingCameraController::CFlyingCameraController(const CFlyingCameraController& rhs)
+CMainCameraController::CMainCameraController(const CMainCameraController& rhs)
 	:Super(rhs)
 {
 }
 
-HRESULT CFlyingCameraController::Initialize_Prototype()
+HRESULT CMainCameraController::Initialize_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CFlyingCameraController::Initialize(void* pArg)
+HRESULT CMainCameraController::Initialize(void* pArg)
 {
 	m_pTransform = static_cast<CTransform*>(m_pGameObject->GetTransform());
 	m_pTransform->RotateYAxisFixed(Vec3(45.f, 0.f, 0.f));
 	m_pTransform->Translate(Vec3(0.f, 200.f, -200.f));
 
 	m_fLinearSpeed = 100.f;
-	m_vAngularSpeed = Vec3(180.f, 180.f, 180.f);
+	m_vAngularSpeed = Vec3(90.f, 90.f, 90.f);
 	
 	/*CCamera::CAMERA_DESC tDesc;
 	::ZeroMemory(&tDesc, sizeof CCamera::CAMERA_DESC);
@@ -42,20 +42,20 @@ HRESULT CFlyingCameraController::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CFlyingCameraController::Tick(const _float& fTimeDelta)
+void CMainCameraController::Tick(const _float& fTimeDelta)
 {
 	Input(fTimeDelta);
 }
 
-void CFlyingCameraController::LateTick(const _float& fTimeDelta)
+void CMainCameraController::LateTick(const _float& fTimeDelta)
 {
 }
 
-void CFlyingCameraController::DebugRender()
+void CMainCameraController::DebugRender()
 {
 }
 
-void CFlyingCameraController::Input(const _float& fTimeDelta)
+void CMainCameraController::Input(const _float& fTimeDelta)
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
@@ -110,32 +110,32 @@ void CFlyingCameraController::Input(const _float& fTimeDelta)
 	RELEASE_INSTANCE(CGameInstance);
 }
 
-CFlyingCameraController* CFlyingCameraController::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CMainCameraController* CMainCameraController::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CFlyingCameraController* pInstance = new CFlyingCameraController(pDevice, pContext);
+	CMainCameraController* pInstance = new CMainCameraController(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CFlyingCameraController");
+		MSG_BOX("Failed to Created : CMainCameraController");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CComponent* CFlyingCameraController::Clone(CGameObject* pGameObject, void* pArg)
+CComponent* CMainCameraController::Clone(CGameObject* pGameObject, void* pArg)
 {
-	CFlyingCameraController* pInstance = new CFlyingCameraController(*this);
+	CMainCameraController* pInstance = new CMainCameraController(*this);
 	pInstance->m_pGameObject = pGameObject;
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed To Cloned : CFlyingCameraController");
+		MSG_BOX("Failed To Cloned : CMainCameraController");
 		Safe_Release(pInstance);
 	}
 	return pInstance;
 }
 
-void CFlyingCameraController::Free()
+void CMainCameraController::Free()
 {
 }

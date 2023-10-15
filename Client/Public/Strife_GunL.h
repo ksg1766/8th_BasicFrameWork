@@ -13,7 +13,7 @@ private:
 	/* 원형을 생성할 때 */
 	CStrife_GunL(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	/* 사본을 생성할 때 */
-	CStrife_GunL(const CStrife_GunL& rhs); /* 복사 생성자. */
+	CStrife_GunL(const CStrife_GunL& rhs);
 	virtual ~CStrife_GunL() = default;
 
 public:

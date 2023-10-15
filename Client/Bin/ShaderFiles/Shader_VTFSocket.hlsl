@@ -41,6 +41,8 @@ struct tagTweenFrameDesc
 tagTweenFrameDesc g_Tweenframes;
 
 Texture2DArray g_TransformMap;
+//matrix g_SocketWorld;
+int g_iSocketBoneIndex;
 
 struct VS_IN
 {
@@ -48,8 +50,6 @@ struct VS_IN
     float3 vNormal : NORMAL;
     float2 vTexcoord : TEXCOORD0;
     float3 vTangent : TANGENT;
-    uint4 vBlendIndex : BLENDINDEX;
-    float4 vBlendWeight : BLENDWEIGHT;
 };
 
 struct VS_OUT
@@ -61,11 +61,8 @@ struct VS_OUT
     float3 vTangent : TANGENT;
 };
 
-matrix GetAnimationMatrix(VS_IN input)
+matrix GetSocketMatrix()
 {
-    float indices[4] = { input.vBlendIndex.x, input.vBlendIndex.y, input.vBlendIndex.z, input.vBlendIndex.w };
-    float weights[4] = { input.vBlendWeight.x, input.vBlendWeight.y, input.vBlendWeight.z, input.vBlendWeight.w };
-
     int animIndex[2];
     int currFrame[2];
     int nextFrame[2];
@@ -86,46 +83,40 @@ matrix GetAnimationMatrix(VS_IN input)
     
     matrix curr = 0;
     matrix next = 0;
-    matrix transform = 0;
 
-    for (int i = 0; i < 4; i++)
+    c0 = g_TransformMap.Load(int4(g_iSocketBoneIndex * 4 + 0, currFrame[0], animIndex[0], 0));  // indices[i] 위치에 SocketBoneNumber를 던지자
+    c1 = g_TransformMap.Load(int4(g_iSocketBoneIndex * 4 + 1, currFrame[0], animIndex[0], 0));  // for문 순회 필요는 없다. 정점과 달리 소켓은 한뼈에만 영향을 받는다.
+    c2 = g_TransformMap.Load(int4(g_iSocketBoneIndex * 4 + 2, currFrame[0], animIndex[0], 0));
+    c3 = g_TransformMap.Load(int4(g_iSocketBoneIndex * 4 + 3, currFrame[0], animIndex[0], 0));
+    curr = matrix(c0, c1, c2, c3);
+    
+    n0 = g_TransformMap.Load(int4(g_iSocketBoneIndex * 4 + 0, nextFrame[0], animIndex[0], 0));
+    n1 = g_TransformMap.Load(int4(g_iSocketBoneIndex * 4 + 1, nextFrame[0], animIndex[0], 0));
+    n2 = g_TransformMap.Load(int4(g_iSocketBoneIndex * 4 + 2, nextFrame[0], animIndex[0], 0));
+    n3 = g_TransformMap.Load(int4(g_iSocketBoneIndex * 4 + 3, nextFrame[0], animIndex[0], 0));
+    next = matrix(n0, n1, n2, n3);
+    
+    matrix result = lerp(curr, next, ratio[0]);
+    
+    if (g_Tweenframes.next.animIndex >= 0)
     {
-        c0 = g_TransformMap.Load(int4(indices[i] * 4 + 0, currFrame[0], animIndex[0], 0));
-        c1 = g_TransformMap.Load(int4(indices[i] * 4 + 1, currFrame[0], animIndex[0], 0));
-        c2 = g_TransformMap.Load(int4(indices[i] * 4 + 2, currFrame[0], animIndex[0], 0));
-        c3 = g_TransformMap.Load(int4(indices[i] * 4 + 3, currFrame[0], animIndex[0], 0));
+        c0 = g_TransformMap.Load(int4(g_iSocketBoneIndex * 4 + 0, currFrame[1], animIndex[1], 0));
+        c1 = g_TransformMap.Load(int4(g_iSocketBoneIndex * 4 + 1, currFrame[1], animIndex[1], 0));
+        c2 = g_TransformMap.Load(int4(g_iSocketBoneIndex * 4 + 2, currFrame[1], animIndex[1], 0));
+        c3 = g_TransformMap.Load(int4(g_iSocketBoneIndex * 4 + 3, currFrame[1], animIndex[1], 0));
         curr = matrix(c0, c1, c2, c3);
-        
-        n0 = g_TransformMap.Load(int4(indices[i] * 4 + 0, nextFrame[0], animIndex[0], 0));
-        n1 = g_TransformMap.Load(int4(indices[i] * 4 + 1, nextFrame[0], animIndex[0], 0));
-        n2 = g_TransformMap.Load(int4(indices[i] * 4 + 2, nextFrame[0], animIndex[0], 0));
-        n3 = g_TransformMap.Load(int4(indices[i] * 4 + 3, nextFrame[0], animIndex[0], 0));
+
+        n0 = g_TransformMap.Load(int4(g_iSocketBoneIndex * 4 + 0, nextFrame[1], animIndex[1], 0));
+        n1 = g_TransformMap.Load(int4(g_iSocketBoneIndex * 4 + 1, nextFrame[1], animIndex[1], 0));
+        n2 = g_TransformMap.Load(int4(g_iSocketBoneIndex * 4 + 2, nextFrame[1], animIndex[1], 0));
+        n3 = g_TransformMap.Load(int4(g_iSocketBoneIndex * 4 + 3, nextFrame[1], animIndex[1], 0));
         next = matrix(n0, n1, n2, n3);
-        
-        matrix result = lerp(curr, next, ratio[0]);
-        
-        if (g_Tweenframes.next.animIndex >= 0)
-        {
-            c0 = g_TransformMap.Load(int4(indices[i] * 4 + 0, currFrame[1], animIndex[1], 0));
-            c1 = g_TransformMap.Load(int4(indices[i] * 4 + 1, currFrame[1], animIndex[1], 0));
-            c2 = g_TransformMap.Load(int4(indices[i] * 4 + 2, currFrame[1], animIndex[1], 0));
-            c3 = g_TransformMap.Load(int4(indices[i] * 4 + 3, currFrame[1], animIndex[1], 0));
-            curr = matrix(c0, c1, c2, c3);
 
-            n0 = g_TransformMap.Load(int4(indices[i] * 4 + 0, nextFrame[1], animIndex[1], 0));
-            n1 = g_TransformMap.Load(int4(indices[i] * 4 + 1, nextFrame[1], animIndex[1], 0));
-            n2 = g_TransformMap.Load(int4(indices[i] * 4 + 2, nextFrame[1], animIndex[1], 0));
-            n3 = g_TransformMap.Load(int4(indices[i] * 4 + 3, nextFrame[1], animIndex[1], 0));
-            next = matrix(n0, n1, n2, n3);
-
-            matrix nextResult = lerp(curr, next, ratio[1]);
-            result = lerp(result, nextResult, g_Tweenframes.tweenRatio);
-        }
-        
-        transform += mul(weights[i], result);
+        matrix nextResult = lerp(curr, next, ratio[1]);
+        result = lerp(result, nextResult, g_Tweenframes.tweenRatio);
     }
 
-    return transform;
+    return result;
 }
 
 VS_OUT VS_MAIN(VS_IN In)
@@ -134,11 +125,11 @@ VS_OUT VS_MAIN(VS_IN In)
 
     matrix matWV, matWVP;
 
+    Matrix m = GetSocketMatrix();
+
     matWV = mul(g_WorldMatrix, g_ViewMatrix);
     matWVP = mul(matWV, g_ProjMatrix);
-
-    matrix m = GetAnimationMatrix(In);
-    
+   
     vector vPosition = mul(vector(In.vPosition, 1.f), m);
     vector vNormal = mul(vector(In.vNormal, 0.f), m);
 

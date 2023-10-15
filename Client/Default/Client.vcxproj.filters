@@ -58,30 +58,6 @@
     <Filter Include="03.GameObjects">
       <UniqueIdentifier>{d435cd37-10c5-4f6c-a2f1-ee72504bbb59}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03.GameObjects\BackGround">
-      <UniqueIdentifier>{327a42a0-45f0-4b4d-b8cd-bb209baedc94}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03.GameObjects\Camera">
-      <UniqueIdentifier>{548fcad8-b15c-480f-be95-7ac6cffde6c8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03.GameObjects\Camera\00.FlyingCamera">
-      <UniqueIdentifier>{58335612-64ea-4fb8-9646-d008b3eaed74}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03.GameObjects\Camera\00.FlyingCamera\GameObject">
-      <UniqueIdentifier>{bdcf4e26-ba9b-418c-93cf-9fe79e0e688c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03.GameObjects\Camera\00.FlyingCamera\Script">
-      <UniqueIdentifier>{dd15396f-49de-4631-a0d5-97aa141723a3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03.GameObjects\Camera\01.MainCamera">
-      <UniqueIdentifier>{957dc45a-e064-4c63-a0de-15a961b42e61}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03.GameObjects\Camera\01.MainCamera\GameObject">
-      <UniqueIdentifier>{939637c6-34cf-4fda-b60b-f7891e65c8c2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03.GameObjects\Camera\01.MainCamera\Script">
-      <UniqueIdentifier>{5c7e68d7-8b95-4ea2-868c-2f65d5a1612c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.ClientManagers">
       <UniqueIdentifier>{91592fbc-d0e9-4b34-a846-d3a78316b95d}</UniqueIdentifier>
     </Filter>
@@ -153,6 +129,30 @@
     </Filter>
     <Filter Include="03.GameObjects\01.Playable\00.P_Strife\Parts">
       <UniqueIdentifier>{9d79ba9a-4824-49a3-a4b1-6e45ce8401da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\99.BackGround">
+      <UniqueIdentifier>{327a42a0-45f0-4b4d-b8cd-bb209baedc94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\98.Camera">
+      <UniqueIdentifier>{548fcad8-b15c-480f-be95-7ac6cffde6c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\98.Camera\00.FlyingCamera">
+      <UniqueIdentifier>{58335612-64ea-4fb8-9646-d008b3eaed74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\98.Camera\00.FlyingCamera\GameObject">
+      <UniqueIdentifier>{bdcf4e26-ba9b-418c-93cf-9fe79e0e688c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\98.Camera\00.FlyingCamera\Script">
+      <UniqueIdentifier>{dd15396f-49de-4631-a0d5-97aa141723a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\98.Camera\01.MainCamera">
+      <UniqueIdentifier>{957dc45a-e064-4c63-a0de-15a961b42e61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\98.Camera\01.MainCamera\GameObject">
+      <UniqueIdentifier>{939637c6-34cf-4fda-b60b-f7891e65c8c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\98.Camera\01.MainCamera\Script">
+      <UniqueIdentifier>{5c7e68d7-8b95-4ea2-868c-2f65d5a1612c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -229,10 +229,10 @@
       <Filter>03.GameObjects\02.Monster\CollisionTestCube\01.Script</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\FlyingCamera.h">
-      <Filter>03.GameObjects\Camera\00.FlyingCamera\GameObject</Filter>
+      <Filter>03.GameObjects\98.Camera\00.FlyingCamera\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\FlyingCameraController.h">
-      <Filter>03.GameObjects\Camera\00.FlyingCamera\Script</Filter>
+      <Filter>03.GameObjects\98.Camera\00.FlyingCamera\Script</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\BasicTerrain.h">
       <Filter>03.GameObjects\00.Static\BasicTerrain\GameObject</Filter>
@@ -271,7 +271,7 @@
       <Filter>02.ClientManagers\00. DissolveManager</Filter>
     </ClInclude>
     <ClInclude Include="..\public\BackGround.h">
-      <Filter>03.GameObjects\BackGround</Filter>
+      <Filter>03.GameObjects\99.BackGround</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\AnimationView.h">
       <Filter>01.Levels\02.GameTool\View\AnimationView</Filter>
@@ -287,6 +287,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\Strife_GunR.h">
       <Filter>03.GameObjects\01.Playable\00.P_Strife\Parts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MainCamera.h">
+      <Filter>03.GameObjects\98.Camera\01.MainCamera\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MainCameraController.h">
+      <Filter>03.GameObjects\98.Camera\01.MainCamera\Script</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -312,7 +318,7 @@
       <Filter>01.Levels\99.Loading\Loader</Filter>
     </ClCompile>
     <ClCompile Include="..\private\BackGround.cpp">
-      <Filter>03.GameObjects\BackGround</Filter>
+      <Filter>03.GameObjects\99.BackGround</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Level_GameTool.cpp">
       <Filter>01.Levels\02.GameTool</Filter>
@@ -351,10 +357,10 @@
       <Filter>03.GameObjects\02.Monster\CollisionTestCube\01.Script</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\FlyingCamera.cpp">
-      <Filter>03.GameObjects\Camera\00.FlyingCamera\GameObject</Filter>
+      <Filter>03.GameObjects\98.Camera\00.FlyingCamera\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\FlyingCameraController.cpp">
-      <Filter>03.GameObjects\Camera\00.FlyingCamera\Script</Filter>
+      <Filter>03.GameObjects\98.Camera\00.FlyingCamera\Script</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\BasicTerrain.cpp">
       <Filter>03.GameObjects\00.Static\BasicTerrain\GameObject</Filter>
@@ -403,6 +409,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Strife_GunR.cpp">
       <Filter>03.GameObjects\01.Playable\00.P_Strife\Parts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MainCamera.cpp">
+      <Filter>03.GameObjects\98.Camera\01.MainCamera\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MainCameraController.cpp">
+      <Filter>03.GameObjects\98.Camera\01.MainCamera\Script</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -23,13 +23,14 @@ HRESULT CStrife_GunR::Initialize(void* pArg)
 		return E_FAIL;
 
 	if (FAILED(Ready_Scripts()))
-		return E_FAIL;
+		return E_FAIL;	
 
 	return S_OK;
 }
 
 void CStrife_GunR::Tick(const _float& fTimeDelta)
 {
+
 	Super::Tick(fTimeDelta);
 }
 

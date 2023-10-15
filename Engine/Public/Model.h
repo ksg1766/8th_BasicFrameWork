@@ -75,8 +75,14 @@ private:
 	ID3D11Texture2D*			m_pTexture = nullptr;
 	ID3D11ShaderResourceView*	m_pSRV = nullptr;
 
-	vector<CSocket*>			m_Sockets;	// TODO:소켓이 Bone index를 갖게 할지, 아니면 pair로 인덱스와 함께 저장할지 고민
+	//
+	vector<CModel*>				m_PartsModel;
+	vector<_int>				m_vecSocketBones;
 
+	_bool						m_HasParent = false;
+	_int						m_iSocketBoneIndex = 0;
+	//
+	
 	class CShader*				m_pShader;
 
 	static map<_int, _bool>		m_mapVTFExist;	// TODO:다른곳에 텍스쳐를 가지고 있는지 기록할 수 있도록 하자.

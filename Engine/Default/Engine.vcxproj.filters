@@ -151,6 +151,9 @@
     <Filter Include="01.Utiltiy\04.Component\11.Model\00.Bone\Socket">
       <UniqueIdentifier>{22da5036-a8c8-4fe7-b35c-bd6c3a914c1c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utiltiy\01.Managers\08.CameraManager">
+      <UniqueIdentifier>{eb362217-7826-4ea1-a1a3-e93e59e38e25}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -330,6 +333,12 @@
     <ClInclude Include="..\Public\Socket.h">
       <Filter>01.Utiltiy\04.Component\11.Model\00.Bone\Socket</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\CameraManager.h">
+      <Filter>01.Utiltiy\01.Managers\08.CameraManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Hasher.h">
+      <Filter>98.Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -493,6 +502,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Socket.cpp">
       <Filter>01.Utiltiy\04.Component\11.Model\00.Bone\Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CameraManager.cpp">
+      <Filter>01.Utiltiy\01.Managers\08.CameraManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

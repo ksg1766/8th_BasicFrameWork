@@ -30,6 +30,7 @@ HRESULT CStrife_GunL::Initialize(void* pArg)
 
 void CStrife_GunL::Tick(const _float& fTimeDelta)
 {
+	
 	Super::Tick(fTimeDelta);
 }
 

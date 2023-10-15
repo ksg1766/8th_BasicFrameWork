@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Base.h"
+#include "Hasher.h"
 
 BEGIN(Engine)
 
@@ -20,20 +21,6 @@ public:
 	void	Restore_Object(CGameObject* pGameObject);
 
 private:
-	struct djb2Hasher
-	{
-		size_t operator() (const wstring& str) const
-		{
-			_ulong	hash = 5381;
-			_uint	size = str.length();
-
-			for (_uint i = 0; i < size; i++)
-				hash = ((hash << 5) + hash) + (str[i]); /* hash * 33 + c */
-
-			return hash;
-		}
-	};	// HashFunctionObject (djb2)
-
 	using POOLS = unordered_map<const wstring, queue<CGameObject*>, djb2Hasher>;
 	POOLS m_hashPools;
 

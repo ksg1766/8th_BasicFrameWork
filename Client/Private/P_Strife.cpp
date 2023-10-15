@@ -30,6 +30,7 @@ HRESULT CP_Strife::Initialize(void* pArg)
 
 	GetRigidBody()->GetSphereCollider()->SetRadius(10.f);
 	GetRigidBody()->GetOBBCollider()->SetExtents(Vec3(5.f, 5.f, 5.f));
+	//GetTransform()->SetScale(Vec3(2.f, 2.f, 2.f));
 
 	return S_OK;
 }
@@ -53,10 +54,7 @@ void CP_Strife::LateTick(const _float& fTimeDelta)
 {
 	Super::LateTick(fTimeDelta);
 
-	//GetModel()->UpdateAnimation(fTimeDelta);
-
-	//GetRenderer()->Add_RenderGroup(CRenderer::RG_NONBLEND, this);
-	GetRenderer()->Add_RenderGroup(CRenderer::RG_NONBLEND_INSTANCE, this);
+	GetRenderer()->Add_RenderGroup(CRenderer::RG_NONBLEND, this);
 }
 
 void CP_Strife::DebugRender()
@@ -72,7 +70,7 @@ HRESULT CP_Strife::Render()
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
-	//GetModel()->Render();
+	GetModel()->Render();
 
 #ifdef _DEBUG
 	DebugRender();
@@ -84,11 +82,7 @@ HRESULT CP_Strife::Render()
 HRESULT CP_Strife::Ready_FixedComponents()
 {
 	/* Com_Shader */
-	/*if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Shader, TEXT("Prototype_Component_Shader_VtxTexFetchAnim"))))
-		return E_FAIL;*/
-
-	/* Com_Shader */
-	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Shader, TEXT("Prototype_Component_Shader_VtxAnimInstancing"))))
+	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Shader, TEXT("Prototype_Component_Shader_VtxTexFetchAnim"))))
 		return E_FAIL;
 
 	/* Com_Model */
@@ -120,12 +114,14 @@ HRESULT CP_Strife::Ready_Parts()
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	CGameObject* pGameObject = pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, LAYERTAG::EQUIPMENT, TEXT("Prototype_GameObject_Strife_GunL"));
+	//CGameObject* pGameObject = pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, LAYERTAG::EQUIPMENT, TEXT("Prototype_GameObject_Strife_GunL"));
+	CGameObject* pGameObject = pGameInstance->CreateObject(TEXT("Prototype_GameObject_Strife_GunL"), LAYERTAG::EQUIPMENT);
 	if (nullptr == pGameObject)	return E_FAIL;
 	m_vecParts.push_back(pGameObject);
 	GetModel()->EquipParts(0, pGameObject->GetModel());
 
-	pGameObject = pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, LAYERTAG::EQUIPMENT, TEXT("Prototype_GameObject_Strife_GunR"));
+	//pGameObject = pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, LAYERTAG::EQUIPMENT, TEXT("Prototype_GameObject_Strife_GunR"));
+	pGameObject = pGameInstance->CreateObject(TEXT("Prototype_GameObject_Strife_GunR"), LAYERTAG::EQUIPMENT);
 	if (nullptr == pGameObject)	return E_FAIL;
 	m_vecParts.push_back(pGameObject);
 	GetModel()->EquipParts(1, pGameObject->GetModel());
@@ -139,7 +135,8 @@ HRESULT CP_Strife::Bind_ShaderResources()
 	/* 셰이더 전역변수로 던져야 할 값들을 던지자. */
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	if (FAILED(pGameInstance->Bind_TransformToShader(GetShader(), "g_ViewMatrix", CPipeLine::D3DTS_VIEW)) ||
+	if (FAILED(GetTransform()->Bind_ShaderResources(GetShader(), "g_WorldMatrix")) ||
+		FAILED(pGameInstance->Bind_TransformToShader(GetShader(), "g_ViewMatrix", CPipeLine::D3DTS_VIEW)) ||
 		FAILED(pGameInstance->Bind_TransformToShader(GetShader(), "g_ProjMatrix", CPipeLine::D3DTS_PROJ)) ||
 		FAILED(GetShader()->Bind_RawValue("g_vCamPosition", &static_cast<const _float4&>(pGameInstance->Get_CamPosition_Float4()), sizeof(_float4))))
 	{

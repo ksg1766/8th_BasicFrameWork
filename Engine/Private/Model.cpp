@@ -31,7 +31,10 @@ CModel::CModel(const CModel& rhs)
 	, m_iNumMaterials(rhs.m_iNumMaterials)
 	, m_Materials(rhs.m_Materials)
 	, m_Animations(rhs.m_Animations)
-	, m_Sockets(rhs.m_Sockets)
+	, m_vecSocketBones(rhs.m_vecSocketBones)
+	, m_PartsModel(rhs.m_PartsModel)
+	, m_HasParent(rhs.m_HasParent)
+	, m_iSocketBoneIndex(rhs.m_iSocketBoneIndex)
 	, m_iCurrentAnimIndex(rhs.m_iCurrentAnimIndex)
 	, m_iInstanceID(rhs.m_iInstanceID)
 {
@@ -55,8 +58,8 @@ CModel::CModel(const CModel& rhs)
 
 HRESULT CModel::Initialize_Prototype(const wstring& strModelFilePath, const SOCKETDESC& desc, _fmatrix& matPivot)
 {
-	//XMStoreFloat4x4(&m_matPivot, matPivot);
-	XMStoreFloat4x4(&m_matPivot, XMMatrixScaling(0.2f, 0.2f, 0.2f) * XMMatrixRotationY(XMConvertToRadians(90.0f)));
+	XMStoreFloat4x4(&m_matPivot, matPivot);
+	//XMStoreFloat4x4(&m_matPivot, XMMatrixScaling(0.2f, 0.2f, 0.2f) * XMMatrixRotationY(XMConvertToRadians(90.0f)));
 
 	/* DirectX로 그려낼 수 있도록 데이터들을 정리한다. */
 
@@ -151,8 +154,8 @@ HRESULT CModel::Initialize(void * pArg)
 			if (FAILED(CreateVertexTexture2DArray()))
 				return E_FAIL;
 
-			for (auto& pSocket : m_Sockets)
-				pSocket->LoadSRV(m_pSRV);
+			/*for (auto& pParts : m_PartsModel)
+				pParts->SetSRV(m_pSRV);*/
 
 			CLevelManager* pInstance = GET_INSTANCE(CLevelManager);
 			if (3/*LEVEL_GAMETOOL*/ != pInstance->GetCurrentLevelIndex())
@@ -184,9 +187,9 @@ void CModel::Tick(const _float& fTimeDelta)
 	{
 		UpdateTweenData(fTimeDelta);
 
-		for (auto& socket : m_Sockets)
+		for (auto& parts : m_PartsModel)
 		{
-			socket->LoadTweenDescFromBone(m_TweenDesc);
+			parts->SetTweenDesc(m_TweenDesc);
 		}
 	}
 	// Socket은 NonAnim 모델일테니 어차피 Tick이 안도는거나 마찬가지.
@@ -202,26 +205,15 @@ HRESULT CModel::Render()
 	if (m_pSRV)
 	{
 		if (FAILED(m_pShader->Bind_Texture("g_TransformMap", m_pSRV)))
-			__debugbreak();
+			return E_FAIL;
 
 		/* 본의 최종 트랜스폼 계산 : <오프셋 * 루트 기준 * 사전변환> */
 		if (FAILED(m_pShader->Bind_RawValue("g_Tweenframes", &m_TweenDesc, sizeof(TWEENDESC))))
 			return E_FAIL;
-	}
-
-	// 소켓은 NonAnim이니까 여기로 빠질거임. 따라서 g_TransformMap과 g_Tweenframes를 바인딩 해줄 수 있도록 소켓의 바인딩함수에 해당 기능을 넣어서 호출하거나
-	// 위의 if (TYPE_ANIM == m_eModelType) 부분을 빼고 nullptr로 바꾸자. 다만 m_TweenDesc를 null check 못하는게 문제긴한데...
-	// -> m_pSRV가 nullptr이 아니라면 TWEENDESC가 있을테니  간단히 문제 해결.
-	// 소켓의 인덱스는 어디서 바인딩하지...?
-
-	// 내가 파츠 모델이라면 소켓본인덱스를 바인딩
-	// 소켓의 바인딩함수 호출해서 파츠 모델의 셰이더에 본인덱스 바인딩하도록
-	if (!m_Sockets.empty())
-	{
-		for (CSocket* pSocket : m_Sockets)
-		{
-			pSocket->BindBoneIndex();
-		}
+		
+		if(m_HasParent)
+			if (FAILED(m_pShader->Bind_RawValue("g_iSocketBoneIndex", &m_iSocketBoneIndex, sizeof(_int))))
+				return E_FAIL;
 	}
 
 	for (_uint i = 0; i < m_iNumMeshes; i++)
@@ -234,23 +226,10 @@ HRESULT CModel::Render()
 		m_Meshes[i]->Render();
 	}
 
-
-	// 파츠모델은 부모모델 이후에 렌더링되는게 맞다.
-
-	//////////////////////////////////////////////////////////////////
-	if (!m_Sockets.empty())
-	//{	// 월드 매트릭스 바인딩은 파츠오브젝트가 알아서 할것임. 렌더링 이후에 가져와서 쓰기만 하면됨.
-	//	// 다만 실제 상태는 렌더링 상태보다 한 프레임 전의 월드 상태일 것임.
-	//	Matrix matSocketWorld;
-	//	m_pShader->Get_Matrix("g_SocketWorld", &matSocketWorld);
-
-		for (CSocket* pSocket : m_Sockets)
-		{
-			//pSocket->LoadTrasformFromBone(matSocketWorld);
-			Matrix tempMatrix = GetTransform()->WorldMatrix();
-			pSocket->LoadTrasformFromBone(tempMatrix);
-		}
-	//}
+	for (auto& pParts : m_PartsModel)
+	{
+		pParts->GetTransform()->Set_WorldMatrix(GetTransform()->WorldMatrix());
+	}
 
 	return S_OK;
 }
@@ -398,10 +377,14 @@ void CModel::SetNextAnimationIndex(_int iAnimIndex)
 
 HRESULT CModel::EquipParts(const _int& iSocketIndex, CModel* pModel)
 {
-	if (iSocketIndex >= m_Sockets.size())
+	if (iSocketIndex >= m_vecSocketBones.size())
 		return E_FAIL;
 
-	m_Sockets[iSocketIndex]->Equip(pModel);
+	m_PartsModel[iSocketIndex] = pModel;
+	pModel->m_HasParent = true;
+	pModel->m_iSocketBoneIndex = m_vecSocketBones[iSocketIndex];
+	pModel->m_pSRV = m_pSRV;
+
 	return S_OK;
 }
 
@@ -436,16 +419,14 @@ HRESULT CModel::Ready_Bones(const wstring& strModelFilePath, const SOCKETDESC& d
 		if (nullptr == pBone)
 			return E_FAIL;
 
-		if (!desc.vecSocketBoneNames.empty())
+		for (auto& strSocket : desc.vecSocketBoneNames)
 		{
-			for (auto& strSocket : desc.vecSocketBoneNames)
-			{
-				if (strSocket == strName)
-				{	// Initialize에서 해줘야하나?
-					m_Sockets.push_back(CSocket::Create(iBoneIndex));
-				}
+			if (strSocket == strName)
+			{	// Initialize에서 해줘야하나?
+				m_vecSocketBones.push_back(iBoneIndex);
 			}
 		}
+		m_PartsModel.resize(m_vecSocketBones.size());
 
 		m_Bones.push_back(pBone);
 	}
@@ -887,9 +868,9 @@ void CModel::Free()
 
 	Safe_Release(m_pShader);
 
-	for (auto& pSockets : m_Sockets)
+	/*for (auto& pSockets : m_Sockets)
 		Safe_Release(pSockets);
-	m_Sockets.clear();
+	m_Sockets.clear();*/
 
 	Safe_Release(m_pShader);
 }

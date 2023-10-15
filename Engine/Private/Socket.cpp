@@ -53,17 +53,23 @@ HRESULT CSocket::LoadTweenDescFromBone(TWEENDESC& tweenDec)
 	return S_OK;
 }
 
-HRESULT CSocket::LoadTrasformFromBone(Matrix& matSocketWorld)
+HRESULT CSocket::LoadTrasformFromBone(const Matrix& matSocketWorld)
 {
-	const Matrix& matWorld = m_pPartsModel->GetTransform()->WorldMatrix();
-	m_pPartsModel->GetTransform()->Set_WorldMatrix(matSocketWorld * matWorld);
+	_matrix		WorldMatrix = m_pPartsModel->GetTransform()->WorldMatrix() * matSocketWorld;
+
+	WorldMatrix.r[0] = XMVector3Normalize(WorldMatrix.r[0]);
+	WorldMatrix.r[1] = XMVector3Normalize(WorldMatrix.r[1]);
+	WorldMatrix.r[2] = XMVector3Normalize(WorldMatrix.r[2]);
+
+	m_pPartsModel->GetTransform()->Set_WorldMatrix(WorldMatrix);
 
 	return S_OK;
 }
 
 HRESULT CSocket::BindBoneIndex()
 {
-	return m_pPartsModel->GetGameObject()->GetShader()->Bind_RawValue("g_iSocketBoneIndex", &m_iBoneIndex, sizeof(_int));
+	return S_OK;
+//	return m_pPartsModel->SetSocketBoneIndex(m_iBoneIndex);
 }
 
 CSocket* CSocket::Create(const _int iBoneIndex)
