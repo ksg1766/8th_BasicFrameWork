@@ -24,7 +24,7 @@ public:
 	void	SetScale(const Vec3& vScale)			{ SetScale(const_cast<Vec3&>(vScale)); }
 
 	void	RotateYAxisFixed(Vec3& vEulers);	// TODO : Constraint변수를 따로 두고 Rotate는 하나로 통합
-	void	RotateYAxisFixed(const Vec3& vEulers)		{ RotateYAxisFixed(const_cast<Vec3&>(vEulers)); }
+	void	RotateYAxisFixed(const Vec3& vEulers)	{ RotateYAxisFixed(const_cast<Vec3&>(vEulers)); }
 	void	Rotate(Vec3& vEulers);
 	void	Rotate(const Vec3& vEulers)				{ Rotate(const_cast<Vec3&>(vEulers)); }
 	void	Rotate(const _float& fXangle, const _float& fYangle, const _float& fZangle)
@@ -52,6 +52,9 @@ public:
 	Vec3	GetUp()									{ return static_cast<Vec3>(m_matWorld.Up()); }
 	Vec3	GetForward()							{ return static_cast<Vec3>(m_matWorld.Backward()); }
 	Vec3	GetPosition()							{ return static_cast<Vec3>(m_matWorld.Translation()); }
+	void	SetRight(Vec3& vRight);// { m_matWorld.Right(vRight); }
+	void	SetUp(Vec3& vUp);// { m_matWorld.Up(vUp); }
+	void	SetForward(Vec3& vForward);// { m_matWorld.Backward(vForward); }
 
 public:
 	// RUL의 크기가 각 축의 길이(크기)

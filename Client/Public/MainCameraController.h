@@ -21,14 +21,18 @@ public:
 	virtual void	LateTick(const _float& fTimeDelta)	override;
 	virtual void	DebugRender()						override;
 
+public:
+	void	SetTarget(CTransform* pTargetTransform) { m_pTargetTransform = pTargetTransform; }
+
 private:
 	void	Input(const _float& fTimeDelta);
+	void	Trace(const _float& fTimeDelta);
 
 private:
-	CTransform*		m_pTransform;
+	CTransform*		m_pTransform = nullptr;
+	CTransform*		m_pTargetTransform = nullptr;
 
-	_float			m_fLinearSpeed;
-	Vec3			m_vAngularSpeed;
+	Vec3			m_vOffset = Vec3::Zero;
 
 public:
 	static	CMainCameraController* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -2,6 +2,7 @@
 
 /* .FBX파일을 로드하여 데이터들을 내 구조에 맞게 정리한다. */
 #include "VIBuffer.h"
+#include "Hasher.h"
 
 BEGIN(Engine)
 
@@ -61,6 +62,10 @@ private:
 	vector<CBone*>				m_Bones;
 	vector<CMesh*>				m_Meshes;
 	vector<CAnimation*>			m_Animations;
+
+	using ANIMINDEX = unordered_map<wstring, _int, djb2Hasher>;
+	ANIMINDEX					m_hashAnimIndices;
+
 	vector<MESH_MATERIAL>		m_Materials;
 
 	_float4x4					m_matPivot;
@@ -94,6 +99,7 @@ public:
 	_uint			GetMaterialIndex(_uint iMeshIndex);
 	CBone*			GetBone(const _char* pNodeName);
 	CBone*			GetBone(const _int& iIndex);
+	_int			GetAnimationIndexByName(const wstring& strAnimName);
 	const _int		GetCurAnimationIndex() const			{ return m_iCurrentAnimIndex; }
 	const _int		GetNextAnimationIndex() const			{ return m_iNextAnimIndex; }
 	
@@ -119,7 +125,7 @@ private:
 	void			CreateAnimationTransform(_uint index, vector<AnimTransform>& animTransforms);
 
 public:
-	static	CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strPath, const SOCKETDESC& desc = SOCKETDESC(), _fmatrix matPivot = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(90.0f)));
+	static	CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strModelFilePath, const SOCKETDESC& desc = SOCKETDESC(), _fmatrix matPivot = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(90.0f)));
 	virtual CComponent* Clone(CGameObject* pGameObject, void* pArg) override;
 	virtual void Free() override;
 

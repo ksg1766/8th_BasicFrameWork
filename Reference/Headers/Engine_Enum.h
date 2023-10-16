@@ -67,6 +67,13 @@ namespace Engine
 		OBJECT_END
 	};
 
+	enum class Axis
+	{
+		X,
+		Y,
+		Z,
+	};
+
 	enum class KEYSTATE
 	{
 		NONE,

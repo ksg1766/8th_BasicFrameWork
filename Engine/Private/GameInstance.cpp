@@ -7,6 +7,7 @@
 #include "LevelManager.h"
 #include "ObjectManager.h"
 #include "CollisionManager.h"
+#include "CameraManager.h"
 #include "EventManager.h"
 #include "PoolManager.h"
 
@@ -23,6 +24,7 @@ CGameInstance::CGameInstance()
 	, m_pLevelManager(CLevelManager::GetInstance())
 	, m_pQuadTree(CQuadTree::GetInstance())
 	, m_pCollisionManager(CCollisionManager::GetInstance())
+	, m_pCameraManager(CCameraManager::GetInstance())
 	, m_pPoolManager(CPoolManager::GetInstance())
 	, m_pPipeLine(CPipeLine::GetInstance())
 {
@@ -36,6 +38,7 @@ CGameInstance::CGameInstance()
 	Safe_AddRef(m_pLevelManager);
 	Safe_AddRef(m_pQuadTree);
 	Safe_AddRef(m_pCollisionManager);
+	Safe_AddRef(m_pCameraManager);
 	Safe_AddRef(m_pPoolManager);
 	Safe_AddRef(m_pPipeLine);
 }
@@ -70,6 +73,10 @@ HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, const GRAPHIC_DESC& G
 		return E_FAIL;
 	
 	/* 콜리전 매니져의 예약 처리. */
+	if (FAILED(m_pCameraManager->Reserve_Manager(iNumLevels)))
+		return E_FAIL;
+	
+	/* 콜리전 매니져의 예약 처리. */
 	if (FAILED(m_pPipeLine->Initialize()))
 		return E_FAIL;
 
@@ -82,11 +89,13 @@ void CGameInstance::Tick(const _float& fTimeDelta)
 	m_pKeyManager->Tick(fTimeDelta);
 	m_pObjectManager->Tick(fTimeDelta);
 	m_pLevelManager->Tick(fTimeDelta);
+	m_pCameraManager->Tick(fTimeDelta);
 
 	m_pPipeLine->Tick();
 
 	m_pObjectManager->LateTick(fTimeDelta);
 	m_pLevelManager->LateTick(fTimeDelta);
+	m_pCameraManager->LateTick(fTimeDelta);
 	//m_pCollisionManager->LateTick_Collision(fTimeDelta);
 }
 
@@ -252,6 +261,30 @@ void CGameInstance::LevelChange(CLevel* pLevel, _uint iLevelId)
 void CGameInstance::LateTick_Collision(const _float& fTimeDelta)
 {
 	m_pCollisionManager->LateTick_Collision(fTimeDelta);
+}
+
+HRESULT CGameInstance::AddCamera(const wstring& strName, CGameObject* pCamera)
+{
+	if(nullptr == m_pCameraManager)
+		return E_FAIL;
+
+	return m_pCameraManager->AddCamera(strName, pCamera);
+}
+
+HRESULT CGameInstance::DeleteCamera(const wstring& strName)
+{
+	if (nullptr == m_pCameraManager)
+		return E_FAIL;
+
+	return m_pCameraManager->DeleteCamera(strName);
+}
+
+HRESULT CGameInstance::ChangeCamera(const wstring& strName)
+{
+	if (nullptr == m_pCameraManager)
+		return E_FAIL;
+
+	return m_pCameraManager->ChangeCamera(strName);
 }
 
 HRESULT CGameInstance::Reserve_Pool(const wstring& strObjectName, const _uint& iReserveCount, void* pArg)

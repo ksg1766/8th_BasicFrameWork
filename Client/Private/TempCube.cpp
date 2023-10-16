@@ -106,10 +106,6 @@ HRESULT CTempCube::Ready_FixedComponents()
 
 HRESULT CTempCube::Ready_Scripts()
 {
-	/* Com_PlayerController */
-	if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::Script, TEXT("Prototype_Component_PlayerController"))))
-		return E_FAIL;
-
 	return S_OK;
 }
 

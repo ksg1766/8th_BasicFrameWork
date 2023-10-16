@@ -21,6 +21,7 @@ enum class ComponentType
 	Animator,
 	Light,
 	Terrain,
+	StateMachine,
 	// ...
 	Script,
 

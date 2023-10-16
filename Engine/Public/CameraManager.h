@@ -7,6 +7,7 @@ BEGIN(Engine)
 class CGameObject;
 class CCameraManager final : public CBase
 {
+	using Super = CBase;
 	DECLARE_SINGLETON(CCameraManager)
 private:
 	CCameraManager();
@@ -21,7 +22,7 @@ public:
 
 public:
 	HRESULT AddCamera(const wstring& strName, CGameObject* pCamera);
-	HRESULT DeleteCamera(const wstring& strName, CGameObject* pCamera);
+	HRESULT DeleteCamera(const wstring& strName);
 	HRESULT ChangeCamera(const wstring& strName);
 
 private:

@@ -8,10 +8,12 @@
 #include "Renderer.h"
 #include "Mesh.h"
 #include "Model.h"
+#include "StateMachine.h"
 
 #include "VIBuffer_Rect.h"
 #include "VIBuffer_Cube.h"
 #include "VIBuffer_Grid.h"
+#include "VIBuffer_Instance.h"
 #include "RigidDynamic.h"
 #include "RigidStatic.h"
 #include "MonoBehaviour.h"

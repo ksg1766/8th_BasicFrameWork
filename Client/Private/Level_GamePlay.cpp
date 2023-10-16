@@ -200,6 +200,11 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera()
 	if (nullptr == pGameObject)	return E_FAIL;
 	pGameObject->GetTransform()->Translate(Vec3(0.f, 400.f, 0.f));
 
+	pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_MainCamera"));
+	if (nullptr == pGameObject)	return E_FAIL;
+
+	m_pGameInstance->ChangeCamera(TEXT("MainCamera"));
+
 	return S_OK;
 }
 

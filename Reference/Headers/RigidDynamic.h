@@ -11,13 +11,6 @@ enum class ForceMode
 	ACCELERATION
 };
 
-enum class Axis
-{
-	X,
-	Y,
-	Z,
-};
-
 class ENGINE_DLL CRigidDynamic :
     public CRigidBody
 {

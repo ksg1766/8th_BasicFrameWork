@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "RigidBodyBase.h"
 #include "CollisionManager.h"
+#include "CameraManager.h"
 
 IMPLEMENT_SINGLETON(CObjectManager)
 
@@ -17,17 +18,6 @@ HRESULT CObjectManager::Reserve_Manager(_uint iNumLevels)
 
 	m_pLayers = new LAYERS[iNumLevels];
 
-	/*CLayer* pLayer = CLayer::Create();
-	for (_int i = 0; (LAYERTAG)i < LAYERTAG::LAYER_END; ++i)
-	{
-		LAYERTAG e = (LAYERTAG)i;
-		if (e == LAYERTAG::DEFAULT_LAYER_END || e == LAYERTAG::DYNAMIC_LAYER_END || e == LAYERTAG::STATIC_LAYER_END)
-			continue;
-
-		pLayer->SetLayerTag(e);
-
-		m_pLayers[iNumLevels][e] = pLayer;
-	}*/
 	m_iNumLevels = iNumLevels;
 
 	return S_OK;
@@ -103,6 +93,12 @@ void CObjectManager::Tick(const _float& fTimeDelta)
 			{
 				if ((_uint)Pair.first == (_uint)LAYERTAG::DEFAULT_LAYER_END)
 					continue;
+				
+				if ((_uint)Pair.first == (_uint)LAYERTAG::CAMERA)
+				{
+					CCameraManager::GetInstance()->Tick(fTimeDelta);
+					continue;
+				}
 
 				if ((_uint)Pair.first < (_uint)LAYERTAG::DYNAMIC_LAYER_END)
 					Pair.second->Tick(fTimeDelta);
@@ -118,6 +114,12 @@ void CObjectManager::Tick(const _float& fTimeDelta)
 				if ((_uint)Pair.first == (_uint)LAYERTAG::DEFAULT_LAYER_END
 					|| (_uint)Pair.first == (_uint)LAYERTAG::DYNAMIC_LAYER_END)
 					continue;
+
+				if ((_uint)Pair.first == (_uint)LAYERTAG::CAMERA)
+				{
+					CCameraManager::GetInstance()->Tick(fTimeDelta);
+					continue;
+				}
 
 				if ((_uint)Pair.first < (_uint)LAYERTAG::STATIC_LAYER_END)
 					Pair.second->Tick(fTimeDelta);

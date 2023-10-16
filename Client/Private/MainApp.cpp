@@ -242,6 +242,11 @@ HRESULT CMainApp::Ready_Prototype_Components()
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Camera"),
 		CCamera::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+	
+	/* For.Prototype_Component_StateMachine */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_StateMachine"),
+		CStateMachine::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_Dissolve */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Dissolve"),
@@ -289,13 +294,13 @@ HRESULT CMainApp::Ready_Prototype_Components()
 
 			SOCKETDESC desc = SOCKETDESC();
 			Matrix matPivot = Matrix::Identity;
-			XMStoreFloat4x4(&matPivot, XMMatrixScaling(0.2f, 0.2f, 0.2f) * XMMatrixRotationY(XMConvertToRadians(90.0f)));
+			XMStoreFloat4x4(&matPivot, XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(270.0f)));
 			if (TEXT("P_Strife") == strFileName)
 			{
 				desc.vecSocketBoneNames.push_back("Bone_Strife_Fing_Index3_L_end");
 				desc.vecSocketBoneNames.push_back("Bone_Strife_Fing_Index3_R_end");
-				desc.vecSocketBoneNames.push_back("Bone_Strife_Weapon_Dagger_L_end");
-				desc.vecSocketBoneNames.push_back("Bone_Strife_Weapon_Dagger_R_end");
+				//desc.vecSocketBoneNames.push_back("Bone_Strife_Weapon_Dagger_L_end");
+				//desc.vecSocketBoneNames.push_back("Bone_Strife_Weapon_Dagger_R_end");
 
 				if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_" + strFileName),
 					CModel::Create(m_pDevice, m_pContext, strSkeletalFilePath + strFileName, desc, matPivot))))

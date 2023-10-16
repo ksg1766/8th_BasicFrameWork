@@ -79,7 +79,6 @@ void CCollider::DebugRender()
 	RELEASE_INSTANCE(CPipeLine);
 
 	m_pEffect->Apply(m_pContext);
-
 	m_pContext->IASetInputLayout(m_pInputLayout);
 #endif // DEBUG
 }

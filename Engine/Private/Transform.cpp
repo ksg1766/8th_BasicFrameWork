@@ -219,6 +219,36 @@ Quaternion CTransform::GetRotationQuaternion()
 	return quat;
 }
 
+void CTransform::SetRight(Vec3& vRight)
+{
+	//vRight.Normalize();
+	m_matWorld.Right(vRight);
+	Vec3 vForward = vRight.Cross(Vec3::UnitY);
+	m_matWorld.Forward(vForward);
+	Vec3 vUp = vForward.Cross(vRight);
+	m_matWorld.Up(vUp);
+}
+
+void CTransform::SetUp(Vec3& vUp)
+{
+	m_matWorld.Up(vUp);
+	Vec3 vRight = Vec3::UnitY.Cross(vUp);
+	m_matWorld.Right(vRight);
+	Vec3 vForward = vRight.Cross(vUp);
+	m_matWorld.Forward(vForward);
+}
+
+void CTransform::SetForward(Vec3& vForward)
+{
+	m_matWorld.Backward(vForward);
+	Vec3 vRight = Vec3::UnitY.Cross(vForward);
+	vRight.Normalize();
+	m_matWorld.Right(vRight);
+	Vec3 vUp = vForward.Cross(vRight);
+	vUp.Normalize();
+	m_matWorld.Up(vUp);
+}
+
 Vec3 CTransform::ToEulerAngles(Quaternion q)
 {
 	Vec3 angles;

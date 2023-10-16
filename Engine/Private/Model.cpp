@@ -189,7 +189,8 @@ void CModel::Tick(const _float& fTimeDelta)
 
 		for (auto& parts : m_PartsModel)
 		{
-			parts->SetTweenDesc(m_TweenDesc);
+			if(parts)
+				parts->SetTweenDesc(m_TweenDesc);
 		}
 	}
 	// Socket은 NonAnim 모델일테니 어차피 Tick이 안도는거나 마찬가지.
@@ -228,7 +229,8 @@ HRESULT CModel::Render()
 
 	for (auto& pParts : m_PartsModel)
 	{
-		pParts->GetTransform()->Set_WorldMatrix(GetTransform()->WorldMatrix());
+		if(pParts)
+			pParts->GetTransform()->Set_WorldMatrix(GetTransform()->WorldMatrix());
 	}
 
 	return S_OK;
@@ -284,19 +286,17 @@ HRESULT CModel::UpdateTweenData(const _float& fTimeDelta)
 
 	desc.curr.sumTime += fTimeDelta;
 
+	if (currentAnim)
 	{
-		if (currentAnim)
+		_float timePerFrame = 1 / currentAnim->GetTickPerSecond();
+		if (desc.curr.sumTime >= timePerFrame)
 		{
-			_float timePerFrame = 1 / currentAnim->GetTickPerSecond();
-			if (desc.curr.sumTime >= timePerFrame)
-			{
-				desc.curr.sumTime = 0.f;
-				desc.curr.currFrame = (desc.curr.currFrame + 1) % currentAnim->GetMaxFrameCount();
-				desc.curr.nextFrame = (desc.curr.currFrame + 1) % currentAnim->GetMaxFrameCount();
-			}
-
-			desc.curr.ratio = (desc.curr.sumTime / timePerFrame);
+			desc.curr.sumTime = 0.f;
+			desc.curr.currFrame = (desc.curr.currFrame + 1) % currentAnim->GetMaxFrameCount();
+			desc.curr.nextFrame = (desc.curr.currFrame + 1) % currentAnim->GetMaxFrameCount();
 		}
+
+		desc.curr.ratio = (desc.curr.sumTime / timePerFrame);
 	}
 
 	// 다음 애니메이션이 예약 되어 있다면
@@ -363,6 +363,18 @@ CBone* CModel::GetBone(const _int& iIndex)
 		return nullptr;
 
 	return m_Bones[iIndex];
+}
+
+_int CModel::GetAnimationIndexByName(const wstring& strAnimName)
+{
+	ANIMINDEX::iterator iter = m_hashAnimIndices.find(strAnimName);
+
+	if (iter == m_hashAnimIndices.end())
+	{
+		return -1;
+	}
+
+	return iter->second;
 }
 
 _uint CModel::GetMaterialIndex(_uint iMeshIndex)
@@ -647,6 +659,7 @@ HRESULT CModel::Ready_Animations(const wstring& strModelFilePath)
 			return E_FAIL;
 
 		m_Animations.push_back(pAnimation);
+		m_hashAnimIndices.emplace(Utils::ToWString(strAnimName), i);
 	}
 
 	return S_OK;
@@ -806,7 +819,7 @@ void CModel::CreateAnimationTransform(_uint index, vector<AnimTransform>& animTr
 	}
 }
 
-CModel * CModel::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring& strModelFilePath, const SOCKETDESC& desc, _fmatrix matPivot)
+CModel * CModel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strModelFilePath, const SOCKETDESC& desc, _fmatrix matPivot)
 {
 	CModel*	pInstance = new CModel(pDevice, pContext);
 

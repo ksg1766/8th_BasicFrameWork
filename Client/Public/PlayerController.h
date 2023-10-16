@@ -27,7 +27,8 @@ private:
 	void	LimitAllAxisVelocity();
 
 private:
-	CRigidDynamic*	m_pRigidBody;
+	CTransform*		m_pTransform = nullptr;
+	CRigidDynamic*	m_pRigidBody = nullptr;
 
 	Vec3			m_vMaxLinearSpeed;
 	Vec3			m_vLinearSpeed;

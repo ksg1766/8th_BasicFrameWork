@@ -47,9 +47,9 @@ public:
 
 protected:
 	RigidBodyType		m_eRigidBodyType;
-	CSphereCollider*	m_pSphereCollider = nullptr;	// 아직 안함
-	COBBCollider*		m_pOBBCollider = nullptr;		// 아직 안함
-	//CCollider*		m_pBoxCollider = nullptr;		// 아직 안함
+	CSphereCollider*	m_pSphereCollider = nullptr;
+	COBBCollider*		m_pOBBCollider = nullptr;	
+	//CCollider*		m_pBoxCollider = nullptr;	
 	//array<CCollider*, 2>	m_arrColliderGroup;
 
 public:

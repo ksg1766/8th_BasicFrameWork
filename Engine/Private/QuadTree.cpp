@@ -53,13 +53,32 @@ HRESULT CQuadTree::Build_QuadTree(_uint iNumLevels)
         for (auto& _iter : vecObjects)
             AddObjectInNode(_iter->GetTransform(), m_pQuadTreeRoot);
     }*/
+    /*CGraphicDevice* pGrahicDevice = GET_INSTANCE(CGraphicDevice);
 
+    m_pBatch = new PrimitiveBatch<VertexPositionColor>(pGrahicDevice->GetContext());
+
+    m_pEffect = new BasicEffect(pGrahicDevice->GetDevice());
+    m_pEffect->SetVertexColorEnabled(true);
+
+    const void* pShaderByteCodes = nullptr;
+    size_t		iLength = 0;
+    m_pEffect->GetVertexShaderBytecode(&pShaderByteCodes, &iLength);
+
+    if (FAILED(pGrahicDevice->GetDevice()->CreateInputLayout(VertexPositionColor::InputElements, VertexPositionColor::InputElementCount, pShaderByteCodes, iLength, &m_pInputLayout)))
+    {
+        Safe_Delete(m_pBatch);
+        Safe_Delete(m_pEffect);
+        Safe_Release(m_pInputLayout);
+        RELEASE_INSTANCE(CGraphicDevice)
+        return E_FAIL;
+    }
+    RELEASE_INSTANCE(CGraphicDevice)
 
     if (!m_pQuadTreeRoot)
     {
         RELEASE_INSTANCE(CObjectManager)
         return E_FAIL;
-    }
+    }*/
 
     RELEASE_INSTANCE(CObjectManager)
 

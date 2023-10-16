@@ -58,7 +58,7 @@ HRESULT CMainCamera::Ready_FixedComponents()
 HRESULT CMainCamera::Ready_Scripts()
 {
 	/* Com_PlayerController */
-	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Script, TEXT("Prototype_Component_MainCameraController"))))
+	if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::Script, TEXT("Prototype_Component_MainCameraController"))))
 		return E_FAIL;
 
 	return S_OK;

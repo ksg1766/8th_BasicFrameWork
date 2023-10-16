@@ -1,6 +1,7 @@
 #include "ComponentManager.h"
 #include "PipeLine.h"
 #include "GameObject.h"
+#include "CameraManager.h"
 
 CCamera::CCamera(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     :Super(pDevice, pContext, ComponentType::Camera)
@@ -74,12 +75,32 @@ HRESULT CCamera::Initialize(void* pArg)
 		break;
 	}
 
+	CCameraManager* pInstance = GET_INSTANCE(CCameraManager);
+	pInstance->AddCamera(this->m_pGameObject->GetObjectTag(), this->m_pGameObject);
+	RELEASE_INSTANCE(CCameraManager);
+
     return S_OK;
 }
 
 void CCamera::Tick(const _float& fTimeDelta)
 {
-	/* 카메라 월드행렬의 역행렬 == 뷰스페이스 변환행렬. */
+	///* 카메라 월드행렬의 역행렬 == 뷰스페이스 변환행렬. */
+	//m_pPipeLine->Set_Transform(CPipeLine::D3DTS_VIEW, m_pTransform->WorldMatrix().Invert());
+	////m_pPipeLine->Set_Transform(CPipeLine::D3DTS_PROJ, XMMatrixPerspectiveFovLH(m_fFovy, m_fAspect, m_fNear, m_fFar));
+
+	//switch (m_eMode)
+	//{
+	//case PROJECTION_MODE::PERSPECTIVE:
+	//	m_pPipeLine->Set_Transform(CPipeLine::D3DTS_PROJ, XMMatrixPerspectiveFovLH(m_fFovy, m_fAspect, m_fNear, m_fFar));
+	//	break;
+	//case PROJECTION_MODE::ORTHOGRAPHIC:
+	//	m_pPipeLine->Set_Transform(CPipeLine::D3DTS_PROJ, XMMatrixOrthographicLH(m_fFovy, m_fAspect, m_fNear, m_fFar));
+	//	break;
+	//}
+}
+
+void CCamera::LateTick(const _float& fTimeDelta)
+{/* 카메라 월드행렬의 역행렬 == 뷰스페이스 변환행렬. */
 	m_pPipeLine->Set_Transform(CPipeLine::D3DTS_VIEW, m_pTransform->WorldMatrix().Invert());
 	//m_pPipeLine->Set_Transform(CPipeLine::D3DTS_PROJ, XMMatrixPerspectiveFovLH(m_fFovy, m_fAspect, m_fNear, m_fFar));
 
@@ -92,10 +113,6 @@ void CCamera::Tick(const _float& fTimeDelta)
 		m_pPipeLine->Set_Transform(CPipeLine::D3DTS_PROJ, XMMatrixOrthographicLH(m_fFovy, m_fAspect, m_fNear, m_fFar));
 		break;
 	}
-}
-
-void CCamera::LateTick(const _float& fTimeDelta)
-{
 }
 
 CCamera* CCamera::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

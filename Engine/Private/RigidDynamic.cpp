@@ -85,8 +85,8 @@ void CRigidDynamic::KineticUpdate(const _float& fTimeDelta)
 	m_vAngularVelocity += m_vAngularAcceleration * fTimeDelta;
 	m_vLinearVelocity += m_vLinearAcceleration * fTimeDelta;
 
-	_float fAngularResistance = m_fAngularDrag;
-	_float fLinearResistance = m_fDrag;
+	_float& fAngularResistance = m_fAngularDrag;
+	_float& fLinearResistance = m_fDrag;
 
 	(fAngularResistance < 1.f) ? (m_vAngularVelocity = m_vAngularVelocity * (1.f - fAngularResistance)) : (m_vAngularVelocity = Vec3::Zero);
 	(fLinearResistance < 1.f) ? (m_vLinearVelocity = m_vLinearVelocity * (1.f - fLinearResistance)) : (m_vLinearVelocity = Vec3::Zero);

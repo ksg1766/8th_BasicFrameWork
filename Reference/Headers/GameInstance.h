@@ -15,39 +15,39 @@ private:
 	virtual ~CGameInstance() = default;
 
 public: /* For.GameInstance */
-	HRESULT Initialize_Engine(_uint iNumLevels, const GRAPHIC_DESC& GraphicDesc, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext, _In_ HINSTANCE hInst);
-	void Tick(const _float& fTimeDelta);
-	void DebugRender();
+	HRESULT			Initialize_Engine(_uint iNumLevels, const GRAPHIC_DESC& GraphicDesc, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext, _In_ HINSTANCE hInst);
+	void			Tick(const _float& fTimeDelta);
+	void			DebugRender();
 
-	void Clear(_uint iLevelIndex);
+	void			Clear(_uint iLevelIndex);
 
 public: /* For.TimerManager */
-	_float	Compute_TimeDelta(const wstring& strTimerTag);
-	HRESULT	Add_Timer(const wstring& strTimerTag);
+	_float			Compute_TimeDelta(const wstring& strTimerTag);
+	HRESULT			Add_Timer(const wstring& strTimerTag);
 
 public: /* For.GraphicDevice */
-	HRESULT Clear_BackBuffer_View(_float4 vClearColor);	
-	HRESULT Clear_DepthStencil_View();
-	Viewport& GetViewPort();
-	HRESULT Present();
+	HRESULT			Clear_BackBuffer_View(_float4 vClearColor);	
+	HRESULT			Clear_DepthStencil_View();
+	Viewport&		GetViewPort();
+	HRESULT			Present();
 
 public: /* For.QuadTRee */
-	HRESULT	Build_QuadTree(_uint iNumLevels);
-	void	Update_QuadTree();
-	void	Render_QuadTree();
+	HRESULT			Build_QuadTree(_uint iNumLevels);
+	void			Update_QuadTree();
+	void			Render_QuadTree();
 
 public: /* For.LevelManager */
-	HRESULT Open_Level(_uint iLevelIndex, class CLevel* pNewLevel);
-	_uint	GetCurrentLevelIndex();
-	void	SetCurrentLevelIndex(_uint iLevelIndex);
+	HRESULT			Open_Level(_uint iLevelIndex, class CLevel* pNewLevel);
+	_uint			GetCurrentLevelIndex();
+	void			SetCurrentLevelIndex(_uint iLevelIndex);
 
 public: /* For.ObjectManager */
-	HRESULT Add_Prototype(const wstring& strPrototypeTag, class CGameObject* pPrototype);
-	CGameObject* Add_GameObject(_uint iLevelIndex, const LAYERTAG& eLayerTag, const wstring& strPrototypeTag, void* pArg = nullptr);
+	HRESULT			Add_Prototype(const wstring& strPrototypeTag, class CGameObject* pPrototype);
+	CGameObject*	Add_GameObject(_uint iLevelIndex, const LAYERTAG& eLayerTag, const wstring& strPrototypeTag, void* pArg = nullptr);
 	map<LAYERTAG, class CLayer*>*	GetCurrentLevelLayers();
 
 public: /* For.ComponentManager */
-	HRESULT Add_Prototype(_uint iLevelIndex, const wstring& strPrototypeTag, class CComponent* pPrototype);
+	HRESULT			Add_Prototype(_uint iLevelIndex, const wstring& strPrototypeTag, class CComponent* pPrototype);
 	class CComponent* Clone_Component(CGameObject* pGameObject, _uint iLevelIndex, const wstring& strPrototypeTag, void* pArg = nullptr);
 
 public: /* For.EventManager */
@@ -57,38 +57,43 @@ public: /* For.EventManager */
 	void			LevelChange(class CLevel* pLevel, _uint iLevelId);
 
 public: /* For.CollisionManager */
-	void	LateTick_Collision(const _float& fTimeDelta);
+	void			LateTick_Collision(const _float& fTimeDelta);
+
+public: /* For.CameraManager */
+	HRESULT			AddCamera(const wstring& strName, CGameObject* pCamera);
+	HRESULT			DeleteCamera(const wstring& strName);
+	HRESULT			ChangeCamera(const wstring& strName);
 
 public: /* For.PoolManager */
-	HRESULT	Reserve_Pool(const wstring& strObjectName, const _uint& iReserveCount, void* pArg = nullptr);	// 매니저 초기화 아님.
+	HRESULT			Reserve_Pool(const wstring& strObjectName, const _uint& iReserveCount, void* pArg = nullptr);	// 매니저 초기화 아님.
 
 public: /* For.InputDevice */
-	_bool	Key_Down(_ubyte byKeyID);
-	_bool	Key_Pressing(_ubyte byKeyID);
-	_bool	Key_Up(_ubyte byKeyID);
+	_bool			Key_Down(_ubyte byKeyID);
+	_bool			Key_Pressing(_ubyte byKeyID);
+	_bool			Key_Up(_ubyte byKeyID);
 
-	_bool	Mouse_Down(MOUSEKEYSTATE eMouseKeyID);
-	_bool	Mouse_Pressing(MOUSEKEYSTATE eMouseKeyID);
-	_bool	Mouse_Up(MOUSEKEYSTATE eMouseKeyID);
+	_bool			Mouse_Down(MOUSEKEYSTATE eMouseKeyID);
+	_bool			Mouse_Pressing(MOUSEKEYSTATE eMouseKeyID);
+	_bool			Mouse_Up(MOUSEKEYSTATE eMouseKeyID);
 
-	_ubyte	Get_DIKeyState(_ubyte eKeyID);
-	_ubyte	Get_DIMouseState(MOUSEKEYSTATE eMouseKeyID);
-	_long	Get_DIMouseMove(MOUSEMOVESTATE eMouseMoveID);
+	_ubyte			Get_DIKeyState(_ubyte eKeyID);
+	_ubyte			Get_DIMouseState(MOUSEKEYSTATE eMouseKeyID);
+	_long			Get_DIMouseMove(MOUSEMOVESTATE eMouseMoveID);
 
-	_bool	Get_AnyKeyDown();
+	_bool			Get_AnyKeyDown();
 	
 public:	/* For. KeyManager */
-	KEYSTATE GetKeyState(KEY _eKey);
-	const POINT& GetMousePos();
+	KEYSTATE		GetKeyState(KEY _eKey);
+	const POINT&	GetMousePos();
 
 public: /* For.PipeLine */
-	HRESULT Bind_TransformToShader(class CShader* pShader, const _char* pConstantName, CPipeLine::TRANSFORMSTATE eState);
-	_float4 Get_CamPosition_Float4() const;
-	_vector Get_CamPosition_Vector() const;
-	_float4x4 Get_Transform_float4x4(CPipeLine::TRANSFORMSTATE eState) const;
-	_matrix Get_Transform_Matrix(CPipeLine::TRANSFORMSTATE eState) const;
-	_float4x4 Get_Transform_float4x4_Inverse(CPipeLine::TRANSFORMSTATE eState) const;
-	_matrix	Get_Transform_Matrix_Inverse(CPipeLine::TRANSFORMSTATE eState) const;
+	HRESULT			Bind_TransformToShader(class CShader* pShader, const _char* pConstantName, CPipeLine::TRANSFORMSTATE eState);
+	_float4			Get_CamPosition_Float4() const;
+	_vector			Get_CamPosition_Vector() const;
+	_float4x4		Get_Transform_float4x4(CPipeLine::TRANSFORMSTATE eState) const;
+	_matrix			Get_Transform_Matrix(CPipeLine::TRANSFORMSTATE eState) const;
+	_float4x4		Get_Transform_float4x4_Inverse(CPipeLine::TRANSFORMSTATE eState) const;
+	_matrix			Get_Transform_Matrix_Inverse(CPipeLine::TRANSFORMSTATE eState) const;
 
 private:
 	class CTimerManager*			m_pTimerManager = { nullptr };
@@ -100,6 +105,7 @@ private:
 	class CObjectManager*			m_pObjectManager = { nullptr };
 	class CComponentManager*		m_pComponentManager = { nullptr };
 	class CCollisionManager*		m_pCollisionManager = { nullptr };
+	class CCameraManager*			m_pCameraManager = { nullptr };
 	class CEventManager*			m_pEventManager = { nullptr };
 	class CPoolManager*				m_pPoolManager = { nullptr };
 	class CPipeLine*				m_pPipeLine = { nullptr };

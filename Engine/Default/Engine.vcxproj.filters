@@ -154,6 +154,15 @@
     <Filter Include="01.Utiltiy\01.Managers\08.CameraManager">
       <UniqueIdentifier>{eb362217-7826-4ea1-a1a3-e93e59e38e25}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utiltiy\04.Component\12.StateMachine">
+      <UniqueIdentifier>{73b7215a-e731-4b18-9915-043f905ec4cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utiltiy\04.Component\13.BehaviorTree">
+      <UniqueIdentifier>{344a011b-a510-4b32-a4ec-9c33ab51fbb7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utiltiy\04.Component\12.StateMachine\States">
+      <UniqueIdentifier>{50ac689e-a2f2-402e-a3d3-b04becd36484}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -339,6 +348,12 @@
     <ClInclude Include="..\Public\Hasher.h">
       <Filter>98.Utils</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\StateMachine.h">
+      <Filter>01.Utiltiy\04.Component\12.StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State.h">
+      <Filter>01.Utiltiy\04.Component\12.StateMachine\States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -505,6 +520,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\CameraManager.cpp">
       <Filter>01.Utiltiy\01.Managers\08.CameraManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\StateMachine.cpp">
+      <Filter>01.Utiltiy\04.Component\12.StateMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State.cpp">
+      <Filter>01.Utiltiy\04.Component\12.StateMachine\States</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

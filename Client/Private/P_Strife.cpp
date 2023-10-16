@@ -28,8 +28,8 @@ HRESULT CP_Strife::Initialize(void* pArg)
 	if (FAILED(Ready_Parts()))
 		return E_FAIL;
 
-	GetRigidBody()->GetSphereCollider()->SetRadius(10.f);
-	GetRigidBody()->GetOBBCollider()->SetExtents(Vec3(5.f, 5.f, 5.f));
+	//GetRigidBody()->GetSphereCollider()->SetRadius(10.f);
+	//GetRigidBody()->GetOBBCollider()->SetExtents(Vec3(5.f, 5.f, 5.f));
 	//GetTransform()->SetScale(Vec3(2.f, 2.f, 2.f));
 
 	return S_OK;
@@ -102,11 +102,19 @@ HRESULT CP_Strife::Ready_FixedComponents()
 		|| FAILED(GetRigidBody()->InitializeCollider()))
 		return E_FAIL;
 
+	/* Com_StateMachine */
+	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::StateMachine, TEXT("Prototype_Component_StateMachine"))))
+		return E_FAIL;
+
 	return S_OK;
 }
 
 HRESULT CP_Strife::Ready_Scripts()
 {
+	/* Com_PlayerController */
+	if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::Script, TEXT("Prototype_Component_PlayerController"))))
+		return E_FAIL;
+
 	return S_OK;
 }
 

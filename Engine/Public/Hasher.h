@@ -1,5 +1,7 @@
 #pragma once
-#include "Engine_Defines.h"
+#ifndef Hasher_h__
+#define Hasher_h__
+
 #include "MurmurHash3.h"
 
 BEGIN(Engine)
@@ -30,3 +32,5 @@ struct ENGINE_DLL MurmurHash3Hasher
 };	// HashFunctionObject (MurmurHash3)
 
 END
+
+#endif

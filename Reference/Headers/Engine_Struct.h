@@ -202,5 +202,4 @@ namespace Engine
 	}COLLISION_DESC;
 }
 
-
 #endif // Engine_Struct_h__

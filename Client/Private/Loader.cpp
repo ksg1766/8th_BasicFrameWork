@@ -9,8 +9,10 @@
 #include "TempCube.h"
 #include "CollisionTest.h"
 #include "PlayerController.h"
+#include "MainCameraController.h"
 #include "TestAIController.h"
 #include "FlyingCamera.h"
+#include "MainCamera.h"
 #include "StaticTest.h"
 #include "StaticBase.h"
 #include "P_Strife.h"
@@ -194,6 +196,11 @@ HRESULT CLoader::Loading_Scripts_For_Level_GamePlay()
 		CPlayerController::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_MainCamera*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_MainCameraController"),
+		CMainCameraController::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	/* For.Prototype_Component_TestAIController*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_TestAIController"),
 		CTestAIController::Create(m_pDevice, m_pContext))))
@@ -222,6 +229,10 @@ HRESULT CLoader::Loading_GameObjects_For_Level_GamePlay()
 
 	/* For.Prototype_GameObject_FlyingCamera */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_FlyingCamera"), CFlyingCamera::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_FlyingCamera */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_MainCamera"), CMainCamera::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_StaticTest */

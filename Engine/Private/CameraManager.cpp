@@ -52,7 +52,7 @@ HRESULT CCameraManager::AddCamera(const wstring& strName, CGameObject* pCamera)
 	return E_FAIL;
 }
 
-HRESULT CCameraManager::DeleteCamera(const wstring& strName, CGameObject* pCamera)
+HRESULT CCameraManager::DeleteCamera(const wstring& strName)
 {
 	CameraHash::iterator iter;
 	iter = m_hashCamera.find(strName);
@@ -81,4 +81,5 @@ HRESULT CCameraManager::ChangeCamera(const wstring& strName)
 void CCameraManager::Free()
 {
 	Safe_Release(m_pCurrentCamera);
+	Super::Free();
 }

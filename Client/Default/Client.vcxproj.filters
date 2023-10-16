@@ -154,6 +154,9 @@
     <Filter Include="03.GameObjects\98.Camera\01.MainCamera\Script">
       <UniqueIdentifier>{5c7e68d7-8b95-4ea2-868c-2f65d5a1612c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.GameObjects\01.Playable\00.P_Strife\State">
+      <UniqueIdentifier>{70859d86-9931-4177-b022-ff101db9f0c0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -218,9 +221,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\TempCube.h">
       <Filter>03.GameObjects\01.Playable\TempCube\00.GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\PlayerController.h">
-      <Filter>03.GameObjects\01.Playable\TempCube\01.Script</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\CollisionTest.h">
       <Filter>03.GameObjects\02.Monster\CollisionTestCube\00.GameObject</Filter>
@@ -294,6 +294,12 @@
     <ClInclude Include="..\Public\MainCameraController.h">
       <Filter>03.GameObjects\98.Camera\01.MainCamera\Script</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\PlayerController.h">
+      <Filter>03.GameObjects\01.Playable\00.P_Strife\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\P_Strife_State_Idle.h">
+      <Filter>03.GameObjects\01.Playable\00.P_Strife\State</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -346,9 +352,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\TempCube.cpp">
       <Filter>03.GameObjects\01.Playable\TempCube\00.GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\PlayerController.cpp">
-      <Filter>03.GameObjects\01.Playable\TempCube\01.Script</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\CollisionTest.cpp">
       <Filter>03.GameObjects\02.Monster\CollisionTestCube\00.GameObject</Filter>
@@ -415,6 +418,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\MainCameraController.cpp">
       <Filter>03.GameObjects\98.Camera\01.MainCamera\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerController.cpp">
+      <Filter>03.GameObjects\01.Playable\00.P_Strife\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\P_Strife_State_Idle.cpp">
+      <Filter>03.GameObjects\01.Playable\00.P_Strife\State</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

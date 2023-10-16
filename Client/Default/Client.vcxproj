@@ -181,6 +181,7 @@
     <ClInclude Include="..\Public\MainCamera.h" />
     <ClInclude Include="..\Public\MainCameraController.h" />
     <ClInclude Include="..\Public\P_Strife.h" />
+    <ClInclude Include="..\Public\P_Strife_State_Idle.h" />
     <ClInclude Include="..\Public\SaveLoadView.h" />
     <ClInclude Include="..\Public\DebugTerrainGrid.h" />
     <ClInclude Include="..\Public\FlyingCameraController.h" />
@@ -227,6 +228,7 @@
     <ClCompile Include="..\Private\MainCamera.cpp" />
     <ClCompile Include="..\Private\MainCameraController.cpp" />
     <ClCompile Include="..\Private\P_Strife.cpp" />
+    <ClCompile Include="..\Private\P_Strife_State_Idle.cpp" />
     <ClCompile Include="..\Private\SaveLoadView.cpp" />
     <ClCompile Include="..\Private\DebugTerrainGrid.cpp" />
     <ClCompile Include="..\Private\FlyingCameraController.cpp" />
