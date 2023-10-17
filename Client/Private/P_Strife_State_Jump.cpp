@@ -47,7 +47,7 @@ const wstring& CP_Strife_State_Jump::Transition()
 
 	if (Anims::JUMP == m_iCurrAnimation)
 	{
-		if (m_fTimeSum > m_vecAnimIndexTime[m_iCurrAnimation].second);
+		if (m_fTimeSum > m_vecAnimIndexTime[m_iCurrAnimation].second)
 		{
 			//Enter(Anims::FALL);
 			Enter(Anims::LAND);
@@ -62,7 +62,7 @@ const wstring& CP_Strife_State_Jump::Transition()
 	}
 	else if (Anims::JUMP_DOUBLE == m_iCurrAnimation)
 	{
-		if (m_fTimeSum > m_vecAnimIndexTime[m_iCurrAnimation].second);
+		if (m_fTimeSum > m_vecAnimIndexTime[m_iCurrAnimation].second)
 		{
 			//Enter(Anims::FALL);
 			Enter(Anims::JUMP_LAND_HEAVY);
@@ -71,14 +71,14 @@ const wstring& CP_Strife_State_Jump::Transition()
 	}
 	else if (Anims::LAND == m_iCurrAnimation)
 	{
-		if (m_fTimeSum > m_vecAnimIndexTime[m_iCurrAnimation].second);
+		if (m_fTimeSum > m_vecAnimIndexTime[m_iCurrAnimation].second)
 		{
 			return m_vecTransition[Trans::IDLE];
 		}
 	}
 	else if (Anims::JUMP_LAND_HEAVY == m_iCurrAnimation)
 	{
-		if (m_fTimeSum > m_vecAnimIndexTime[m_iCurrAnimation].second);
+		if (m_fTimeSum > m_vecAnimIndexTime[m_iCurrAnimation].second)
 		{
 			return m_vecTransition[Trans::IDLE];
 		}

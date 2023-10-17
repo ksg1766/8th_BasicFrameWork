@@ -46,7 +46,7 @@ const wstring& CP_Strife_State_Dash::Transition()
 	
 	if (Anims::DASH == m_iCurrAnimation)
 	{
-		if (m_fTimeSum > m_vecAnimIndexTime[m_iCurrAnimation].second);
+		if (m_fTimeSum > m_vecAnimIndexTime[m_iCurrAnimation].second)
 		{
 			Enter(Anims::DASH_END);
 			return m_strStateName;
@@ -55,7 +55,7 @@ const wstring& CP_Strife_State_Dash::Transition()
 
 	else if (Anims::DASH_END == m_iCurrAnimation)
 	{
-		if (m_fTimeSum > m_vecAnimIndexTime[m_iCurrAnimation].second);
+		if (m_fTimeSum > m_vecAnimIndexTime[m_iCurrAnimation].second)
 		{
 			return m_vecTransition[Trans::IDLE];
 		}
