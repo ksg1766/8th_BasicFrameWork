@@ -181,7 +181,12 @@
     <ClInclude Include="..\Public\MainCamera.h" />
     <ClInclude Include="..\Public\MainCameraController.h" />
     <ClInclude Include="..\Public\P_Strife.h" />
+    <ClInclude Include="..\Public\P_Strife_State_Aim.h" />
+    <ClInclude Include="..\Public\P_Strife_State_Dash.h" />
     <ClInclude Include="..\Public\P_Strife_State_Idle.h" />
+    <ClInclude Include="..\Public\P_Strife_State_Impact.h" />
+    <ClInclude Include="..\Public\P_Strife_State_Jump.h" />
+    <ClInclude Include="..\Public\P_Strife_State_Run.h" />
     <ClInclude Include="..\Public\SaveLoadView.h" />
     <ClInclude Include="..\Public\DebugTerrainGrid.h" />
     <ClInclude Include="..\Public\FlyingCameraController.h" />
@@ -228,7 +233,12 @@
     <ClCompile Include="..\Private\MainCamera.cpp" />
     <ClCompile Include="..\Private\MainCameraController.cpp" />
     <ClCompile Include="..\Private\P_Strife.cpp" />
+    <ClCompile Include="..\Private\P_Strife_State_Aim.cpp" />
+    <ClCompile Include="..\Private\P_Strife_State_Dash.cpp" />
     <ClCompile Include="..\Private\P_Strife_State_Idle.cpp" />
+    <ClCompile Include="..\Private\P_Strife_State_Impact.cpp" />
+    <ClCompile Include="..\Private\P_Strife_State_Jump.cpp" />
+    <ClCompile Include="..\Private\P_Strife_State_Run.cpp" />
     <ClCompile Include="..\Private\SaveLoadView.cpp" />
     <ClCompile Include="..\Private\DebugTerrainGrid.cpp" />
     <ClCompile Include="..\Private\FlyingCameraController.cpp" />

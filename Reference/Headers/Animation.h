@@ -23,9 +23,10 @@ public:
 	HRESULT Calculate_Animation(_uint iFrame);
 
 public:
-	vector<CChannel*>& GetChannels() { return m_Channels; }
-	_uint	GetMaxFrameCount() { return m_iMaxFrameCount; }
-	_float	GetTickPerSecond() { return m_fTickPerSecond; }
+	vector<CChannel*>& GetChannels()	{ return m_Channels; }
+	_uint	GetMaxFrameCount()			{ return m_iMaxFrameCount; }
+	_float	GetTickPerSecond()			{ return m_fTickPerSecond; }
+	_float	GetDuaration()				{ return m_fDuration; }
 
 private:
 	string						m_strName;

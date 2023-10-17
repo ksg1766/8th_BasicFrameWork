@@ -98,7 +98,8 @@ void CAnimationView::InfoView()
 	if (m_pAnimModelObject)
 	{
 		Matrix matTransformCam = m_pGameInstance->Get_Transform_float4x4_Inverse(CPipeLine::D3DTS_VIEW);
-		m_pAnimModelObject->GetTransform()->SetPosition(matTransformCam.Translation() + 300.f * matTransformCam.Backward());
+		m_pAnimModelObject->GetTransform()->SetPosition(matTransformCam.Translation() + 10.f * matTransformCam.Backward());
+		m_pAnimModelObject->GetTransform()->SetRotation(Vec3(0.f, 180.f, 0.f));
 	}
 
 	ImGui::NewLine();
@@ -177,7 +178,7 @@ HRESULT CAnimationView::LoadAnimations()
 {
 	for (auto& iter : m_pAnimModelObject->GetModel()->m_Animations)
 	{
-		string strCopy = iter->m_strName.substr(iter->m_strName.find_last_of("|") + 1);
+		string strCopy = iter->m_strName;// .substr(iter->m_strName.find_last_of("|") + 1);
 		const _char* szSrc = strCopy.c_str();
 		size_t len = strlen(szSrc) + 1; // NULL 문자 포함
 		_char* szCopy = new _char[len];
@@ -229,7 +230,9 @@ HRESULT CAnimationView::ExportAnimations(const wstring& strModelFilePath)
 			return !strcmp(szSrc, szName);
 		}))	continue;*/
 
-		file->Write<string>(pAnimation->m_strName);
+		string strCopy = pAnimation->m_strName.substr(pAnimation->m_strName.find_last_of("|") + 1);
+		file->Write<string>(strCopy);
+		//file->Write<string>(pAnimation->m_strName);
 		file->Write<_float>(pAnimation->m_fDuration);
 		file->Write<_float>(pAnimation->m_fTickPerSecond);
 

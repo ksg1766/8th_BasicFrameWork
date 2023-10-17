@@ -22,6 +22,14 @@ public:
 	virtual void	LateTick(const _float& fTimeDelta)	override;
 	virtual void	DebugRender()						override;
 
+public:
+	_bool	Idle();
+	_bool	Run();
+	_bool	Aim();
+	_bool	Jump();
+	_bool	Dash();
+	void	Move(const Vec3& vDir, const _float& fTimeDelta);
+
 private:
 	void	Input(const _float& fTimeDelta);
 	void	LimitAllAxisVelocity();
@@ -35,7 +43,6 @@ private:
 
 	Vec3			m_vMaxAngularSpeed;
 	Vec3			m_vAngularSpeed;
-
 public:
 	static	CPlayerController* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CComponent* Clone(CGameObject* pGameObject, void* pArg) override;

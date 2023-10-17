@@ -31,6 +31,7 @@ CModel::CModel(const CModel& rhs)
 	, m_iNumMaterials(rhs.m_iNumMaterials)
 	, m_Materials(rhs.m_Materials)
 	, m_Animations(rhs.m_Animations)
+	, m_hashAnimIndices(rhs.m_hashAnimIndices)
 	, m_vecSocketBones(rhs.m_vecSocketBones)
 	, m_PartsModel(rhs.m_PartsModel)
 	, m_HasParent(rhs.m_HasParent)
@@ -377,6 +378,12 @@ _int CModel::GetAnimationIndexByName(const wstring& strAnimName)
 	return iter->second;
 }
 
+_float CModel::GetAnimationTimeByIndex(const _int& iIndex)
+{
+	_float fAnimTime = m_Animations[iIndex]->GetDuaration() / m_Animations[iIndex]->GetTickPerSecond();
+	return fAnimTime;
+}
+
 _uint CModel::GetMaterialIndex(_uint iMeshIndex)
 {
 	return m_Meshes[iMeshIndex]->Get_MaterialIndex();
@@ -579,13 +586,6 @@ HRESULT CModel::Ready_Materials(const wstring& strModelFilePath)
 				MaterialDesc.pTextures[aiTextureType_DIFFUSE] = CTexture::Create(m_pDevice, m_pContext, path);
 			}
 
-			/*fileName = Utils::ToWString(file->Read<string>());
-			if (!fileName.empty())
-			{
-				path = strModelFilePath + TEXT("/") + fileName;
-				MaterialDesc.pTextures[aiTextureType_SPECULAR] = CTexture::Create(m_pDevice, m_pContext, path);
-			}*/
-
 			fileName = Utils::ToWString(file->Read<string>());
 			if (!fileName.empty())
 			{
@@ -724,58 +724,6 @@ HRESULT CModel::CreateVertexTexture2DArray()
 
 		if (FAILED(m_pDevice->CreateTexture2D(&desc, subResources.data(), &m_pTexture)))
 			return E_FAIL;
-
-		/////////////////////////////////////////////////////////////////////////////////////////////////////////
-		//                                         Socket Texture, SRV                                         //
-		/////////////////////////////////////////////////////////////////////////////////////////////////////////
-		//{
-		//	D3D11_TEXTURE2D_DESC desc;
-		//	ZeroMemory(&desc, sizeof(D3D11_TEXTURE2D_DESC));
-		//	desc.Width = m_SocketBones.size() * 4;
-		//	desc.Height = m_iMaxFrameCount;	//////////
-		//	desc.ArraySize = iAnimCount;
-		//	desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT; // 16바이트
-		//	desc.Usage = D3D11_USAGE_IMMUTABLE;
-		//	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-		//	desc.MipLevels = 1;
-		//	desc.SampleDesc.Count = 1;
-
-		//	const _uint dataSize = m_SocketBones.size() * sizeof(Matrix);
-		//	const _uint pageSize = dataSize * m_iMaxFrameCount;	//////////
-		//	void* mallocPtr = ::malloc(pageSize * iAnimCount);
-
-		//	// 파편화된 데이터를 조립한다.
-		//	for (_uint c = 0; c < iAnimCount; c++)
-		//	{
-		//		_uint startOffset = c * pageSize;
-
-		//		BYTE* pageStartPtr = reinterpret_cast<BYTE*>(mallocPtr) + startOffset;
-
-		//		for (_uint f = 0; f < m_iMaxFrameCount; f++)
-		//		{
-		//			void* ptr = pageStartPtr + f * dataSize;
-
-		//			for(_int*& iter : m_SocketBones)
-		//			{
-		//				::memcpy(ptr, &_animTransforms[c].transforms[f][*iter], sizeof(Matrix));
-		//			}
-		//		}
-		//	}
-
-		//	// 리소스 만들기
-		//	vector<D3D11_SUBRESOURCE_DATA> subResources(iAnimCount);
-
-		//	for (_uint c = 0; c < iAnimCount; c++)
-		//	{
-		//		void* ptr = (BYTE*)mallocPtr + c * pageSize;
-		//		subResources[c].pSysMem = ptr;
-		//		subResources[c].SysMemPitch = dataSize;
-		//		subResources[c].SysMemSlicePitch = pageSize;
-		//	}
-
-		//	if (FAILED(m_pDevice->CreateTexture2D(&desc, subResources.data(), &m_pSocketTexture)))
-		//		return E_FAIL;
-		//}
 		
 		::free(mallocPtr);
 	}
@@ -878,12 +826,6 @@ void CModel::Free()
 		Safe_Release(m_pTexture);
 		Safe_Release(m_pSRV);
 	}
-
-	Safe_Release(m_pShader);
-
-	/*for (auto& pSockets : m_Sockets)
-		Safe_Release(pSockets);
-	m_Sockets.clear();*/
 
 	Safe_Release(m_pShader);
 }

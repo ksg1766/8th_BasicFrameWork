@@ -8,7 +8,6 @@
 #include "Renderer.h"
 #include "Mesh.h"
 #include "Model.h"
-#include "StateMachine.h"
 
 #include "VIBuffer_Rect.h"
 #include "VIBuffer_Cube.h"

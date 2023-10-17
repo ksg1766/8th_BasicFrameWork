@@ -91,11 +91,11 @@ void CGameInstance::Tick(const _float& fTimeDelta)
 	m_pLevelManager->Tick(fTimeDelta);
 	m_pCameraManager->Tick(fTimeDelta);
 
-	m_pPipeLine->Tick();
-
 	m_pObjectManager->LateTick(fTimeDelta);
 	m_pLevelManager->LateTick(fTimeDelta);
 	m_pCameraManager->LateTick(fTimeDelta);
+
+	m_pPipeLine->Tick();
 	//m_pCollisionManager->LateTick_Collision(fTimeDelta);
 }
 

@@ -1,6 +1,13 @@
 #include "stdafx.h"
 #include "..\Public\P_Strife.h"
 #include "GameInstance.h"
+#include "StateMachine.h"
+#include "P_Strife_State_Idle.h"
+#include "P_Strife_State_Run.h"
+#include "P_Strife_State_Aim.h"
+#include "P_Strife_State_Jump.h"
+#include "P_Strife_State_Dash.h"
+#include "P_Strife_State_Impact.h"
 
 CP_Strife::CP_Strife(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: Super(pDevice, pContext)
@@ -102,19 +109,72 @@ HRESULT CP_Strife::Ready_FixedComponents()
 		|| FAILED(GetRigidBody()->InitializeCollider()))
 		return E_FAIL;
 
-	/* Com_StateMachine */
-	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::StateMachine, TEXT("Prototype_Component_StateMachine"))))
-		return E_FAIL;
-
 	return S_OK;
 }
 
 HRESULT CP_Strife::Ready_Scripts()
 {
-	/* Com_PlayerController */
-	if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::Script, TEXT("Prototype_Component_PlayerController"))))
-		return E_FAIL;
+	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
+	if (LEVEL_GAMEPLAY == pGameInstance->GetCurrentLevelIndex())
+	{
+		///* Com_PlayerController */
+		if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::Script, TEXT("Prototype_Component_PlayerController"))))
+			return E_FAIL;
+	
+		CMonoBehaviour* pController = m_vecScripts.back();
+
+		///* Com_StateMachine */
+		if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::Script, TEXT("Prototype_Component_StateMachine"))))
+			return E_FAIL;
+		
+		CStateMachine* pStateMachine = dynamic_cast<CStateMachine*>(m_vecScripts.back());
+		{
+			CState::STATEANIMS desc;
+			desc.vecAnimations.push_back(TEXT("Strife_Idle"));
+			CState* pState = CP_Strife_State_Idle::Create(this, desc, pController);
+			if (FAILED(pStateMachine->AddState(pState))) return E_FAIL;
+
+			desc.vecAnimations.clear();
+			desc.vecAnimations.push_back(TEXT("Strife_Run"));
+			desc.vecAnimations.push_back(TEXT("Strife_Run_B"));
+			pState = CP_Strife_State_Run::Create(this, desc, pController);
+			if (FAILED(pStateMachine->AddState(pState))) return E_FAIL;
+
+			desc.vecAnimations.clear();
+			desc.vecAnimations.push_back(TEXT("Strife_Aim_Idle"));
+			desc.vecAnimations.push_back(TEXT("Strife_Aim_Walk"));
+			desc.vecAnimations.push_back(TEXT("Strife_Aim_Walk_Back"));
+			pState = CP_Strife_State_Aim::Create(this, desc, pController);
+			if (FAILED(pStateMachine->AddState(pState))) return E_FAIL;
+
+			desc.vecAnimations.clear();
+			desc.vecAnimations.push_back(TEXT("Strife_Jump"));
+			desc.vecAnimations.push_back(TEXT("Strife_Land"));
+			desc.vecAnimations.push_back(TEXT("Strife_Jump_Double"));
+			desc.vecAnimations.push_back(TEXT("Strife_Jump_Land_Heavy"));
+			pState = CP_Strife_State_Jump::Create(this, desc, pController);
+			if (FAILED(pStateMachine->AddState(pState))) return E_FAIL;
+
+			desc.vecAnimations.clear();
+			desc.vecAnimations.push_back(TEXT("Strife_Dash"));
+			desc.vecAnimations.push_back(TEXT("Strife_Dash_End"));
+			desc.vecAnimations.push_back(TEXT("Strife_Dash_Back"));
+			desc.vecAnimations.push_back(TEXT("Strife_Dash_Back_End"));
+			pState = CP_Strife_State_Dash::Create(this, desc, pController);
+			if (FAILED(pStateMachine->AddState(pState))) return E_FAIL;
+
+			desc.vecAnimations.clear();
+			desc.vecAnimations.push_back(TEXT("Strife_Impact_FromFront"));
+			desc.vecAnimations.push_back(TEXT("Strife_Impact_FromBack"));
+			desc.vecAnimations.push_back(TEXT("Strife_Impact_FromLeft"));
+			desc.vecAnimations.push_back(TEXT("Strife_Impact_FromRight"));
+			pState = CP_Strife_State_Impact::Create(this, desc, pController);
+			if (FAILED(pStateMachine->AddState(pState))) return E_FAIL;
+		}
+	}
+
+	RELEASE_INSTANCE(CGameInstance);
 	return S_OK;
 }
 
@@ -122,13 +182,11 @@ HRESULT CP_Strife::Ready_Parts()
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	//CGameObject* pGameObject = pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, LAYERTAG::EQUIPMENT, TEXT("Prototype_GameObject_Strife_GunL"));
 	CGameObject* pGameObject = pGameInstance->CreateObject(TEXT("Prototype_GameObject_Strife_GunL"), LAYERTAG::EQUIPMENT);
 	if (nullptr == pGameObject)	return E_FAIL;
 	m_vecParts.push_back(pGameObject);
 	GetModel()->EquipParts(0, pGameObject->GetModel());
 
-	//pGameObject = pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, LAYERTAG::EQUIPMENT, TEXT("Prototype_GameObject_Strife_GunR"));
 	pGameObject = pGameInstance->CreateObject(TEXT("Prototype_GameObject_Strife_GunR"), LAYERTAG::EQUIPMENT);
 	if (nullptr == pGameObject)	return E_FAIL;
 	m_vecParts.push_back(pGameObject);
@@ -152,27 +210,9 @@ HRESULT CP_Strife::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
-	//const LIGHT_DESC* pLightDesc = pGameInstance->Get_LightDesc(0);
-	/*if (nullptr == pLightDesc)
-		return E_FAIL;*/
-
-	//_uint		iPassIndex = 0;
-
-	//if (LIGHT_DESC::LIGHT_DIRECTIONAL == pLightDesc->eLightType)
-	//{
 	_float4 vLightDir = _float4(1.f, -1.f, 1.f, 0.f);
-		if (FAILED(GetShader()->Bind_RawValue("g_vLightDir", &vLightDir, sizeof(_float4))))
-			return E_FAIL;
-	//	iPassIndex = 0;
-	//}
-	/*else
-	{
-		if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightPos", &pLightDesc->vLightPos, sizeof(_float4))))
-			return E_FAIL;
-		if (FAILED(m_pShaderCom->Bind_RawValue("g_fLightRange", &pLightDesc->fLightRange, sizeof(_float))))
-			return E_FAIL;
-		iPassIndex = 1;
-	}*/
+	if (FAILED(GetShader()->Bind_RawValue("g_vLightDir", &vLightDir, sizeof(_float4))))
+		return E_FAIL;
 
 	_float4	vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
 	if (FAILED(GetShader()->Bind_RawValue("g_vLightDiffuse", &vDiffuse, sizeof(_float4))))

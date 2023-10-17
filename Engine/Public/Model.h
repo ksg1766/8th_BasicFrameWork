@@ -47,7 +47,6 @@ public:
 	HRESULT			RenderInstancing(class CVIBuffer_Instance*& pInstanceBuffer);
 
 public:
-	//HRESULT		UpdateAnimation(const _float& fTimeDelta);
 	HRESULT			UpdateTweenData(const _float& fTimeDelta);
 
 	void			PushTweenData(const InstancedTweenDesc& desc);
@@ -100,6 +99,7 @@ public:
 	CBone*			GetBone(const _char* pNodeName);
 	CBone*			GetBone(const _int& iIndex);
 	_int			GetAnimationIndexByName(const wstring& strAnimName);
+	_float			GetAnimationTimeByIndex(const _int& iIndex);
 	const _int		GetCurAnimationIndex() const			{ return m_iCurrentAnimIndex; }
 	const _int		GetNextAnimationIndex() const			{ return m_iNextAnimIndex; }
 	

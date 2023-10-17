@@ -10,6 +10,7 @@
 #include "CollisionTest.h"
 #include "PlayerController.h"
 #include "MainCameraController.h"
+#include "StateMachine.h"
 #include "TestAIController.h"
 #include "FlyingCamera.h"
 #include "MainCamera.h"
@@ -196,7 +197,7 @@ HRESULT CLoader::Loading_Scripts_For_Level_GamePlay()
 		CPlayerController::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	/* For.Prototype_Component_MainCamera*/
+	/* For.Prototype_Component_MainCameraController*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_MainCameraController"),
 		CMainCameraController::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
@@ -205,6 +206,12 @@ HRESULT CLoader::Loading_Scripts_For_Level_GamePlay()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_TestAIController"),
 		CTestAIController::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
+	/* For.Prototype_Component_StateMachine */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_StateMachine"),
+		CStateMachine::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 
 	RELEASE_INSTANCE(CGameInstance);
 
@@ -215,7 +222,7 @@ HRESULT CLoader::Loading_GameObjects_For_Level_GamePlay()
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	/* For.Prototype_GameObject_Terrain*/
+	/* For.Prototype_GameObject_Terrain */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_BasicTerrain"), CBasicTerrain::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
@@ -337,12 +344,23 @@ HRESULT CLoader::Loading_GameObjects_For_Level_GameTool()
 	{
 		const wstring& strFileName = entry.path().stem();
 
+		if (strFileName == TEXT("Strife_GunL") || strFileName == TEXT("Strife_GunR"))
+			continue;
+
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_") + strFileName, CStaticBase::Create(m_pDevice, m_pContext))))
 			return E_FAIL;
 	}
 
 	/* For.Prototype_GameObject_P_Strife */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_P_Strife"), CP_Strife::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_HellHound */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Strife_GunL"), CStrife_GunL::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_HellHound */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Strife_GunR"), CStrife_GunR::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_HellHound */

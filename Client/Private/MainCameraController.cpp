@@ -73,11 +73,12 @@ void CMainCameraController::Input(const _float& fTimeDelta)
 void CMainCameraController::Trace(const _float& fTimeDelta)
 {
 	const Vec3& vTargetPos = m_pTargetTransform->GetPosition() + Vec3::UnitY;
-	Vec3 vPos = m_pTransform->GetPosition();
+	//Vec3 vPos = m_pTransform->GetPosition();
 	Vec3 vDist = vTargetPos - m_pTransform->GetPosition();
-	Vec3::Lerp(vPos, m_vOffset + vTargetPos, max(10.f * fTimeDelta, 1.f), vPos);
+	//Vec3::Lerp(vPos, m_vOffset + vTargetPos, max(10.f * fTimeDelta, 1.f), vPos);
 
-	m_pTransform->SetPosition(vPos);
+	//m_pTransform->SetPosition(vPos);
+	m_pTransform->SetPosition(m_vOffset + vTargetPos);
 
 	vDist.Normalize();
 	m_pTransform->SetForward(vDist);

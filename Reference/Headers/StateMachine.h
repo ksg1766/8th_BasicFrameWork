@@ -1,13 +1,13 @@
 #pragma once
-#include "Component.h"
+#include "MonoBehaviour.h"
 #include "Hasher.h"
 
 BEGIN(Engine)
 
 class CState;
-class ENGINE_DLL CStateMachine final : public CComponent
+class ENGINE_DLL CStateMachine final : public CMonoBehaviour
 {
-	using Super = CComponent;
+	using Super = CMonoBehaviour;
 
 private:
 	CStateMachine(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -23,15 +23,20 @@ public:
 	virtual void	DebugRender()						override;
 
 public:
-	CState* GetCurState() const { return m_pCurrentState; }
-	HRESULT ChangeState(const wstring& strStateTag);
+	CState* GetCurrState() const { return m_pCurrState; }
+
+	HRESULT ChangeState(const wstring& strState, _int iAnimIndex = 0);
 	HRESULT AddState(CState* pState);
+
+	HRESULT SetController(CMonoBehaviour* pController);
 
 private:
 	using STATES = unordered_map<wstring, CState*, djb2Hasher>;
 	STATES	m_hashStates;
 
-	CState* m_pCurrentState = nullptr;
+	CState* m_pCurrState = nullptr;
+
+	CMonoBehaviour* m_pController = nullptr;
 
 public:
 	static CStateMachine* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

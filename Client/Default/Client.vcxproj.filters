@@ -157,6 +157,24 @@
     <Filter Include="03.GameObjects\01.Playable\00.P_Strife\State">
       <UniqueIdentifier>{70859d86-9931-4177-b022-ff101db9f0c0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.GameObjects\01.Playable\00.P_Strife\State\00.Idle">
+      <UniqueIdentifier>{39b34663-ef83-4fe2-9eb2-132c783c9e32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\01.Playable\00.P_Strife\State\01.Run">
+      <UniqueIdentifier>{9c0cd635-02f3-42c6-9316-ebd23f49ee80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\01.Playable\00.P_Strife\State\02.Aim">
+      <UniqueIdentifier>{4c37db3e-5ee4-4d8d-9b54-e27d267003f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\01.Playable\00.P_Strife\State\03.Jump">
+      <UniqueIdentifier>{5ed3e432-9bcf-4a33-9d14-5527d4bd1864}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\01.Playable\00.P_Strife\State\04.Dash">
+      <UniqueIdentifier>{c6c83032-262d-4c93-9e18-2f36a6b15849}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\01.Playable\00.P_Strife\State\05.Impact">
+      <UniqueIdentifier>{ae95e2f3-5da1-4275-962b-f9854f3cae5b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -298,7 +316,22 @@
       <Filter>03.GameObjects\01.Playable\00.P_Strife\Script</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\P_Strife_State_Idle.h">
-      <Filter>03.GameObjects\01.Playable\00.P_Strife\State</Filter>
+      <Filter>03.GameObjects\01.Playable\00.P_Strife\State\00.Idle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\P_Strife_State_Run.h">
+      <Filter>03.GameObjects\01.Playable\00.P_Strife\State\01.Run</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\P_Strife_State_Aim.h">
+      <Filter>03.GameObjects\01.Playable\00.P_Strife\State\02.Aim</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\P_Strife_State_Dash.h">
+      <Filter>03.GameObjects\01.Playable\00.P_Strife\State\04.Dash</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\P_Strife_State_Jump.h">
+      <Filter>03.GameObjects\01.Playable\00.P_Strife\State\03.Jump</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\P_Strife_State_Impact.h">
+      <Filter>03.GameObjects\01.Playable\00.P_Strife\State\05.Impact</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -423,7 +456,22 @@
       <Filter>03.GameObjects\01.Playable\00.P_Strife\Script</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\P_Strife_State_Idle.cpp">
-      <Filter>03.GameObjects\01.Playable\00.P_Strife\State</Filter>
+      <Filter>03.GameObjects\01.Playable\00.P_Strife\State\00.Idle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\P_Strife_State_Run.cpp">
+      <Filter>03.GameObjects\01.Playable\00.P_Strife\State\01.Run</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\P_Strife_State_Aim.cpp">
+      <Filter>03.GameObjects\01.Playable\00.P_Strife\State\02.Aim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\P_Strife_State_Dash.cpp">
+      <Filter>03.GameObjects\01.Playable\00.P_Strife\State\04.Dash</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\P_Strife_State_Jump.cpp">
+      <Filter>03.GameObjects\01.Playable\00.P_Strife\State\03.Jump</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\P_Strife_State_Impact.cpp">
+      <Filter>03.GameObjects\01.Playable\00.P_Strife\State\05.Impact</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,18 +1,25 @@
+#include "stdafx.h"
+#include "GameObject.h"
+#include "GameInstance.h"
 #include "P_Strife_State_Idle.h"
+#include "PlayerController.h"
 
 CP_Strife_State_Idle::CP_Strife_State_Idle()
 	:Super()
 {
-
-}
-
-CP_Strife_State_Idle::CP_Strife_State_Idle(const CP_Strife_State_Idle& rhs)
-	:Super(rhs)
-{
+	m_strStateName = TEXT("Idle");
+	m_vecTransition.push_back(TEXT("Run"));
+	m_vecTransition.push_back(TEXT("Aim"));
+	m_vecTransition.push_back(TEXT("Jump"));
+	m_vecTransition.push_back(TEXT("Dash"));
+	m_vecTransition.push_back(TEXT("Impact"));
 }
 
 HRESULT CP_Strife_State_Idle::Enter(_int i)
 {
+	m_iCurrAnimation = i;
+	Super::Enter(m_vecAnimIndexTime[i].first);
+
 	return S_OK;
 }
 
@@ -20,21 +27,44 @@ void CP_Strife_State_Idle::Tick(const _float& fTimeDelta)
 {
 }
 
-void CP_Strife_State_Idle::LateTick(const _float& fTimeDelta)
+const wstring& CP_Strife_State_Idle::LateTick(const _float& fTimeDelta)
 {
+	return Transition();
 }
 
 void CP_Strife_State_Idle::Exit()
 {
 }
 
-CP_Strife_State_Idle* CP_Strife_State_Idle::Create(const wstring& strStateName, CGameObject* pGameObject, const STATEANIMS& tStateAnim)
+const wstring& CP_Strife_State_Idle::Transition()
+{
+	CPlayerController* pController = static_cast<CPlayerController*>(m_pController);
+	
+	if (pController->Run())
+		return m_vecTransition[Trans::RUN];
+
+	if (pController->Jump())
+		return m_vecTransition[Trans::JUMP];
+
+	if (pController->Dash())
+		return m_vecTransition[Trans::DASH];
+
+	if (pController->Aim())
+		return m_vecTransition[Trans::AIM];
+
+	/*if ()
+		return m_vecTransition[Trans::IMPACT];*/
+
+	return m_strStateName;
+}
+
+CP_Strife_State_Idle* CP_Strife_State_Idle::Create(CGameObject* pGameObject, const STATEANIMS& tStateAnim, CMonoBehaviour* pController)
 {
 	CP_Strife_State_Idle* pInstance = new CP_Strife_State_Idle();
 
-	if (FAILED(pInstance->Initialize(strStateName, pGameObject, tStateAnim)))
+	if (FAILED(pInstance->Initialize(pGameObject, tStateAnim, pController)))
 	{
-		MSG_BOX("Failed to Created : CPlayerController");
+		MSG_BOX("Failed to Created : CP_Strife_State_Idle");
 		Safe_Release(pInstance);
 	}
 

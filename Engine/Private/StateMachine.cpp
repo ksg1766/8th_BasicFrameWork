@@ -3,13 +3,15 @@
 #include "State.h"
 
 CStateMachine::CStateMachine(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: Super(pDevice, pContext, ComponentType::StateMachine)
+	: Super(pDevice, pContext)
 {
 
 }
 
 CStateMachine::CStateMachine(const CStateMachine& rhs)
 	:Super(rhs)
+	, m_hashStates(rhs.m_hashStates)
+	, m_pCurrState(rhs.m_pCurrState)
 {
 }
 
@@ -28,14 +30,22 @@ HRESULT CStateMachine::Initialize(void* pArg)
 
 void CStateMachine::Tick(const _float& fTimeDelta)
 {
-	if(m_pCurrentState)
-		m_pCurrentState->Tick(fTimeDelta);
+	if (!m_pCurrState)
+		__debugbreak();
+		//return;
+
+	m_pCurrState->Tick(fTimeDelta);
 }
 
 void CStateMachine::LateTick(const _float& fTimeDelta)
 {
-	if (m_pCurrentState)
-		m_pCurrentState->Tick(fTimeDelta);
+	if (!m_pCurrState)
+		__debugbreak();
+
+	const wstring& strState = m_pCurrState->LateTick(fTimeDelta);
+
+	if(m_pCurrState->GetName() != strState)
+		ChangeState(strState);
 }
 
 void CStateMachine::DebugRender()
@@ -51,26 +61,32 @@ HRESULT CStateMachine::AddState(CState* pState)
 
 	m_hashStates.emplace(pState->GetName(), pState);
 
+	if (nullptr == m_pCurrState)
+	{
+		if (FAILED(ChangeState(pState->GetName())))
+			return E_FAIL;
+	}
+
 	return S_OK;
 }
 
-HRESULT CStateMachine::ChangeState(const wstring& strStateTag)
+HRESULT CStateMachine::ChangeState(const wstring& strState, _int iAnimIndex)
 {
-	STATES::iterator iter = m_hashStates.find(strStateTag);
+	STATES::iterator iter = m_hashStates.find(strState);
 
 	if (iter == m_hashStates.end())
 		return E_FAIL;
 
-	if (m_pCurrentState)
+	if (m_pCurrState)
 	{
 		iter->second->Exit();
-		Safe_Release(m_pCurrentState);
+		Safe_Release(m_pCurrState);
 	}
 
-	m_pCurrentState = iter->second;
-	Safe_AddRef(m_pCurrentState);
+	m_pCurrState = iter->second;
+	Safe_AddRef(m_pCurrState);
 
-	m_pCurrentState->Enter();
+	m_pCurrState->Enter(iAnimIndex);
 
 	return S_OK;
 }

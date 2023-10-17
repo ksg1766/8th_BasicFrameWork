@@ -117,4 +117,12 @@
 #define KEY_UP(key) KEY_CHECK(key, KEYSTATE::AWAY)
 #define KEY_NONE(key) KEY_CHECK(key, KEYSTATE::NONE)
 
+#define MOUSE_DOWN(key) CGameInstance::GetInstance()->Mouse_Down(key)
+#define MOUSE_PRESSING(key) CGameInstance::GetInstance()->Mouse_Pressing(key)
+#define MOUSE_UP(key) CGameInstance::GetInstance()->Mouse_Up(key)
+#define MOUSE_NONE(key)	if(!MOUSE_DOWN(key) && !MOUSE_PRESSING(key) && !MOUSE_UP(key))	\
+							{ return true; }											\
+						else															\
+							{ return false; }
+
 #endif // Engine_Macro_h__

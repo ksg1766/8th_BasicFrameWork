@@ -118,9 +118,13 @@
       <AdditionalLibraryDirectories>../ThirdPartyLib</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>cd /d $(SolutionDir)
-call Copy.bat</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>

@@ -243,11 +243,6 @@ HRESULT CMainApp::Ready_Prototype_Components()
 		CCamera::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 	
-	/* For.Prototype_Component_StateMachine */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_StateMachine"),
-		CStateMachine::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-
 	/* For.Prototype_Component_Texture_Dissolve */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Dissolve"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/DissolvePattern%d.dds"), 5))))
@@ -264,14 +259,14 @@ HRESULT CMainApp::Ready_Prototype_Components()
 
 			if (TEXT("Strife_GunL") == strFileName)
 			{
-				XMStoreFloat4x4(&matPivot, XMMatrixScaling(0.007f, 0.007f, 0.007f) * XMMatrixRotationY(XMConvertToRadians(270.0f))  * XMMatrixRotationX(XMConvertToRadians(90.0f)));
+				XMStoreFloat4x4(&matPivot, XMMatrixScaling(0.007f, 0.007f, 0.007f) * XMMatrixRotationY(XMConvertToRadians(10.0f)) * XMMatrixRotationX(XMConvertToRadians(280.0f)) * XMMatrixTranslation(0.17f, -0.12f, -0.11f));
 				if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_" + strFileName),
 					CModel::Create(m_pDevice, m_pContext, strStaticFilePath + strFileName, desc, matPivot))))
 					return E_FAIL;
 			}
 			else if (TEXT("Strife_GunR") == strFileName)
 			{
-				XMStoreFloat4x4(&matPivot, XMMatrixScaling(0.007f, 0.007f, 0.007f) * XMMatrixRotationY(XMConvertToRadians(90.0f))  * XMMatrixRotationX(XMConvertToRadians(270.0f)));
+				XMStoreFloat4x4(&matPivot, XMMatrixScaling(0.007f, 0.007f, 0.007f) * XMMatrixRotationY(XMConvertToRadians(172.0f)) * XMMatrixRotationX(XMConvertToRadians(98.0f)) * XMMatrixTranslation(-0.15f, 0.f, 0.095f));
 				if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_" + strFileName),
 					CModel::Create(m_pDevice, m_pContext, strStaticFilePath + strFileName, desc, matPivot))))
 					return E_FAIL;
@@ -297,10 +292,10 @@ HRESULT CMainApp::Ready_Prototype_Components()
 			XMStoreFloat4x4(&matPivot, XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(270.0f)));
 			if (TEXT("P_Strife") == strFileName)
 			{
-				desc.vecSocketBoneNames.push_back("Bone_Strife_Fing_Index3_L_end");
-				desc.vecSocketBoneNames.push_back("Bone_Strife_Fing_Index3_R_end");
-				//desc.vecSocketBoneNames.push_back("Bone_Strife_Weapon_Dagger_L_end");
-				//desc.vecSocketBoneNames.push_back("Bone_Strife_Weapon_Dagger_R_end");
+				//desc.vecSocketBoneNames.push_back("Bone_Strife_Fing_Index3_L_end");
+				//desc.vecSocketBoneNames.push_back("Bone_Strife_Fing_Index3_R_end");
+				desc.vecSocketBoneNames.push_back("Bone_Strife_Weapon_Dagger_L_end");
+				desc.vecSocketBoneNames.push_back("Bone_Strife_Weapon_Dagger_R_end");
 
 				if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_" + strFileName),
 					CModel::Create(m_pDevice, m_pContext, strSkeletalFilePath + strFileName, desc, matPivot))))
