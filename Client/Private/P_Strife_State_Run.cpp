@@ -62,12 +62,10 @@ void CP_Strife_State_Run::Input(const _float& fTimeDelta)
 {	// 잘 고쳐보자
 	CPlayerController* pController = static_cast<CPlayerController*>(m_pController);
 
-	if (KEY_PRESSING(KEY::W) || KEY_DOWN(KEY::W)) pController->Move(Vec3::UnitZ, fTimeDelta);
-	if (KEY_PRESSING(KEY::A) || KEY_DOWN(KEY::A)) pController->Move(-Vec3::UnitX, fTimeDelta);
-	if (KEY_PRESSING(KEY::S) || KEY_DOWN(KEY::S)) pController->Move(-Vec3::UnitZ, fTimeDelta);
-	if (KEY_PRESSING(KEY::D) || KEY_DOWN(KEY::D)) pController->Move(Vec3::UnitX, fTimeDelta);
-
-
+	if (KEY_PRESSING(KEY::W) || KEY_DOWN(KEY::W)) pController->GetMoveMessage(Vec3::UnitZ);
+	if (KEY_PRESSING(KEY::A) || KEY_DOWN(KEY::A)) pController->GetMoveMessage(-Vec3::UnitX);
+	if (KEY_PRESSING(KEY::S) || KEY_DOWN(KEY::S)) pController->GetMoveMessage(-Vec3::UnitZ);
+	if (KEY_PRESSING(KEY::D) || KEY_DOWN(KEY::D)) pController->GetMoveMessage(Vec3::UnitX);
 }
 
 CP_Strife_State_Run* CP_Strife_State_Run::Create(CGameObject* pGameObject, const STATEANIMS& tStateAnim, CMonoBehaviour* pController)

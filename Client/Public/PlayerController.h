@@ -28,15 +28,18 @@ public:
 	_bool	Aim();
 	_bool	Jump();
 	_bool	Dash();
-	void	Move(const Vec3& vDir, const _float& fTimeDelta);
+	void	GetMoveMessage(const Vec3& vDir) { m_vNetTrans += vDir; }
 
 private:
 	void	Input(const _float& fTimeDelta);
+	void	Move(const _float& fTimeDelta);
 	void	LimitAllAxisVelocity();
 
 private:
 	CTransform*		m_pTransform = nullptr;
 	CRigidDynamic*	m_pRigidBody = nullptr;
+
+	Vec3			m_vNetTrans;
 
 	Vec3			m_vMaxLinearSpeed;
 	Vec3			m_vLinearSpeed;

@@ -9,13 +9,17 @@ CPlayerController::CPlayerController(ID3D11Device* pDevice, ID3D11DeviceContext*
 	:Super(pDevice, pContext)
 	, m_vLinearSpeed(Vec3(10.f, 10.f, 10.f))
 	, m_vMaxLinearSpeed(Vec3(20.f, 20.f, 20.f))
-	, m_vAngularSpeed(Vec3(0.f, 540.f, 0.f))
+	, m_vAngularSpeed(Vec3(0.f, 360.f, 0.f))
 	, m_vMaxAngularSpeed(Vec3(0.f, 540.f, 0.f))
 {
 }
 
 CPlayerController::CPlayerController(const CPlayerController& rhs)
 	:Super(rhs)
+	, m_vLinearSpeed(rhs.m_vLinearSpeed)
+	, m_vMaxLinearSpeed(rhs.m_vMaxLinearSpeed)
+	, m_vAngularSpeed(rhs.m_vAngularSpeed)
+	, m_vMaxAngularSpeed(rhs.m_vMaxAngularSpeed)
 {
 }
 
@@ -41,7 +45,7 @@ HRESULT CPlayerController::Initialize(void* pArg)
 
 void CPlayerController::Tick(const _float& fTimeDelta)
 {
-
+	Move(fTimeDelta);
 }
 
 void CPlayerController::LateTick(const _float& fTimeDelta)
@@ -97,29 +101,32 @@ _bool CPlayerController::Dash()
 	return false;
 }
 
-void CPlayerController::Move(const Vec3& vDir, const _float& fTimeDelta)
+void CPlayerController::Move(const _float& fTimeDelta)
 {
+	if (m_vNetTrans.Length() < EPSILON) return;
+
+	m_vNetTrans.Normalize();
+
 	const Vec3& vForward = m_pTransform->GetForward();
 	const Vec3& vRotation = m_pTransform->GetRotation();
 
-	_float fRadian = acos(vForward.Dot(vDir));
+	_float fRadian = acos(vForward.Dot(m_vNetTrans));
 
 	if (fabs(fRadian) < EPSILON) return;
 
-	const Vec3& vLeftRight = vForward.Cross(vDir);
+	const Vec3& vLeftRight = vForward.Cross(m_vNetTrans);
 	const _float& fRotY = m_pTransform->GetRotation().y;
 
-	Vec3 vSpeed = m_vLinearSpeed * vDir;
-	//Vec3 vRotateAmount(m_vAngularSpeed);
-	Vec3 vRotateAmount(0.f, 360.f * fRadian, 0.f);
+	Vec3 vSpeed = m_vLinearSpeed * m_vNetTrans;
+	Vec3 vRotateAmount(m_vAngularSpeed * fRadian);
 	if (vLeftRight.y < 0)
 		vRotateAmount.y = -vRotateAmount.y;
 
 	m_pRigidBody->AddForce(vSpeed, ForceMode::VELOCITY_CHANGE);
-	//m_pTransform->Rotate(vRotateAmount);
 	m_pRigidBody->AddTorque(vRotateAmount, ForceMode::VELOCITY_CHANGE);
 
 	LimitAllAxisVelocity();
+	m_vNetTrans = Vec3::Zero;
 }
 
 void CPlayerController::Input(const _float& fTimeDelta)

@@ -71,14 +71,14 @@ const wstring& CP_Strife_State_Jump::Transition()
 	}
 	else if (Anims::LAND == m_iCurrAnimation)
 	{
-		if (m_fTimeSum > m_vecAnimIndexTime[m_iCurrAnimation].second)
+		if (m_fTimeSum > m_vecAnimIndexTime[m_iCurrAnimation].second * 0.7f)
 		{
 			return m_vecTransition[Trans::IDLE];
 		}
 	}
 	else if (Anims::JUMP_LAND_HEAVY == m_iCurrAnimation)
 	{
-		if (m_fTimeSum > m_vecAnimIndexTime[m_iCurrAnimation].second)
+		if (m_fTimeSum > m_vecAnimIndexTime[m_iCurrAnimation].second * 0.7f)
 		{
 			return m_vecTransition[Trans::IDLE];
 		}
@@ -91,10 +91,10 @@ void CP_Strife_State_Jump::Input(const _float& fTimeDelta)
 {
 	CPlayerController* pController = static_cast<CPlayerController*>(m_pController);
 
-	if (KEY_PRESSING(KEY::W) || KEY_DOWN(KEY::W)) pController->Move(Vec3::UnitZ, fTimeDelta);
-	if (KEY_PRESSING(KEY::A) || KEY_DOWN(KEY::A)) pController->Move(-Vec3::UnitX, fTimeDelta);
-	if (KEY_PRESSING(KEY::S) || KEY_DOWN(KEY::S)) pController->Move(-Vec3::UnitZ, fTimeDelta);
-	if (KEY_PRESSING(KEY::D) || KEY_DOWN(KEY::D)) pController->Move(Vec3::UnitX, fTimeDelta);
+	if (KEY_PRESSING(KEY::W) || KEY_DOWN(KEY::W)) pController->GetMoveMessage(Vec3::UnitZ);
+	if (KEY_PRESSING(KEY::A) || KEY_DOWN(KEY::A)) pController->GetMoveMessage(-Vec3::UnitX);
+	if (KEY_PRESSING(KEY::S) || KEY_DOWN(KEY::S)) pController->GetMoveMessage(-Vec3::UnitZ);
+	if (KEY_PRESSING(KEY::D) || KEY_DOWN(KEY::D)) pController->GetMoveMessage(Vec3::UnitX);
 }
 
 CP_Strife_State_Jump* CP_Strife_State_Jump::Create(CGameObject* pGameObject, const STATEANIMS& tStateAnim, CMonoBehaviour* pController)

@@ -42,20 +42,26 @@ void CP_Strife_State_Dash::Exit()
 
 const wstring& CP_Strife_State_Dash::Transition()
 {
-	//CPlayerController* pController = static_cast<CPlayerController*>(m_pController);
+	CPlayerController* pController = static_cast<CPlayerController*>(m_pController);
 	
 	if (Anims::DASH == m_iCurrAnimation)
 	{
-		if (m_fTimeSum > m_vecAnimIndexTime[m_iCurrAnimation].second)
+		if (m_fTimeSum <= m_vecAnimIndexTime[m_iCurrAnimation].second)
 		{
-			Enter(Anims::DASH_END);
-			return m_strStateName;
+			if (pController->Dash())
+			{
+				Enter(Anims::DASH_END);
+				return m_strStateName;
+			}
+		}
+		if (m_fTimeSum > m_vecAnimIndexTime[m_iCurrAnimation].second * 0.7f)
+		{
+			return m_vecTransition[Trans::IDLE];
 		}
 	}
-
 	else if (Anims::DASH_END == m_iCurrAnimation)
 	{
-		if (m_fTimeSum > m_vecAnimIndexTime[m_iCurrAnimation].second)
+		if (m_fTimeSum > m_vecAnimIndexTime[m_iCurrAnimation].second * 0.7f)
 		{
 			return m_vecTransition[Trans::IDLE];
 		}

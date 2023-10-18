@@ -25,6 +25,7 @@ HRESULT CP_Strife_State_Aim::Enter(_int i)
 
 void CP_Strife_State_Aim::Tick(const _float& fTimeDelta)
 {
+	Input(fTimeDelta);
 }
 
 const wstring& CP_Strife_State_Aim::LateTick(const _float& fTimeDelta)
@@ -48,18 +49,47 @@ const wstring& CP_Strife_State_Aim::Transition()
 
 	if (!pController->Aim())
 	{
-		if(pController->Run())
-			return m_vecTransition[Trans::RUN];
-		else
-			return m_vecTransition[Trans::IDLE];
+		return m_vecTransition[Trans::IDLE];
 	}
 
+	if (Anims::AIM_IDLE == m_iCurrAnimation)
+	{
+		if (pController->Run())
+		{
+			Enter(Anims::AIM_WALK);
+		}
+	}
+	else if (Anims::AIM_WALK == m_iCurrAnimation)
+	{
+		if (!pController->Run())
+		{
+			Enter(Anims::AIM_IDLE);
+		}
+	}
+	
 	return m_strStateName;
 }
 
 void CP_Strife_State_Aim::Input(const _float& fTimeDelta)
 {
 	CPlayerController* pController = static_cast<CPlayerController*>(m_pController);
+
+	if (KEY_PRESSING(KEY::W) || KEY_DOWN(KEY::W))
+	{
+		pController->GetMoveMessage(Vec3::UnitZ);
+	}
+	if (KEY_PRESSING(KEY::A) || KEY_DOWN(KEY::A))
+	{
+		pController->GetMoveMessage(-Vec3::UnitX);
+	}
+	if (KEY_PRESSING(KEY::S) || KEY_DOWN(KEY::S))
+	{
+		pController->GetMoveMessage(-Vec3::UnitZ);
+	}
+	if (KEY_PRESSING(KEY::D) || KEY_DOWN(KEY::D))
+	{
+		pController->GetMoveMessage(Vec3::UnitX);
+	}
 
 	if (MOUSE_DOWN(MOUSEKEYSTATE::DIM_LB) || MOUSE_PRESSING(MOUSEKEYSTATE::DIM_LB))
 		;//АјАн
