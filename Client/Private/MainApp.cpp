@@ -245,7 +245,7 @@ HRESULT CMainApp::Ready_Prototype_Components()
 	
 	/* For.Prototype_Component_Texture_Dissolve */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Dissolve"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/DissolvePattern%d.dds"), 5))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Dissolve/DissolvePattern%d.dds"), 5))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Model_Static */

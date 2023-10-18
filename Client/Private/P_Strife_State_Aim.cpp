@@ -91,8 +91,12 @@ void CP_Strife_State_Aim::Input(const _float& fTimeDelta)
 		pController->GetMoveMessage(Vec3::UnitX);
 	}
 
+	const POINT& p = CGameInstance::GetInstance()->GetMousePos();
+	if (p.x > 1280 || p.x < 0 || p.y > 720 || p.y < 0)
+		return;
+
 	if (MOUSE_DOWN(MOUSEKEYSTATE::DIM_LB) || MOUSE_PRESSING(MOUSEKEYSTATE::DIM_LB))
-		;//공격
+		pController->Fire(fTimeDelta, CStrife_Ammo::AmmoType::DEFAULT);
 	if (MOUSE_DOWN(MOUSEKEYSTATE::DIM_RB) || MOUSE_PRESSING(MOUSEKEYSTATE::DIM_RB))
 		;//공격
 }

@@ -2,6 +2,7 @@
 /* 상수테이블. */
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
+float4 g_Color;
 Texture2D g_Texture;
 Texture2D g_Textures[2];
 
@@ -88,6 +89,17 @@ PS_OUT PS_MAIN(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_COLOR_MAIN(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    vector vColor = g_Texture.Sample(LinearSampler, In.vTexcoord);
+    vColor = mul(vColor, g_Color);
+
+    Out.vColor = vColor;
+
+    return Out;
+}
+
 technique11 DefaultTechnique
 {
 	/* */
@@ -99,6 +111,16 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN();
+    }
+
+    pass COLORTEX
+    {
+		/* 여러 셰이더에 대해서 각각 어떤 버젼으로 빌드하고 어떤 함수를 호출하여 해당 셰이더가 구동되는지를 설정한다. */
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_COLOR_MAIN();
     }
 }
 

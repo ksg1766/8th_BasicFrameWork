@@ -2,6 +2,7 @@
 #include "PlayerController.h"
 #include "GameInstance.h"
 #include "GameObject.h"
+#include "Strife_Ammo_Default.h"
 
 constexpr auto EPSILON = 0.03f;
 
@@ -30,7 +31,7 @@ HRESULT CPlayerController::Initialize_Prototype()
 
 HRESULT CPlayerController::Initialize(void* pArg)
 {
-	m_pTransform = m_pGameObject->GetTransform();
+	m_pTransform = GetTransform();
 	m_pRigidBody = static_cast<CRigidDynamic*>(m_pGameObject->GetRigidBody());
 
 	m_pRigidBody->FreezeRotation(Axis::X);
@@ -115,7 +116,6 @@ void CPlayerController::Move(const _float& fTimeDelta)
 	if (fabs(fRadian) < EPSILON) return;
 
 	const Vec3& vLeftRight = vForward.Cross(m_vNetTrans);
-	const _float& fRotY = m_pTransform->GetRotation().y;
 
 	Vec3 vSpeed = m_vLinearSpeed * m_vNetTrans;
 	Vec3 vRotateAmount(m_vAngularSpeed * fRadian);
@@ -127,6 +127,55 @@ void CPlayerController::Move(const _float& fTimeDelta)
 
 	LimitAllAxisVelocity();
 	m_vNetTrans = Vec3::Zero;
+}
+
+void CPlayerController::Fire(const _float& fTimeDelta, CStrife_Ammo::AmmoType eAmmoType)
+{
+	CGameInstance* pInstance = GET_INSTANCE(CGameInstance);
+	CGameObject* pAmmo = nullptr;
+	
+	switch (eAmmoType)
+	{
+	case CStrife_Ammo::AmmoType::DEFAULT:
+		CStrife_Ammo_Default::AMMOPROPS tProps{ eAmmoType, 3, 0, 1, 10.f * m_pTransform->GetForward(), false, 5.f };
+		pAmmo = pInstance->CreateObject(L"Prototype_GameObject_Strife_Ammo_Default", LAYERTAG::EQUIPMENT, &tProps);
+		break;
+
+	/*case CStrife_Ammo::AmmoType::CHARGE:
+		CStrife_Ammo::AMMOPROPS tPros{ eAmmoType, 4, 0, 1, 10.f * m_pTransform->GetForward(), false, 5.f };
+		pInstance->CreateObject(L"Prototype_GameObject_Strife_Ammo_Charge", LAYERTAG::EQUIPMENT, &tProps);
+		break;
+
+	case CStrife_Ammo::AmmoType::STATIC:
+		CStrife_Ammo::AMMOPROPS tPros{ eAmmoType, 4, 0, 1, 10.f * m_pTransform->GetForward(), false, 5.f };
+		pInstance->CreateObject(L"Prototype_GameObject_Strife_Ammo_Static", LAYERTAG::EQUIPMENT, &tProps);
+		break;
+
+	case CStrife_Ammo::AmmoType::GRAVITY:
+		CStrife_Ammo::AMMOPROPS tPros{ eAmmoType, 4, 0, 1, 10.f * m_pTransform->GetForward(), false, 5.f };
+		pInstance->CreateObject(L"Prototype_GameObject_Strife_Ammo_Gravity", LAYERTAG::EQUIPMENT, &tProps);
+		break;
+
+	case CStrife_Ammo::AmmoType::NATURE:
+		CStrife_Ammo::AMMOPROPS tPros{ eAmmoType, 4, 0, 1, 10.f * m_pTransform->GetForward(), false, 5.f };
+		pInstance->CreateObject(L"Prototype_GameObject_Strife_Ammo_Nature", LAYERTAG::EQUIPMENT, &tProps);
+		break;
+
+	case CStrife_Ammo::AmmoType::BEAM:
+		CStrife_Ammo::AMMOPROPS tPros{ eAmmoType, 4, 0, 1, 10.f * m_pTransform->GetForward(), false, 5.f };
+		pInstance->CreateObject(L"Prototype_GameObject_Strife_Ammo_Beam", LAYERTAG::EQUIPMENT, &tProps);
+		break;
+
+	case CStrife_Ammo::AmmoType::LAVA:
+		CStrife_Ammo::AMMOPROPS tPros{ eAmmoType, 4, 0, 1, 10.f * m_pTransform->GetForward(), false, 5.f };
+		pInstance->CreateObject(L"Prototype_GameObject_Strife_Ammo_Lava", LAYERTAG::EQUIPMENT, &tProps);
+		break;*/
+	}
+
+	pAmmo->GetTransform()->SetPosition(m_pTransform->GetPosition() + 0.5f * m_pTransform->GetForward() - (m_bFireLR * 0.2f - 0.1f) * m_pTransform->GetRight());
+	m_bFireLR = !m_bFireLR;
+
+	RELEASE_INSTANCE(CGameInstance);
 }
 
 void CPlayerController::Input(const _float& fTimeDelta)

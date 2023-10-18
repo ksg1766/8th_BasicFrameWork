@@ -35,8 +35,6 @@ public:
 
 private:
 	void	Input(const _float& fTimeDelta);
-	void	Move(const Vec3& vDir, const _float& fTimeDelta);
-	void	LimitAllAxisVelocity();
 
 private:
 	CTransform*		m_pTransform = nullptr;

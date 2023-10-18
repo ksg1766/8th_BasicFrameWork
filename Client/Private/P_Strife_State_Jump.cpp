@@ -71,14 +71,14 @@ const wstring& CP_Strife_State_Jump::Transition()
 	}
 	else if (Anims::LAND == m_iCurrAnimation)
 	{
-		if (m_fTimeSum > m_vecAnimIndexTime[m_iCurrAnimation].second * 0.7f)
+		if (m_fTimeSum > m_vecAnimIndexTime[m_iCurrAnimation].second * 0.6f)
 		{
 			return m_vecTransition[Trans::IDLE];
 		}
 	}
 	else if (Anims::JUMP_LAND_HEAVY == m_iCurrAnimation)
 	{
-		if (m_fTimeSum > m_vecAnimIndexTime[m_iCurrAnimation].second * 0.7f)
+		if (m_fTimeSum > m_vecAnimIndexTime[m_iCurrAnimation].second * 0.6f)
 		{
 			return m_vecTransition[Trans::IDLE];
 		}

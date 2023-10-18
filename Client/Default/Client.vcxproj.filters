@@ -175,6 +175,15 @@
     <Filter Include="03.GameObjects\01.Playable\00.P_Strife\State\05.Impact">
       <UniqueIdentifier>{ae95e2f3-5da1-4275-962b-f9854f3cae5b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.GameObjects\01.Playable\00.P_Strife\Ammo">
+      <UniqueIdentifier>{44d0eb6d-1b6d-4731-8770-291a16644535}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\01.Playable\00.P_Strife\Ammo\Base">
+      <UniqueIdentifier>{254b5cf2-ca93-45d5-b979-bc4eb8e8c205}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\01.Playable\00.P_Strife\Ammo\Defaut">
+      <UniqueIdentifier>{d582029f-a2ac-4ffd-bd74-0c64bccc4200}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -333,6 +342,12 @@
     <ClInclude Include="..\Public\P_Strife_State_Impact.h">
       <Filter>03.GameObjects\01.Playable\00.P_Strife\State\05.Impact</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Strife_Ammo.h">
+      <Filter>03.GameObjects\01.Playable\00.P_Strife\Ammo\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Strife_Ammo_Default.h">
+      <Filter>03.GameObjects\01.Playable\00.P_Strife\Ammo\Defaut</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -472,6 +487,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\P_Strife_State_Impact.cpp">
       <Filter>03.GameObjects\01.Playable\00.P_Strife\State\05.Impact</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Strife_Ammo.cpp">
+      <Filter>03.GameObjects\01.Playable\00.P_Strife\Ammo\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Strife_Ammo_Default.cpp">
+      <Filter>03.GameObjects\01.Playable\00.P_Strife\Ammo\Defaut</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Strife_Ammo.cpp">
+      <Filter>03.GameObjects\01.Playable\00.P_Strife\Ammo\Base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

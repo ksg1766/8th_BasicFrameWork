@@ -48,8 +48,6 @@ namespace Engine
 	using uint32 = unsigned __int32;
 	using uint64 = unsigned __int64;
 
-	using Color = DirectX::XMFLOAT4;
-
 	using Vec2 = DirectX::SimpleMath::Vector2;
 	using Vec3 = DirectX::SimpleMath::Vector3;
 	using Vec4 = DirectX::SimpleMath::Vector4;

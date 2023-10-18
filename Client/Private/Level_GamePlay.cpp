@@ -110,7 +110,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Equipment()
 	/* 원형객체를 복제하여 사본객체를 생성하고 레이어에 추가한다. */
 	CGameObject* pGameObject = nullptr;
 	LAYERTAG	eLayerTag = LAYERTAG::EQUIPMENT;
-	
+
 	return S_OK;
 }
 
