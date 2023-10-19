@@ -37,9 +37,8 @@ void CP_Strife_State_Impact::Exit()
 
 const wstring& CP_Strife_State_Impact::Transition()
 {
-	if (KEY_PRESSING(KEY::W) || KEY_DOWN(KEY::W) ||	KEY_PRESSING(KEY::A) || KEY_DOWN(KEY::A) ||
-		KEY_PRESSING(KEY::S) || KEY_DOWN(KEY::S) ||	KEY_PRESSING(KEY::D) || KEY_DOWN(KEY::D))
-		return m_vecTransition[0];
+	//if (m_pController->Run())
+	//	return m_vecTransition[0];
 
 	return m_strStateName;
 }

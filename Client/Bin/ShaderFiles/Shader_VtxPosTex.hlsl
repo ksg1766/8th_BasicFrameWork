@@ -93,9 +93,11 @@ PS_OUT PS_COLOR_MAIN(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
     vector vColor = g_Texture.Sample(LinearSampler, In.vTexcoord);
-    vColor = mul(vColor, g_Color);
+    
+    if (vColor.r < 0.01f)
+        discard;
 
-    Out.vColor = vColor;
+    Out.vColor = g_Color;
 
     return Out;
 }

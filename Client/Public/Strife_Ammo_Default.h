@@ -28,9 +28,9 @@ private:
 	HRESULT			Bind_ShaderResources(); /* 셰이더 전역변수에 값 던진다. */
 
 public:
-	virtual	void	OnCollisionEnter(const CGameObject* pOther)	override;
-	virtual	void	OnCollisionStay(const CGameObject* pOther)	override;
-	virtual	void	OnCollisionExit(const CGameObject* pOther)	override;
+	virtual	void	OnCollisionEnter(CGameObject* pOther)	override;
+	virtual	void	OnCollisionStay(CGameObject* pOther)	override;
+	virtual	void	OnCollisionExit(CGameObject* pOther)	override;
 
 public:
 	static	CStrife_Ammo_Default* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

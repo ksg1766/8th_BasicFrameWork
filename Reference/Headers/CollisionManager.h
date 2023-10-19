@@ -53,8 +53,6 @@ private:
 	_uint	m_arrCheck[(_uint)LAYERTAG::LAYER_END - (_uint)LAYERTAG::DEFAULT_LAYER_END] = { 0 };
 	_bool	m_arrSorted[(_uint)LAYERTAG::LAYER_END - (_uint)LAYERTAG::DEFAULT_LAYER_END] = { 0 };
 
-	map<LAYERTAG, class CLayer*>* m_pCurrentLevelLayers;//
-
 public:
 	virtual void Free() override;
 };

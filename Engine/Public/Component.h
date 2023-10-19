@@ -5,6 +5,7 @@
 BEGIN(Engine)
 
 class CGameObject;
+class CGameInstance;
 class CTransform;
 
 enum class ComponentType
@@ -63,6 +64,7 @@ protected:
 protected:
 	ComponentType			m_eType;
 	CGameObject*			m_pGameObject;
+	CGameInstance*			m_pGameInstance;
 
 private:
 	friend class CGameObject;

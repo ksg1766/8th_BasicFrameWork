@@ -292,8 +292,6 @@ HRESULT CMainApp::Ready_Prototype_Components()
 			XMStoreFloat4x4(&matPivot, XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(270.0f)));
 			if (TEXT("P_Strife") == strFileName)
 			{
-				//desc.vecSocketBoneNames.push_back("Bone_Strife_Fing_Index3_L_end");
-				//desc.vecSocketBoneNames.push_back("Bone_Strife_Fing_Index3_R_end");
 				desc.vecSocketBoneNames.push_back("Bone_Strife_Weapon_Dagger_L_end");
 				desc.vecSocketBoneNames.push_back("Bone_Strife_Weapon_Dagger_R_end");
 

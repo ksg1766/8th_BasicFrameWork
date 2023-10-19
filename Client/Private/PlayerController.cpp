@@ -57,14 +57,14 @@ void CPlayerController::DebugRender()
 {
 }
 
-_bool CPlayerController::Idle()
+_bool CPlayerController::IsIdle()
 {	// 루프 끝나면 Idle로 돌아오도록 해야함.
 	// 쓸일 없는 함수여야 함.
-	if(!Run() && !Aim() && !Jump() && !Dash())
+	if(!IsRun() && !IsAim() && !IsJump() && !IsDash())
 		return true;
 }
 
-_bool CPlayerController::Run()
+_bool CPlayerController::IsRun()
 {
 	if (KEY_PRESSING(KEY::W) || KEY_DOWN(KEY::W) || KEY_PRESSING(KEY::A) || KEY_DOWN(KEY::A) ||
 		KEY_PRESSING(KEY::S) || KEY_DOWN(KEY::S) || KEY_PRESSING(KEY::D) || KEY_DOWN(KEY::D))
@@ -73,10 +73,10 @@ _bool CPlayerController::Run()
 	return false;
 }
 
-_bool CPlayerController::Aim()
+_bool CPlayerController::IsAim()
 {
 	const POINT& p = CGameInstance::GetInstance()->GetMousePos();
-	if (p.x > 1280 || p.x < 0 || p.y > 720 || p.y < 0)
+	if (p.x > 1440 || p.x < 0 || p.y > 810 || p.y < 0)
 		return false;
 
 	if (MOUSE_DOWN(MOUSEKEYSTATE::DIM_LB) || MOUSE_PRESSING(MOUSEKEYSTATE::DIM_LB) ||
@@ -86,7 +86,7 @@ _bool CPlayerController::Aim()
 	return false;
 }
 
-_bool CPlayerController::Jump()
+_bool CPlayerController::IsJump()
 {
 	if (KEY_DOWN(KEY::SPACE))
 		return true;
@@ -94,7 +94,7 @@ _bool CPlayerController::Jump()
 	return false;
 }
 
-_bool CPlayerController::Dash()
+_bool CPlayerController::IsDash()
 {
 	if (KEY_DOWN(KEY::SHIFT))
 		return true;
@@ -109,36 +109,44 @@ void CPlayerController::Move(const _float& fTimeDelta)
 	m_vNetTrans.Normalize();
 
 	const Vec3& vForward = m_pTransform->GetForward();
-	const Vec3& vRotation = m_pTransform->GetRotation();
-
-	_float fRadian = acos(vForward.Dot(m_vNetTrans));
-
-	if (fabs(fRadian) < EPSILON) return;
-
-	const Vec3& vLeftRight = vForward.Cross(m_vNetTrans);
 
 	Vec3 vSpeed = m_vLinearSpeed * m_vNetTrans;
-	Vec3 vRotateAmount(m_vAngularSpeed * fRadian);
-	if (vLeftRight.y < 0)
-		vRotateAmount.y = -vRotateAmount.y;
-
 	m_pRigidBody->AddForce(vSpeed, ForceMode::VELOCITY_CHANGE);
-	m_pRigidBody->AddTorque(vRotateAmount, ForceMode::VELOCITY_CHANGE);
+
+	_float fRadian = acos(vForward.Dot(m_vNetTrans));
+	if (fabs(fRadian) > EPSILON)
+	{
+		const Vec3& vLeftRight = vForward.Cross(m_vNetTrans);
+		Vec3 vRotateAmount(m_vAngularSpeed * fRadian);
+		if (vLeftRight.y < 0)
+			vRotateAmount.y = -vRotateAmount.y;
+
+		m_pRigidBody->AddTorque(vRotateAmount, ForceMode::VELOCITY_CHANGE);
+	}
 
 	LimitAllAxisVelocity();
 	m_vNetTrans = Vec3::Zero;
 }
 
+void CPlayerController::Leap(const _float& fTimeDelta)
+{
+	return;
+}
+
+void CPlayerController::Fall(const _float& fTimeDelta)
+{
+	return;
+}
+
 void CPlayerController::Fire(const _float& fTimeDelta, CStrife_Ammo::AmmoType eAmmoType)
 {
-	CGameInstance* pInstance = GET_INSTANCE(CGameInstance);
 	CGameObject* pAmmo = nullptr;
 	
 	switch (eAmmoType)
 	{
 	case CStrife_Ammo::AmmoType::DEFAULT:
-		CStrife_Ammo_Default::AMMOPROPS tProps{ eAmmoType, 3, 0, 1, 10.f * m_pTransform->GetForward(), false, 5.f };
-		pAmmo = pInstance->CreateObject(L"Prototype_GameObject_Strife_Ammo_Default", LAYERTAG::EQUIPMENT, &tProps);
+		CStrife_Ammo_Default::AMMOPROPS tProps{ eAmmoType, 7, 0, 1, 50.f * m_pTransform->GetForward(), false, 5.f };
+		pAmmo = m_pGameInstance->CreateObject(L"Prototype_GameObject_Strife_Ammo_Default", LAYERTAG::EQUIPMENT, &tProps);
 		break;
 
 	/*case CStrife_Ammo::AmmoType::CHARGE:
@@ -172,10 +180,15 @@ void CPlayerController::Fire(const _float& fTimeDelta, CStrife_Ammo::AmmoType eA
 		break;*/
 	}
 
-	pAmmo->GetTransform()->SetPosition(m_pTransform->GetPosition() + 0.5f * m_pTransform->GetForward() - (m_bFireLR * 0.2f - 0.1f) * m_pTransform->GetRight());
-	m_bFireLR = !m_bFireLR;
+	Vec3 vFireOffset = m_pTransform->GetPosition() + 2.f * m_pTransform->GetForward() - (m_bFireLR * 0.35f - 0.175f) * m_pTransform->GetRight() + 1.7f * m_pTransform->GetUp();
+	Quaternion qRot = m_pTransform->GetRotationQuaternion();
 
-	RELEASE_INSTANCE(CGameInstance);
+	pAmmo->GetTransform()->SetScale(Vec3(0.28f, 3.6f, 1.f));
+	pAmmo->GetTransform()->Rotate(Vec3(90.f, 0.0f, 0.f));
+	pAmmo->GetTransform()->Rotate(qRot);
+	pAmmo->GetTransform()->SetPosition(vFireOffset);
+
+	m_bFireLR = !m_bFireLR;
 }
 
 void CPlayerController::Input(const _float& fTimeDelta)

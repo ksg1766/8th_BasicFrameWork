@@ -1,6 +1,7 @@
 #include "ComponentManager.h"
 #include "PipeLine.h"
 #include "GameObject.h"
+#include "GameInstance.h"
 #include "CameraManager.h"
 
 CCamera::CCamera(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -30,7 +31,7 @@ HRESULT CCamera::Initialize_Prototype()
 	m_vEye		= Vec4::UnitW;
 	m_vAt		= Vec4::UnitW;
 	m_fFovy		= XM_PI / 4.f;
-	m_fAspect	= 1280.f / 720.f;
+	m_fAspect	= 1440.f / 810.f;
 	m_fNear		= 0.1f;
 	m_fFar		= 2000.0f;
 
@@ -59,7 +60,7 @@ HRESULT CCamera::Initialize(void* pArg)
 	m_vEye		= m_pTransform->GetPosition();
 	m_vAt		= m_pTransform->GetForward();
 	/*m_fFovy		= XM_PI / 4.f;
-	m_fAspect	= 1280.f / 720.f;
+	m_fAspect	= 1440.f / 810.f;
 	m_fNear		= 0.1f;
 	m_fFar		= 1000.0f;*/
 
@@ -75,9 +76,7 @@ HRESULT CCamera::Initialize(void* pArg)
 		break;
 	}
 
-	CCameraManager* pInstance = GET_INSTANCE(CCameraManager);
-	pInstance->AddCamera(this->m_pGameObject->GetObjectTag(), this->m_pGameObject);
-	RELEASE_INSTANCE(CCameraManager);
+	m_pGameInstance->AddCamera(this->m_pGameObject->GetObjectTag(), this->m_pGameObject);
 
     return S_OK;
 }

@@ -24,11 +24,11 @@ public:
 	virtual void	DebugRender()						override;
 
 public:
-	_bool	Idle();
-	_bool	Run();
-	_bool	Aim();
-	_bool	Jump();
-	_bool	Dash();
+	_bool	IsIdle();
+	_bool	IsRun();
+	_bool	IsAim();
+	_bool	IsJump();
+	_bool	IsDash();
 
 	void	GetMoveMessage(const Vec3& vDir) { m_vNetTrans += vDir; }
 	void	Fire(const _float& fTimeDelta, CStrife_Ammo::AmmoType eAmmoType);
@@ -36,6 +36,8 @@ public:
 private:
 	void	Input(const _float& fTimeDelta);
 	void	Move(const _float& fTimeDelta);
+	void	Leap(const _float& fTimeDelta);
+	void	Fall(const _float& fTimeDelta);
 	void	LimitAllAxisVelocity();
 
 private:

@@ -4,6 +4,7 @@
 
 BEGIN(Engine)
 
+class CGameInstance;
 class CGameObject;
 class CModel;
 class CMonoBehaviour;
@@ -35,6 +36,8 @@ public:
 
 protected:
 	CGameObject*	m_pGameObject = nullptr;
+	CGameInstance*	m_pGameInstance = nullptr;
+
 	CModel*			m_pModel = nullptr;
 	CMonoBehaviour* m_pController = nullptr;
 	wstring			m_strStateName = TEXT("");

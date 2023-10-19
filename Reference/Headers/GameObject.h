@@ -6,6 +6,7 @@
 
 BEGIN(Engine)
 
+class CGameInstance;
 class CMonoBehaviour;
 class CRenderer;
 class CShader;
@@ -62,17 +63,18 @@ public:
 	/*void					SetLayerIndex(uint8 layer) { m_i8LayerIndex = layer; }
 	uint8					GetLayerIndex() { return m_i8LayerIndex; }*/
 
-	virtual	void			OnCollisionEnter(const CGameObject* pOther) {};
-	virtual	void			OnCollisionStay(const CGameObject* pOther) {};
-	virtual	void			OnCollisionExit(const CGameObject* pOther) {};
+	virtual	void			OnCollisionEnter(CGameObject* pOther) {};
+	virtual	void			OnCollisionStay(CGameObject* pOther) {};
+	virtual	void			OnCollisionExit(CGameObject* pOther) {};
 
-	virtual	void			OnTriggerEnter(const CGameObject* pOther) {};
-	virtual	void			OnTriggerStay(const CGameObject* pOther) {};
-	virtual	void			OnTriggerExit(const CGameObject* pOther) {};
+	virtual	void			OnTriggerEnter(CGameObject* pOther) {};
+	virtual	void			OnTriggerStay(CGameObject* pOther) {};
+	virtual	void			OnTriggerExit(CGameObject* pOther) {};
 
 protected:
 	ID3D11Device*			m_pDevice = { nullptr };
 	ID3D11DeviceContext*	m_pContext = { nullptr };
+	CGameInstance*			m_pGameInstance = nullptr;
 
 protected:
 	array<CComponent*, FIXED_COMPONENT_COUNT> m_arrComponents = { nullptr };

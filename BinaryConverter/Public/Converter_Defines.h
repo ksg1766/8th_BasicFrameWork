@@ -9,5 +9,5 @@
 #include <Assimp/Importer.hpp>
 #include <Assimp/postprocess.h>
 
-const _uint		g_iWinSizeX = 1280;
-const _uint		g_iWinSizeY = 720;
+const _uint		g_iWinSizeX = 1440;
+const _uint		g_iWinSizeY = 810;

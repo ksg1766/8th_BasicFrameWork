@@ -68,7 +68,7 @@ CGameObject* CEventManager::CreateObject(const wstring& strPrototypeTag, const L
 		pLayer = CLayer::Create();
 		pLayer->SetLayerTag(eLayer);
 
-		pObjectManager->GetCurrentLevelLayers()->emplace(eLayer, pLayer);
+		pObjectManager->GetCurrentLevelLayers().emplace(eLayer, pLayer);
 
 		CreateObject(pGameObject, eLayer);
 	}
@@ -109,7 +109,14 @@ void CEventManager::Execute(const tagEvent& eve)
 		CGameObject* pNewObject = (CGameObject*)eve.lParam;
 		LAYERTAG eLayer = (LAYERTAG)eve.wParam;
 
-		(*CObjectManager::GetInstance()->GetCurrentLevelLayers())[eLayer]->Add_GameObject(pNewObject, eLayer);
+		map<LAYERTAG, CLayer*>& mapLayers = CObjectManager::GetInstance()->GetCurrentLevelLayers();
+		auto iter = mapLayers.find(eLayer);
+
+		if (mapLayers.end() != iter)
+		{
+			//(*CObjectManager::GetInstance()->GetCurrentLevelLayers())[eLayer]->Add_GameObject(pNewObject, eLayer);
+			iter->second->Add_GameObject(pNewObject, eLayer);
+		}
 	}
 	break;
 	case EVENT_TYPE::DELETE_OBJECT:

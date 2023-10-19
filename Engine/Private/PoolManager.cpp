@@ -38,7 +38,14 @@ void CPoolManager::Spawn_Object(const wstring& strObjectName, const Vec3& vSpawn
 	iter->second.pop();
 
 	const LAYERTAG& eLayerTag = pGameObject->GetLayerTag();
-	(*CObjectManager::GetInstance()->GetCurrentLevelLayers())[eLayerTag]->Add_GameObject(pGameObject, eLayerTag);
+	
+	const map<LAYERTAG, CLayer*>& mapLayers = CObjectManager::GetInstance()->GetCurrentLevelLayers();
+
+	const auto& _iter = mapLayers.find(LAYERTAG::WALL);
+	if (mapLayers.end() != _iter)
+		_iter->second->Add_GameObject(pGameObject, eLayerTag);
+	else
+		__debugbreak();
 }
 
 void CPoolManager::Restore_Object(CGameObject* pGameObject)

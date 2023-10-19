@@ -178,6 +178,7 @@
     <ClInclude Include="..\Public\BasicTerrain.h" />
     <ClInclude Include="..\Public\DissolveManager.h" />
     <ClInclude Include="..\Public\HellHound.h" />
+    <ClInclude Include="..\Public\LavaTerrain.h" />
     <ClInclude Include="..\Public\MainCamera.h" />
     <ClInclude Include="..\Public\MainCameraController.h" />
     <ClInclude Include="..\Public\P_Strife.h" />
@@ -232,6 +233,7 @@
     <ClCompile Include="..\Private\BasicTerrain.cpp" />
     <ClCompile Include="..\Private\DissolveManager.cpp" />
     <ClCompile Include="..\Private\HellHound.cpp" />
+    <ClCompile Include="..\Private\LavaTerrain.cpp" />
     <ClCompile Include="..\Private\MainCamera.cpp" />
     <ClCompile Include="..\Private\MainCameraController.cpp" />
     <ClCompile Include="..\Private\P_Strife.cpp" />

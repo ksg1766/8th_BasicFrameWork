@@ -9,6 +9,8 @@ CGameObject::CGameObject(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
 	Safe_AddRef(m_pDevice);
 	Safe_AddRef(m_pContext);
+
+	m_pGameInstance = GET_INSTANCE(CGameInstance);
 }
 
 CGameObject::CGameObject(const CGameObject & rhs)
@@ -17,9 +19,11 @@ CGameObject::CGameObject(const CGameObject & rhs)
 	, m_IsDead(rhs.m_IsDead)
 	, m_eLayerTag(rhs.m_eLayerTag)
 	, m_strObjectTag(rhs.m_strObjectTag)
+	, m_pGameInstance(rhs.m_pGameInstance)
 {
 	Safe_AddRef(m_pDevice);
 	Safe_AddRef(m_pContext);
+	Safe_AddRef(m_pGameInstance);
 }
 
 HRESULT CGameObject::Initialize_Prototype()
@@ -171,4 +175,5 @@ void CGameObject::Free()
 
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pContext);
+	RELEASE_INSTANCE(CGameInstance);
 }

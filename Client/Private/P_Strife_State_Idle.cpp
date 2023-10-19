@@ -40,16 +40,16 @@ const wstring& CP_Strife_State_Idle::Transition()
 {
 	CPlayerController* pController = static_cast<CPlayerController*>(m_pController);
 	
-	if (pController->Run())
+	if (pController->IsRun())
 		return m_vecTransition[Trans::RUN];
 
-	if (pController->Jump())
+	if (pController->IsJump())
 		return m_vecTransition[Trans::JUMP];
 
-	if (pController->Dash())
+	if (pController->IsDash())
 		return m_vecTransition[Trans::DASH];
 
-	if (pController->Aim())
+	if (pController->IsAim())
 		return m_vecTransition[Trans::AIM];
 
 	/*if ()

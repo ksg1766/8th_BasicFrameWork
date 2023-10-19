@@ -72,11 +72,11 @@ HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, const GRAPHIC_DESC& G
 	if (FAILED(m_pCollisionManager->Reserve_Manager(iNumLevels)))
 		return E_FAIL;
 	
-	/* 콜리전 매니져의 예약 처리. */
+	/* 카메라 매니져의 예약 처리. */
 	if (FAILED(m_pCameraManager->Reserve_Manager(iNumLevels)))
 		return E_FAIL;
 	
-	/* 콜리전 매니져의 예약 처리. */
+	/* 파이프라인의 예약 처리. */
 	if (FAILED(m_pPipeLine->Initialize()))
 		return E_FAIL;
 
@@ -214,10 +214,10 @@ CGameObject* CGameInstance::Add_GameObject(_uint iLevelIndex, const LAYERTAG& eL
 	return m_pObjectManager->Add_GameObject(iLevelIndex, eLayerTag, strPrototypeTag, pArg);
 }
 
-map<LAYERTAG, CLayer*>* CGameInstance::GetCurrentLevelLayers()
+map<LAYERTAG, CLayer*>& CGameInstance::GetCurrentLevelLayers()
 {
 	if (nullptr == m_pObjectManager)
-		return nullptr;
+		__debugbreak();
 
 	return m_pObjectManager->GetCurrentLevelLayers();
 }

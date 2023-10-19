@@ -104,9 +104,7 @@ HRESULT CP_Strife::Ready_FixedComponents()
 
 HRESULT CP_Strife::Ready_Scripts()
 {
-	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
-	if (LEVEL_GAMEPLAY == pGameInstance->GetCurrentLevelIndex())
+	if (LEVEL_GAMEPLAY == m_pGameInstance->GetCurrentLevelIndex())
 	{
 		///* Com_PlayerController */
 		if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::Script, TEXT("Prototype_Component_PlayerController"))))
@@ -164,39 +162,32 @@ HRESULT CP_Strife::Ready_Scripts()
 		}
 	}
 
-	RELEASE_INSTANCE(CGameInstance);
 	return S_OK;
 }
 
 HRESULT CP_Strife::Ready_Parts()
 {
-	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
-	CGameObject* pGameObject = pGameInstance->CreateObject(TEXT("Prototype_GameObject_Strife_GunL"), LAYERTAG::EQUIPMENT);
+	CGameObject* pGameObject = m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Strife_GunL"), LAYERTAG::IGNORECOLLISION);
 	if (nullptr == pGameObject)	return E_FAIL;
 	m_vecParts.push_back(pGameObject);
 	GetModel()->EquipParts(0, pGameObject->GetModel());
 
-	pGameObject = pGameInstance->CreateObject(TEXT("Prototype_GameObject_Strife_GunR"), LAYERTAG::EQUIPMENT);
+	pGameObject = m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Strife_GunR"), LAYERTAG::IGNORECOLLISION);
 	if (nullptr == pGameObject)	return E_FAIL;
 	m_vecParts.push_back(pGameObject);
 	GetModel()->EquipParts(1, pGameObject->GetModel());
 
-	RELEASE_INSTANCE(CGameInstance);
 	return S_OK;
 }
 
 HRESULT CP_Strife::Bind_ShaderResources()
 {
 	/* 셰이더 전역변수로 던져야 할 값들을 던지자. */
-	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
 	if (FAILED(GetTransform()->Bind_ShaderResources(GetShader(), "g_WorldMatrix")) ||
-		FAILED(pGameInstance->Bind_TransformToShader(GetShader(), "g_ViewMatrix", CPipeLine::D3DTS_VIEW)) ||
-		FAILED(pGameInstance->Bind_TransformToShader(GetShader(), "g_ProjMatrix", CPipeLine::D3DTS_PROJ)) ||
-		FAILED(GetShader()->Bind_RawValue("g_vCamPosition", &static_cast<const _float4&>(pGameInstance->Get_CamPosition_Float4()), sizeof(_float4))))
+		FAILED(m_pGameInstance->Bind_TransformToShader(GetShader(), "g_ViewMatrix", CPipeLine::D3DTS_VIEW)) ||
+		FAILED(m_pGameInstance->Bind_TransformToShader(GetShader(), "g_ProjMatrix", CPipeLine::D3DTS_PROJ)) ||
+		FAILED(GetShader()->Bind_RawValue("g_vCamPosition", &static_cast<const _float4&>(m_pGameInstance->Get_CamPosition_Float4()), sizeof(_float4))))
 	{
-		RELEASE_INSTANCE(CGameInstance);
 		return E_FAIL;
 	}
 
@@ -216,7 +207,6 @@ HRESULT CP_Strife::Bind_ShaderResources()
 	if (FAILED(GetShader()->Bind_RawValue("g_vLightSpecular", &vSpecular, sizeof(_float4))))
 		return E_FAIL;
 
-	RELEASE_INSTANCE(CGameInstance);
 	return S_OK;
 }
 

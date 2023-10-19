@@ -28,7 +28,7 @@ HRESULT CLevel_Logo::LateTick(const _float& fTimeDelta)
 
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	if (KEY_DOWN(KEY::ENTER))
+	if (KEY_DOWN_EX(KEY::ENTER))
 	{		
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_GAMEPLAY))))
 		{
@@ -36,7 +36,7 @@ HRESULT CLevel_Logo::LateTick(const _float& fTimeDelta)
 			return E_FAIL;
 		}
 	}
-	else if (KEY_PRESSING(KEY::SHIFT) && KEY_DOWN(KEY::E))
+	else if (KEY_PRESSING_EX(KEY::SHIFT) && KEY_DOWN_EX(KEY::E))
 	{
 		if (FAILED(pGameInstance->Open_Level(LEVEL_LOADING, CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL_GAMETOOL))))
 		{

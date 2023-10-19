@@ -34,6 +34,9 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Equipment()))
 		return E_FAIL;
 
+	if (FAILED(Ready_Layer_IgnoreCollision()))
+		return E_FAIL;
+
 	if (FAILED(Ready_Layer_Camera()))
 		return E_FAIL;
 
@@ -114,6 +117,15 @@ HRESULT CLevel_GamePlay::Ready_Layer_Equipment()
 	return S_OK;
 }
 
+HRESULT CLevel_GamePlay::Ready_Layer_IgnoreCollision()
+{
+	/* 원형객체를 복제하여 사본객체를 생성하고 레이어에 추가한다. */
+	CGameObject* pGameObject = nullptr;
+	LAYERTAG	eLayerTag = LAYERTAG::IGNORECOLLISION;
+
+	return S_OK;
+}
+
 HRESULT CLevel_GamePlay::Ready_Layer_Default()
 {
 	/* 원형객체를 복제하여 사본객체를 생성하고 레이어에 추가한다. */
@@ -172,16 +184,16 @@ HRESULT CLevel_GamePlay::Ready_Layer_UnitGround()
 		pGameObject->GetTransform()->Translate(Vec3(230.f - (_float)i, 100.f, -180.f - (_float)i));
 	}
 
-	/*for (_int i = 0; i < 150; ++i)
+	for (_int i = 0; i < 5; ++i)
 	{
 		pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_HellHound"));
 		if (nullptr == pGameObject)	return E_FAIL;
-		_int iRandomPosX = (rand() * i) % 1024 - 512;
-		_int iRandomPosZ = (rand() * i) % 1024 - 512;
-		_int iRandomAnimIndex = (abs(rand()) * i) % 344;
+		_int iRandomPosX = (rand() * i) % 16 - 8;
+		_int iRandomPosZ = (rand() * i) % 16 - 8;
+		_int iRandomAnimIndex = abs(rand()) * i;
 		pGameObject->GetModel()->SetNextAnimationIndex(iRandomAnimIndex);
 		pGameObject->GetTransform()->Translate(Vec3(iRandomPosX, 0.f, iRandomPosZ));
-	}*/
+	}
 
 	return S_OK;
 }

@@ -26,8 +26,13 @@ HRESULT CMainCameraController::Initialize(void* pArg)
 	m_pTransform = m_pGameObject->GetTransform();
 	
 	m_vOffset = Vec3(0.f, 13.f, -15.f);
-	CGameInstance* pInstance = GET_INSTANCE(CGameInstance);
-	m_pTargetTransform = (*pInstance->GetCurrentLevelLayers())[LAYERTAG::PLAYER]->GetGameObjects().front()->GetTransform();
+
+	map<LAYERTAG, CLayer*>& mapLayers = m_pGameInstance->GetCurrentLevelLayers();
+	auto iter = mapLayers.find(LAYERTAG::PLAYER);
+	if (iter == mapLayers.end())
+		return E_FAIL;
+
+	m_pTargetTransform = iter->second->GetGameObjects().front()->GetTransform();
 	
 	//m_pPlayer = ;//GameManager 같은 거라도 만들자
 
@@ -40,8 +45,6 @@ HRESULT CMainCameraController::Initialize(void* pArg)
 	tDesc.fAspect = g_iWinSizeX / (_float)g_iWinSizeY;
 	tDesc.fNear = 0.1f;
 	tDesc.fFar = 1000.0f;*/
-
-	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
 }
@@ -63,11 +66,7 @@ void CMainCameraController::DebugRender()
 
 void CMainCameraController::Input(const _float& fTimeDelta)
 {
-	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-
-
-	RELEASE_INSTANCE(CGameInstance);
 }
 
 void CMainCameraController::Trace(const _float& fTimeDelta)

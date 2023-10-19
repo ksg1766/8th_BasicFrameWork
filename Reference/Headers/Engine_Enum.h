@@ -17,6 +17,7 @@ namespace Engine
 		UNIT_AIR,
 		UNIT_GROUND,
 		EQUIPMENT,	// DYNAMIC이 맞을까 잘 모르겠다.
+		IGNORECOLLISION,
 		DYNAMIC_LAYER_END,
 
 		// STATIC_LAYER
@@ -50,6 +51,8 @@ namespace Engine
 		"PLAYER",
 		"UNIT_AIR",
 		"UNIT_GROUND",
+		"EQUIPMENT",
+		"IGNORECOLLISION",
 		"DYNAMIC_LAYER_END",
 
 		"TERRAIN",

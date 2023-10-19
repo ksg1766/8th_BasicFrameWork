@@ -184,6 +184,9 @@
     <Filter Include="03.GameObjects\01.Playable\00.P_Strife\Ammo\Defaut">
       <UniqueIdentifier>{d582029f-a2ac-4ffd-bd74-0c64bccc4200}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.GameObjects\00.Static\LavaTerrain">
+      <UniqueIdentifier>{6cdf4d51-3305-435c-a6ad-79f0ba1ae653}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -348,6 +351,9 @@
     <ClInclude Include="..\Public\Strife_Ammo_Default.h">
       <Filter>03.GameObjects\01.Playable\00.P_Strife\Ammo\Defaut</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\LavaTerrain.h">
+      <Filter>03.GameObjects\00.Static\LavaTerrain</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -496,6 +502,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Strife_Ammo.cpp">
       <Filter>03.GameObjects\01.Playable\00.P_Strife\Ammo\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\LavaTerrain.cpp">
+      <Filter>03.GameObjects\00.Static\LavaTerrain</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

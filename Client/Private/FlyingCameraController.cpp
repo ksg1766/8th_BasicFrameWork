@@ -57,8 +57,6 @@ void CFlyingCameraController::DebugRender()
 
 void CFlyingCameraController::Input(const _float& fTimeDelta)
 {
-	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
 	if (KEY_PRESSING(KEY::W) || KEY_DOWN(KEY::W))
 		m_pTransform->Translate(fTimeDelta * m_fLinearSpeed * m_pTransform->GetForward());
 
@@ -77,37 +75,35 @@ void CFlyingCameraController::Input(const _float& fTimeDelta)
 	if (KEY_PRESSING(KEY::E) || KEY_DOWN(KEY::E))
 		m_pTransform->Translate(-fTimeDelta * m_fLinearSpeed * m_pTransform->GetUp());
 
-	const POINT& p = pGameInstance->GetMousePos();
-	if (p.x > 1280 || p.x < 0 || p.y > 720 || p.y < 0)
+	const POINT& p = m_pGameInstance->GetMousePos();
+	if (p.x > 1440 || p.x < 0 || p.y > 810 || p.y < 0)
 		return;
 
 	_long		dwMouseMove = 0;
 
-	if (dwMouseMove = pGameInstance->Get_DIMouseMove(DIMS_X))
+	if (dwMouseMove = m_pGameInstance->Get_DIMouseMove(DIMS_X))
 	{
-		if (pGameInstance->Mouse_Pressing(DIM_LB))
+		if (m_pGameInstance->Mouse_Pressing(DIM_LB))
 			m_pTransform->RotateYAxisFixed(Vec3(0.f, -dwMouseMove * fTimeDelta * 4.f, 0.f));
 	}
 
-	if (dwMouseMove = pGameInstance->Get_DIMouseMove(DIMS_Y))
+	if (dwMouseMove = m_pGameInstance->Get_DIMouseMove(DIMS_Y))
 	{
-		if (pGameInstance->Mouse_Pressing(DIM_LB))
+		if (m_pGameInstance->Mouse_Pressing(DIM_LB))
 			m_pTransform->RotateYAxisFixed(Vec3(-dwMouseMove * fTimeDelta * 4.f, 0.f, 0.f));
 	}
 
-	if (dwMouseMove = pGameInstance->Get_DIMouseMove(DIMS_X))
+	if (dwMouseMove = m_pGameInstance->Get_DIMouseMove(DIMS_X))
 	{
-		if (pGameInstance->Mouse_Pressing(DIM_RB))
+		if (m_pGameInstance->Mouse_Pressing(DIM_RB))
 			m_pTransform->Translate(dwMouseMove * fTimeDelta * -m_pTransform->GetRight() * 2.f);
 	}
 
-	if (dwMouseMove = pGameInstance->Get_DIMouseMove(DIMS_Y))
+	if (dwMouseMove = m_pGameInstance->Get_DIMouseMove(DIMS_Y))
 	{
-		if (pGameInstance->Mouse_Pressing(DIM_RB))
+		if (m_pGameInstance->Mouse_Pressing(DIM_RB))
 			m_pTransform->Translate(dwMouseMove * fTimeDelta * m_pTransform->GetUp() * 2.f);
 	}
-
-	RELEASE_INSTANCE(CGameInstance);
 }
 
 CFlyingCameraController* CFlyingCameraController::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

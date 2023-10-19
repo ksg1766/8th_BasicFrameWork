@@ -19,6 +19,10 @@ public:
 
 	virtual void	DebugRender()						override;
 
+protected:
+	CGameInstance* m_pGameInstance = nullptr;
+
+public:
 	virtual void Free() override;
 };
 

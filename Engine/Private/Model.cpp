@@ -38,6 +38,8 @@ CModel::CModel(const CModel& rhs)
 	, m_iSocketBoneIndex(rhs.m_iSocketBoneIndex)
 	, m_iCurrentAnimIndex(rhs.m_iCurrentAnimIndex)
 	, m_iInstanceID(rhs.m_iInstanceID)
+	, m_pTexture(rhs.m_pTexture)
+	, m_pSRV(rhs.m_pSRV)
 {
 	/* Bones */
 	for (auto& pBone : m_Bones)

@@ -1,16 +1,19 @@
 #include "State.h"
+#include "GameInstance.h"
 #include "GameObject.h"
 #include "Model.h"
 #include "MonoBehaviour.h"
 
 CState::CState()
 {
-
+	m_pGameInstance = GET_INSTANCE(CGameInstance);
 }
 
 CState::CState(const CState& rhs)
 	:Super(rhs)
+	, m_pGameInstance(rhs.m_pGameInstance)
 {
+	Safe_AddRef(m_pGameInstance);
 }
 
 HRESULT CState::Initialize(CGameObject* pGameObject, const STATEANIMS& tStateAnim, CMonoBehaviour* pController)
@@ -44,4 +47,5 @@ HRESULT CState::Enter(_int i)
 void CState::Free()
 {
 	Super::Free();
+	GET_INSTANCE(CGameInstance);
 }

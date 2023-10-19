@@ -102,14 +102,11 @@ HRESULT CStaticBase::Ready_Scripts()
 HRESULT CStaticBase::Bind_ShaderResources()
 {
 	/* 셰이더 전역변수로 던져야 할 값들을 던지자. */
-	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
 	if (FAILED(GetTransform()->Bind_ShaderResources(GetShader(), "g_WorldMatrix")) ||
-		FAILED(pGameInstance->Bind_TransformToShader(GetShader(), "g_ViewMatrix", CPipeLine::D3DTS_VIEW)) ||
-		FAILED(pGameInstance->Bind_TransformToShader(GetShader(), "g_ProjMatrix", CPipeLine::D3DTS_PROJ)) ||
-		FAILED(GetShader()->Bind_RawValue("g_vCamPosition", &static_cast<const _float4&>(pGameInstance->Get_CamPosition_Float4()), sizeof(_float4))))
+		FAILED(m_pGameInstance->Bind_TransformToShader(GetShader(), "g_ViewMatrix", CPipeLine::D3DTS_VIEW)) ||
+		FAILED(m_pGameInstance->Bind_TransformToShader(GetShader(), "g_ProjMatrix", CPipeLine::D3DTS_PROJ)) ||
+		FAILED(GetShader()->Bind_RawValue("g_vCamPosition", &static_cast<const _float4&>(m_pGameInstance->Get_CamPosition_Float4()), sizeof(_float4))))
 	{
-		RELEASE_INSTANCE(CGameInstance);
 		return E_FAIL;
 	}
 
@@ -117,7 +114,7 @@ HRESULT CStaticBase::Bind_ShaderResources()
 	/*if (FAILED(GetShader()->Bind_RawValue("g_fDissolveAmount", &m_fDissolveAmount, sizeof(_float))))
 		return E_FAIL;*/
 
-	//RELEASE_INSTANCE(CGameInstance);
+	//
 	//return S_OK;
 
 	//const LIGHT_DESC* pLightDesc = pGameInstance->Get_LightDesc(0);
@@ -154,7 +151,6 @@ HRESULT CStaticBase::Bind_ShaderResources()
 	if (FAILED(GetShader()->Bind_RawValue("g_vLightSpecular", &vSpecular, sizeof(_float4))))
 		return E_FAIL;
 
-	RELEASE_INSTANCE(CGameInstance);
 	return S_OK;
 }
 

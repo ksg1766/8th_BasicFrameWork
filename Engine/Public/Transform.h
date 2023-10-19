@@ -27,6 +27,8 @@ public:
 	void	RotateYAxisFixed(const Vec3& vEulers)	{ RotateYAxisFixed(const_cast<Vec3&>(vEulers)); }
 	void	Rotate(Vec3& vEulers);
 	void	Rotate(const Vec3& vEulers)				{ Rotate(const_cast<Vec3&>(vEulers)); }
+	void	Rotate(Quaternion& vQuaternion);
+	void	Rotate(const Quaternion& vQuaternion)	{ Rotate(const_cast<Quaternion&>(vQuaternion)); }
 	void	Rotate(const _float& fXangle, const _float& fYangle, const _float& fZangle)
 													{ Rotate(Vec3(fXangle, fYangle, fZangle)); }
 	void	RotateAround(const Vec3& vPoint, const Vec3& vAxis, const _float& fAngle);	// Revolution;

@@ -13,10 +13,10 @@ CObjectManager::CObjectManager()
 
 HRESULT CObjectManager::Reserve_Manager(_uint iNumLevels)
 {
-	if (nullptr != m_pLayers)
+	if (m_vecLayers.size())
 		return E_FAIL;
 
-	m_pLayers = new LAYERS[iNumLevels];
+	m_vecLayers.resize(iNumLevels);
 
 	m_iNumLevels = iNumLevels;
 
@@ -47,7 +47,8 @@ CGameObject* CObjectManager::Add_GameObject(_uint iLevelIndex, const LAYERTAG& e
 	if (nullptr == pGameObject)
 		return nullptr;
 
-	if (m_pLayers[iLevelIndex].size() < (_uint)LAYERTAG::LAYER_END)
+	//if (m_pLayers[iLevelIndex].size() < (_uint)LAYERTAG::LAYER_END)
+	if (m_vecLayers[iLevelIndex].size() < (_uint)LAYERTAG::LAYER_END)
 	{
 		CLayer* pLayer = CLayer::Create();
 
@@ -57,7 +58,8 @@ CGameObject* CObjectManager::Add_GameObject(_uint iLevelIndex, const LAYERTAG& e
 
 			pLayer->SetLayerTag(e);
 
-			m_pLayers[iLevelIndex].emplace(eLayerTag, pLayer);
+			//m_pLayers[iLevelIndex].emplace(eLayerTag, pLayer);
+			m_vecLayers[iLevelIndex].emplace(eLayerTag, pLayer);
 		}
 	}
 
@@ -71,7 +73,8 @@ CGameObject* CObjectManager::Add_GameObject(_uint iLevelIndex, const LAYERTAG& e
 		pLayer->SetLayerTag(eLayerTag);
 
 		/* 생성한 레이어를 iLevelIndex용 레이어로 추가하였다. */
-		m_pLayers[iLevelIndex].emplace(eLayerTag, pLayer);
+		//m_pLayers[iLevelIndex].emplace(eLayerTag, pLayer);
+		m_vecLayers[iLevelIndex].emplace(eLayerTag, pLayer);
 		
 		/* 레이어에 객체를 추가하자. */
 		pLayer->Add_GameObject(pGameObject, eLayerTag);
@@ -89,7 +92,8 @@ void CObjectManager::Tick(const _float& fTimeDelta)
 	{
 		if (i == 2)		// GAMEPLAY
 		{
-			for (auto& Pair : m_pLayers[i])
+			//for (auto& Pair : m_pLayers[i])
+			for (auto& Pair : m_vecLayers[i])
 			{
 				if ((_uint)Pair.first == (_uint)LAYERTAG::DEFAULT_LAYER_END)
 					continue;
@@ -107,9 +111,10 @@ void CObjectManager::Tick(const _float& fTimeDelta)
 					Pair.second->Tick(fTimeDelta);
 			}
 		}
-		else if (i != 2)		// GAMEPLAY
+		else if (i != 2)		// !GAMEPLAY
 		{
-			for (auto& Pair : m_pLayers[i])
+			//for (auto& Pair : m_pLayers[i])
+			for (auto& Pair : m_vecLayers[i])
 			{
 				if ((_uint)Pair.first == (_uint)LAYERTAG::DEFAULT_LAYER_END
 					|| (_uint)Pair.first == (_uint)LAYERTAG::DYNAMIC_LAYER_END)
@@ -137,7 +142,8 @@ void CObjectManager::LateTick(const _float& fTimeDelta)
 	{
 		if (i == 2)		// GAMEPLAY
 		{
-			for (auto& Pair : m_pLayers[i])
+			//for (auto& Pair : m_pLayers[i])
+			for (auto& Pair : m_vecLayers[i])
 			{
 				if ((_uint)Pair.first == (_uint)LAYERTAG::DEFAULT_LAYER_END)
 					continue;
@@ -151,7 +157,8 @@ void CObjectManager::LateTick(const _float& fTimeDelta)
 		}
 		else if (i != 2)	// GAMEPLAY
 		{
-			for (auto& Pair : m_pLayers[i])
+			//for (auto& Pair : m_pLayers[i])
+			for (auto& Pair : m_vecLayers[i])
 			{
 				if ((_uint)Pair.first == (_uint)LAYERTAG::DEFAULT_LAYER_END
 					|| (_uint)Pair.first == (_uint)LAYERTAG::DYNAMIC_LAYER_END)
@@ -173,7 +180,8 @@ void CObjectManager::DebugRender()
 	{
 		if (i == 2)		// GAMEPLAY
 		{
-			for (auto& Pair : m_pLayers[i])
+			//for (auto& Pair : m_pLayers[i])
+			for (auto& Pair : m_vecLayers[i])
 			{
 				if ((_uint)Pair.first == (_uint)LAYERTAG::DEFAULT_LAYER_END)
 					continue;
@@ -187,7 +195,8 @@ void CObjectManager::DebugRender()
 		}
 		else if (i != 2)	// !GAMEPLAY
 		{
-			for (auto& Pair : m_pLayers[i])
+			//for (auto& Pair : m_pLayers[i])
+			for (auto& Pair : m_vecLayers[i])
 			{
 				if ((_uint)Pair.first == (_uint)LAYERTAG::DEFAULT_LAYER_END
 					|| (_uint)Pair.first == (_uint)LAYERTAG::DYNAMIC_LAYER_END)
@@ -205,11 +214,13 @@ void CObjectManager::DebugRender()
 
 void CObjectManager::Clear(_uint iLevelIndex)
 {
-	for (auto& Pair : m_pLayers[iLevelIndex])
+	//for (auto& Pair : m_pLayers[iLevelIndex])
+	for (auto& Pair : m_vecLayers[iLevelIndex])
 	{
 		Safe_Release(Pair.second);
 	}
-	m_pLayers[iLevelIndex].clear();
+	//m_pLayers[iLevelIndex].clear();
+	m_vecLayers[iLevelIndex].clear();
 }
 
 CGameObject * CObjectManager::Find_Prototype(const wstring & strPrototypeTag)
@@ -222,14 +233,16 @@ CGameObject * CObjectManager::Find_Prototype(const wstring & strPrototypeTag)
 	return iter->second;
 }
 
-CLayer * CObjectManager::Find_Layer(_uint iLevelIndex, const LAYERTAG& eLayerTag)
+CLayer* CObjectManager::Find_Layer(_uint iLevelIndex, const LAYERTAG& eLayerTag)
 {
 	if (iLevelIndex >= m_iNumLevels)
 		return nullptr;
 
-	auto	iter = m_pLayers[iLevelIndex].find(eLayerTag);
+	//auto	iter = m_pLayers[iLevelIndex].find(eLayerTag);
+	auto	iter = m_vecLayers[iLevelIndex].find(eLayerTag);
 
-	if (iter == m_pLayers[iLevelIndex].end())
+	//if (iter == m_pLayers[iLevelIndex].end())
+	if (iter == m_vecLayers[iLevelIndex].end())
 		return nullptr;
 
 	return iter->second;
@@ -241,13 +254,17 @@ void CObjectManager::Free()
 
 	for (size_t i = 0; i < m_iNumLevels; i++)
 	{
-		for (auto& Pair : m_pLayers[i])
+		//for (auto& Pair : m_pLayers[i])
+		for (auto& Pair : m_vecLayers[i])
 		{
 			Safe_Release(Pair.second);
 		}
-		m_pLayers[i].clear();
+		//m_pLayers[i].clear();
+		m_vecLayers[i].clear();
 	}
-	Safe_Delete_Array(m_pLayers);
+
+	//Safe_Delete_Array(m_pLayers);
+	m_vecLayers.clear();
 
 	for (auto& Pair : m_Prototypes)
 		Safe_Release(Pair.second);

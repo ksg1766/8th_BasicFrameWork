@@ -28,6 +28,12 @@ HRESULT CStrife_Ammo_Default::Initialize(void* pArg)
 	if (FAILED(Ready_Scripts()))
 		return E_FAIL;
 
+	static_cast<CRigidDynamic*>(GetRigidBody())->UseGravity(false);
+	static_cast<CRigidDynamic*>(GetRigidBody())->IsKinematic(true);
+
+	GetRigidBody()->GetSphereCollider()->SetRadius(1.f);
+	GetRigidBody()->GetOBBCollider()->SetExtents(Vec3(1.f, 1.f, 0.8f));
+
 	return S_OK;
 }
 
@@ -68,7 +74,7 @@ HRESULT CStrife_Ammo_Default::Ready_FixedComponents()
 		return E_FAIL;
 
 	/* Com_Texture */
-	if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::Texture, TEXT("Prototype_Component_Texture_Strife_Ammo_Default"))))
+	if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::Texture, TEXT("Prototype_Component_Texture_Strife_Muzzle_Default"))))
 		return E_FAIL;
 
 	return S_OK;
@@ -84,7 +90,7 @@ HRESULT CStrife_Ammo_Default::Bind_ShaderResources()
 	if (FAILED(Super::Bind_ShaderResources()))
 		return E_FAIL;
 
-	Color color(210.f, 140.f, 60.f, 1.f);
+	Color color(0.85f, 0.57f, 0.24f, 1.f);
 	if (FAILED(GetShader()->Bind_RawValue("g_Color", &color, sizeof(Color))))
 		return E_FAIL;
 
@@ -94,15 +100,22 @@ HRESULT CStrife_Ammo_Default::Bind_ShaderResources()
 	return S_OK;
 }
 
-void CStrife_Ammo_Default::OnCollisionEnter(const CGameObject* pOther)
+void CStrife_Ammo_Default::OnCollisionEnter(CGameObject* pOther)
+{
+	const LAYERTAG& eLayerTag = pOther->GetLayerTag();
+	if (LAYERTAG::UNIT_GROUND == eLayerTag)
+	{
+		m_pGameInstance->DeleteObject(pOther);
+	}
+
+	m_pGameInstance->DeleteObject(this);
+}
+
+void CStrife_Ammo_Default::OnCollisionStay(CGameObject* pOther)
 {
 }
 
-void CStrife_Ammo_Default::OnCollisionStay(const CGameObject* pOther)
-{
-}
-
-void CStrife_Ammo_Default::OnCollisionExit(const CGameObject* pOther)
+void CStrife_Ammo_Default::OnCollisionExit(CGameObject* pOther)
 {
 }
 

@@ -110,19 +110,41 @@
 			return dwRefCnt;									\
 		}
 
+/* Color */
+#define D3DCOLOR_ARGB(a,b,g,r) \
+    ((D3DCOLOR)((((a)&0xff)<<24)|(((r)&0xff)<<16)|(((g)&0xff)<<8)|((b)&0xff)))
+
+#define D3DCOLOR_RGBA(r,g,b,a) \
+    ((D3DCOLOR)((((r)&0xff)<<24)|(((g)&0xff)<<16)|(((b)&0xff)<<8)|((a)&0xff)))
+
+
 // For.KeyManager
-#define KEY_CHECK(key, state) CGameInstance::GetInstance()->GetKeyState(key) == state
+#define KEY_CHECK(key, state) m_pGameInstance->GetKeyState(key) == state
 #define KEY_PRESSING(key) KEY_CHECK(key, KEYSTATE::HOLD)
 #define KEY_DOWN(key) KEY_CHECK(key, KEYSTATE::TAP)
 #define KEY_UP(key) KEY_CHECK(key, KEYSTATE::AWAY)
 #define KEY_NONE(key) KEY_CHECK(key, KEYSTATE::NONE)
 
-#define MOUSE_DOWN(key) CGameInstance::GetInstance()->Mouse_Down(key)
-#define MOUSE_PRESSING(key) CGameInstance::GetInstance()->Mouse_Pressing(key)
-#define MOUSE_UP(key) CGameInstance::GetInstance()->Mouse_Up(key)
+#define KEY_CHECK_EX(key, state) CGameInstance::GetInstance()->GetKeyState(key) == state
+#define KEY_PRESSING_EX(key) KEY_CHECK_EX(key, KEYSTATE::HOLD)
+#define KEY_DOWN_EX(key) KEY_CHECK_EX(key, KEYSTATE::TAP)
+#define KEY_UP_EX(key) KEY_CHECK_EX(key, KEYSTATE::AWAY)
+#define KEY_NONE_EX(key) KEY_CHECK_EX(key, KEYSTATE::NONE)
+
+#define MOUSE_DOWN(key) m_pGameInstance->Mouse_Down(key)
+#define MOUSE_PRESSING(key) m_pGameInstance->Mouse_Pressing(key)
+#define MOUSE_UP(key) m_pGameInstance->Mouse_Up(key)
 #define MOUSE_NONE(key)	if(!MOUSE_DOWN(key) && !MOUSE_PRESSING(key) && !MOUSE_UP(key))	\
 							{ return true; }											\
 						else															\
 							{ return false; }
+
+#define MOUSE_DOWN_EX(key) CGameInstance::GetInstance()->Mouse_Down(key)
+#define MOUSE_PRESSING_EX(key) CGameInstance::GetInstance()->Mouse_Pressing(key)
+#define MOUSE_UP_EX(key) CGameInstance::GetInstance()->Mouse_Up(key)
+#define MOUSE_NONE_EX(key)	if(!MOUSE_DOWN_EX(key) && !MOUSE_PRESSING_EX(key) && !MOUSE_UP_EX(key))	\
+								{ return true; }													\
+							else																	\
+								{ return false; }
 
 #endif // Engine_Macro_h__

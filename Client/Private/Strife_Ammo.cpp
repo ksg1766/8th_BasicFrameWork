@@ -91,13 +91,10 @@ HRESULT CStrife_Ammo::Ready_Scripts()
 HRESULT CStrife_Ammo::Bind_ShaderResources()
 {
 	/* 셰이더 전역변수로 던져야 할 값들을 던지자. */
-	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
 	if (FAILED(GetTransform()->Bind_ShaderResources(GetShader(), "g_WorldMatrix")) || 
-		FAILED(pGameInstance->Bind_TransformToShader(GetShader(), "g_ViewMatrix", CPipeLine::D3DTS_VIEW)) ||
-		FAILED(pGameInstance->Bind_TransformToShader(GetShader(), "g_ProjMatrix", CPipeLine::D3DTS_PROJ)))
+		FAILED(m_pGameInstance->Bind_TransformToShader(GetShader(), "g_ViewMatrix", CPipeLine::D3DTS_VIEW)) ||
+		FAILED(m_pGameInstance->Bind_TransformToShader(GetShader(), "g_ProjMatrix", CPipeLine::D3DTS_PROJ)))
 	{
-		RELEASE_INSTANCE(CGameInstance);
 		return E_FAIL;
 	}
 
@@ -117,19 +114,18 @@ HRESULT CStrife_Ammo::Bind_ShaderResources()
 	if (FAILED(GetShader()->Bind_RawValue("g_vLightSpecular", &vSpecular, sizeof(_float4))))
 		return E_FAIL;*/
 
-	RELEASE_INSTANCE(CGameInstance);
 	return S_OK;
 }
 
-void CStrife_Ammo::OnCollisionEnter(const CGameObject* pOther)
+void CStrife_Ammo::OnCollisionEnter(CGameObject* pOther)
 {
 }
 
-void CStrife_Ammo::OnCollisionStay(const CGameObject* pOther)
+void CStrife_Ammo::OnCollisionStay(CGameObject* pOther)
 {
 }
 
-void CStrife_Ammo::OnCollisionExit(const CGameObject* pOther)
+void CStrife_Ammo::OnCollisionExit(CGameObject* pOther)
 {
 }
 
@@ -139,9 +135,7 @@ void CStrife_Ammo::Move(const _float& fTimeDelta)
 
 	if (m_tProps.fLifeTime < 0.f)
 	{
-		CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-		pGameInstance->DeleteObject(this);
-		RELEASE_INSTANCE(CGameInstance);
+		m_pGameInstance->DeleteObject(this);
 		return;
 	}
 

@@ -20,6 +20,8 @@ HRESULT CP_Strife_State_Aim::Enter(_int i)
 	m_iCurrAnimation = i;
 	Super::Enter(m_vecAnimIndexTime[i].first);
 
+	m_fFR_Default_Timer = 0.1f;
+
 	return S_OK;
 }
 
@@ -41,27 +43,27 @@ const wstring& CP_Strife_State_Aim::Transition()
 {
 	CPlayerController* pController = static_cast<CPlayerController*>(m_pController);
 	
-	if (pController->Dash())
+	if (pController->IsDash())
 		return m_vecTransition[Trans::DASH];
 
-	if (pController->Jump())
+	if (pController->IsJump())
 		return m_vecTransition[Trans::JUMP];
 
-	if (!pController->Aim())
+	if (!pController->IsAim())
 	{
 		return m_vecTransition[Trans::IDLE];
 	}
 
 	if (Anims::AIM_IDLE == m_iCurrAnimation)
 	{
-		if (pController->Run())
+		if (pController->IsRun())
 		{
 			Enter(Anims::AIM_WALK);
 		}
 	}
 	else if (Anims::AIM_WALK == m_iCurrAnimation)
 	{
-		if (!pController->Run())
+		if (!pController->IsRun())
 		{
 			Enter(Anims::AIM_IDLE);
 		}
@@ -92,11 +94,18 @@ void CP_Strife_State_Aim::Input(const _float& fTimeDelta)
 	}
 
 	const POINT& p = CGameInstance::GetInstance()->GetMousePos();
-	if (p.x > 1280 || p.x < 0 || p.y > 720 || p.y < 0)
+	if (p.x > 1440 || p.x < 0 || p.y > 810 || p.y < 0)
 		return;
 
 	if (MOUSE_DOWN(MOUSEKEYSTATE::DIM_LB) || MOUSE_PRESSING(MOUSEKEYSTATE::DIM_LB))
-		pController->Fire(fTimeDelta, CStrife_Ammo::AmmoType::DEFAULT);
+	{
+		m_fFR_Default_Timer -= fTimeDelta;
+		if (m_fFR_Default_Timer < 0.f)
+		{
+			pController->Fire(fTimeDelta, CStrife_Ammo::AmmoType::DEFAULT);
+			m_fFR_Default_Timer = m_fFR_Default;
+		}
+	}
 	if (MOUSE_DOWN(MOUSEKEYSTATE::DIM_RB) || MOUSE_PRESSING(MOUSEKEYSTATE::DIM_RB))
 		;//АјАн
 }

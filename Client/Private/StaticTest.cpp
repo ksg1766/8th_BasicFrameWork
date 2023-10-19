@@ -83,13 +83,10 @@ HRESULT CStaticTest::Ready_FixedComponents()
 		return E_FAIL;
 
 	/* Com_Texture */
-	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-	if (FAILED(Super::AddComponent(pGameInstance->GetCurrentLevelIndex(), ComponentType::Texture, TEXT("Prototype_Component_Texture_Sky"))))
+	if (FAILED(Super::AddComponent(m_pGameInstance->GetCurrentLevelIndex(), ComponentType::Texture, TEXT("Prototype_Component_Texture_Sky"))))
 	{
-		RELEASE_INSTANCE(CGameInstance);
 		return E_FAIL;
 	}
-	RELEASE_INSTANCE(CGameInstance);
 
 	/* Com_RigidBody */
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::RigidBody, TEXT("Prototype_Component_RigidStatic")))
@@ -108,19 +105,15 @@ HRESULT CStaticTest::Ready_Scripts()
 
 HRESULT CStaticTest::Bind_ShaderResources()
 {
-	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
 	if (FAILED(GetTransform()->Bind_ShaderResources(GetShader(), "g_WorldMatrix")) ||
-		FAILED(pGameInstance->Bind_TransformToShader(GetShader(), "g_ViewMatrix", CPipeLine::D3DTS_VIEW)) ||
-		FAILED(pGameInstance->Bind_TransformToShader(GetShader(), "g_ProjMatrix", CPipeLine::D3DTS_PROJ)) ||
-		FAILED(GetShader()->Bind_RawValue("g_vCamPosition", &static_cast<const _float4&>(pGameInstance->Get_CamPosition_Float4()), sizeof(_float4))) ||
+		FAILED(m_pGameInstance->Bind_TransformToShader(GetShader(), "g_ViewMatrix", CPipeLine::D3DTS_VIEW)) ||
+		FAILED(m_pGameInstance->Bind_TransformToShader(GetShader(), "g_ProjMatrix", CPipeLine::D3DTS_PROJ)) ||
+		FAILED(GetShader()->Bind_RawValue("g_vCamPosition", &static_cast<const _float4&>(m_pGameInstance->Get_CamPosition_Float4()), sizeof(_float4))) ||
 		FAILED(GetTexture()->Bind_ShaderResource(GetShader(), "g_DiffuseTexture", 2)))
 	{
-		RELEASE_INSTANCE(CGameInstance);
 		return E_FAIL;
 	}
 
-	RELEASE_INSTANCE(CGameInstance);
 	return S_OK;
 }
 

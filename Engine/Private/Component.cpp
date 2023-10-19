@@ -1,5 +1,6 @@
 #include "Transform.h"
 #include "GameObject.h"
+#include "GameInstance.h"
 
 CComponent::CComponent(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, ComponentType type)
 	: m_pDevice(pDevice)
@@ -10,6 +11,8 @@ CComponent::CComponent(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, C
 {
 	Safe_AddRef(m_pDevice);
 	Safe_AddRef(m_pContext);
+
+	m_pGameInstance = GET_INSTANCE(CGameInstance);
 }
 
 CComponent::CComponent(const CComponent & rhs)
@@ -18,9 +21,11 @@ CComponent::CComponent(const CComponent & rhs)
 	, m_isCloned(true)
 	, m_eType(rhs.m_eType)
 	, m_pGameObject(rhs.m_pGameObject)
+	, m_pGameInstance(rhs.m_pGameInstance)
 {
 	Safe_AddRef(m_pDevice);
 	Safe_AddRef(m_pContext);
+	Safe_AddRef(m_pGameInstance);
 }
 
 HRESULT CComponent::Initialize_Prototype()
@@ -48,4 +53,6 @@ void CComponent::Free()
 {
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pContext);
+
+	RELEASE_INSTANCE(CGameInstance);
 }

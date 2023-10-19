@@ -41,9 +41,9 @@ protected:
 	HRESULT			Bind_ShaderResources(); /* 셰이더 전역변수에 값 던진다. */
 
 protected:
-	virtual	void	OnCollisionEnter(const CGameObject* pOther)	override;
-	virtual	void	OnCollisionStay(const CGameObject* pOther)	override;
-	virtual	void	OnCollisionExit(const CGameObject* pOther)	override;
+	virtual	void	OnCollisionEnter(CGameObject* pOther)	override;
+	virtual	void	OnCollisionStay(CGameObject* pOther)	override;
+	virtual	void	OnCollisionExit(CGameObject* pOther)	override;
 
 protected:
 	AMMOPROPS		m_tProps;

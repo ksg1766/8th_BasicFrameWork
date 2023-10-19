@@ -78,7 +78,7 @@ CGameObject* CLayersView::Pick(_int screenX, _int screenY)
 	CGameObject* pPicked = nullptr;
 	_float fMinDistance = FLT_MAX;
 
-	map<LAYERTAG, CLayer*>* mapLayers = m_pGameInstance->GetCurrentLevelLayers();
+	map<LAYERTAG, CLayer*>& mapLayers = m_pGameInstance->GetCurrentLevelLayers();
 	for (_uint iLayer = DEFAULT_LAYER_COUNT + 1; iLayer < (_uint)LAYERTAG::LAYER_END; ++iLayer)
 	{
 		LAYERTAG eLayer = static_cast<LAYERTAG>(iLayer);
@@ -88,9 +88,9 @@ CGameObject* CLayersView::Pick(_int screenX, _int screenY)
 			eLayer == LAYERTAG::TERRAIN)
 			continue;
 
-		map<LAYERTAG, CLayer*>::iterator iter = mapLayers->find(eLayer);
+		map<LAYERTAG, CLayer*>::iterator iter = mapLayers.find(eLayer);
 
-		if (iter == mapLayers->end())
+		if (iter == mapLayers.end())
 			continue;
 
 		vector<CGameObject*>& vecObjects = iter->second->GetGameObjects();
@@ -209,7 +209,7 @@ void CLayersView::TapGroups(_uint iIndex)
 
 	if (ImGui::BeginTabBar(LayerTag_string[iIndex], tab_bar_flags))
 	{
-		map<LAYERTAG, CLayer*>* mapLayers = m_pGameInstance->GetCurrentLevelLayers();
+		map<LAYERTAG, CLayer*>& mapLayers = m_pGameInstance->GetCurrentLevelLayers();
 
 		for (_uint iLayer = iIndex; iLayer < (_uint)LAYERTAG::LAYER_END; ++iLayer)
 		{
@@ -224,8 +224,8 @@ void CLayersView::TapGroups(_uint iIndex)
 
 			if (ImGui::BeginTabItem(LayerTag_string[iLayer]))
 			{
-				map<LAYERTAG, class CLayer*>::iterator iter = mapLayers->find(eLayer);
-				if (iter == mapLayers->end())
+				map<LAYERTAG, class CLayer*>::iterator iter = mapLayers.find(eLayer);
+				if (iter == mapLayers.end())
 				{
 					ImGui::EndTabItem();
 					continue;

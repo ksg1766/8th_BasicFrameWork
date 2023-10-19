@@ -111,21 +111,17 @@ HRESULT CTempCube::Ready_Scripts()
 
 HRESULT CTempCube::Bind_ShaderResources()
 {
-	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
 	//const _float4& vCampPos = pGameInstance->Get_CamPosition_Float4();
 
 	if (FAILED(GetTransform()->Bind_ShaderResources(GetShader(), "g_WorldMatrix")) ||
-		FAILED(pGameInstance->Bind_TransformToShader(GetShader(), "g_ViewMatrix", CPipeLine::D3DTS_VIEW)) ||
-		FAILED(pGameInstance->Bind_TransformToShader(GetShader(), "g_ProjMatrix", CPipeLine::D3DTS_PROJ)) ||
-		FAILED(GetShader()->Bind_RawValue("g_vCamPosition", &static_cast<const _float4&>(pGameInstance->Get_CamPosition_Float4()), sizeof(_float4))) ||
+		FAILED(m_pGameInstance->Bind_TransformToShader(GetShader(), "g_ViewMatrix", CPipeLine::D3DTS_VIEW)) ||
+		FAILED(m_pGameInstance->Bind_TransformToShader(GetShader(), "g_ProjMatrix", CPipeLine::D3DTS_PROJ)) ||
+		FAILED(GetShader()->Bind_RawValue("g_vCamPosition", &static_cast<const _float4&>(m_pGameInstance->Get_CamPosition_Float4()), sizeof(_float4))) ||
 		FAILED(GetTexture()->Bind_ShaderResource(GetShader(), "g_DiffuseTexture", 0)))
 	{
-		RELEASE_INSTANCE(CGameInstance);
 		return E_FAIL;
 	}
 
-	RELEASE_INSTANCE(CGameInstance);
 	return S_OK;
 }
 

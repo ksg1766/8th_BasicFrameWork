@@ -42,7 +42,7 @@ void CTransform::SetScale(Vec3& vScale)
 		v.Normalize();
 
 		for (_int j = 0; j < 3; ++j)
-			m_matWorld.m[i][j] = *(((_float*)&v) + j) * *(((_float*)&vScale) + j);
+			m_matWorld.m[i][j] = *(((_float*)&v) + j) * *(((_float*)&vScale) + i);
 	}
 }
 
@@ -97,6 +97,20 @@ void CTransform::RotateYAxisFixed(Vec3& vEulers)
 	}
 
 	matRotation = Matrix::CreateFromQuaternion(quat);
+
+	for (_uint i = 0; i < 3; ++i)
+	{
+		Vec3 v(m_matWorld.m[i]);
+		v = Vec3::TransformNormal(v, matRotation);
+
+		for (_uint j = 0; j < 3; ++j)
+			m_matWorld.m[i][j] = *((_float*)&v + j);
+	}
+}
+
+void CTransform::Rotate(Quaternion& vQuaternion)
+{
+	Matrix matRotation = Matrix::CreateFromQuaternion(vQuaternion);
 
 	for (_uint i = 0; i < 3; ++i)
 	{

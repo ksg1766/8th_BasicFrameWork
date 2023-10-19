@@ -46,6 +46,9 @@ private:
 	Vec3			m_vMaxAngularSpeed;
 	Vec3			m_vAngularSpeed;
 
+	_float			m_fFR_Default = 0.2f;
+	_float			m_fFR_Default_Timer = 0.f;
+
 public:
 	static	CP_Strife_State_Aim* Create(CGameObject* pGameObject, const STATEANIMS& tStateAnim, CMonoBehaviour* pController);
 	virtual void Free() override;

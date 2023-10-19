@@ -57,7 +57,7 @@ void CSaveLoadView::Input()
 
 HRESULT CSaveLoadView::Save()
 {
-	map<LAYERTAG, CLayer*>& mapLayers = *m_pGameInstance->GetCurrentLevelLayers();
+	map<LAYERTAG, CLayer*>& mapLayers = m_pGameInstance->GetCurrentLevelLayers();
 
 	FileUtils FileUtils;
 	FileUtils.Open(TEXT("../Bin/LevelData/") + m_strFilePath, Write);
@@ -140,7 +140,7 @@ HRESULT CSaveLoadView::Load()
 
 HRESULT CSaveLoadView::Clear()
 {
-	map<LAYERTAG, CLayer*>& mapLayers = *m_pGameInstance->GetCurrentLevelLayers();
+	map<LAYERTAG, CLayer*>& mapLayers = m_pGameInstance->GetCurrentLevelLayers();
 
 	for (_uint iLayer = 0; iLayer < static_cast<_uint>(LAYERTAG::LAYER_END); ++iLayer)
 	{

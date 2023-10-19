@@ -19,8 +19,7 @@ CCollisionManager::CCollisionManager()
 
 void CCollisionManager::LateTick_Collision(const _float& fTimeDelta)
 {
-	m_pCurrentLevelLayers = CObjectManager::GetInstance()->GetCurrentLevelLayers();
-	if (m_pCurrentLevelLayers->empty())	return;
+	if (CObjectManager::GetInstance()->GetCurrentLevelLayers().empty())	return;
 
 	_uint iOffset = (_uint)LAYERTAG::DEFAULT_LAYER_END;
 
@@ -46,6 +45,7 @@ HRESULT CCollisionManager::Reserve_Manager(_uint iNumLevels)
 	Reset();
 
 	CheckGroup(LAYERTAG::PLAYER, LAYERTAG::UNIT_GROUND);
+	CheckGroup(LAYERTAG::UNIT_GROUND, LAYERTAG::EQUIPMENT);
 	//CheckGroup(LAYERTAG::DEFAULT, LAYERTAG::DEFAULT);
 
 	return S_OK;
@@ -92,11 +92,18 @@ bool CCollisionManager::IsCollided(CCollider* pLeft, CCollider* pRight)
 
 void CCollisionManager::CheckDynamicCollision(LAYERTAG& eLayerLeft, LAYERTAG& eLayerRight , const _float& fTimeDelta)
 {
-	if (!(*m_pCurrentLevelLayers)[eLayerLeft] || !(*m_pCurrentLevelLayers)[eLayerRight])
+	map<LAYERTAG, class CLayer*>& mapLayers = CObjectManager::GetInstance()->GetCurrentLevelLayers();
+
+	auto iterL = mapLayers.find(eLayerLeft);
+	if (mapLayers.end() == iterL)
 		return;
 
-	vector<CGameObject*>& vecLeft = (*m_pCurrentLevelLayers)[eLayerLeft]->GetGameObjects();
-	vector<CGameObject*>& vecRight = (*m_pCurrentLevelLayers)[eLayerRight]->GetGameObjects();
+	auto iterR = mapLayers.find(eLayerRight);
+	if (mapLayers.end() == iterR)
+		return;
+
+	vector<CGameObject*>& vecLeft = iterL->second->GetGameObjects();
+	vector<CGameObject*>& vecRight = iterR->second->GetGameObjects();
 	
 	if (!m_arrSorted[(_uint)eLayerRight])
 	{	// sweep and prune
@@ -223,7 +230,13 @@ void CCollisionManager::CheckDynamicCollision(LAYERTAG& eLayerLeft, LAYERTAG& eL
 
 void CCollisionManager::CheckStaticCollision(LAYERTAG& eDynamicLayer, const _float& fTimeDelta)
 {
-	vector<CGameObject*>& vecLeft = (*m_pCurrentLevelLayers)[eDynamicLayer]->GetGameObjects();
+	const map<LAYERTAG, class CLayer*>& mapLayers = CObjectManager::GetInstance()->GetCurrentLevelLayers();
+
+	const auto& iterL = mapLayers.find(eDynamicLayer);
+	if (mapLayers.end() == iterL)
+		return;
+
+	vector<CGameObject*>& vecLeft = iterL->second->GetGameObjects();
 	
 	CQuadTree* pQuadTreeInstance = CQuadTree::GetInstance();
 	

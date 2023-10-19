@@ -20,14 +20,10 @@ HRESULT CDebugTerrainGrid::Initialize_Prototype()
 
 HRESULT CDebugTerrainGrid::Initialize(void* pArg)
 {
-	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
 	//m_pBufferGrid = static_cast<CVIBuffer_Grid*>(m_pGameObject->GetBuffer());
-	m_pBufferGrid = dynamic_cast<CVIBuffer_Grid*>(pGameInstance->Clone_Component(m_pGameObject, LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Grid"), pArg));
-	m_pShader = dynamic_cast<CShader*>(pGameInstance->Clone_Component(m_pGameObject, LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxDebug"), pArg));
+	m_pBufferGrid = dynamic_cast<CVIBuffer_Grid*>(m_pGameInstance->Clone_Component(m_pGameObject, LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Grid"), pArg));
+	m_pShader = dynamic_cast<CShader*>(m_pGameInstance->Clone_Component(m_pGameObject, LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxDebug"), pArg));
 	m_pShader->SetPassIndex(1);
-
-	RELEASE_INSTANCE(CGameInstance);
 
 	return S_OK;
 }
@@ -52,17 +48,13 @@ void CDebugTerrainGrid::DebugRender()
 
 HRESULT CDebugTerrainGrid::Bind_ShaderResources()
 {
-	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
 	if (FAILED(m_pGameObject->GetTransform()->Bind_ShaderResources(m_pShader, "g_WorldMatrix")) ||
-		FAILED(pGameInstance->Bind_TransformToShader(m_pShader, "g_ViewMatrix", CPipeLine::D3DTS_VIEW)) ||
-		FAILED(pGameInstance->Bind_TransformToShader(m_pShader, "g_ProjMatrix", CPipeLine::D3DTS_PROJ)))
+		FAILED(m_pGameInstance->Bind_TransformToShader(m_pShader, "g_ViewMatrix", CPipeLine::D3DTS_VIEW)) ||
+		FAILED(m_pGameInstance->Bind_TransformToShader(m_pShader, "g_ProjMatrix", CPipeLine::D3DTS_PROJ)))
 	{
-		RELEASE_INSTANCE(CGameInstance);
 		return E_FAIL;
 	}
 
-	RELEASE_INSTANCE(CGameInstance);
 	return S_OK;
 }
 

@@ -54,7 +54,7 @@ const wstring& CP_Strife_State_Jump::Transition()
 			return m_strStateName;
 		}
 
-		if (pController->Jump())
+		if (pController->IsJump())
 		{
 			Enter(Anims::JUMP_DOUBLE);
 			return m_strStateName;

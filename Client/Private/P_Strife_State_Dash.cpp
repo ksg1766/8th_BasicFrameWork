@@ -48,20 +48,20 @@ const wstring& CP_Strife_State_Dash::Transition()
 	{
 		if (m_fTimeSum <= m_vecAnimIndexTime[m_iCurrAnimation].second)
 		{
-			if (pController->Dash())
+			if (pController->IsDash())
 			{
 				Enter(Anims::DASH_END);
 				return m_strStateName;
 			}
 		}
-		if (m_fTimeSum > m_vecAnimIndexTime[m_iCurrAnimation].second * 0.7f)
+		if (m_fTimeSum > m_vecAnimIndexTime[m_iCurrAnimation].second * 0.5f)
 		{
 			return m_vecTransition[Trans::IDLE];
 		}
 	}
 	else if (Anims::DASH_END == m_iCurrAnimation)
 	{
-		if (m_fTimeSum > m_vecAnimIndexTime[m_iCurrAnimation].second * 0.7f)
+		if (m_fTimeSum > m_vecAnimIndexTime[m_iCurrAnimation].second * 0.5f)
 		{
 			return m_vecTransition[Trans::IDLE];
 		}

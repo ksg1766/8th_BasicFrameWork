@@ -1,26 +1,26 @@
 #include "stdafx.h"
-#include "..\Public\BasicTerrain.h"
+#include "..\Public\LavaTerrain.h"
 #include "GameInstance.h"
 #include "DebugTerrainGrid.h"
 
-CBasicTerrain::CBasicTerrain(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CLavaTerrain::CLavaTerrain(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: Super(pDevice, pContext)
 {
 }
 
-CBasicTerrain::CBasicTerrain(const CBasicTerrain& rhs)
+CLavaTerrain::CLavaTerrain(const CLavaTerrain& rhs)
 	: Super(rhs)
 {
 }
 
-HRESULT CBasicTerrain::Initialize_Prototype()
+HRESULT CLavaTerrain::Initialize_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CBasicTerrain::Initialize(void* pArg)
+HRESULT CLavaTerrain::Initialize(void* pArg)
 {
-	SetObjectTag(TEXT("BasicTerrain"));
+	SetObjectTag(TEXT("LavaTerrain"));
 
 	if (FAILED(Ready_FixedComponents(pArg)))
 		return E_FAIL;
@@ -30,23 +30,23 @@ HRESULT CBasicTerrain::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CBasicTerrain::Tick(const _float& fTimeDelta)
+void CLavaTerrain::Tick(const _float& fTimeDelta)
 {
 	Super::Tick(fTimeDelta);
 }
 
-void CBasicTerrain::LateTick(const _float& fTimeDelta)
+void CLavaTerrain::LateTick(const _float& fTimeDelta)
 {
 	Super::Tick(fTimeDelta);
 	GetRenderer()->Add_RenderGroup(CRenderer::RG_NONBLEND, this);
 }
 
-void CBasicTerrain::DebugRender()
+void CLavaTerrain::DebugRender()
 {
 
 }
 
-HRESULT CBasicTerrain::Render()
+HRESULT CLavaTerrain::Render()
 {
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
@@ -63,7 +63,7 @@ HRESULT CBasicTerrain::Render()
 	return S_OK;
 }
 
-HRESULT CBasicTerrain::Ready_FixedComponents(void* pArg)
+HRESULT CLavaTerrain::Ready_FixedComponents(void* pArg)
 {
 	/* Com_Renderer */
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Renderer, TEXT("Prototype_Component_Renderer"))))
@@ -98,7 +98,7 @@ HRESULT CBasicTerrain::Ready_FixedComponents(void* pArg)
 	return S_OK;
 }
 
-HRESULT CBasicTerrain::Ready_Scripts(void* pArg)
+HRESULT CLavaTerrain::Ready_Scripts(void* pArg)
 {
 	/* Com_PlayerController */
 	//if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Script, TEXT("Prototype_Component_DebugTerrainGrid"))))
@@ -107,12 +107,12 @@ HRESULT CBasicTerrain::Ready_Scripts(void* pArg)
 	return S_OK;
 }
 
-HRESULT CBasicTerrain::Bind_ShaderResources()
+HRESULT CLavaTerrain::Bind_ShaderResources()
 {
 	if (FAILED(GetTransform()->Bind_ShaderResources(GetShader(), "g_WorldMatrix")) ||
 		FAILED(m_pGameInstance->Bind_TransformToShader(GetShader(), "g_ViewMatrix", CPipeLine::D3DTS_VIEW)) ||
 		FAILED(m_pGameInstance->Bind_TransformToShader(GetShader(), "g_ProjMatrix", CPipeLine::D3DTS_PROJ))/* ||
-		FAILED(GetShader()->Bind_RawValue("g_vCamPosition", &static_cast<const _float4&>(m_pGameInstance->Get_CamPosition_Float4()), sizeof(_float4))) ||
+		FAILED(GetShader()->Bind_RawValue("g_vCamPosition", &static_cast<const _float4&>(pGameInstance->Get_CamPosition_Float4()), sizeof(_float4))) ||
 		FAILED(GetTexture()->Bind_ShaderResource(GetShader(), "g_DiffuseTexture", 0))*/)
 	{
 		return E_FAIL;
@@ -121,33 +121,33 @@ HRESULT CBasicTerrain::Bind_ShaderResources()
 	return S_OK;
 }
 
-CBasicTerrain* CBasicTerrain::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CLavaTerrain* CLavaTerrain::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CBasicTerrain* pInstance = new CBasicTerrain(pDevice, pContext);
+	CLavaTerrain* pInstance = new CLavaTerrain(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CBasicTerrain");
+		MSG_BOX("Failed to Created : CLavaTerrain");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CBasicTerrain* CBasicTerrain::Clone(void* pArg)
+CLavaTerrain* CLavaTerrain::Clone(void* pArg)
 {
-	CBasicTerrain* pInstance = new CBasicTerrain(*this);
+	CLavaTerrain* pInstance = new CLavaTerrain(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CBasicTerrain");
+		MSG_BOX("Failed to Cloned : CLavaTerrain");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CBasicTerrain::Free()
+void CLavaTerrain::Free()
 {
 	Super::Free();
 }
