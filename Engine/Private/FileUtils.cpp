@@ -79,16 +79,18 @@ void FileUtils::Read(void** data, _uint dataSize)
 #endif
 }
 
-void FileUtils::Read(OUT string& data)
+_bool FileUtils::Read(OUT string& data)
 {
 	_uint size = Read<_uint>();
 
 	if (size == 0)
-		return;
+		return false;
 
 	char* temp = new char[size + 1];
 	temp[size] = 0;
 	Read((void**)&temp, size);
 	data = temp;
 	delete[] temp;
+
+	return true;
 }

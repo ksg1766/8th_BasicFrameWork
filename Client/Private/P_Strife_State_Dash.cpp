@@ -81,9 +81,7 @@ const wstring& CP_Strife_State_Dash::Transition()
 
 void CP_Strife_State_Dash::Input(const _float& fTimeDelta)
 {
-	/*CPlayerController* pController = static_cast<CPlayerController*>(m_pController);
 
-	if (KEY_PRESSING(KEY::SHIFT) || KEY_DOWN(KEY::SHIFT)) pController->GetDashMessage(true);*/
 }
 
 CP_Strife_State_Dash* CP_Strife_State_Dash::Create(CGameObject* pGameObject, const STATEANIMS& tStateAnim, CMonoBehaviour* pController)

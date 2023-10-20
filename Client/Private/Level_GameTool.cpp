@@ -133,6 +133,8 @@ HRESULT CLevel_GameTool::Ready_Layer_Camera()
 	if (nullptr == pGameObject)	return E_FAIL;
 	pGameObject->GetTransform()->Translate(Vec3(0.f, 400.f, 0.f));
 
+	m_pGameInstance->ChangeCamera(TEXT("FlyingCamera"));
+
 	return S_OK;
 }
 

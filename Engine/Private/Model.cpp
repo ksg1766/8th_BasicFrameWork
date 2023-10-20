@@ -549,6 +549,21 @@ HRESULT CModel::Ready_Meshes(const wstring& strModelFilePath, Matrix matPivot)
 				return E_FAIL;
 		}
 		m_Meshes.push_back(pMesh);
+
+		CLevelManager* pInstance = GET_INSTANCE(CLevelManager);
+		if (3/*LEVEL_GAMETOOL*/ != pInstance->GetCurrentLevelIndex() && !bAnim)
+		{
+			for (size_t i = 0; i < StaticVertices.size(); ++i)
+			{
+				m_vecSurfaceVtx.push_back(StaticVertices[i].vPosition);
+			}
+			for (size_t i = 0; i < Indiecs.size() / 3; ++i)
+			{
+				FACEINDICES32 idx = { Indiecs[3 * i], Indiecs[3 * i + 1], Indiecs[3 * i + 2] };
+				m_vecSurfaceIdx.push_back(idx);
+			}
+		}
+		RELEASE_INSTANCE(CLevelManager);
 	}
 
 	m_iNumMeshes = iNumMeshes;

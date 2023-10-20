@@ -32,7 +32,8 @@ public:
 
 	void	GetMoveMessage(const Vec3& vDir)	{ m_vNetTrans += vDir; }
 	void	GetJumpMessage(const _bool& IsJump)	{ IsJump ? Jump() : Land();}
-	void	GetDashMessage(const _bool& IsDash);
+	void	GetDashMessage(const _bool& IsDash) { IsDash ? Dash(m_pTransform->GetForward()) : DashEnd(); }
+	//void	GetFireMessage(const _bool& IsDash) { IsFireOn ?  }
 
 	void	Fire(const _float& fTimeDelta, CStrife_Ammo::AmmoType eAmmoType);
 
@@ -43,6 +44,7 @@ private:
 	void	Land();
 	void	Dash(const Vec3& vDir);
 	void	DashEnd();
+	//void	Fire(const _float& fTimeDelta, CStrife_Ammo::AmmoType eAmmoType);
 
 	void	LimitAllAxisVelocity();
 

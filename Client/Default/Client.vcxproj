@@ -181,6 +181,7 @@
     <ClInclude Include="..\Public\LavaTerrain.h" />
     <ClInclude Include="..\Public\MainCamera.h" />
     <ClInclude Include="..\Public\MainCameraController.h" />
+    <ClInclude Include="..\Public\NavMeshView.h" />
     <ClInclude Include="..\Public\P_Strife.h" />
     <ClInclude Include="..\Public\P_Strife_State_Aim.h" />
     <ClInclude Include="..\Public\P_Strife_State_Dash.h" />
@@ -236,6 +237,7 @@
     <ClCompile Include="..\Private\LavaTerrain.cpp" />
     <ClCompile Include="..\Private\MainCamera.cpp" />
     <ClCompile Include="..\Private\MainCameraController.cpp" />
+    <ClCompile Include="..\Private\NavMeshView.cpp" />
     <ClCompile Include="..\Private\P_Strife.cpp" />
     <ClCompile Include="..\Private\P_Strife_State_Aim.cpp" />
     <ClCompile Include="..\Private\P_Strife_State_Dash.cpp" />

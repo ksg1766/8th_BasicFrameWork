@@ -8,18 +8,20 @@
 #include "Renderer.h"
 #include "Mesh.h"
 #include "Model.h"
+#include "NavMeshAgent.h"
+#include "RigidDynamic.h"
+#include "RigidStatic.h"
+#include "ColliderAABB.h"
+#include "ColliderOBB.h"
+#include "ColliderSphere.h"
+#include "ColliderCylinder.h"
+#include "MonoBehaviour.h"
 
 #include "VIBuffer_Rect.h"
 #include "VIBuffer_Cube.h"
 #include "VIBuffer_Grid.h"
 #include "VIBuffer_Instance.h"
-#include "RigidDynamic.h"
-#include "RigidStatic.h"
-#include "MonoBehaviour.h"
-#include "ColliderAABB.h"
-#include "ColliderOBB.h"
-#include "ColliderSphere.h"
-#include "ColliderCylinder.h"
+
 
 
 /* 컴포넌트들의 원형을 보관한다. */
@@ -38,7 +40,7 @@ private:
 public:
 	HRESULT Reserve_Manager(_uint iNumLevels);
 	HRESULT Add_Prototype(_uint iLevelIndex, const wstring& strPrototypeTag, class CComponent* pPrototype);
-	class CComponent* Clone_Component(CGameObject* pGameObject, _uint iLevelIndex, const wstring& strPrototypeTag, void* pArg);
+	class CComponent* Clone_Component(CGameObject* pGameObject, _uint iLevelIndex, const wstring& strPrototypeTag, void* pArg = nullptr);
 
 private:
 	_uint											m_iNumLevels = { 0 };

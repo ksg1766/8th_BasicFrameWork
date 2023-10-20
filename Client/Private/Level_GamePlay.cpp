@@ -141,7 +141,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_UnitGround()
 	CGameObject* pGameObject = nullptr;
 	LAYERTAG	eLayerTag = LAYERTAG::UNIT_GROUND;
 
-	for (_uint i = 0; i < 1; ++i)
+	/*for (_uint i = 0; i < 1; ++i)
 	{
 		pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_CollisionTest"));
 		if (nullptr == pGameObject)	return E_FAIL;
@@ -182,9 +182,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_UnitGround()
 		pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_CollisionTest"));
 		if (nullptr == pGameObject)	return E_FAIL;
 		pGameObject->GetTransform()->Translate(Vec3(230.f - (_float)i, 100.f, -180.f - (_float)i));
-	}
+	}*/
 
-	for (_int i = 0; i < 10; ++i)
+	/*for (_int i = 0; i < 10; ++i)
 	{
 		pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_HellHound"));
 		if (nullptr == pGameObject)	return E_FAIL;
@@ -193,7 +193,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_UnitGround()
 		_int iRandomAnimIndex = abs(rand()) * i;
 		pGameObject->GetModel()->SetNextAnimationIndex(iRandomAnimIndex);
 		pGameObject->GetTransform()->Translate(Vec3(iRandomPosX, 0.f, iRandomPosZ));
-	}
+	}*/
 
 	return S_OK;
 }
@@ -225,7 +225,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Wall()
 	CGameObject* pGameObject = nullptr;
 	LAYERTAG	eLayerTag = LAYERTAG::WALL;
 
-	pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_StaticTest"));
+	/*pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_StaticTest"));
 	if (nullptr == pGameObject)	return E_FAIL;
 	pGameObject->GetTransform()->Translate(Vec3(200.f, 300.f, 100.f));
 
@@ -247,7 +247,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Wall()
 
 	pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_StaticTest"));
 	if (nullptr == pGameObject)	return E_FAIL;
-	pGameObject->GetTransform()->Translate(Vec3(-300.f, 300.f, 0.f));
+	pGameObject->GetTransform()->Translate(Vec3(-300.f, 300.f, 0.f));*/
 	//pGameObject->GetTransform()->Translate(Vec3(10.f, 0.f, 100.f));
 
 	return S_OK;

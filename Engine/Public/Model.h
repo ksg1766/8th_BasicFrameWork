@@ -39,7 +39,7 @@ private:
 	virtual ~CModel() = default;
 
 public:
-	virtual HRESULT Initialize_Prototype(const wstring& strModelFilePath, const SOCKETDESC& desc, _fmatrix& matPivot);
+	HRESULT			Initialize_Prototype(const wstring& strModelFilePath, const SOCKETDESC& desc, _fmatrix& matPivot);
 	virtual HRESULT Initialize(void* pArg)			override;
 	virtual void	Tick(const _float& fTimeDelta)	override;
 	void			DebugRender()					override;
@@ -74,24 +74,27 @@ private:
 	_uint						m_iMaxFrameCount = 0;
 
 private:
+	// Animation
 	TWEENDESC					m_TweenDesc;
-
 	ID3D11Texture2D*			m_pTexture = nullptr;
 	ID3D11ShaderResourceView*	m_pSRV = nullptr;
 
-	//
+	// Socket
 	vector<CModel*>				m_PartsModel;
 	vector<_int>				m_vecSocketBones;
-
 	_bool						m_HasParent = false;
 	_int						m_iSocketBoneIndex = 0;
-	//
 	
 	class CShader*				m_pShader;
 
+	// Instance
 	static map<_int, _bool>		m_mapVTFExist;	// TODO:다른곳에 텍스쳐를 가지고 있는지 기록할 수 있도록 하자.
 	static _int					m_iNextInstanceID;
 	_int						m_iInstanceID;
+
+	// Tool : NavMeshView
+	vector<Vec3>				m_vecSurfaceVtx;
+	vector<FACEINDICES32>		m_vecSurfaceIdx;
 
 public:
 	_uint			GetNumMeshes() const					{ return (_uint)m_Meshes.size(); }
@@ -106,6 +109,10 @@ public:
 	// Instancing
 	TweenDesc&		GetTweenDesc()							{ return m_TweenDesc; }
 	const InstanceID& GetInstanceID() const					{ return make_pair((_int)m_eModelType, m_iInstanceID); }
+
+	// Tool : NavMeshView
+	vector<Vec3>&	GetSurfaceVtx()							{ return m_vecSurfaceVtx; }
+	vector<FACEINDICES32>&	GetSurfaceIdx()					{ return m_vecSurfaceIdx; }
 
 public:
 	void			SetAnimation(_int iAnimIndex)			{ m_iCurrentAnimIndex = iAnimIndex; }

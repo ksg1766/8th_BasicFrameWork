@@ -22,6 +22,7 @@ enum class ComponentType
 	Animator,
 	Light,
 	Terrain,
+	NavMeshAgent,
 	// ...
 	Script,
 

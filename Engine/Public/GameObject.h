@@ -55,7 +55,7 @@ public:
 	const wstring&			GetObjectTag()	const			{ return m_strObjectTag; }
 	
 	void					SetLayerTag(LAYERTAG eLayerTag) { m_eLayerTag = eLayerTag; }
-	void					SetObjectTag(const wstring& strObjectTag) { m_strObjectTag = strObjectTag; }
+	void					SetObjectTag(const wstring strObjectTag) { m_strObjectTag = strObjectTag; }
 	void					SetDeadState(_bool bDead)		{ m_IsDead = bDead; }
 
 	HRESULT					AddComponent(_uint iLevelIndex, const ComponentType& type, const wstring& strPrototypeTag, void* pArg = nullptr);

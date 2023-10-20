@@ -177,6 +177,7 @@ call Copy.bat</Command>
     <ClInclude Include="..\Public\Bone.h" />
     <ClInclude Include="..\Public\Camera.h" />
     <ClInclude Include="..\Public\CameraManager.h" />
+    <ClInclude Include="..\Public\Cell.h" />
     <ClInclude Include="..\Public\Channel.h" />
     <ClInclude Include="..\Public\ColliderAABB.h" />
     <ClInclude Include="..\Public\ColliderBase.h" />
@@ -196,6 +197,7 @@ call Copy.bat</Command>
     <ClInclude Include="..\Public\Mesh.h" />
     <ClInclude Include="..\Public\Model.h" />
     <ClInclude Include="..\Public\MurmurHash3.h" />
+    <ClInclude Include="..\Public\NavMeshAgent.h" />
     <ClInclude Include="..\Public\PhysicsManager.h" />
     <ClInclude Include="..\Public\PipeLine.h" />
     <ClInclude Include="..\Public\PoolManager.h" />
@@ -232,6 +234,7 @@ call Copy.bat</Command>
     <ClInclude Include="..\Public\TransformEx.h" />
     <ClInclude Include="..\Public\Utils.h" />
     <ClInclude Include="..\public\VIBuffer.h" />
+    <ClInclude Include="..\Public\VIBuffer_Cell.h" />
     <ClInclude Include="..\Public\VIBuffer_Cube.h" />
     <ClInclude Include="..\Public\VIBuffer_Grid.h" />
     <ClInclude Include="..\Public\VIBuffer_Instance.h" />
@@ -243,6 +246,7 @@ call Copy.bat</Command>
     <ClCompile Include="..\Private\Bone.cpp" />
     <ClCompile Include="..\Private\Camera.cpp" />
     <ClCompile Include="..\Private\CameraManager.cpp" />
+    <ClCompile Include="..\Private\Cell.cpp" />
     <ClCompile Include="..\Private\Channel.cpp" />
     <ClCompile Include="..\Private\ColliderAABB.cpp" />
     <ClCompile Include="..\Private\ColliderBase.cpp" />
@@ -260,6 +264,7 @@ call Copy.bat</Command>
     <ClCompile Include="..\Private\Mesh.cpp" />
     <ClCompile Include="..\Private\Model.cpp" />
     <ClCompile Include="..\Private\MurmurHash3.cpp" />
+    <ClCompile Include="..\Private\NavMeshAgent.cpp" />
     <ClCompile Include="..\Private\PhysicsManager.cpp" />
     <ClCompile Include="..\Private\PipeLine.cpp" />
     <ClCompile Include="..\Private\PoolManager.cpp" />
@@ -292,6 +297,7 @@ call Copy.bat</Command>
     <ClCompile Include="..\Private\TransformEx.cpp" />
     <ClCompile Include="..\Private\Utils.cpp" />
     <ClCompile Include="..\private\VIBuffer.cpp" />
+    <ClCompile Include="..\Private\VIBuffer_Cell.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Cube.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Grid.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Instance.cpp" />

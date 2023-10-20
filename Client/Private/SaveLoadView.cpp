@@ -85,6 +85,7 @@ HRESULT CSaveLoadView::Save()
 			const Matrix& matWorld = iterObj->GetTransform()->WorldMatrix();
 			const wstring& strObjectTag = iterObj->GetObjectTag();
 
+			string strLayer = LayerTag_string[static_cast<_int>(eLayer)];
 			FileUtils.Write(eLayer);
 			FileUtils.Write(matWorld);
 			FileUtils.Write(Utils::ToString(strObjectTag));
@@ -99,17 +100,25 @@ HRESULT CSaveLoadView::Load()
 	FileUtils FileUtils;
 	FileUtils.Open(TEXT("../Bin/LevelData/") + m_strFilePath, Read);
 
-    OBJECTTAG eTag = OBJECTTAG::OBJECT_END;
-
-    DWORD	dwByte = 0;
-
     while (true)
     {
         // key °ª ÀúÀå
 		LAYERTAG eLayer = LAYERTAG::LAYER_END;
+		string strLayerTag = "";
 
-        if (false == FileUtils.Read(eLayer))
+        if (false == FileUtils.Read(strLayerTag))
             break;
+
+		const _int LayerTag_End = sizeof(LayerTag_string) / sizeof(_char*);
+		for (_int i = 0; i < LayerTag_End; ++i)
+		{
+			if (0 == strcmp(LayerTag_string[i], strLayerTag.c_str()))
+			{
+				eLayer = static_cast<LAYERTAG>(i);
+			}
+			else
+				__debugbreak();
+		}
 
 		Matrix matWorld = FileUtils.Read<Matrix>();
 		string tempObjectTag;
@@ -130,7 +139,8 @@ HRESULT CSaveLoadView::Load()
 			const wstring strPrototypeTag = TEXT("Prototype_GameObject_") + Utils::ToWString(tempObjectTag);
 
 			CGameObject* pGameObject = m_pGameInstance->CreateObject(strPrototypeTag, eLayer);
-
+			if (nullptr == pGameObject)
+				__debugbreak();
 			pGameObject->GetTransform()->Set_WorldMatrix(matWorld);
 		}
     }

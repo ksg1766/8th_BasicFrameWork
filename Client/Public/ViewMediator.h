@@ -35,12 +35,12 @@ public:
 	void	SetAnimationView(CAnimationView* pAnimationView);
 
 protected:
-	CGameInstance*			m_pGameInstance = nullptr;
+	CGameInstance*	m_pGameInstance = nullptr;
 
-	_bool					m_IsPickingActivated = false;
+	_bool			m_IsPickingActivated = false;
 
-	CPrefabsView*		m_pPrefabsView = nullptr;
-	CLayersView*		m_pLayersView = nullptr;
+	CPrefabsView*	m_pPrefabsView = nullptr;
+	CLayersView*	m_pLayersView = nullptr;
 	CTransformView*	m_pTransformView = nullptr;
 	CSaveLoadView*	m_pSaveLoadView = nullptr;
 	CAnimationView*	m_pAnimationView = nullptr;

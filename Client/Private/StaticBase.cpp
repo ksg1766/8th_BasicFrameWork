@@ -94,8 +94,18 @@ HRESULT CStaticBase::Ready_FixedComponents()
 	return S_OK;
 }
 
-HRESULT CStaticBase::Ready_Scripts()
+HRESULT CStaticBase::Ready_Scripts(void* pArg)
 {
+	if (nullptr != pArg)
+	{
+		if (LAYERTAG::GROUND == *(LAYERTAG*)pArg)
+		{
+			/* Com_NavMeshSurface */
+			if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Script, TEXT("Prototype_Component_NavMeshSurface"))))
+				return E_FAIL;
+		}
+	}
+
 	return S_OK;
 }
 
