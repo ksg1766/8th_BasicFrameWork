@@ -9,6 +9,8 @@ CRigidDynamic::CRigidDynamic(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
 	, m_UseGravity(true)
 	, m_IsKinematic(false)
 	, m_fMass(1.f)
+	, m_fMaterialDrag(0.02f)
+	, m_fMaterialAngularDrag(0.05f)
 	, m_fDrag(0.01f)
 	, m_fAngularDrag(0.01f)
 	, m_byConstraints(0)
@@ -26,6 +28,8 @@ CRigidDynamic::CRigidDynamic(const CRigidDynamic& rhs)
 	, m_UseGravity(rhs.m_UseGravity)
 	, m_IsKinematic(rhs.m_IsKinematic)
 	, m_fMass(rhs.m_fMass)
+	, m_fMaterialDrag(rhs.m_fMaterialDrag)
+	, m_fMaterialAngularDrag(rhs.m_fMaterialAngularDrag)
 	, m_fDrag(rhs.m_fDrag)
 	, m_fAngularDrag(rhs.m_fAngularDrag)
 	, m_byConstraints(rhs.m_byConstraints)
@@ -49,6 +53,8 @@ HRESULT CRigidDynamic::Initialize(void* pArg)
 
 void CRigidDynamic::Tick(const _float& fTimeDelta)	// FixedUpdate 처럼 동작하기 위해 RigidBody의 업데이트를 가장 우선 호출해야 함.
 {
+	//m_vPrePosition = GetTransform()->GetPosition();
+
 	// ColliderUpdate
 	m_pSphereCollider->Tick(fTimeDelta);
 	m_pOBBCollider->Tick(fTimeDelta);
@@ -56,7 +62,7 @@ void CRigidDynamic::Tick(const _float& fTimeDelta)	// FixedUpdate 처럼 동작하기 
 	if (m_IsSleeping)
 		return;
 
-	if (m_fSleepThreshold > m_vLinearVelocity.Length() && m_fSleepThreshold > 180.f * XM_1DIVPI * m_vAngularVelocity.Length())
+	if (!m_UseGravity && m_fSleepThreshold > m_vLinearVelocity.Length() && m_fSleepThreshold > 180.f * XM_1DIVPI * m_vAngularVelocity.Length())
 	{
 		Sleep();
 		return;
@@ -80,13 +86,13 @@ void CRigidDynamic::DebugRender()
 void CRigidDynamic::KineticUpdate(const _float& fTimeDelta)
 {
 	if (m_UseGravity)
-		m_vLinearVelocity.y += -9.81f * fTimeDelta;
+		m_vLinearVelocity.y += -9.81f * fTimeDelta /**/ * 2.f;
 
 	m_vAngularVelocity += m_vAngularAcceleration * fTimeDelta;
 	m_vLinearVelocity += m_vLinearAcceleration * fTimeDelta;
 
-	_float& fAngularResistance = m_fAngularDrag;
-	_float& fLinearResistance = m_fDrag;
+	const _float fAngularResistance = m_fAngularDrag + m_fMaterialAngularDrag;
+	const _float fLinearResistance = m_fDrag + m_fMaterialDrag;
 
 	(fAngularResistance < 1.f) ? (m_vAngularVelocity = m_vAngularVelocity * (1.f - fAngularResistance)) : (m_vAngularVelocity = Vec3::Zero);
 	(fLinearResistance < 1.f) ? (m_vLinearVelocity = m_vLinearVelocity * (1.f - fLinearResistance)) : (m_vLinearVelocity = Vec3::Zero);
@@ -252,7 +258,16 @@ void CRigidDynamic::OnCollisionEnter(const COLLISION_DESC& desc)
 	{
 		if (pRigidOther->IsKinematic())	// Kinematic
 		{
-			GetTransform()->Translate(0.08f * desc.vResultVelocity);
+			/*Vec3 vCurPosition = GetTransform()->GetPosition();
+			Vec3 vOtherPosition = desc.pOther->GetTransform()->GetPosition();
+			Vec3 vCollisionNormal = vCurPosition - vOtherPosition;
+			Vec3 vDir = vCurPosition - m_vPrePosition;
+			vCollisionNormal.Normalize();
+			vCollisionNormal = Vec3::Reflect(vDir, vCollisionNormal);
+			
+			vDir.Normalize();*/
+
+			GetTransform()->Translate(11.1f * desc.fTimeDelta * desc.vResultVelocity);
 		}
 		else	// Kinetic
 		{	
@@ -279,7 +294,7 @@ void CRigidDynamic::OnCollisionStay(const COLLISION_DESC& desc)
 	{
 		if (pRigidOther->IsKinematic())	// Kinematic
 		{
-			GetTransform()->Translate(0.08f * desc.vResultVelocity);
+			GetTransform()->Translate(11.1f * desc.fTimeDelta * desc.vResultVelocity);
 		}
 		else	// Kinetic
 		{

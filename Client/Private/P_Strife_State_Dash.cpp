@@ -19,6 +19,7 @@ HRESULT CP_Strife_State_Dash::Enter(_int i)
 {
 	m_iCurrAnimation = i;
 	Super::Enter(m_vecAnimIndexTime[i].first);
+	static_cast<CPlayerController*>(m_pController)->GetDashMessage(true);
 
 	return S_OK;
 }
@@ -46,7 +47,13 @@ const wstring& CP_Strife_State_Dash::Transition()
 	
 	if (Anims::DASH == m_iCurrAnimation)
 	{
-		if (m_fTimeSum <= m_vecAnimIndexTime[m_iCurrAnimation].second)
+		if (m_fTimeSum > m_vecAnimIndexTime[m_iCurrAnimation].second * 0.3f &&
+			m_fTimeSum <= m_vecAnimIndexTime[m_iCurrAnimation].second * 0.7f)
+		{
+
+		}
+
+		if (m_fTimeSum <= m_vecAnimIndexTime[m_iCurrAnimation].second * 0.7f)
 		{
 			if (pController->IsDash())
 			{
@@ -56,6 +63,7 @@ const wstring& CP_Strife_State_Dash::Transition()
 		}
 		if (m_fTimeSum > m_vecAnimIndexTime[m_iCurrAnimation].second * 0.5f)
 		{
+			pController->GetDashMessage(false);
 			return m_vecTransition[Trans::IDLE];
 		}
 	}
@@ -63,11 +71,19 @@ const wstring& CP_Strife_State_Dash::Transition()
 	{
 		if (m_fTimeSum > m_vecAnimIndexTime[m_iCurrAnimation].second * 0.5f)
 		{
+			pController->GetDashMessage(false);
 			return m_vecTransition[Trans::IDLE];
 		}
 	}
 
 	return m_strStateName;
+}
+
+void CP_Strife_State_Dash::Input(const _float& fTimeDelta)
+{
+	/*CPlayerController* pController = static_cast<CPlayerController*>(m_pController);
+
+	if (KEY_PRESSING(KEY::SHIFT) || KEY_DOWN(KEY::SHIFT)) pController->GetDashMessage(true);*/
 }
 
 CP_Strife_State_Dash* CP_Strife_State_Dash::Create(CGameObject* pGameObject, const STATEANIMS& tStateAnim, CMonoBehaviour* pController)

@@ -30,14 +30,20 @@ public:
 	_bool	IsJump();
 	_bool	IsDash();
 
-	void	GetMoveMessage(const Vec3& vDir) { m_vNetTrans += vDir; }
+	void	GetMoveMessage(const Vec3& vDir)	{ m_vNetTrans += vDir; }
+	void	GetJumpMessage(const _bool& IsJump)	{ IsJump ? Jump() : Land();}
+	void	GetDashMessage(const _bool& IsDash);
+
 	void	Fire(const _float& fTimeDelta, CStrife_Ammo::AmmoType eAmmoType);
 
 private:
 	void	Input(const _float& fTimeDelta);
 	void	Move(const _float& fTimeDelta);
-	void	Leap(const _float& fTimeDelta);
-	void	Fall(const _float& fTimeDelta);
+	void	Jump();
+	void	Land();
+	void	Dash(const Vec3& vDir);
+	void	DashEnd();
+
 	void	LimitAllAxisVelocity();
 
 private:

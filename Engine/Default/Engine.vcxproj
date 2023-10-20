@@ -196,6 +196,7 @@ call Copy.bat</Command>
     <ClInclude Include="..\Public\Mesh.h" />
     <ClInclude Include="..\Public\Model.h" />
     <ClInclude Include="..\Public\MurmurHash3.h" />
+    <ClInclude Include="..\Public\PhysicsManager.h" />
     <ClInclude Include="..\Public\PipeLine.h" />
     <ClInclude Include="..\Public\PoolManager.h" />
     <ClInclude Include="..\Public\Socket.h" />
@@ -259,6 +260,7 @@ call Copy.bat</Command>
     <ClCompile Include="..\Private\Mesh.cpp" />
     <ClCompile Include="..\Private\Model.cpp" />
     <ClCompile Include="..\Private\MurmurHash3.cpp" />
+    <ClCompile Include="..\Private\PhysicsManager.cpp" />
     <ClCompile Include="..\Private\PipeLine.cpp" />
     <ClCompile Include="..\Private\PoolManager.cpp" />
     <ClCompile Include="..\Private\Socket.cpp" />

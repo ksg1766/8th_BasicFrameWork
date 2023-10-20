@@ -361,9 +361,11 @@ void CCollisionManager::MakeCollisionDesc(OUT COLLISION_DESC& descLeft, OUT COLL
 
 	descLeft.pOther = rRigid;
 	descLeft.vResultVelocity = (2.f * vVelocityR - (1.f - fMassRatio) * vVelocityL) / (1.f + fMassRatio);
-	
+	descLeft.fTimeDelta = fTimeDelta;
+
 	descRight.pOther = lRigid;
 	descRight.vResultVelocity = (2.f * vVelocityL - (1.f - 1.f / fMassRatio) * vVelocityR) / (1.f + 1.f / fMassRatio);
+	descRight.fTimeDelta = fTimeDelta;
 }
 
 void CCollisionManager::MakeCollisionDescStatic(OUT COLLISION_DESC& descLeft, CRigidBody* lRigid, CRigidBody* rRigid, const _float& fTimeDelta)

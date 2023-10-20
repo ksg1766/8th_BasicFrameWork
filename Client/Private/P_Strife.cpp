@@ -141,6 +141,7 @@ HRESULT CP_Strife::Ready_Scripts()
 			desc.vecAnimations.push_back(TEXT("Strife_Land"));
 			desc.vecAnimations.push_back(TEXT("Strife_Jump_Double"));
 			desc.vecAnimations.push_back(TEXT("Strife_Jump_Land_Heavy"));
+			desc.vecAnimations.push_back(TEXT("Strife_Fall"));
 			pState = CP_Strife_State_Jump::Create(this, desc, pController);
 			if (FAILED(pStateMachine->AddState(pState))) return E_FAIL;
 

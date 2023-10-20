@@ -15,7 +15,7 @@ BEGIN(Client)
 class CP_Strife_State_Jump : public CState
 {
 	enum Trans { IDLE, RUN, AIM, DASH, IMPACT, TRANS_END };
-	enum Anims { JUMP, LAND, JUMP_DOUBLE, JUMP_LAND_HEAVY, ANIMS_END };
+	enum Anims { JUMP, LAND, JUMP_DOUBLE, JUMP_LAND_HEAVY, FALL, ANIMS_END };
 
 	using Super = CState;
 
@@ -25,7 +25,7 @@ private:
 	virtual ~CP_Strife_State_Jump() = default;
 	
 public:
-	virtual HRESULT	Enter(_int iIndex = 0)				override;
+	virtual HRESULT			Enter(_int iIndex = 0)				override;
 
 	virtual void			Tick(const _float& fTimeDelta)		override;
 	virtual const wstring&	LateTick(const _float& fTimeDelta)	override;
@@ -35,18 +35,15 @@ public:
 
 private:
 	void	Input(const _float& fTimeDelta);
-	void	Move(const Vec3& vDir, const _float& fTimeDelta);
-	void	LimitAllAxisVelocity();
 
 private:
-	CTransform*		m_pTransform = nullptr;
-	CRigidDynamic*	m_pRigidBody = nullptr;
-
 	Vec3			m_vMaxLinearSpeed;
 	Vec3			m_vLinearSpeed;
 
 	Vec3			m_vMaxAngularSpeed;
 	Vec3			m_vAngularSpeed;
+
+	_bool			m_bDoubleJump = false;
 
 public:
 	static	CP_Strife_State_Jump* Create(CGameObject* pGameObject, const STATEANIMS& tStateAnim, CMonoBehaviour* pController);

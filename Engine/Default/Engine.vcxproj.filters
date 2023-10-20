@@ -163,6 +163,9 @@
     <Filter Include="01.Utiltiy\04.Component\12.StateMachine\States">
       <UniqueIdentifier>{50ac689e-a2f2-402e-a3d3-b04becd36484}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utiltiy\01.Managers\09.PhysicsManager">
+      <UniqueIdentifier>{23e4686d-5a4b-4c51-9ff0-2a25e5fb8ef0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -354,6 +357,9 @@
     <ClInclude Include="..\Public\State.h">
       <Filter>01.Utiltiy\04.Component\12.StateMachine\States</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\PhysicsManager.h">
+      <Filter>01.Utiltiy\01.Managers\09.PhysicsManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -526,6 +532,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\State.cpp">
       <Filter>01.Utiltiy\04.Component\12.StateMachine\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PhysicsManager.cpp">
+      <Filter>01.Utiltiy\01.Managers\09.PhysicsManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

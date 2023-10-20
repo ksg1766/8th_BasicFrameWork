@@ -8,7 +8,7 @@ constexpr auto EPSILON = 0.03f;
 
 CPlayerController::CPlayerController(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:Super(pDevice, pContext)
-	, m_vLinearSpeed(Vec3(10.f, 10.f, 10.f))
+	, m_vLinearSpeed(Vec3(7.f, 7.f, 7.f))
 	, m_vMaxLinearSpeed(Vec3(20.f, 20.f, 20.f))
 	, m_vAngularSpeed(Vec3(0.f, 360.f, 0.f))
 	, m_vMaxAngularSpeed(Vec3(0.f, 540.f, 0.f))
@@ -111,7 +111,7 @@ void CPlayerController::Move(const _float& fTimeDelta)
 	const Vec3& vForward = m_pTransform->GetForward();
 
 	Vec3 vSpeed = m_vLinearSpeed * m_vNetTrans;
-	m_pRigidBody->AddForce(vSpeed, ForceMode::VELOCITY_CHANGE);
+	m_pTransform->Translate(fTimeDelta * vSpeed);
 
 	_float fRadian = acos(vForward.Dot(m_vNetTrans));
 	if (fabs(fRadian) > EPSILON)
@@ -121,21 +121,48 @@ void CPlayerController::Move(const _float& fTimeDelta)
 		if (vLeftRight.y < 0)
 			vRotateAmount.y = -vRotateAmount.y;
 
-		m_pRigidBody->AddTorque(vRotateAmount, ForceMode::VELOCITY_CHANGE);
+		m_pTransform->RotateYAxisFixed(fTimeDelta * vRotateAmount);
 	}
 
-	LimitAllAxisVelocity();
 	m_vNetTrans = Vec3::Zero;
 }
 
-void CPlayerController::Leap(const _float& fTimeDelta)
+void CPlayerController::Jump()
 {
-	return;
+	m_pRigidBody->IsKinematic(false);
+	m_pRigidBody->UseGravity(true);
+	m_pRigidBody->ClearForce(ForceMode::FORCE);
+	m_pRigidBody->ClearForce(ForceMode::IMPULSE);
+	m_pRigidBody->AddForce(10.f * Vec3::UnitY, ForceMode::IMPULSE);
 }
 
-void CPlayerController::Fall(const _float& fTimeDelta)
+void CPlayerController::Land()
 {
-	return;
+	m_pRigidBody->ClearForce(ForceMode::ACCELERATION);
+	m_pRigidBody->ClearForce(ForceMode::VELOCITY_CHANGE);
+	m_pRigidBody->IsKinematic(true);
+	m_pRigidBody->UseGravity(false);
+}
+
+void CPlayerController::Dash(const Vec3& vDir)
+{
+	m_pRigidBody->ClearForce(ForceMode::FORCE);
+	m_pRigidBody->ClearForce(ForceMode::IMPULSE);
+	m_pRigidBody->IsKinematic(false);
+	m_pRigidBody->UseGravity(false);
+	m_pRigidBody->AddForce(30.f * m_pTransform->GetForward(), ForceMode::IMPULSE);
+}
+
+void CPlayerController::DashEnd()
+{
+	m_pRigidBody->ClearForce(ForceMode::FORCE);
+	m_pRigidBody->ClearForce(ForceMode::IMPULSE);
+	m_pRigidBody->IsKinematic(true);
+}
+
+void CPlayerController::GetDashMessage(const _bool& IsDash)
+{
+	IsDash ? Dash(m_pTransform->GetForward()) : DashEnd();
 }
 
 void CPlayerController::Fire(const _float& fTimeDelta, CStrife_Ammo::AmmoType eAmmoType)

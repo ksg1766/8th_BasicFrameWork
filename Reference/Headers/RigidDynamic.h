@@ -93,6 +93,8 @@ private:
 	_bool	m_IsKinematic;
 
 	_float	m_fMass;
+	_float	m_fMaterialDrag;
+	_float	m_fMaterialAngularDrag;
 	_float	m_fDrag;
 	_float	m_fAngularDrag;
 
@@ -104,6 +106,8 @@ private:
 
 	Vec3	m_vLinearVelocity;
 	Vec3	m_vAngularVelocity;
+
+	//Vec3	m_vPrePosition;
 
 public:
 	static CRigidDynamic* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
