@@ -99,14 +99,12 @@ HRESULT CP_Strife::Ready_FixedComponents()
 		|| FAILED(GetRigidBody()->InitializeCollider()))
 		return E_FAIL;
 
-	/* Com_NavMeshAgent */
-	map<LAYERTAG, CLayer*> mapLayers = m_pGameInstance->GetCurrentLevelLayers();
-	auto iter = mapLayers.find(LAYERTAG::GROUND);
-	if (iter == mapLayers.end())
-		return E_FAIL;
-	iter->second
-	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::NavMeshAgent, TEXT("Prototype_Component_NavMeshAgent"))))
-		return E_FAIL;
+	if (LEVEL_GAMEPLAY == m_pGameInstance->GetCurrentLevelIndex())
+	{
+		/* Com_NavMeshAgent */
+		if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::NavMeshAgent, TEXT("Prototype_Component_NavMeshAgent"))))
+			return E_FAIL;
+	}
 
 	return S_OK;
 }

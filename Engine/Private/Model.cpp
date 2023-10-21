@@ -40,6 +40,8 @@ CModel::CModel(const CModel& rhs)
 	, m_iInstanceID(rhs.m_iInstanceID)
 	, m_pTexture(rhs.m_pTexture)
 	, m_pSRV(rhs.m_pSRV)
+	, m_vecSurfaceVtx(rhs.m_vecSurfaceVtx)
+	, m_vecSurfaceIdx(rhs.m_vecSurfaceIdx)
 {
 	/* Bones */
 	for (auto& pBone : m_Bones)
@@ -539,31 +541,33 @@ HRESULT CModel::Ready_Meshes(const wstring& strModelFilePath, Matrix matPivot)
 		for (size_t j = 0; j < iNumBoneIndices; j++)
 			BoneIndices.push_back(file->Read<_int>());
 
+		//CLevelManager* pInstance = GET_INSTANCE(CLevelManager);
+		//if (/*LEVEL_GAMETOOL*//*3 == pInstance->GetCurrentLevelIndex() && */!bAnim)
+		//{
+		//	for (size_t i = 0; i < StaticVertices.size(); ++i)
+		//	{
+		//		m_vecSurfaceVtx.push_back(StaticVertices[i].vPosition);
+		//	}
+		//	for (size_t i = 0; i < Indiecs.size() / 3; ++i)
+		//	{
+		//		FACEINDICES32 idx = { Indiecs[3 * i], Indiecs[3 * i + 1], Indiecs[3 * i + 2] };
+		//		m_vecSurfaceIdx.push_back(idx);
+		//	}
+		//}
+		//RELEASE_INSTANCE(CLevelManager);
+
 		/* Create Mesh */
 		CMesh* pMesh = nullptr;
 		{
 			pMesh = (bAnim) ? CMesh::Create(m_pDevice, m_pContext, strName, AnimVertices, Indiecs, iMaterialIndex, BoneIndices, this) :
-				CMesh::Create(m_pDevice, m_pContext, strName, StaticVertices, Indiecs, iMaterialIndex, BoneIndices, matPivot, this);
+				CMesh::Create(m_pDevice, m_pContext, strName, StaticVertices, Indiecs, iMaterialIndex, BoneIndices, matPivot, this, m_vecSurfaceVtx, m_vecSurfaceIdx);
 
 			if (nullptr == pMesh)
 				return E_FAIL;
 		}
 		m_Meshes.push_back(pMesh);
 
-		CLevelManager* pInstance = GET_INSTANCE(CLevelManager);
-		if (3/*LEVEL_GAMETOOL*/ != pInstance->GetCurrentLevelIndex() && !bAnim)
-		{
-			for (size_t i = 0; i < StaticVertices.size(); ++i)
-			{
-				m_vecSurfaceVtx.push_back(StaticVertices[i].vPosition);
-			}
-			for (size_t i = 0; i < Indiecs.size() / 3; ++i)
-			{
-				FACEINDICES32 idx = { Indiecs[3 * i], Indiecs[3 * i + 1], Indiecs[3 * i + 2] };
-				m_vecSurfaceIdx.push_back(idx);
-			}
-		}
-		RELEASE_INSTANCE(CLevelManager);
+		
 	}
 
 	m_iNumMeshes = iNumMeshes;

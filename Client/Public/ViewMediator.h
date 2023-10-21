@@ -1,11 +1,7 @@
 #pragma once
 #include "Base.h"
 #include "Client_Defines.h"
-#include "AnimationView.h"
-#include "PrefabsView.h"
-#include "LayersView.h"
-#include "TransformView.h"
-#include "SaveLoadView.h"
+
 
 BEGIN(Engine)
 
@@ -16,6 +12,13 @@ END
 
 BEGIN(Client)
 
+class CView;
+class CPrefabsView;
+class CLayersView;
+class CTransformView;
+class CSaveLoadView;
+class CAnimationView;
+class CNavMeshView;
 class CViewMediator : public CBase
 {
 	using Super = CBase;
@@ -33,6 +36,7 @@ public:
 	void	SetTransformView(CTransformView* pTransformView);
 	void	SetSaveLoadView(CSaveLoadView* pSaveLoadView);
 	void	SetAnimationView(CAnimationView* pAnimationView);
+	void	SetNavMeshView(CNavMeshView* pNavMeshView);
 
 protected:
 	CGameInstance*	m_pGameInstance = nullptr;
@@ -44,6 +48,7 @@ protected:
 	CTransformView*	m_pTransformView = nullptr;
 	CSaveLoadView*	m_pSaveLoadView = nullptr;
 	CAnimationView*	m_pAnimationView = nullptr;
+	CNavMeshView*	m_pNavMeshView = nullptr;
 
 public:
 	virtual void Free() override;

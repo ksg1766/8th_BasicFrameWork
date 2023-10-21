@@ -17,7 +17,7 @@ private:
 	virtual ~CMesh() = default;
 
 public:
-	HRESULT Initialize_Prototype(string& strName, vector<VTXMESH>& Vertices, vector<_int>& Indices, _uint iMatIndex, vector<_int>& Bones, Matrix& matPivot, CModel* pModel);
+	HRESULT Initialize_Prototype(string& strName, vector<VTXMESH>& Vertices, vector<_int>& Indices, _uint iMatIndex, vector<_int>& Bones, Matrix& matPivot, CModel* pModel, vector<Vec3>& vecSurfaceVtx, vector<FACEINDICES32>& vecSurfaceIdx);
 	HRESULT Initialize_Prototype(string& strName, vector<VTXANIMMESH>& Vertices, vector<_int>& Indices, _uint iMatIndex, vector<_int>& Bones, CModel* pModel);
 	virtual HRESULT Initialize(void* pArg);
 
@@ -37,12 +37,12 @@ private:
 	friend HRESULT CVIBuffer_Instance::Render(CMesh* pMesh);
 
 private:
-	HRESULT Ready_StaticVertices(vector<VTXMESH>& Vertices, _fmatrix& PivotMatrix);
+	HRESULT Ready_StaticVertices(vector<VTXMESH>& Vertices, _fmatrix& PivotMatrix, vector<Vec3>& vecSurfaceVtx);
 	HRESULT Ready_AnimVertices(vector<VTXANIMMESH>& Vertices);
-	HRESULT Ready_Indices(vector<_int>& Indices);
+	HRESULT Ready_Indices(vector<_int>& Indices, vector<FACEINDICES32>* vecSurfaceIdx = nullptr);
 
 public:
-	static CMesh* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, string& strName, vector<VTXMESH>& Vertices, vector<_int>& Indices, _uint iMatIndex, vector<_int>& Bones, Matrix& matPivot, CModel* pModel);
+	static CMesh* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, string& strName, vector<VTXMESH>& Vertices, vector<_int>& Indices, _uint iMatIndex, vector<_int>& Bones, Matrix& matPivot, CModel* pModel, vector<Vec3>& vecSurfaceVtx, vector<FACEINDICES32>& vecSurfaceIdx);
 	static CMesh* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, string& strName, vector<VTXANIMMESH>& Vertices, vector<_int>& Indices, _uint iMatIndex, vector<_int>& Bones, CModel* pModel);
 
 	virtual CComponent* Clone(CGameObject* pGameObject, void* pArg = nullptr) override;

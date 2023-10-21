@@ -70,6 +70,10 @@ HRESULT CStaticBase::Render()
 
 HRESULT CStaticBase::Ready_FixedComponents()
 {
+	/* Com_Shader */
+	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Shader, TEXT("Prototype_Component_Shader_VtxMesh"))))
+		return E_FAIL;
+
 	/* Com_Model */
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Model, TEXT("Prototype_Component_Model_") + GetObjectTag())))
 		return E_FAIL;
@@ -82,10 +86,6 @@ HRESULT CStaticBase::Ready_FixedComponents()
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Renderer, TEXT("Prototype_Component_Renderer"))))
 		return E_FAIL;
 
-	/* Com_Shader */
-	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Shader, TEXT("Prototype_Component_Shader_VtxMesh"))))
-		return E_FAIL;
-
 	/* Com_RigidBody */
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::RigidBody, TEXT("Prototype_Component_RigidStatic")))
 		|| FAILED(GetRigidBody()->InitializeCollider()))
@@ -94,18 +94,8 @@ HRESULT CStaticBase::Ready_FixedComponents()
 	return S_OK;
 }
 
-HRESULT CStaticBase::Ready_Scripts(void* pArg)
+HRESULT CStaticBase::Ready_Scripts()
 {
-	if (nullptr != pArg)
-	{
-		if (LAYERTAG::GROUND == *(LAYERTAG*)pArg)
-		{
-			/* Com_NavMeshSurface */
-			if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Script, TEXT("Prototype_Component_NavMeshSurface"))))
-				return E_FAIL;
-		}
-	}
-
 	return S_OK;
 }
 

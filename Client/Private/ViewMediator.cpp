@@ -1,5 +1,11 @@
 #include "stdafx.h"
 #include "ViewMediator.h"
+#include "AnimationView.h"
+#include "PrefabsView.h"
+#include "LayersView.h"
+#include "TransformView.h"
+#include "SaveLoadView.h"
+#include "NavMeshView.h"
 
 CViewMediator::CViewMediator()
 {
@@ -19,18 +25,19 @@ void CViewMediator::OnNotifiedPickingOn(CView* pSender)
 	if(pSender == m_pPrefabsView)
 	{
 		m_pLayersView->DeactivatePicking();
+		m_pNavMeshView->DeactivatePicking();
 	}
 	else if (pSender == m_pLayersView)
 	{
 		m_pPrefabsView->DeactivatePicking();
+		m_pNavMeshView->DeactivatePicking();
+	}
+	else if (pSender == m_pNavMeshView)
+	{
+		m_pLayersView->DeactivatePicking();
+		m_pPrefabsView->DeactivatePicking();
 	}
 }
-
-//void CViewMediator::OnNotifiedTransform(CTransform* pTransform)
-//{
-//	//Safe_Release(m_pTransformView);
-//	//m_pTransformView->SetTransform(pTransform);
-//}
 
 void CViewMediator::SetPrefabsView(CPrefabsView* pPrefabsView)
 { 
@@ -67,6 +74,13 @@ void CViewMediator::SetAnimationView(CAnimationView* pAnimationView)
 	m_pAnimationView->SetMediator(this);
 }
 
+void CViewMediator::SetNavMeshView(CNavMeshView* pNavMeshView)
+{
+	m_pNavMeshView = pNavMeshView;
+	Safe_AddRef(m_pNavMeshView);
+	m_pNavMeshView->SetMediator(this);
+}
+
 void CViewMediator::Free()
 {
 	Safe_Release(m_pPrefabsView);
@@ -74,4 +88,5 @@ void CViewMediator::Free()
 	Safe_Release(m_pTransformView);
 	Safe_Release(m_pSaveLoadView);
 	Safe_Release(m_pAnimationView);
+	Safe_Release(m_pNavMeshView);
 }

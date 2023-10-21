@@ -160,6 +160,11 @@ void CPlayerController::DashEnd()
 	m_pRigidBody->IsKinematic(true);
 }
 
+void CPlayerController::GetDashMessage(const _bool& IsDash)
+{
+	IsDash ? Dash(m_pTransform->GetForward()) : DashEnd();
+}
+
 void CPlayerController::Fire(const _float& fTimeDelta, CStrife_Ammo::AmmoType eAmmoType)
 {
 	CGameObject* pAmmo = nullptr;

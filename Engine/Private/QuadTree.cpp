@@ -28,7 +28,7 @@ HRESULT CQuadTree::Build_QuadTree(_uint iNumLevels)
 
     const map<LAYERTAG, CLayer*>& mapLayers = pObjectManager->GetCurrentLevelLayers();
 
-    const auto& iter = mapLayers.find(LAYERTAG::WALL);
+    auto iter = mapLayers.find(LAYERTAG::WALL);
 
     if (mapLayers.end() != iter)
     {
@@ -38,17 +38,21 @@ HRESULT CQuadTree::Build_QuadTree(_uint iNumLevels)
     }
     else
     {
-        return E_FAIL;
+        //return E_FAIL;
     }
 
-    /*iter = mapLayers.find(LAYERTAG::WALL);
+    iter = mapLayers.find(LAYERTAG::GROUND);
     if (mapLayers.end() != iter)
     {
-        vector<CGameObject*>& vecObjects = mapLayers[LAYERTAG::WALL]->GetGameObjects();
+        vector<CGameObject*>& vecObjects = iter->second->GetGameObjects();
         for (auto& _iter : vecObjects)
             AddObjectInNode(_iter->GetTransform(), m_pQuadTreeRoot);
     }
-
+    else
+    {
+       // return E_FAIL;
+    }
+    /*
     iter = mapLayers.find(LAYERTAG::WALL);
     if (mapLayers.end() != iter)
     {

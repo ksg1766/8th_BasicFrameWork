@@ -5,15 +5,17 @@
 BEGIN(Engine)
 
 class CGameObject;
-class CCell;
+class CShader;
 
 END
 
 BEGIN(Client)
 
-class CNavMeshView : public CView
+class CNavMeshView final : public CView
 {
     using Super = CView;
+public:
+
 private:
 	CNavMeshView(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual ~CNavMeshView() = default;
@@ -26,28 +28,38 @@ public:
 
 private:
 	void	Input();
-	_bool	Pick(_uint screenX, _uint screenY, Vec3& pickPos, _float& distance);
+	_bool	Pick(_uint screenX, _uint screenY);
 
-	void	AddCell(CCell* pCell) { m_vecCells.push_back(pCell); }
-	//void	AddPoint(Vec3 vPoint) { m_arrPoints}
+	HRESULT	Save();
+	HRESULT	Load();
 
 private:
 	void	InfoView();
 	void	PointGroup();
 	void	CellGroup();
 
-
 private:
+	struct CellData;
+
 	wstring				m_strPickedObject;
 	CGameObject*		m_pPickedObject = nullptr;
+	CShader*			m_pShader = nullptr;
 
 	_int				m_Item_Current = 0;
+	wstring				m_strFilePath = TEXT("NavigationMesh");
 
-	vector<CCell*>		m_vecCells;
+	vector<CellData*>	m_vecCells;
 	vector<_char*>		m_strCells;
 	// cache
 	vector<Vec3>		m_vecPoints;
 	vector<const _char*>m_strPoints;
+	_int				m_Point_Current;
+
+	vector<BoundingSphere*> m_vecSphere;
+
+	PrimitiveBatch<VertexPositionColor>* m_pBatch = nullptr;
+	BasicEffect*		m_pEffect = nullptr;
+	ID3D11InputLayout*	m_pInputLayout = nullptr;
 
 public:
 	static class CNavMeshView* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

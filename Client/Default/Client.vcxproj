@@ -176,6 +176,7 @@
     <ClInclude Include="..\Public\AnimationView.h" />
     <ClInclude Include="..\public\BackGround.h" />
     <ClInclude Include="..\Public\BasicTerrain.h" />
+    <ClInclude Include="..\Public\DebugDraw.h" />
     <ClInclude Include="..\Public\DissolveManager.h" />
     <ClInclude Include="..\Public\HellHound.h" />
     <ClInclude Include="..\Public\LavaTerrain.h" />
@@ -229,15 +230,20 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Private\AnimationView.cpp" />
+    <ClCompile Include="..\Private\AnimationView.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="..\private\BackGround.cpp" />
     <ClCompile Include="..\Private\BasicTerrain.cpp" />
+    <ClCompile Include="..\Private\DebugDraw.cpp" />
     <ClCompile Include="..\Private\DissolveManager.cpp" />
     <ClCompile Include="..\Private\HellHound.cpp" />
     <ClCompile Include="..\Private\LavaTerrain.cpp" />
     <ClCompile Include="..\Private\MainCamera.cpp" />
     <ClCompile Include="..\Private\MainCameraController.cpp" />
-    <ClCompile Include="..\Private\NavMeshView.cpp" />
+    <ClCompile Include="..\Private\NavMeshView.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="..\Private\P_Strife.cpp" />
     <ClCompile Include="..\Private\P_Strife_State_Aim.cpp" />
     <ClCompile Include="..\Private\P_Strife_State_Dash.cpp" />
@@ -245,12 +251,16 @@
     <ClCompile Include="..\Private\P_Strife_State_Impact.cpp" />
     <ClCompile Include="..\Private\P_Strife_State_Jump.cpp" />
     <ClCompile Include="..\Private\P_Strife_State_Run.cpp" />
-    <ClCompile Include="..\Private\SaveLoadView.cpp" />
+    <ClCompile Include="..\Private\SaveLoadView.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="..\Private\DebugTerrainGrid.cpp" />
     <ClCompile Include="..\Private\FlyingCameraController.cpp" />
     <ClCompile Include="..\Private\CollisionTest.cpp" />
     <ClCompile Include="..\Private\FlyingCamera.cpp" />
-    <ClCompile Include="..\Private\LayersView.cpp" />
+    <ClCompile Include="..\Private\LayersView.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="..\Private\Level_GamePlay.cpp" />
     <ClCompile Include="..\Private\Level_GameTool.cpp">
       <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</IncludeInUnityFile>
@@ -260,7 +270,9 @@
     <ClCompile Include="..\private\Level_Logo.cpp" />
     <ClCompile Include="..\private\Loader.cpp" />
     <ClCompile Include="..\private\MainApp.cpp" />
-    <ClCompile Include="..\Private\PrefabsView.cpp" />
+    <ClCompile Include="..\Private\PrefabsView.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="..\Private\PlayerController.cpp" />
     <ClCompile Include="..\Private\StaticBase.cpp" />
     <ClCompile Include="..\Private\StaticTest.cpp" />
@@ -271,8 +283,12 @@
     <ClCompile Include="..\Private\TempCube.cpp" />
     <ClCompile Include="..\Private\TestAIController.cpp" />
     <ClCompile Include="..\Private\ViewMediator.cpp" />
-    <ClCompile Include="..\Private\TransformView.cpp" />
-    <ClCompile Include="..\Private\View.cpp" />
+    <ClCompile Include="..\Private\TransformView.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\Private\View.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="..\Public\ImGUI\imgui.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>

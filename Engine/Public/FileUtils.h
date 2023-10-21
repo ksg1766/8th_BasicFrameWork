@@ -53,7 +53,8 @@ public:
 	T Read()
 	{
 		T data;
-		Read(data);
+		if (false == Read(data))
+			ZeroMemory(&data, sizeof(T));
 		return data;
 	}
 

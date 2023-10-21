@@ -6,12 +6,14 @@
 #include "BasicTerrain.h"
 #include "Terrain.h"
 
-#include "ViewMediator.h"
+#include "AnimationView.h"
 #include "PrefabsView.h"
 #include "LayersView.h"
 #include "TransformView.h"
 #include "SaveLoadView.h"
-#include "AnimationView.h"
+#include "NavMeshView.h"
+
+#include "ViewMediator.h"
 
 CLevel_GameTool::CLevel_GameTool(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -80,6 +82,8 @@ HRESULT CLevel_GameTool::Tick(const _float& fTimeDelta)
 		m_pSaveLoadView->Tick();
 	if (m_pAnimationView)
 		m_pAnimationView->Tick();
+	if (m_pNavMeshView)
+		m_pNavMeshView->Tick();
 
 	//
 
@@ -102,6 +106,13 @@ HRESULT CLevel_GameTool::DebugRender()
 	{
 		ImGui::Render();
 		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+
+		m_pPrefabsView->DebugRender();
+		m_pLayersView->DebugRender();
+		m_pTransformView->DebugRender();
+		m_pSaveLoadView->DebugRender();
+		m_pAnimationView->DebugRender();
+		m_pNavMeshView->DebugRender();
 	}
 
 	return S_OK;
@@ -163,6 +174,9 @@ HRESULT CLevel_GameTool::Ready_Tools()
 
 	m_pAnimationView = CAnimationView::Create(m_pDevice, m_pContext);
 	m_pMediator->SetAnimationView(m_pAnimationView);
+	
+	m_pNavMeshView = CNavMeshView::Create(m_pDevice, m_pContext);
+	m_pMediator->SetNavMeshView(m_pNavMeshView);
 
 	return S_OK;
 }

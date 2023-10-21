@@ -21,7 +21,44 @@ HRESULT CView::Initialize(void* pArg)
 void CView::SetMediator(CViewMediator* pMediator)
 { 
 	m_pMediator = pMediator;
-	m_pMediator->AddRef();
+	Safe_AddRef(m_pMediator);
+	//m_pMediator->AddRef();
+}
+
+void CView::s2cPushBack(vector<_char*>& vecChar, string str)
+{
+	const _char* szSrc = str.c_str();
+	size_t len = strlen(szSrc) + 1;
+	_char* szCopy = new _char[len];
+	strcpy_s(szCopy, len, szSrc);
+	vecChar.push_back(szCopy);
+}
+
+void CView::s2cPushBack(vector<const _char*>& vecChar, string str)
+{
+	const _char* szSrc = str.c_str();
+	size_t len = strlen(szSrc) + 1;
+	_char* szCopy = new _char[len];
+	strcpy_s(szCopy, len, szSrc);
+	vecChar.push_back(szCopy);
+}
+
+void CView::s2cPushBackRef(vector<_char*>& vecChar, string& str)
+{
+	const _char* szSrc = str.c_str();
+	size_t len = strlen(szSrc) + 1;
+	_char* szCopy = new _char[len];
+	strcpy_s(szCopy, len, szSrc);
+	vecChar.push_back(szCopy);
+}
+
+void CView::s2cPushBackRef(vector<const _char*>& vecChar, string& str)
+{
+	const _char* szSrc = str.c_str();
+	size_t len = strlen(szSrc) + 1;
+	_char* szCopy = new _char[len];
+	strcpy_s(szCopy, len, szSrc);
+	vecChar.push_back(szCopy);
 }
 
 void CView::Free()

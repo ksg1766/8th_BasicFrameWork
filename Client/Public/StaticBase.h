@@ -29,7 +29,7 @@ public:
 
 private:
 	HRESULT			Ready_FixedComponents();
-	HRESULT			Ready_Scripts(void* pArg);
+	HRESULT			Ready_Scripts();
 	HRESULT			Bind_ShaderResources(); /* 셰이더 전역변수에 값 던진다. */
 
 	//

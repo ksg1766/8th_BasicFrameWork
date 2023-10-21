@@ -21,17 +21,17 @@ CMesh::CMesh(const CMesh& rhs)
 }
 
 HRESULT CMesh::Initialize_Prototype(string& strName, vector<VTXMESH>& Vertices, vector<_int>& Indices,
-	_uint iMatIndex, vector<_int>& Bones, Matrix& matPivot, CModel* pModel)
+	_uint iMatIndex, vector<_int>& Bones, Matrix& matPivot, CModel* pModel, vector<Vec3>& vecSurfaceVtx, vector<FACEINDICES32>& vecSurfaceIdx)
 {
 	/* 이 메시와 이름이 같은 뼈가 존재한다면. 이 뼈의 행렬을 메시를 구성하는 정점에 곱해질 수 있도록 유도한다. */
 	strcpy_s(m_szName, strName.c_str());
 
 	m_iMaterialIndex = iMatIndex;
 
-	if (FAILED(Ready_StaticVertices(Vertices, matPivot)))
+	if (FAILED(Ready_StaticVertices(Vertices, matPivot, vecSurfaceVtx)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Indices(Indices)))
+	if (FAILED(Ready_Indices(Indices, &vecSurfaceIdx)))
 		return E_FAIL;
 
 	/* 이 메시에서 사용하는 본의 인덱스를 저장한다. */
@@ -104,7 +104,7 @@ void CMesh::SetUp_BoneMatrices(_float4x4* pBoneMatrices, _fmatrix PivotMatrix)
 	}
 }
 
-HRESULT CMesh::Ready_StaticVertices(vector<VTXMESH>& Vertices, _fmatrix& PivotMatrix)
+HRESULT CMesh::Ready_StaticVertices(vector<VTXMESH>& Vertices, _fmatrix& PivotMatrix, vector<Vec3>& vecSurfaceVtx)
 {
 	m_iNumVBs = 1;
 	m_iNumVertices = (_int)Vertices.size();
@@ -135,6 +135,8 @@ HRESULT CMesh::Ready_StaticVertices(vector<VTXMESH>& Vertices, _fmatrix& PivotMa
 
 		memcpy(&pVertices[i].vTangent, &Vertices[i].vTangent, sizeof(_float3));
 		XMStoreFloat3(&pVertices[i].vTangent, XMVector3TransformNormal(XMLoadFloat3(&pVertices[i].vTangent), PivotMatrix));
+
+		vecSurfaceVtx.push_back(pVertices[i].vPosition);
 	}
 
 	ZeroMemory(&m_SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
@@ -189,7 +191,7 @@ HRESULT CMesh::Ready_AnimVertices(vector<VTXANIMMESH>& Vertices)
 	return S_OK;
 }
 
-HRESULT CMesh::Ready_Indices(vector<_int>& Indices)
+HRESULT CMesh::Ready_Indices(vector<_int>& Indices, vector<FACEINDICES32>* vecSurfaceIdx)
 {
 	m_iNumPrimitives = ((_int)Indices.size()) / 3;
 	m_iIndexSizeofPrimitive = sizeof(FACEINDICES32);
@@ -209,11 +211,26 @@ HRESULT CMesh::Ready_Indices(vector<_int>& Indices)
 	FACEINDICES32* pIndices = new FACEINDICES32[m_iNumPrimitives];
 	::ZeroMemory(pIndices, sizeof(FACEINDICES32) * m_iNumPrimitives);
 
+	FACEINDICES32* pIndicesCache = new FACEINDICES32[m_iNumPrimitives];
+	::ZeroMemory(pIndicesCache, sizeof(FACEINDICES32) * m_iNumPrimitives);
+
+	size_t IndicesOffset = 0;
+	if (vecSurfaceIdx)
+		IndicesOffset = vecSurfaceIdx->size() * 3;
+
 	for (_uint i = 0, j = 0; i < m_iNumPrimitives; ++i, ++j)
 	{
 		pIndices[i]._0 = Indices[j];
 		pIndices[i]._1 = Indices[++j];
 		pIndices[i]._2 = Indices[++j];
+		
+		if (vecSurfaceIdx)
+		{
+			pIndicesCache[i]._0 = pIndices[i]._0 + IndicesOffset;
+			pIndicesCache[i]._1 = pIndices[i]._1 + IndicesOffset;
+			pIndicesCache[i]._2 = pIndices[i]._2 + IndicesOffset;
+			vecSurfaceIdx->push_back(pIndicesCache[i]);
+		}
 	}
 
 	ZeroMemory(&m_SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
@@ -228,11 +245,11 @@ HRESULT CMesh::Ready_Indices(vector<_int>& Indices)
 }
 
 CMesh* CMesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, string& strName,
-	vector<VTXMESH>& Vertices, vector<_int>& Indices, _uint iMatIndex, vector<_int>& Bones, Matrix& PivotMatrix, CModel* pModel)
+	vector<VTXMESH>& Vertices, vector<_int>& Indices, _uint iMatIndex, vector<_int>& Bones, Matrix& PivotMatrix, CModel* pModel, vector<Vec3>& vecSurfaceVtx, vector<FACEINDICES32>& vecSurfaceIdx)
 {
 	CMesh* pInstance = new CMesh(pDevice, pContext);
 
-	if (FAILED(pInstance->Initialize_Prototype(strName, Vertices, Indices, iMatIndex, Bones, PivotMatrix, pModel)))
+	if (FAILED(pInstance->Initialize_Prototype(strName, Vertices, Indices, iMatIndex, Bones, PivotMatrix, pModel, vecSurfaceVtx, vecSurfaceIdx)))
 	{
 		MSG_BOX("Failed To Created : CMesh");
 		Safe_Release(pInstance);

@@ -116,13 +116,7 @@ void CAnimationView::ItemGroup()
 		{
 			if (entry.is_directory())
 			{
-				string fileName = Utils::ToString(entry.path().stem());
-				const _char* szSrc = fileName.c_str();
-				size_t len = strlen(szSrc) + 1; // NULL 문자 포함
-				_char* szCopy = new _char[len];
-				strcpy_s(szCopy, len, szSrc);
-
-				vecItems.push_back(szCopy);
+				s2cPushBack(vecItems, Utils::ToString(entry.path().stem()));
 			}
 		}
 	}
@@ -178,13 +172,7 @@ HRESULT CAnimationView::LoadAnimations()
 {
 	for (auto& iter : m_pAnimModelObject->GetModel()->m_Animations)
 	{
-		string strCopy = iter->m_strName;// .substr(iter->m_strName.find_last_of("|") + 1);
-		const _char* szSrc = strCopy.c_str();
-		size_t len = strlen(szSrc) + 1; // NULL 문자 포함
-		_char* szCopy = new _char[len];
-		strcpy_s(szCopy, len, szSrc);
-		
-		m_vecAnimationNames.push_back(szCopy);
+		s2cPushBack(m_vecAnimationNames, iter->m_strName);
 	}
 
 	return S_OK;

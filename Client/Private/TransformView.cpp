@@ -83,6 +83,8 @@ void CTransformView::TransformController()
 		vRotation = Vec3(XMConvertToDegrees(vRotation.x), XMConvertToDegrees(vRotation.y), XMConvertToDegrees(vRotation.z));
 		vScale = pTransform->GetLocalScale();
 	}
+	else
+		return;
 
 	_float varrPosition[3] = { vPosition.x, vPosition.y, vPosition.z };
 	_float varrRotation[3] = { 0.f };

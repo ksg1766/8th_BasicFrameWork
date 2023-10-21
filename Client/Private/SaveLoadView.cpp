@@ -62,8 +62,6 @@ HRESULT CSaveLoadView::Save()
 	FileUtils FileUtils;
 	FileUtils.Open(TEXT("../Bin/LevelData/") + m_strFilePath, Write);
 
-    DWORD	dwByte = 0;
-
     for (_uint iLayer = 0; iLayer < static_cast<_uint>(LAYERTAG::LAYER_END); ++iLayer)
     {
 		LAYERTAG eLayer = static_cast<LAYERTAG>(iLayer);
@@ -86,7 +84,7 @@ HRESULT CSaveLoadView::Save()
 			const wstring& strObjectTag = iterObj->GetObjectTag();
 
 			string strLayer = LayerTag_string[static_cast<_int>(eLayer)];
-			FileUtils.Write(eLayer);
+			FileUtils.Write(strLayer);
 			FileUtils.Write(matWorld);
 			FileUtils.Write(Utils::ToString(strObjectTag));
         }        
@@ -115,10 +113,11 @@ HRESULT CSaveLoadView::Load()
 			if (0 == strcmp(LayerTag_string[i], strLayerTag.c_str()))
 			{
 				eLayer = static_cast<LAYERTAG>(i);
+				break;
 			}
-			else
-				__debugbreak();
 		}
+		if (LAYERTAG::LAYER_END == eLayer)
+			__debugbreak();
 
 		Matrix matWorld = FileUtils.Read<Matrix>();
 		string tempObjectTag;
@@ -222,13 +221,7 @@ void CSaveLoadView::InfoView()
 		{
 			if (entry.is_regular_file())
 			{
-				string fileName = Utils::ToString(entry.path().filename());
-				const _char* szSrc = fileName.c_str();
-				size_t len = strlen(szSrc) + 1; // NULL 문자 포함
-				_char* szCopy = new _char[len];
-				strcpy_s(szCopy, len, szSrc);
-
-				vecItems.push_back(szCopy);
+				s2cPushBack(vecItems, Utils::ToString(entry.path().filename()));
 			}
 		}
 	}

@@ -1,9 +1,14 @@
 #pragma once
-
 #include "Client_Defines.h"
 #include "MonoBehaviour.h"
 #include "RigidDynamic.h"
 #include "Strife_Ammo.h"
+
+BEGIN(Engine)
+
+class CTransform;
+
+END
 
 BEGIN(Client)
 
@@ -32,7 +37,7 @@ public:
 
 	void	GetMoveMessage(const Vec3& vDir)	{ m_vNetTrans += vDir; }
 	void	GetJumpMessage(const _bool& IsJump)	{ IsJump ? Jump() : Land();}
-	void	GetDashMessage(const _bool& IsDash) { IsDash ? Dash(m_pTransform->GetForward()) : DashEnd(); }
+	void	GetDashMessage(const _bool& IsDash);// { IsDash ? Dash(m_pTransform->GetForward()) : DashEnd(); }
 	//void	GetFireMessage(const _bool& IsDash) { IsFireOn ?  }
 
 	void	Fire(const _float& fTimeDelta, CStrife_Ammo::AmmoType eAmmoType);

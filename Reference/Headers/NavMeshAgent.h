@@ -36,8 +36,12 @@ private:
 	static vector<class CCell*>	m_Cells;
 
 #ifdef _DEBUG
-	_bool	m_bRender = false;
-	class CShader* m_pShader = { nullptr };
+	_bool	m_IsRendered = false;
+	//class CShader* m_pShader = { nullptr };
+
+	PrimitiveBatch<VertexPositionColor>* m_pBatch = nullptr;
+	BasicEffect* m_pEffect = nullptr;
+	ID3D11InputLayout* m_pInputLayout = nullptr;
 #endif
 
 public:

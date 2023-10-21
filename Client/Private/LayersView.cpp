@@ -236,14 +236,7 @@ void CLayersView::TapGroups(_uint iIndex)
 
 				for (auto& iter : vecObjects)
 				{
-					string strItem = Utils::ToString(iter->GetObjectTag());
-					const _char* szSrc = strItem.c_str();
-					size_t len = strlen(szSrc) + 1; // NULL 문자 포함
-					_char* szCopy = new _char[len];
-
-					strcpy_s(szCopy, len, szSrc);
-
-					vecItems.push_back(szCopy);
+					s2cPushBack(vecItems, Utils::ToString(iter->GetObjectTag()));
 				}
 
 				if (m_Item_Current >= vecItems.size())

@@ -34,6 +34,13 @@ public:
 	void	SetMediator(CViewMediator* pMediator);
 
 protected:
+	void	s2cPushBack(vector<_char*>& vecChar, string str);
+	void	s2cPushBack(vector<const _char*>& vecChar, string str);
+
+	void	s2cPushBackRef(vector<_char*>& vecChar, string& str);
+	void	s2cPushBackRef(vector<const _char*>& vecChar, string& str);
+
+protected:
 	CGameInstance*			m_pGameInstance = nullptr;
 	CViewMediator*			m_pMediator = nullptr;
 

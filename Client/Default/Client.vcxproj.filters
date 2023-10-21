@@ -360,6 +360,9 @@
     <ClInclude Include="..\Public\NavMeshView.h">
       <Filter>01.Levels\02.GameTool\View\NavMeshView</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\DebugDraw.h">
+      <Filter>99.Defines</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -514,6 +517,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\NavMeshView.cpp">
       <Filter>01.Levels\02.GameTool\View\NavMeshView</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\DebugDraw.cpp">
+      <Filter>99.Defines</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

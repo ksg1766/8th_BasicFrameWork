@@ -15,21 +15,19 @@ private:
 	virtual ~CCell() = default;
 	
 public:
-	const _float3*	Get_Point(POINTS ePoint) const				{ return &m_vPoints_Original[ePoint]; }
+	const _float3*	Get_Point(POINTS ePoint) const				{ return &m_vPoints[ePoint]; }
 
 	void			SetUp_Neighbor(LINE eLine, CCell* pCell)	{ m_iNeighborIndices[eLine] = pCell->m_iIndex; }
 
 	HRESULT			Initialize(const _float3* pPoints, _uint iIndex);
-	void			DebugRender();
+	void			DebugRender(PrimitiveBatch<VertexPositionColor>*& pBatch, XMVECTORF32 vColor);
 
 	_bool			Compare_Points(const _float3* pSourPoint, const _float3* pDestPoint);
 	_bool			isOut(_fvector vPoint, _int* pNeighborIndex);
 
 private:
 	_uint					m_iIndex = {};
-	_float3					m_vPoints_Original[POINT_END];
-
-	_float3					m_vPoints_InWorld[POINT_END];
+	_float3					m_vPoints[POINT_END];
 	_float3					m_vNormals[LINE_END];
 
 	_int					m_iNeighborIndices[LINE_END] = { -1, -1, -1 };
@@ -38,7 +36,7 @@ private:
 	ID3D11DeviceContext*	m_pContext = { nullptr };
 
 #ifdef _DEBUG
-	class CVIBuffer_Cell*	m_pVIBuffer = { nullptr };
+	//class CVIBuffer_Cell*	m_pVIBuffer = { nullptr };
 #endif
 
 public:
