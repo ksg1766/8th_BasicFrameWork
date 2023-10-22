@@ -29,6 +29,8 @@ private:
 	HRESULT			Ready_Layer_Camera();
 	HRESULT			Ready_Layer_Wall();	// Static
 
+	HRESULT			LoadData_Map();
+
 public:
 	static class CLevel_GamePlay* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

@@ -27,7 +27,10 @@ HRESULT CP_Strife_State_Aim::Enter(_int i)
 
 void CP_Strife_State_Aim::Tick(const _float& fTimeDelta)
 {
+	CPlayerController* pController = static_cast<CPlayerController*>(m_pController);
+
 	Input(fTimeDelta);
+	pController->ForceHeight();
 }
 
 const wstring& CP_Strife_State_Aim::LateTick(const _float& fTimeDelta)
@@ -102,7 +105,7 @@ void CP_Strife_State_Aim::Input(const _float& fTimeDelta)
 		m_fFR_Default_Timer -= fTimeDelta;
 		if (m_fFR_Default_Timer < 0.f)
 		{
-			pController->Fire(fTimeDelta, CStrife_Ammo::AmmoType::DEFAULT);
+			pController->Fire(CStrife_Ammo::AmmoType::DEFAULT);
 			m_fFR_Default_Timer = m_fFR_Default;
 		}
 	}

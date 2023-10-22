@@ -52,12 +52,9 @@ const wstring& CP_Strife_State_Jump::Transition()
 
 	if (Anims::JUMP == m_iCurrAnimation)
 	{
-		// Temp
-		CTransform* pTransform = m_pGameObject->GetTransform();
-		const Vec3& vPos = pTransform->GetPosition();
-		if (0.f > vPos.y)
+		if (pController->GetHeightOffset() > 0.0f)
 		{
-			pTransform->SetPosition(Vec3(vPos.x, 0.f, vPos.z));
+			pController->ForceHeight();
 			Enter(Anims::LAND);
 			return m_strStateName;
 		}
@@ -77,12 +74,9 @@ const wstring& CP_Strife_State_Jump::Transition()
 	}
 	else if (Anims::JUMP_DOUBLE == m_iCurrAnimation)
 	{
-		// Temp
-		CTransform* pTransform = m_pGameObject->GetTransform();
-		const Vec3& vPos = pTransform->GetPosition();
-		if (0.f > vPos.y)
+		if (pController->GetHeightOffset() > 0.0f)
 		{
-			pTransform->SetPosition(Vec3(vPos.x, 0.f, vPos.z));
+			pController->ForceHeight();
 			Enter(Anims::JUMP_LAND_HEAVY);
 			return m_strStateName;
 		}
@@ -95,12 +89,9 @@ const wstring& CP_Strife_State_Jump::Transition()
 	}
 	else if (Anims::FALL == m_iCurrAnimation)
 	{
-		// Temp
-		CTransform* pTransform = m_pGameObject->GetTransform();
-		const Vec3& vPos = pTransform->GetPosition();
-		if (0.f > vPos.y)
+		if (pController->GetHeightOffset() > 0.0f)
 		{
-			pTransform->SetPosition(Vec3(vPos.x, 0.f, vPos.z));
+			pController->ForceHeight();
 			m_bDoubleJump = false;
 			Enter(Anims::JUMP_LAND_HEAVY);
 			return m_strStateName;
@@ -115,14 +106,14 @@ const wstring& CP_Strife_State_Jump::Transition()
 	}
 	else if (Anims::LAND == m_iCurrAnimation)
 	{
-		if (m_fTimeSum > m_vecAnimIndexTime[m_iCurrAnimation].second * 0.6f)
+		if (m_fTimeSum > m_vecAnimIndexTime[m_iCurrAnimation].second * 0.4f)
 		{
 			return m_vecTransition[Trans::IDLE];
 		}
 	}
 	else if (Anims::JUMP_LAND_HEAVY == m_iCurrAnimation)
 	{
-		if (m_fTimeSum > m_vecAnimIndexTime[m_iCurrAnimation].second * 0.6f)
+		if (m_fTimeSum > m_vecAnimIndexTime[m_iCurrAnimation].second * 0.4f)
 		{
 			return m_vecTransition[Trans::IDLE];
 		}

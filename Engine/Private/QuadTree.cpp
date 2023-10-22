@@ -12,6 +12,8 @@
 #include "DebugDraw.h"
 #endif // _DEBUG
 
+constexpr _float g_fFrustum_Scale = 1.2f;
+
 IMPLEMENT_SINGLETON(CQuadTree)
 
 CQuadTree::CQuadTree()
@@ -116,6 +118,10 @@ void CQuadTree::Update_Frustum(BoundingFrustum& tFrustum)
     tFrustum.Transform(tFrustum, m_pPipeLine->Get_Transform_Matrix_Inverse(CPipeLine::D3DTS_VIEW));
 #elif _DEBUG
     BoundingFrustum::CreateFromMatrix(m_tBoundingFrustum, m_pPipeLine->Get_Transform_Matrix(CPipeLine::D3DTS_PROJ));
+    //XMStoreFloat3(&m_tBoundingFrustum.Origin, XMVectorScale(XMLoadFloat3(&m_tBoundingFrustum.Origin), g_fFrustum_Scale));
+    //m_tBoundingFrustum.Near *= g_fFrustum_Scale;
+    //m_tBoundingFrustum.Far *= g_fFrustum_Scale;
+
     m_tBoundingFrustum.Transform(m_tBoundingFrustum, m_pPipeLine->Get_Transform_Matrix_Inverse(CPipeLine::D3DTS_VIEW));
 #endif
 }
@@ -180,7 +186,7 @@ CQuadTreeNode* CQuadTree::BuildQuadTree(Vec3 vCenter, Vec3 vHalfExtents, _int iD
     CQuadTreeNode*  pNode = new CQuadTreeNode;
     BoundingBox*    pBBox = pNode->GetBoundingBox();
 
-    vCenter.y += 10.f;  // 간지용
+    //vCenter.y += 10.f;  // 간지용
     pBBox->Center = vCenter;
     pBBox->Extents = vHalfExtents * m_fLooseFactor;
     

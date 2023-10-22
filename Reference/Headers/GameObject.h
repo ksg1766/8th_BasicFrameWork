@@ -14,6 +14,7 @@ class CTexture;
 class CVIBuffer;
 class CRigidBody;
 class CModel;
+class CNavMeshAgent;
 
 class ENGINE_DLL CGameObject abstract : public CBase
 {
@@ -48,6 +49,7 @@ public:
 	CTexture*				GetTexture();
 	//CLight*				GetLight();
 	//CTerrain*				GetTerrain();
+	CNavMeshAgent*			GetNavMeshAgent();
 
 	CTransform*				GetOrAddTransform(_uint iLevelIndex);
 	_bool					IsDead()		const			{ return m_IsDead; }

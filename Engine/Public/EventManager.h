@@ -14,7 +14,7 @@ struct tagEvent
 	DWORD_PTR	wParam;
 };
 
-class CEventManager : public CBase
+class CEventManager final : public CBase
 {
 	DECLARE_SINGLETON(CEventManager);
 	using Super = CBase;

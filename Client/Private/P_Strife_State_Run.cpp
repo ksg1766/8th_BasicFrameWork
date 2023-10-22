@@ -27,7 +27,10 @@ HRESULT CP_Strife_State_Run::Enter(_int i)
 
 void CP_Strife_State_Run::Tick(const _float& fTimeDelta)
 {
+	CPlayerController* pController = static_cast<CPlayerController*>(m_pController);
+
 	Input(fTimeDelta);
+	pController->ForceHeight();
 }
 
 const wstring& CP_Strife_State_Run::LateTick(const _float& fTimeDelta)

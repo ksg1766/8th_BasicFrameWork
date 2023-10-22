@@ -58,11 +58,11 @@ void CQuadTreeNode::Render_QuadTreeNode()
 	{
 		for (auto& iter : m_vecChildren)
 		{
-			if (0 == iter->IsCulled())
+			if (DISJOINT == iter->IsCulled())
 				continue;
-			else if (1 == iter->IsCulled())
+			else if (INTERSECTS == iter->IsCulled())
 				iter->Render_QuadTreeNode();
-			else
+			else // CONTAINS
 			{
 				for (auto& _iter : iter->GetObjectList())
 				{
@@ -73,6 +73,14 @@ void CQuadTreeNode::Render_QuadTreeNode()
 				DebugRender();
 #endif // _DEBUG
 			}
+		}
+	}
+	else
+	{
+		for (auto& _iter : m_vecObjects)
+		{
+			_iter->Tick(0.0167f);
+			_iter->LateTick(0.0167f);
 		}
 	}
 }
@@ -97,7 +105,7 @@ void CQuadTreeNode::DebugRender()
 
 	m_pBatch->Begin();
 
-	DX::Draw(m_pBatch, m_tBoundBox, Colors::Cyan);
+	DX::Draw(m_pBatch, m_tBoundBox, Colors::DarkCyan);
 
 	m_pBatch->End();
 }

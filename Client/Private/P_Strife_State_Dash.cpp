@@ -29,6 +29,7 @@ void CP_Strife_State_Dash::Tick(const _float& fTimeDelta)
 	CPlayerController* pController = static_cast<CPlayerController*>(m_pController);
 
 	m_fTimeSum += fTimeDelta;
+	pController->ForceHeight();
 	//
 }
 
@@ -61,7 +62,7 @@ const wstring& CP_Strife_State_Dash::Transition()
 				return m_strStateName;
 			}
 		}
-		if (m_fTimeSum > m_vecAnimIndexTime[m_iCurrAnimation].second * 0.5f)
+		if (m_fTimeSum > m_vecAnimIndexTime[m_iCurrAnimation].second * 0.4f)
 		{
 			pController->GetDashMessage(false);
 			return m_vecTransition[Trans::IDLE];
@@ -69,7 +70,7 @@ const wstring& CP_Strife_State_Dash::Transition()
 	}
 	else if (Anims::DASH_END == m_iCurrAnimation)
 	{
-		if (m_fTimeSum > m_vecAnimIndexTime[m_iCurrAnimation].second * 0.5f)
+		if (m_fTimeSum > m_vecAnimIndexTime[m_iCurrAnimation].second * 0.4f)
 		{
 			pController->GetDashMessage(false);
 			return m_vecTransition[Trans::IDLE];

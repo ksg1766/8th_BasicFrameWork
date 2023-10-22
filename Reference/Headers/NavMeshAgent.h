@@ -10,7 +10,6 @@ class ENGINE_DLL CNavMeshAgent final : public CComponent
 public:
 	typedef struct tagNavigationDesc
 	{
-		CNavMeshSurface* pNavMeshSurface = nullptr;
 		_int			iCurrentIndex = { -1 };
 	}NAVIGATION_DESC;
 
@@ -21,22 +20,25 @@ private:
 
 public:
 	virtual HRESULT		Initialize_Prototype(const wstring& strNavigationData);
-	virtual HRESULT		Initialize(void* pArg)	override;
-	virtual void		DebugRender()			override;
+	virtual HRESULT		Initialize(void* pArg)				override;
+	virtual void		Tick(const _float& fTimeDelta)		override;
+	virtual void		DebugRender()						override;
 	
 public:
-	_bool	IsMove(_fvector vPoint);
+	_bool	Walkable(_fvector vPoint);
+	void	ForceHeight() { m_pTransform->Translate(Vec3(0.f, GetHeightOffset(), 0.f)); }
+	_float	GetHeightOffset();
 
 private:
 	HRESULT SetUp_Neighbors();
 
 private:
+	CTransform*				m_pTransform = nullptr;
 	_int					m_iCurrentIndex = { -1 };
-	CNavMeshSurface*		m_pNavMeshSurface = nullptr;
 	static vector<class CCell*>	m_Cells;
 
 #ifdef _DEBUG
-	_bool	m_IsRendered = false;
+	static _bool	m_IsRendered;
 	//class CShader* m_pShader = { nullptr };
 
 	PrimitiveBatch<VertexPositionColor>* m_pBatch = nullptr;

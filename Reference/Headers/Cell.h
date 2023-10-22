@@ -16,6 +16,7 @@ private:
 	
 public:
 	const _float3*	Get_Point(POINTS ePoint) const				{ return &m_vPoints[ePoint]; }
+	const _float3*	Get_Points() const							{ return m_vPoints; }
 
 	void			SetUp_Neighbor(LINE eLine, CCell* pCell)	{ m_iNeighborIndices[eLine] = pCell->m_iIndex; }
 

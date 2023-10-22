@@ -90,6 +90,8 @@ HRESULT CModel::Initialize_Prototype(const wstring& strModelFilePath, const SOCK
 
 HRESULT CModel::Initialize(void * pArg)
 {
+	CLevelManager* pInstance = GET_INSTANCE(CLevelManager);
+
 	/* Deep Copy - Bones */
 	vector<CBone*>			Bones;
 	Bones.reserve(m_Bones.size());
@@ -162,7 +164,6 @@ HRESULT CModel::Initialize(void * pArg)
 			/*for (auto& pParts : m_PartsModel)
 				pParts->SetSRV(m_pSRV);*/
 
-			CLevelManager* pInstance = GET_INSTANCE(CLevelManager);
 			if (3/*LEVEL_GAMETOOL*/ != pInstance->GetCurrentLevelIndex())
 			{
 				for (auto& pAnimation : m_Animations)
@@ -175,13 +176,21 @@ HRESULT CModel::Initialize(void * pArg)
 					pAnimation->GetChannels().clear();
 				}
 			}
-			RELEASE_INSTANCE(CLevelManager);
+
 			m_mapVTFExist[m_iInstanceID] = true;
 		}
 	}
 
 	m_pShader = m_pGameObject->GetShader();
 	Safe_AddRef(m_pShader);
+
+	if (2/*LEVEL_GAMEPLAY*/ == pInstance->GetCurrentLevelIndex())
+	{
+		m_vecSurfaceVtx.clear();
+		m_vecSurfaceIdx.clear();
+	}
+
+	RELEASE_INSTANCE(CLevelManager);
 
 	return S_OK;
 }

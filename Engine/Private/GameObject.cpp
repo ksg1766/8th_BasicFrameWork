@@ -112,6 +112,12 @@ CTexture* CGameObject::GetTexture()
 	return static_cast<CTexture*>(pComponent);
 }
 
+CNavMeshAgent* CGameObject::GetNavMeshAgent()
+{
+	CComponent* pComponent = GetFixedComponent(ComponentType::NavMeshAgent);
+	return static_cast<CNavMeshAgent*>(pComponent);
+}
+
 CTransform* CGameObject::GetOrAddTransform(_uint iLevelIndex)
 {
 	if (GetTransform() == nullptr)

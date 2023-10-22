@@ -11,7 +11,7 @@ typedef struct PhysicsDesc
 	_bool IsKinematic;
 }PHYSDESC;
 
-class CPhysicsManager : public CBase
+class CPhysicsManager final : public CBase
 {
 	using Super = CBase;
     DECLARE_SINGLETON(CPhysicsManager);

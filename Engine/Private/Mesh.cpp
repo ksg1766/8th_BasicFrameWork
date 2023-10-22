@@ -6,6 +6,7 @@
 #include "Animation.h"
 #include "GameObject.h"
 #include "GraphicDevice.h"
+#include "LevelManager.h"
 
 CMesh::CMesh(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CVIBuffer(pDevice, pContext)
@@ -123,6 +124,8 @@ HRESULT CMesh::Ready_StaticVertices(vector<VTXMESH>& Vertices, _fmatrix& PivotMa
 	VTXMESH* pVertices = new VTXMESH[m_iNumVertices];
 	ZeroMemory(pVertices, sizeof(VTXMESH) * m_iNumVertices);
 
+	//CLevelManager* pLevelManager = GET_INSTANCE(CLevelManager);
+
 	for (_uint i = 0; i < m_iNumVertices; ++i)
 	{
 		memcpy(&pVertices[i].vPosition, &Vertices[i].vPosition, sizeof(_float3));
@@ -136,8 +139,11 @@ HRESULT CMesh::Ready_StaticVertices(vector<VTXMESH>& Vertices, _fmatrix& PivotMa
 		memcpy(&pVertices[i].vTangent, &Vertices[i].vTangent, sizeof(_float3));
 		XMStoreFloat3(&pVertices[i].vTangent, XMVector3TransformNormal(XMLoadFloat3(&pVertices[i].vTangent), PivotMatrix));
 
-		vecSurfaceVtx.push_back(pVertices[i].vPosition);
+		//if(3 == pLevelManager->GetCurrentLevelIndex())
+			vecSurfaceVtx.push_back(pVertices[i].vPosition);
 	}
+
+	//RELEASE_INSTANCE(CLevelManager);
 
 	ZeroMemory(&m_SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
 	m_SubResourceData.pSysMem = pVertices;
@@ -218,6 +224,8 @@ HRESULT CMesh::Ready_Indices(vector<_int>& Indices, vector<FACEINDICES32>* vecSu
 	if (vecSurfaceIdx)
 		IndicesOffset = vecSurfaceIdx->size() * 3;
 
+	//CLevelManager* pLevelManager = GET_INSTANCE(CLevelManager);
+
 	for (_uint i = 0, j = 0; i < m_iNumPrimitives; ++i, ++j)
 	{
 		pIndices[i]._0 = Indices[j];
@@ -229,9 +237,13 @@ HRESULT CMesh::Ready_Indices(vector<_int>& Indices, vector<FACEINDICES32>* vecSu
 			pIndicesCache[i]._0 = pIndices[i]._0 + IndicesOffset;
 			pIndicesCache[i]._1 = pIndices[i]._1 + IndicesOffset;
 			pIndicesCache[i]._2 = pIndices[i]._2 + IndicesOffset;
-			vecSurfaceIdx->push_back(pIndicesCache[i]);
+
+			//if (3 == pLevelManager->GetCurrentLevelIndex())
+				vecSurfaceIdx->push_back(pIndicesCache[i]);
 		}
 	}
+
+	//RELEASE_INSTANCE(CLevelManager);
 
 	ZeroMemory(&m_SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
 	m_SubResourceData.pSysMem = pIndices;

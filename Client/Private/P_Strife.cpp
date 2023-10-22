@@ -102,7 +102,10 @@ HRESULT CP_Strife::Ready_FixedComponents()
 	if (LEVEL_GAMEPLAY == m_pGameInstance->GetCurrentLevelIndex())
 	{
 		/* Com_NavMeshAgent */
-		if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::NavMeshAgent, TEXT("Prototype_Component_NavMeshAgent"))))
+		CNavMeshAgent::NAVIGATION_DESC pNaviDesc;
+		pNaviDesc.iCurrentIndex = 0;
+
+		if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::NavMeshAgent, TEXT("Prototype_Component_NavMeshAgent"), &pNaviDesc)))
 			return E_FAIL;
 	}
 

@@ -17,7 +17,7 @@ union COLLIDER_ID
 	uint64 ID;
 };
 
-class CCollisionManager : public CBase
+class CCollisionManager final : public CBase
 {
     DECLARE_SINGLETON(CCollisionManager);
 

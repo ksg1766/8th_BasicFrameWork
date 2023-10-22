@@ -35,7 +35,6 @@ public:
 
 private:
 	void	Input(const _float& fTimeDelta);
-	void	LimitAllAxisVelocity();
 
 private:
 

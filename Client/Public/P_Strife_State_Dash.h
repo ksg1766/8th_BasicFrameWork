@@ -37,14 +37,6 @@ private:
 	void	Input(const _float& fTimeDelta);
 
 private:
-	CTransform*		m_pTransform = nullptr;
-	CRigidDynamic*	m_pRigidBody = nullptr;
-
-	Vec3			m_vMaxLinearSpeed;
-	Vec3			m_vLinearSpeed;
-
-	Vec3			m_vMaxAngularSpeed;
-	Vec3			m_vAngularSpeed;
 
 public:
 	static	CP_Strife_State_Dash* Create(CGameObject* pGameObject, const STATEANIMS& tStateAnim, CMonoBehaviour* pController);

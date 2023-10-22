@@ -87,7 +87,7 @@ HRESULT CLevel_GameTool::Tick(const _float& fTimeDelta)
 
 	//
 
-	ImGUIDemo();
+	//ImGUIDemo();
 
 
 	return S_OK;

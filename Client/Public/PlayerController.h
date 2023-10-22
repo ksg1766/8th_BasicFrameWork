@@ -38,9 +38,13 @@ public:
 	void	GetMoveMessage(const Vec3& vDir)	{ m_vNetTrans += vDir; }
 	void	GetJumpMessage(const _bool& IsJump)	{ IsJump ? Jump() : Land();}
 	void	GetDashMessage(const _bool& IsDash);// { IsDash ? Dash(m_pTransform->GetForward()) : DashEnd(); }
-	//void	GetFireMessage(const _bool& IsDash) { IsFireOn ?  }
+	//void	GetFireMessage(CStrife_Ammo::AmmoType eAmmoType) { Fire(eAmmoType) :  }
 
-	void	Fire(const _float& fTimeDelta, CStrife_Ammo::AmmoType eAmmoType);
+	void	ForceHeight()				{ m_pTransform->Translate(Vec3(0.f, m_pNavMeshAgent->GetHeightOffset(), 0.f)); }
+	_float	GetHeightOffset()			{ return m_pNavMeshAgent->GetHeightOffset(); }
+	_bool	Walkable(_fvector vPoint)	{ return m_pNavMeshAgent->Walkable(vPoint); }
+
+	void	Fire(CStrife_Ammo::AmmoType eAmmoType);
 
 private:
 	void	Input(const _float& fTimeDelta);
@@ -56,6 +60,8 @@ private:
 private:
 	CTransform*		m_pTransform = nullptr;
 	CRigidDynamic*	m_pRigidBody = nullptr;
+	CNavMeshAgent*	m_pNavMeshAgent = nullptr;
+	Vec3			m_vPrePos;
 
 	Vec3			m_vNetTrans;
 

@@ -8,6 +8,7 @@ class CGameInstance;
 class CGameObject;
 class CModel;
 class CMonoBehaviour;
+class CNavMeshAgent;
 class ENGINE_DLL CState : public CBase
 {
 	using Super = CBase;
@@ -23,7 +24,7 @@ protected:
 	virtual ~CState() = default;
 	
 public:
-	virtual HRESULT	Initialize(CGameObject* pGameObject, const STATEANIMS& tStateAnim, CMonoBehaviour* pControlle = nullptr);
+	virtual HRESULT	Initialize(CGameObject* pGameObject, const STATEANIMS& tStateAnim, CMonoBehaviour* pController = nullptr);
 	virtual HRESULT	Enter(_int = 0);
 
 	virtual void			Tick(const _float& fTimeDelta)		PURE;
@@ -40,6 +41,7 @@ protected:
 
 	CModel*			m_pModel = nullptr;
 	CMonoBehaviour* m_pController = nullptr;
+	CNavMeshAgent*	m_pNavMeshAgent = nullptr;
 	wstring			m_strStateName = TEXT("");
 	
 	vector<wstring>	m_vecTransition;

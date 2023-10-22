@@ -37,15 +37,6 @@ private:
 	void	Input(const _float& fTimeDelta);
 
 private:
-	CTransform*		m_pTransform = nullptr;
-	CRigidDynamic*	m_pRigidBody = nullptr;
-
-	Vec3			m_vMaxLinearSpeed;
-	Vec3			m_vLinearSpeed;
-
-	Vec3			m_vMaxAngularSpeed;
-	Vec3			m_vAngularSpeed;
-
 	_float			m_fFR_Default = 0.2f;
 	_float			m_fFR_Default_Timer = 0.f;
 

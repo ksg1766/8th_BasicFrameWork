@@ -11,7 +11,6 @@
 #include "PlayerController.h"
 #include "MainCameraController.h"
 #include "StateMachine.h"
-#include "NavMeshSurface.h"
 #include "TestAIController.h"
 #include "FlyingCamera.h"
 #include "MainCamera.h"
@@ -202,7 +201,7 @@ HRESULT CLoader::Loading_Components_For_Level_GamePlay()
 
 	/* For.Prototype_Component_NavMeshAgent */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_NavMeshAgent"),
-		CNavMeshAgent::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/LevelData/NavMesh/NavMesh.dat")))))
+		CNavMeshAgent::Create(m_pDevice, m_pContext, TEXT("../Bin/LevelData/NavMesh/NavigationMesh.dat")))))
 		return E_FAIL;
 
 	RELEASE_INSTANCE(CGameInstance);
@@ -281,6 +280,19 @@ HRESULT CLoader::Loading_GameObjects_For_Level_GamePlay()
 	/* For.Prototype_GameObject_Strife_Ammo_Default */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Strife_Ammo_Default"), CStrife_Ammo_Default::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
+	/* For.Prototype_GameObject_Static */
+	wstring strStaticFilePath = TEXT("../Bin/Resources/Models/Static/");
+	for (const auto& entry : filesystem::directory_iterator(strStaticFilePath))
+	{
+		const wstring& strFileName = entry.path().stem();
+
+		if (strFileName == TEXT("Strife_GunL") || strFileName == TEXT("Strife_GunR"))
+			continue;
+
+		if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_") + strFileName, CStaticBase::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+	}
 
 	RELEASE_INSTANCE(CGameInstance);
 

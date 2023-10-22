@@ -3,6 +3,9 @@
 
 #include "GameInstance.h"
 #include "GameObject.h"
+#include "FileUtils.h"
+#include "Utils.h"
+#include "Cell.h"
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -12,6 +15,9 @@ CLevel_GamePlay::CLevel_GamePlay(ID3D11Device * pDevice, ID3D11DeviceContext * p
 HRESULT CLevel_GamePlay::Initialize()
 {
 	m_pGameInstance = GET_INSTANCE(CGameInstance);
+
+	if (FAILED(LoadData_Map()))
+		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Terrain()))
 		return E_FAIL;
@@ -249,6 +255,58 @@ HRESULT CLevel_GamePlay::Ready_Layer_Wall()
 	if (nullptr == pGameObject)	return E_FAIL;
 	pGameObject->GetTransform()->Translate(Vec3(-300.f, 300.f, 0.f));*/
 	//pGameObject->GetTransform()->Translate(Vec3(10.f, 0.f, 100.f));
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::LoadData_Map()
+{
+	shared_ptr<FileUtils> file = make_shared<FileUtils>();
+	file->Open(TEXT("../Bin/LevelData/NavTest.dat"), Read);
+
+	while (true)
+	{
+		// key °ª ÀúÀå
+		LAYERTAG eLayer = LAYERTAG::LAYER_END;
+		string strLayerTag = "";
+
+		if (false == file->Read(strLayerTag))
+			break;
+
+		const _int LayerTag_End = sizeof(LayerTag_string) / sizeof(_char*);
+		for (_int i = 0; i < LayerTag_End; ++i)
+		{
+			if (0 == strcmp(LayerTag_string[i], strLayerTag.c_str()))
+			{
+				eLayer = static_cast<LAYERTAG>(i);
+				break;
+			}
+		}
+		if (LAYERTAG::LAYER_END == eLayer)
+			__debugbreak();
+
+		Matrix matWorld = file->Read<Matrix>();
+		string tempObjectTag;
+		file->Read(tempObjectTag);
+
+		if (static_cast<_uint>(LAYERTAG::DEFAULT_LAYER_END) < static_cast<_uint>(eLayer) &&
+			static_cast<_uint>(LAYERTAG::DYNAMIC_LAYER_END) < static_cast<_uint>(eLayer))
+		{
+
+		}
+
+		if (static_cast<_uint>(LAYERTAG::DYNAMIC_LAYER_END) < static_cast<_uint>(eLayer) &&
+			static_cast<_uint>(LAYERTAG::STATIC_LAYER_END) > static_cast<_uint>(eLayer))
+		{
+			const wstring strPrototypeTag = TEXT("Prototype_GameObject_") + Utils::ToWString(tempObjectTag);
+
+			//CGameObject* pGameObject = m_pGameInstance->CreateObject(strPrototypeTag, eLayer);
+			CGameObject* pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayer, strPrototypeTag);
+			if (nullptr == pGameObject)
+				__debugbreak();
+			pGameObject->GetTransform()->Set_WorldMatrix(matWorld);
+		}
+	}
 
 	return S_OK;
 }

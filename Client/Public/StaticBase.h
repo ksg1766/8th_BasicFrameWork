@@ -33,6 +33,7 @@ private:
 	HRESULT			Bind_ShaderResources(); /* 셰이더 전역변수에 값 던진다. */
 
 	//
+	_bool			m_bRendered = false;
 	_float			m_fDissolveAmount = 0.f;
 
 public:

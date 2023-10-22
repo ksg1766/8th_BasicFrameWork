@@ -37,12 +37,6 @@ private:
 	void	Input(const _float& fTimeDelta);
 
 private:
-	Vec3			m_vMaxLinearSpeed;
-	Vec3			m_vLinearSpeed;
-
-	Vec3			m_vMaxAngularSpeed;
-	Vec3			m_vAngularSpeed;
-
 	_bool			m_bDoubleJump = false;
 
 public:

@@ -41,16 +41,21 @@ HRESULT CPlayerController::Initialize(void* pArg)
 	m_pRigidBody->IsKinematic(true);
 	m_pRigidBody->SetMass(1.f);
 
+	m_pNavMeshAgent = m_pGameObject->GetNavMeshAgent();
+
 	return S_OK;
 }
 
 void CPlayerController::Tick(const _float& fTimeDelta)
 {
 	Move(fTimeDelta);
+	if (!m_pNavMeshAgent->Walkable(m_pTransform->GetPosition()))
+		m_pTransform->SetPosition(m_vPrePos);
 }
 
 void CPlayerController::LateTick(const _float& fTimeDelta)
 {
+	m_vPrePos = m_pTransform->GetPosition();
 }
 
 void CPlayerController::DebugRender()
@@ -110,8 +115,11 @@ void CPlayerController::Move(const _float& fTimeDelta)
 
 	const Vec3& vForward = m_pTransform->GetForward();
 
-	Vec3 vSpeed = m_vLinearSpeed * m_vNetTrans;
-	m_pTransform->Translate(fTimeDelta * vSpeed);
+	Vec3 vSpeed = fTimeDelta * m_vLinearSpeed * m_vNetTrans;
+
+	//const _float3& vPos = m_pTransform->GetPosition();
+
+	m_pTransform->Translate(vSpeed);
 
 	_float fRadian = acos(vForward.Dot(m_vNetTrans));
 	if (fabs(fRadian) > EPSILON)
@@ -165,7 +173,7 @@ void CPlayerController::GetDashMessage(const _bool& IsDash)
 	IsDash ? Dash(m_pTransform->GetForward()) : DashEnd();
 }
 
-void CPlayerController::Fire(const _float& fTimeDelta, CStrife_Ammo::AmmoType eAmmoType)
+void CPlayerController::Fire(CStrife_Ammo::AmmoType eAmmoType)
 {
 	CGameObject* pAmmo = nullptr;
 	

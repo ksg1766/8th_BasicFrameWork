@@ -33,7 +33,11 @@ HRESULT CStaticBase::Initialize(void* pArg)
 
 void CStaticBase::Tick(const _float& fTimeDelta)
 {
+	if (m_bRendered)
+		return;
+
 	Super::Tick(fTimeDelta);
+	m_bRendered = true;
 }
 
 void CStaticBase::LateTick(const _float& fTimeDelta)
@@ -64,6 +68,8 @@ HRESULT CStaticBase::Render()
 #ifdef _DEBUG
 	Super::DebugRender();
 #endif
+
+	m_bRendered = false;
 
 	return S_OK;
 }

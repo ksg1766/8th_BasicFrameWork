@@ -28,6 +28,11 @@ void CCameraManager::LateTick(const _float& fTimeDelta)
 		return;
 
 	m_pCurrentCamera->LateTick(fTimeDelta);
+
+	if (KEY_PRESSING_EX(KEY::CTRL) && KEY_DOWN_EX(KEY::F9))
+		ChangeCamera(TEXT("FlyingCamera"));
+	else if (KEY_PRESSING_EX(KEY::CTRL) && KEY_DOWN_EX(KEY::F8))
+		ChangeCamera(TEXT("MainCamera"));
 }
 
 void CCameraManager::DebugRender()

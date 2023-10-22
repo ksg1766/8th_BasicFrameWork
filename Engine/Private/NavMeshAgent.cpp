@@ -8,6 +8,7 @@
 #include "Cell.h"
 #include "DebugDraw.h"
 
+_bool CNavMeshAgent::m_IsRendered = false;
 vector<CCell*> CNavMeshAgent::m_Cells;
 
 CNavMeshAgent::CNavMeshAgent(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -25,57 +26,27 @@ CNavMeshAgent::CNavMeshAgent(const CNavMeshAgent& rhs)
 
 HRESULT CNavMeshAgent::Initialize_Prototype(const wstring& strNavigationData)
 {
-	/*shared_ptr<FileUtils> file = make_shared<FileUtils>();
-
+	shared_ptr<FileUtils> file = make_shared<FileUtils>();
 	file->Open(strNavigationData, Read);
 
+	_int iIndex = 0;
 	while (true)
 	{
-		_float3		vPoints[CCell::POINT_END] = {};
+		_float3 vPoints[3];
+		::ZeroMemory(vPoints, 3 * sizeof(_float3));
 
 		if (false == file->Read(vPoints))
 			break;
 
-		CCell* pCell = CCell::Create(m_pDevice, m_pContext, vPoints, m_Cells.size());
-		if (nullptr == pCell)
-			return E_FAIL;
-
+		CCell* pCell = CCell::Create(m_pDevice, m_pContext, vPoints, iIndex);
 		m_Cells.push_back(pCell);
-	}*/
-	_ulong		dwByte = 0;
-	HANDLE		hFile = CreateFile(strNavigationData.c_str(), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
-	if (0 == hFile)
-		return E_FAIL;
-
-	while (true)
-	{
-		_float3		vPoints[CCell::POINT_END] = {};
-
-		ReadFile(hFile, vPoints, sizeof(_float3) * CCell::POINT_END, &dwByte, nullptr);
-
-		if (0 == dwByte)
-			break;
-
-		CCell* pCell = CCell::Create(m_pDevice, m_pContext, vPoints, m_Cells.size());
-		if (nullptr == pCell)
-			return E_FAIL;
-
-		m_Cells.push_back(pCell);
+		++iIndex;
 	}
-
-	CloseHandle(hFile);
 
 	if (FAILED(SetUp_Neighbors()))
 		return E_FAIL;
 
 #ifdef _DEBUG
-	/*m_pShader = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Cell.hlsl"), VTXPOS::Elements, VTXPOS::iNumElements);
-	CComponentManager* pComponentManager = GET_INSTANCE(CComponentManager);
-	CLevelManager* pLevelManager = GET_INSTANCE(CLevelManager);
-	m_pShader = static_cast<CShader*>(pComponentManager->Clone_Component(m_pGameObject, pLevelManager->GetCurrentLevelIndex(), TEXT("Prototype_Component_Shader_VtxDebug")));
-	if (nullptr == m_pShader)
-		return E_FAIL;*/
-
 	m_pBatch = new PrimitiveBatch<VertexPositionColor>(m_pContext);
 
 	m_pEffect = new BasicEffect(m_pDevice);
@@ -85,7 +56,8 @@ HRESULT CNavMeshAgent::Initialize_Prototype(const wstring& strNavigationData)
 	size_t		iLength = 0;
 	m_pEffect->GetVertexShaderBytecode(&pShaderByteCodes, &iLength);
 
-	if (FAILED(m_pDevice->CreateInputLayout(VertexPositionColor::InputElements, VertexPositionColor::InputElementCount, pShaderByteCodes, iLength, &m_pInputLayout)))
+	if (FAILED(m_pDevice->CreateInputLayout(VertexPositionColor::InputElements,
+		VertexPositionColor::InputElementCount, pShaderByteCodes, iLength, &m_pInputLayout)))
 	{
 		Safe_Delete(m_pBatch);
 		Safe_Delete(m_pEffect);
@@ -106,13 +78,30 @@ HRESULT CNavMeshAgent::Initialize(void* pArg)
 
 	/*  이 네비게이션을 이용하고자하는 객체가 어떤 셀에 있는지 저장한다. */
 	m_iCurrentIndex = pNaviDesc->iCurrentIndex;
+	
+	Vec3 vCenter = (*m_Cells[m_iCurrentIndex]->Get_Point(CCell::POINT_A)
+		+ *m_Cells[m_iCurrentIndex]->Get_Point(CCell::POINT_B)
+		+ *m_Cells[m_iCurrentIndex]->Get_Point(CCell::POINT_C)) / 3.f;
+
+	m_pTransform = GetTransform();
+	m_pTransform->SetPosition(vCenter);
+	ForceHeight();
 
 	return S_OK;
+}
+
+void CNavMeshAgent::Tick(const _float& fTimeDelta)
+{
+	if (m_IsRendered)
+		m_IsRendered = false;
+
 }
 
 void CNavMeshAgent::DebugRender()
 {
 #ifdef _DEBUG
+	if (m_IsRendered)
+		return;
 
 	m_pEffect->SetWorld(XMMatrixIdentity());
 
@@ -126,74 +115,20 @@ void CNavMeshAgent::DebugRender()
 	m_pEffect->Apply(m_pContext);
 	m_pContext->IASetInputLayout(m_pInputLayout);
 
-	m_pBatch->Begin();
-
-	if (-1 == m_iCurrentIndex)
+	m_Cells[m_iCurrentIndex]->DebugRender(m_pBatch, Colors::YellowGreen);
+	for (_int i = 0; i < m_Cells.size(); ++i)
 	{
-		for (auto& pCell : m_Cells)
+		if (m_Cells[i])
 		{
-			if (nullptr != pCell)
-				pCell->DebugRender(m_pBatch, Colors::Cyan);
+			m_Cells[i]->DebugRender(m_pBatch, Colors::Cyan);
 		}
 	}
-	else
-	{
-		m_Cells[m_iCurrentIndex]->DebugRender(m_pBatch, Colors::YellowGreen);
-	}
 
-	m_pBatch->End();
-	////////////////////////////////////////////////////////
-
-	//if (FAILED(m_pShader->Bind_Matrix("g_WorldMatrix", &Matrix::Identity)))
-	//	__debugbreak();
-
-	//CPipeLine* pPipeLine = GET_INSTANCE(CPipeLine);
-
-	////if (FAILED(m_pShader->Bind_Matrix("g_ViewMatrix", &pPipeLine->Get_Transform_float4x4(CPipeLine::D3DTS_VIEW))))
-	//if (FAILED(m_pGameInstance->Bind_TransformToShader(m_pShader, "g_ViewMatrix", CPipeLine::D3DTS_VIEW)))
-	//	__debugbreak();
-
-	//if (FAILED(m_pGameInstance->Bind_TransformToShader(m_pShader, "g_ProjMatrix", CPipeLine::D3DTS_PROJ)))
-	//	__debugbreak();
-
-	//RELEASE_INSTANCE(CPipeLine);
-
-	//if (-1 == m_iCurrentIndex)
-	//{
-	//	/*if (FAILED(m_pShader->Bind_RawValue("g_vLineColor", &_float4(0.f, 1.f, 0.f, 1.f), sizeof(_float4))))
-	//		__debugbreak();*/
-	//	/*m_pShader->SetPassIndex(1);
-	//	_float		fHeight = 0.f;
-	//	if (FAILED(m_pShader->Bind_RawValue("g_fHeight", &fHeight, sizeof(_float))))
-	//		__debugbreak();
-
-	//	if (FAILED(m_pShader->Begin()))
-	//		__debugbreak();*/
-
-	//	for (auto& pCell : m_Cells)
-	//	{
-	//		if (nullptr != pCell)
-	//			pCell->DebugRender();
-	//	}
-	//}
-	//else
-	//{
-	//	/*if (FAILED(m_pShader->Bind_RawValue("g_vLineColor", &_float4(1.f, 0.f, 0.f, 1.f), sizeof(_float4))))
-	//		__debugbreak();*/
-	//	/*m_pShader->SetPassIndex(0);
-	//	_float		fHeight = 0.1f;
-	//	if (FAILED(m_pShader->Bind_RawValue("g_fHeight", &fHeight, sizeof(_float))))
-	//		__debugbreak();
-
-	//	if (FAILED(m_pShader->Begin()))
-	//		__debugbreak();*/
-
-	//	m_Cells[m_iCurrentIndex]->DebugRender();
-	//}
+	m_IsRendered = true;
 #endif
 }
 
-_bool CNavMeshAgent::IsMove(_fvector vPoint)
+_bool CNavMeshAgent::Walkable(_fvector vPoint)
 {
 	_int		iNeighborIndex = 0;
 
@@ -220,6 +155,18 @@ _bool CNavMeshAgent::IsMove(_fvector vPoint)
 	}
 	else
 		return true;
+}
+
+_float CNavMeshAgent::GetHeightOffset()
+{
+	_float3 vPos(m_pTransform->GetPosition());
+
+	const _float3* vPoints = m_Cells[m_iCurrentIndex]->Get_Points();
+
+	_float4 vPlane;
+	XMStoreFloat4(&vPlane, XMPlaneFromPoints(XMLoadFloat3(&vPoints[CCell::POINT_A]), XMLoadFloat3(&vPoints[CCell::POINT_B]), XMLoadFloat3(&vPoints[CCell::POINT_C])));
+
+	return -((vPlane.x * vPos.x + vPlane.z * vPos.z + vPlane.w) / vPlane.y + vPos.y);
 }
 
 HRESULT CNavMeshAgent::SetUp_Neighbors()
@@ -267,6 +214,7 @@ CNavMeshAgent* CNavMeshAgent::Create(ID3D11Device* pDevice, ID3D11DeviceContext*
 CComponent* CNavMeshAgent::Clone(CGameObject* pGameObject, void* pArg)
 {
 	CNavMeshAgent* pInstance = new CNavMeshAgent(*this);
+	pInstance->m_pGameObject = pGameObject;
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
