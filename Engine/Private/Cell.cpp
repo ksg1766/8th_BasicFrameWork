@@ -95,6 +95,20 @@ _bool CCell::isOut(_fvector vPoint, _int* pNeighborIndex)
 	return false;
 }
 
+_float3 CCell::GetPassedEdgeNormal(_fvector vPoint)
+{
+	for (size_t i = 0; i < LINE_END; i++)
+	{
+		_vector		vSour = XMVector3Normalize(vPoint - XMLoadFloat3(&m_vPoints[i]));
+		_vector		vDest = XMVector3Normalize(XMLoadFloat3(&m_vNormals[i]));
+
+		if (0 < XMVectorGetX(XMVector3Dot(vSour, vDest)))
+			return m_vNormals[i];
+	}
+
+	return _float3(0.f, 0.f, 0.f);
+}
+
 CCell* CCell::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _float3* pPoints, _uint iIndex)
 {
 	CCell* pInstance = new CCell(pDevice, pContext);

@@ -25,6 +25,7 @@ public:
 
 	_bool			Compare_Points(const _float3* pSourPoint, const _float3* pDestPoint);
 	_bool			isOut(_fvector vPoint, _int* pNeighborIndex);
+	_float3			GetPassedEdgeNormal(_fvector vPoint);
 
 private:
 	_uint					m_iIndex = {};

@@ -109,6 +109,11 @@ HRESULT CP_Strife::Ready_FixedComponents()
 			return E_FAIL;
 	}
 
+	/* Com_Terrain */
+	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Terrain, TEXT("Prototype_Component_Terrain"))) ||
+		FAILED(static_cast<CTerrain*>(GetFixedComponent(ComponentType::Terrain))->InitializeJustGrid(1024, 1024, 1024, 1024)))
+		return E_FAIL;
+
 	return S_OK;
 }
 

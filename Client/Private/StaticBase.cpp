@@ -25,8 +25,11 @@ HRESULT CStaticBase::Initialize(void* pArg)
 	if (FAILED(Ready_Scripts()))
 		return E_FAIL;
 
-	GetRigidBody()->GetSphereCollider()->SetRadius(10.f);
-	GetRigidBody()->GetOBBCollider()->SetExtents(Vec3(5.f, 5.f, 5.f));
+	if (LEVEL_GAMETOOL == m_pGameInstance->GetCurrentLevelIndex())
+	{
+		GetRigidBody()->GetSphereCollider()->SetRadius(10.f);
+		GetRigidBody()->GetOBBCollider()->SetExtents(Vec3(5.f, 5.f, 5.f));
+	}
 
 	return S_OK;
 }
@@ -93,9 +96,12 @@ HRESULT CStaticBase::Ready_FixedComponents()
 		return E_FAIL;
 
 	/* Com_RigidBody */
-	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::RigidBody, TEXT("Prototype_Component_RigidStatic")))
-		|| FAILED(GetRigidBody()->InitializeCollider()))
+	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::RigidBody, TEXT("Prototype_Component_RigidStatic"))))
 		return E_FAIL;
+
+	if (LEVEL_GAMETOOL == m_pGameInstance->GetCurrentLevelIndex())
+		if(FAILED(GetRigidBody()->InitializeCollider()))
+			return E_FAIL;
 
 	return S_OK;
 }

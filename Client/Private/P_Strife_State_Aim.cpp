@@ -81,19 +81,19 @@ void CP_Strife_State_Aim::Input(const _float& fTimeDelta)
 
 	if (KEY_PRESSING(KEY::W) || KEY_DOWN(KEY::W))
 	{
-		pController->GetMoveMessage(Vec3::UnitZ);
+		pController->GetTranslateMessage(Vec3::UnitZ);
 	}
 	if (KEY_PRESSING(KEY::A) || KEY_DOWN(KEY::A))
 	{
-		pController->GetMoveMessage(-Vec3::UnitX);
+		pController->GetTranslateMessage(-Vec3::UnitX);
 	}
 	if (KEY_PRESSING(KEY::S) || KEY_DOWN(KEY::S))
 	{
-		pController->GetMoveMessage(-Vec3::UnitZ);
+		pController->GetTranslateMessage(-Vec3::UnitZ);
 	}
 	if (KEY_PRESSING(KEY::D) || KEY_DOWN(KEY::D))
 	{
-		pController->GetMoveMessage(Vec3::UnitX);
+		pController->GetTranslateMessage(Vec3::UnitX);
 	}
 
 	const POINT& p = CGameInstance::GetInstance()->GetMousePos();
@@ -102,10 +102,16 @@ void CP_Strife_State_Aim::Input(const _float& fTimeDelta)
 
 	if (MOUSE_DOWN(MOUSEKEYSTATE::DIM_LB) || MOUSE_PRESSING(MOUSEKEYSTATE::DIM_LB))
 	{
+		const POINT& p = m_pGameInstance->GetMousePos();
+		Vec3 vPickPos;	_float fDistance;
+
+		pController->Pick(p.x, p.y, vPickPos, fDistance);
+		pController->Look(vPickPos, fTimeDelta);
+
 		m_fFR_Default_Timer -= fTimeDelta;
 		if (m_fFR_Default_Timer < 0.f)
 		{
-			pController->Fire(CStrife_Ammo::AmmoType::DEFAULT);
+			pController->GetFireMessage(CStrife_Ammo::AmmoType::DEFAULT);
 			m_fFR_Default_Timer = m_fFR_Default;
 		}
 	}

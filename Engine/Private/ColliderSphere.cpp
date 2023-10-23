@@ -42,7 +42,7 @@ void CSphereCollider::Tick(const _float& fTimeDelta)
 {
 	CTransform* pTransform = GetGameObject()->GetTransform();
 
-	m_tBoundingSphere.Center = pTransform->GetPosition();
+	m_tBoundingSphere.Center = pTransform->GetPosition() + _float3(0.f, m_tBoundingSphere.Radius, 0.f);
 	//m_tBoundingSphere.Radius = pTransform->GetLocalScale().Length() / 2.f;
 
 	//Vec3 scale = GetGameObject()->GetTransform()->GetLocalScale();

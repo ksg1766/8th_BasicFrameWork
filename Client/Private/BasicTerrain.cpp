@@ -64,18 +64,13 @@ HRESULT CBasicTerrain::Render()
 }
 
 HRESULT CBasicTerrain::Ready_FixedComponents(void* pArg)
-{
-	/* Com_Renderer */
+{	
+	/* Com_Transform */
+	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Transform, TEXT("Prototype_Component_Transform"))))
+		return E_FAIL;	/* Com_Renderer */
+	
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Renderer, TEXT("Prototype_Component_Renderer"))))
 		return E_FAIL;
-
-	/* Com_Shader */
-	/*if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Shader, TEXT("Prototype_Component_Shader_VtxNorTex"))))
-		return E_FAIL;*/
-	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Shader, TEXT("Prototype_Component_Shader_VtxDebug"))))
-		return E_FAIL;
-
-	GetShader()->SetPassIndex(3);
 
 	/* Com_Terrain */
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Terrain, TEXT("Prototype_Component_Terrain"))))
@@ -83,27 +78,12 @@ HRESULT CBasicTerrain::Ready_FixedComponents(void* pArg)
 
 	if (FAILED(static_cast<CTerrain*>(GetFixedComponent(ComponentType::Terrain))->InitializeJustGrid(1024, 1024)))
 		return E_FAIL;
-	/*if (FAILED(dynamic_cast<CTerrain*>(GetFixedComponent(ComponentType::Terrain))->InitializeWithHeightMap(TEXT("../Bin/Resources/Textures/Terrain/Height1.bmp"))))
-		return E_FAIL;*/
-
-	/* Com_Texture*/
-	/*CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-	if (FAILED(Super::AddComponent(pGameInstance->GetCurrentLevelIndex(), ComponentType::Texture, TEXT("Prototype_Component_Texture_Terrain"))))
-		return E_FAIL;*/
-
-	/* Com_Transform */
-	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Transform, TEXT("Prototype_Component_Transform"))))
-		return E_FAIL;
 
 	return S_OK;
 }
 
 HRESULT CBasicTerrain::Ready_Scripts(void* pArg)
 {
-	/* Com_PlayerController */
-	//if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Script, TEXT("Prototype_Component_DebugTerrainGrid"))))
-	//	return E_FAIL;
-
 	return S_OK;
 }
 

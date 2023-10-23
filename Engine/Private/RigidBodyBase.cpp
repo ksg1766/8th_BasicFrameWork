@@ -37,8 +37,8 @@ void CRigidBody::LateTick(const _float& fTimeDelta)
 
 void CRigidBody::DebugRender()
 {
-	m_pSphereCollider->DebugRender();
-	m_pOBBCollider->DebugRender();
+	if (m_pSphereCollider) m_pSphereCollider->DebugRender();
+	if (m_pOBBCollider) m_pOBBCollider->DebugRender();
 }
 
 HRESULT CRigidBody::InitializeCollider()

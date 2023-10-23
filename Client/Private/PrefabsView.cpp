@@ -59,7 +59,7 @@ void CPrefabsView::Input()
 		if (m_IsPickingActivated)
 		{
 			const POINT& p = m_pGameInstance->GetMousePos();
-			if (m_pTerrainBuffer->Pick(p.x, p.y, m_vPickedPosition, fPickDistance))
+			if (m_pTerrainBuffer->Pick(p.x, p.y, m_vPickedPosition, fPickDistance, m_pTerrainBuffer->GetTransform()->WorldMatrix()))
 			{
 				PlaceObject(m_ePickedLayerTag, m_strPickedObject, m_vPickedPosition);
 			}

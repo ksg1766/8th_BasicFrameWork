@@ -35,25 +35,30 @@ public:
 	_bool	IsJump();
 	_bool	IsDash();
 
-	void	GetMoveMessage(const Vec3& vDir)	{ m_vNetTrans += vDir; }
-	void	GetJumpMessage(const _bool& IsJump)	{ IsJump ? Jump() : Land();}
-	void	GetDashMessage(const _bool& IsDash);// { IsDash ? Dash(m_pTransform->GetForward()) : DashEnd(); }
-	//void	GetFireMessage(CStrife_Ammo::AmmoType eAmmoType) { Fire(eAmmoType) :  }
+	void	GetMoveMessage(const Vec3& vDir)						{ m_vNetMove += vDir; }
+	void	GetTranslateMessage(const Vec3& vDir)					{ m_vNetTrans += vDir; }
+	void	GetJumpMessage(const _bool& IsJump)						{ IsJump ? Jump() : Land();}
+	void	GetDashMessage(const _bool& IsDash)						{ IsDash ? Dash(m_pTransform->GetForward()) : DashEnd(); }
+	void	GetFireMessage(const CStrife_Ammo::AmmoType eAmmoType)	{ Fire(eAmmoType); }
 
 	void	ForceHeight()				{ m_pTransform->Translate(Vec3(0.f, m_pNavMeshAgent->GetHeightOffset(), 0.f)); }
 	_float	GetHeightOffset()			{ return m_pNavMeshAgent->GetHeightOffset(); }
 	_bool	Walkable(_fvector vPoint)	{ return m_pNavMeshAgent->Walkable(vPoint); }
 
-	void	Fire(CStrife_Ammo::AmmoType eAmmoType);
+
+	_bool	Pick(_uint screenX, _uint screenY, Vec3& pickPos, _float& distance);
+	void	Look(const Vec3& vPoint, const _float& fTimeDelta);
 
 private:
 	void	Input(const _float& fTimeDelta);
 	void	Move(const _float& fTimeDelta);
+	void	Translate(const _float& fTimeDelta);
+	//void	Look(const Vec3& vPoint);
 	void	Jump();
 	void	Land();
 	void	Dash(const Vec3& vDir);
 	void	DashEnd();
-	//void	Fire(const _float& fTimeDelta, CStrife_Ammo::AmmoType eAmmoType);
+	void	Fire(CStrife_Ammo::AmmoType eAmmoType);
 
 	void	LimitAllAxisVelocity();
 
@@ -63,6 +68,7 @@ private:
 	CNavMeshAgent*	m_pNavMeshAgent = nullptr;
 	Vec3			m_vPrePos;
 
+	Vec3			m_vNetMove;
 	Vec3			m_vNetTrans;
 
 	Vec3			m_vMaxLinearSpeed;

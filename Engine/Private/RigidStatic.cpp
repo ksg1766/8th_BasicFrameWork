@@ -1,5 +1,6 @@
 #include "ComponentManager.h"
 #include "GameObject.h"
+#include "LevelManager.h"
 
 CRigidStatic::CRigidStatic(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: Super(pDevice, pContext, RigidBodyType::STATIC)
@@ -26,8 +27,11 @@ HRESULT CRigidStatic::Initialize(void* pArg)
 void CRigidStatic::Tick(const _float& fTimeDelta)
 {
 	// ColliderUpdate
-	m_pSphereCollider->Tick(fTimeDelta);
-	m_pOBBCollider->Tick(fTimeDelta);
+	if (3/*LEVEL_GAMETOOL*/ == CLevelManager::GetInstance()->GetCurrentLevelIndex())
+	{
+		m_pSphereCollider->Tick(fTimeDelta);
+		m_pOBBCollider->Tick(fTimeDelta);
+	}
 }
 
 void CRigidStatic::LateTick(const _float& fTimeDelta)

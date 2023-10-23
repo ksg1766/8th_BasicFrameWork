@@ -28,6 +28,7 @@ public:
 	_bool	Walkable(_fvector vPoint);
 	void	ForceHeight() { m_pTransform->Translate(Vec3(0.f, GetHeightOffset(), 0.f)); }
 	_float	GetHeightOffset();
+	_float3	GetPassedEdgeNormal(_fvector vPos);
 
 private:
 	HRESULT SetUp_Neighbors();
@@ -39,7 +40,6 @@ private:
 
 #ifdef _DEBUG
 	static _bool	m_IsRendered;
-	//class CShader* m_pShader = { nullptr };
 
 	PrimitiveBatch<VertexPositionColor>* m_pBatch = nullptr;
 	BasicEffect* m_pEffect = nullptr;

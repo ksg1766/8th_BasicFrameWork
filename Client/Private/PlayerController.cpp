@@ -4,7 +4,7 @@
 #include "GameObject.h"
 #include "Strife_Ammo_Default.h"
 
-constexpr auto EPSILON = 0.03f;
+constexpr auto EPSILON = 0.001f;
 
 CPlayerController::CPlayerController(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:Super(pDevice, pContext)
@@ -41,6 +41,9 @@ HRESULT CPlayerController::Initialize(void* pArg)
 	m_pRigidBody->IsKinematic(true);
 	m_pRigidBody->SetMass(1.f);
 
+	m_pRigidBody->GetSphereCollider()->GetBoundingSphere().Radius = GetTransform()->GetLocalScale().Length() / 1.8f;
+	m_pRigidBody->GetOBBCollider()->GetBoundingBox().Extents = _float3(0.4f * GetTransform()->GetLocalScale().x, 0.9f * GetTransform()->GetLocalScale().y, 0.4f * GetTransform()->GetLocalScale().z);
+
 	m_pNavMeshAgent = m_pGameObject->GetNavMeshAgent();
 
 	return S_OK;
@@ -48,9 +51,20 @@ HRESULT CPlayerController::Initialize(void* pArg)
 
 void CPlayerController::Tick(const _float& fTimeDelta)
 {
-	Move(fTimeDelta);
+	if (m_vNetMove.Length() > EPSILON)
+		Move(fTimeDelta);
+	else if (m_vNetTrans.Length() > EPSILON)
+		Translate(fTimeDelta);
+
 	if (!m_pNavMeshAgent->Walkable(m_pTransform->GetPosition()))
+	{
 		m_pTransform->SetPosition(m_vPrePos);
+		//슬라이딩 벡터 = 이동 벡터 - (이동 벡터 · 충돌 표면의 노멀 벡터) * 충돌 표면의 노멀 벡터
+		/*Vec3 vDir = m_pTransform->GetPosition() - m_vPrePos;
+		Vec3 vPassedLine = m_pNavMeshAgent->GetPassedEdgeNormal(m_pTransform->GetPosition());
+		
+		m_pTransform->SetPosition(m_vPrePos + vDir - vDir.Dot(vPassedLine) * vPassedLine);*/
+	}
 }
 
 void CPlayerController::LateTick(const _float& fTimeDelta)
@@ -109,30 +123,52 @@ _bool CPlayerController::IsDash()
 
 void CPlayerController::Move(const _float& fTimeDelta)
 {
-	if (m_vNetTrans.Length() < EPSILON) return;
-
-	m_vNetTrans.Normalize();
-
-	const Vec3& vForward = m_pTransform->GetForward();
-
-	Vec3 vSpeed = fTimeDelta * m_vLinearSpeed * m_vNetTrans;
-
-	//const _float3& vPos = m_pTransform->GetPosition();
-
+	m_vNetMove.Normalize();
+	Vec3 vSpeed = fTimeDelta * m_vLinearSpeed * m_vNetMove;
 	m_pTransform->Translate(vSpeed);
 
-	_float fRadian = acos(vForward.Dot(m_vNetTrans));
+	const Vec3& vForward = m_pTransform->GetForward();
+	_float fRadian = acos(vForward.Dot(m_vNetMove));
+
 	if (fabs(fRadian) > EPSILON)
 	{
-		const Vec3& vLeftRight = vForward.Cross(m_vNetTrans);
-		Vec3 vRotateAmount(m_vAngularSpeed * fRadian);
+		const Vec3& vLeftRight = vForward.Cross(m_vNetMove);
+		//Vec3 vRotateAmount(m_vAngularSpeed * fRadian);
+		Vec3 vRotateAmount(0.f, XMConvertToDegrees(fRadian), 0.f);
 		if (vLeftRight.y < 0)
 			vRotateAmount.y = -vRotateAmount.y;
 
-		m_pTransform->RotateYAxisFixed(fTimeDelta * vRotateAmount);
+		m_pTransform->RotateYAxisFixed(0.2f * vRotateAmount);
 	}
 
+	m_vNetMove = Vec3::Zero;
+}
+
+void CPlayerController::Translate(const _float& fTimeDelta)
+{
+	m_vNetTrans.Normalize();
+	Vec3 vSpeed = fTimeDelta * m_vLinearSpeed * m_vNetTrans;
+	m_pTransform->Translate(vSpeed);
+
 	m_vNetTrans = Vec3::Zero;
+}
+
+void CPlayerController::Look(const Vec3& vPoint, const _float& fTimeDelta)
+{
+	Vec3 vDir = vPoint - m_pTransform->GetPosition();
+	vDir.Normalize();
+	const Vec3& vForward = m_pTransform->GetForward();
+
+	_float fRadian = acos(vForward.Dot(vDir));
+	if (fabs(fRadian) > EPSILON)
+	{
+		const Vec3& vLeftRight = vForward.Cross(vDir);
+		Vec3 vRotateAmount(0.f, XMConvertToDegrees(fRadian), 0.f);
+		if (vLeftRight.y < 0)
+			vRotateAmount.y = -vRotateAmount.y;
+
+		m_pTransform->RotateYAxisFixed(0.3f * vRotateAmount);
+	}
 }
 
 void CPlayerController::Jump()
@@ -166,11 +202,6 @@ void CPlayerController::DashEnd()
 	m_pRigidBody->ClearForce(ForceMode::FORCE);
 	m_pRigidBody->ClearForce(ForceMode::IMPULSE);
 	m_pRigidBody->IsKinematic(true);
-}
-
-void CPlayerController::GetDashMessage(const _bool& IsDash)
-{
-	IsDash ? Dash(m_pTransform->GetForward()) : DashEnd();
 }
 
 void CPlayerController::Fire(CStrife_Ammo::AmmoType eAmmoType)
@@ -224,6 +255,15 @@ void CPlayerController::Fire(CStrife_Ammo::AmmoType eAmmoType)
 	pAmmo->GetTransform()->SetPosition(vFireOffset);
 
 	m_bFireLR = !m_bFireLR;
+}
+
+_bool CPlayerController::Pick(_uint screenX, _uint screenY, Vec3& pickPos, _float& distance)
+{
+	Matrix matBoard(1.f, 0, 0, 0,
+					0, 1.f, 0, 0,
+					0, 0, 1.f, 0,
+					0, m_pTransform->GetPosition().y, 0, 1.f);
+	return static_cast<CTerrain*>(m_pGameObject->GetFixedComponent(ComponentType::Terrain))->Pick(screenX, screenY, pickPos, distance, matBoard);
 }
 
 void CPlayerController::Input(const _float& fTimeDelta)

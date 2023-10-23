@@ -350,15 +350,15 @@ void CTerrain::DebugRender()
 
 	m_pBatch->Begin();
 
-	DX::DrawGrid(m_pBatch, (m_iNumVerticesX - 1) / 2.f * Vec3::UnitX, (m_iNumVerticesZ - 1) / 2.f * Vec3::UnitZ, 10.f * Vec3::UnitY, (m_iNumVerticesX - 1) / 4.f, (m_iNumVerticesZ - 1) / 4.f, Colors::Cyan);
+	DX::DrawGrid(m_pBatch, (m_iNumVerticesX - 1) / 2.f * Vec3::UnitX, (m_iNumVerticesZ - 1) / 2.f * Vec3::UnitZ, 10.f * Vec3::UnitY, (m_iNumVerticesX - 1) / 4.f, (m_iNumVerticesZ - 1) / 4.f, Colors::Aqua);
 
 	m_pBatch->End();
 #endif // DEBUG
 }
 
-_bool CTerrain::Pick(_uint screenX, _uint screenY, Vec3& pickPos, _float& distance)
+_bool CTerrain::Pick(_uint screenX, _uint screenY, Vec3& pickPos, _float& distance, const Matrix& matWorld)
 {
-	Matrix W = m_pGameObject->GetTransform()->WorldMatrix();
+	//Matrix W = m_pGameObject->GetTransform()->WorldMatrix();
 	CPipeLine* pPipeLine = GET_INSTANCE(CPipeLine);
 	Matrix V = pPipeLine->Get_Transform_float4x4(CPipeLine::D3DTS_VIEW);
 	Matrix P = pPipeLine->Get_Transform_float4x4(CPipeLine::D3DTS_PROJ);
@@ -366,8 +366,8 @@ _bool CTerrain::Pick(_uint screenX, _uint screenY, Vec3& pickPos, _float& distan
 	CGraphicDevice* pGraphicDevice = GET_INSTANCE(CGraphicDevice);
 	Viewport& vp = pGraphicDevice->GetViewPort();
 	
-	Vec3 n = vp.Unproject(Vec3(screenX, screenY, 0), P, V, W);
-	Vec3 f = vp.Unproject(Vec3(screenX, screenY, 1), P, V, W);
+	Vec3 n = vp.Unproject(Vec3(screenX, screenY, 0), P, V, matWorld);
+	Vec3 f = vp.Unproject(Vec3(screenX, screenY, 1), P, V, matWorld);
 
 	Vec3 start = n;
 	Vec3 direction = f - n;

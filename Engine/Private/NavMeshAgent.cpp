@@ -169,6 +169,35 @@ _float CNavMeshAgent::GetHeightOffset()
 	return -((vPlane.x * vPos.x + vPlane.z * vPos.z + vPlane.w) / vPlane.y + vPos.y);
 }
 
+_float3 CNavMeshAgent::GetPassedEdgeNormal(_fvector vPos)
+{
+	_int		iNeighborIndex = 0;
+
+	if (true == m_Cells[m_iCurrentIndex]->isOut(vPos, &iNeighborIndex))
+	{
+		/* 나간 방향에 이웃셀이 있으면 움직여야해! */
+		if (-1 != iNeighborIndex)
+		{
+			while (true)
+			{
+				if (-1 == iNeighborIndex)
+					return m_Cells[m_iCurrentIndex]->GetPassedEdgeNormal(vPos);
+
+				if (false == m_Cells[iNeighborIndex]->isOut(vPos, &iNeighborIndex))
+				{
+					m_iCurrentIndex = iNeighborIndex;
+					break;
+				}
+			}
+			return _float3(0.f, 0.f, 0.f);
+		}
+		else
+			return m_Cells[m_iCurrentIndex]->GetPassedEdgeNormal(vPos);
+	}
+	else
+		return  _float3(0.f, 0.f, 0.f);
+}
+
 HRESULT CNavMeshAgent::SetUp_Neighbors()
 {
 	for (auto& pSourCell : m_Cells)
