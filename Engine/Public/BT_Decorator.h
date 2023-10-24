@@ -15,7 +15,7 @@ protected:
 	virtual ~CBT_Decorator() = default;
 	
 public:
-	HRESULT				Initialize(CGameObject* pGameObject, CMonoBehaviour* pController, DecoratorType eDecoratorType);
+	HRESULT				Initialize(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, CMonoBehaviour* pController, DecoratorType eDecoratorType);
 
 	virtual void		OnStart(const _float& fTimeDelta)	override;
 	virtual BT_RETURN	OnUpdate(const _float& fTimeDelta)	override;

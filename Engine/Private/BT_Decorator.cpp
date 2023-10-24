@@ -12,9 +12,9 @@ CBT_Decorator::CBT_Decorator(const CBT_Decorator& rhs)
 {
 }
 
-HRESULT CBT_Decorator::Initialize(CGameObject* pGameObject, CMonoBehaviour* pController, DecoratorType eDecoratorType)
+HRESULT CBT_Decorator::Initialize(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, CMonoBehaviour* pController, DecoratorType eDecoratorType)
 {
-	Super::Initialize(pGameObject, pController);
+	Super::Initialize(pGameObject, pBehaviorTree, pController);
 	m_eDecoratorType = eDecoratorType;
 
 	return S_OK;

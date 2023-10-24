@@ -187,9 +187,6 @@
     <Filter Include="01.Utiltiy\04.Component\13.BehaviorTree\BT_Node\04.BT_Action">
       <UniqueIdentifier>{7a647226-167f-4324-8506-09b32818b590}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utiltiy\04.Component\13.BehaviorTree\BT_Node\03.BT_Condition">
-      <UniqueIdentifier>{c30807fb-6864-4876-999b-14ef7895452e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Utiltiy\04.Component\13.BehaviorTree\BT_Node\02.BT_Decorator">
       <UniqueIdentifier>{afaa03ea-1661-4c80-9479-aa88452deb0a}</UniqueIdentifier>
     </Filter>
@@ -198,6 +195,9 @@
     </Filter>
     <Filter Include="01.Utiltiy\04.Component\13.BehaviorTree\BT_Node\00.BT_Base">
       <UniqueIdentifier>{e391db15-ba98-4381-be2a-6c6bc30c4bf1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utiltiy\04.Component\13.BehaviorTree\BT_Node\03.BT_Abort">
+      <UniqueIdentifier>{c30807fb-6864-4876-999b-14ef7895452e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -412,7 +412,7 @@
       <Filter>01.Utiltiy\04.Component\13.BehaviorTree\BT_Node\01.BT_Composite</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\BT_Abort.h">
-      <Filter>01.Utiltiy\04.Component\13.BehaviorTree\BT_Node\03.BT_Condition</Filter>
+      <Filter>01.Utiltiy\04.Component\13.BehaviorTree\BT_Node\03.BT_Abort</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\BT_Decorator.h">
       <Filter>01.Utiltiy\04.Component\13.BehaviorTree\BT_Node\02.BT_Decorator</Filter>
@@ -615,7 +615,7 @@
       <Filter>01.Utiltiy\04.Component\13.BehaviorTree\BT_Node\01.BT_Composite</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\BT_Abort.cpp">
-      <Filter>01.Utiltiy\04.Component\13.BehaviorTree\BT_Node\03.BT_Condition</Filter>
+      <Filter>01.Utiltiy\04.Component\13.BehaviorTree\BT_Node\03.BT_Abort</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\BT_Decorator.cpp">
       <Filter>01.Utiltiy\04.Component\13.BehaviorTree\BT_Node\02.BT_Decorator</Filter>

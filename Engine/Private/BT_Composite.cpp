@@ -12,9 +12,9 @@ CBT_Composite::CBT_Composite(const CBT_Composite& rhs)
 {
 }
 
-HRESULT CBT_Composite::Initialize(CGameObject* pGameObject, CMonoBehaviour* pController, CompositeType eCompositeType)
+HRESULT CBT_Composite::Initialize(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, CMonoBehaviour* pController, CompositeType eCompositeType)
 {
-	Super::Initialize(pGameObject, pController);
+	Super::Initialize(pGameObject, pBehaviorTree, pController);
 	m_eCompositeType = eCompositeType;
 
 	return S_OK;
@@ -27,33 +27,45 @@ void CBT_Composite::OnStart(const _float& fTimeDelta)
 
 CBT_Node::BT_RETURN CBT_Composite::OnUpdate(const _float& fTimeDelta)
 {
-	m_eReturn = (*m_RunningChild)->Tick(fTimeDelta);
-
-	switch (m_eCompositeType)
+	while (true)
 	{
-	case CompositeType::SELECTOR:
-	{
-		if (BT_FAIL != m_eReturn)
-			return m_eReturn;
+		m_eReturn = (*m_RunningChild)->Tick(fTimeDelta);
 
-		if (++m_RunningChild == m_vecChildren.end())
-			return BT_FAIL;
-	}
+		switch (m_eCompositeType)
+		{
+		case CompositeType::SELECTOR:
+		{
+			if (BT_FAIL != m_eReturn)
+				return m_eReturn;
+
+			if (++m_RunningChild == m_vecChildren.end())
+				return BT_FAIL;
+		}
 		break;
-	case CompositeType::SEQUENCE:
-	{
-		if (BT_SUCCESS != m_eReturn)
-			return m_eReturn;
+		case CompositeType::SEQUENCE:
+		{
+			if (BT_SUCCESS != m_eReturn)
+				return m_eReturn;
 
-		if (++m_RunningChild == m_vecChildren.end())
-			return BT_SUCCESS;
-	}
+			if (++m_RunningChild == m_vecChildren.end())
+				return BT_SUCCESS;
+		}
 		break;
+		}
 	}
 }
 
 void CBT_Composite::OnEnd(const _float& fTimeDelta)
 {
+}
+
+HRESULT CBT_Composite::SetAbort(CBT_Abort* pAbort)
+{
+	if (m_pConditionalAbort)
+		return E_FAIL;
+
+	m_pConditionalAbort = pAbort;
+	return S_OK;
 }
 
 void CBT_Composite::Free()

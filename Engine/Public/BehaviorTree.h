@@ -19,6 +19,9 @@ public:
 	virtual void	LateTick(const _float& fTimeDelta)	override;
 	virtual void	DebugRender()						override;
 
+	void			PushStack(CBT_Node* pNode)	{ m_NodeStack.push(pNode); }
+	void			PopStack()					{ m_NodeStack.pop(); }
+
 public:
 	CBT_Node*			m_pRootNode = nullptr;
 	stack<CBT_Node*>	m_NodeStack;

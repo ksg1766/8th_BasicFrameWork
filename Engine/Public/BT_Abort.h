@@ -15,17 +15,21 @@ protected:
 	virtual ~CBT_Abort() = default;
 	
 public:
-	HRESULT				Initialize(CGameObject* pGameObject, CMonoBehaviour* pController, AbortType	eAbortType);
+	HRESULT				Initialize(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, CMonoBehaviour* pController, AbortType	eAbortType);
 
 	virtual void		OnStart(const _float& fTimeDelta)		override;
 	virtual BT_RETURN	OnUpdate(const _float& fTimeDelta)		override;
 	virtual void		OnEnd(const _float& fTimeDelta)			override;
-	
+
 	virtual BT_NODETYPE	NodeType() override { return BT_NODETYPE::ABORT; }
+
+	void				SetFunctionPtr(function<_bool()> ftAbortCondition) { m_ftAbortCondition = ftAbortCondition; }
 
 protected:
 	AbortType	m_eAbortType = AbortType::TYPE_END;
 	// _bool	m_bCancel = true;
+
+	function<_bool()>	m_ftAbortCondition;
 
 public:
 	virtual void Free() override;

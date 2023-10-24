@@ -1,4 +1,5 @@
-#include "BT_Node.h"
+#include "BT_Composite.h"
+#include "BT_Abort.h"
 #include "GameInstance.h"
 #include "GameObject.h"
 #include "MonoBehaviour.h"
@@ -15,10 +16,11 @@ CBT_Node::CBT_Node(const CBT_Node& rhs)
 	Safe_AddRef(m_pGameInstance);
 }
 
-HRESULT CBT_Node::Initialize(CGameObject* pGameObject, CMonoBehaviour* pController)
+HRESULT CBT_Node::Initialize(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, CMonoBehaviour* pController)
 {
 	m_pGameObject = pGameObject;
 	m_pController = pController;
+	m_pBehaviorTree = pBehaviorTree;
 
 	return S_OK;
 }
@@ -36,12 +38,18 @@ CBT_Node::BT_RETURN CBT_Node::Tick(const _float& fTimeDelta)
 	return m_eReturn;
 }
 
-HRESULT CBT_Node::SetChild(CBT_Node* pChild)
+HRESULT CBT_Node::AddChild(CBT_Node* pChild)
 {
 	if (BT_NODETYPE::ACTION == NodeType())
 		return E_FAIL;
-	else if (BT_NODETYPE::DECORATOR == NodeType() && 0 != m_vecChildren.size())
-		return E_FAIL;
+	else if (BT_NODETYPE::DECORATOR == NodeType() && !m_vecChildren.empty())
+		return E_FAIL; 
+	else if (BT_NODETYPE::COMPOSITE == NodeType())
+	{
+		m_vecChildren.push_back(pChild);
+		if (BT_NODETYPE::ABORT == pChild->NodeType())
+			static_cast<CBT_Composite*>(this)->SetAbort(static_cast<CBT_Abort*>(pChild));
+	}
 	else
 		m_vecChildren.push_back(pChild);
 

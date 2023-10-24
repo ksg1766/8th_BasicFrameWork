@@ -1,5 +1,6 @@
 #pragma once
 #include "Base.h"
+#include "BehaviorTree.h"
 
 BEGIN(Engine)
 
@@ -19,24 +20,24 @@ protected:
 	virtual ~CBT_Node() = default;
 	
 public:
-	virtual HRESULT			Initialize(CGameObject* pGameObject, CMonoBehaviour* pController);
+	virtual HRESULT			Initialize(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, CMonoBehaviour* pController);
 
 	virtual	BT_RETURN		Tick(const _float& fTimeDelta);
-	virtual void			OnStart(const _float& fTimeDelta)	PURE;
+	virtual void			OnStart(const _float& fTimeDelta)	{ m_pBehaviorTree->PushStack(this); }
 	virtual BT_RETURN		OnUpdate(const _float& fTimeDelta)	PURE;
-	virtual void			OnEnd(const _float& fTimeDelta)		PURE;
+	virtual void			OnEnd(const _float& fTimeDelta)		{ m_pBehaviorTree->PopStack(); }
 	
 	virtual BT_NODETYPE		NodeType()							PURE;
-	HRESULT					SetChild(CBT_Node* pChild);
+	HRESULT					AddChild(CBT_Node* pChild);
 
 protected:
-	CGameObject*		m_pGameObject = nullptr;
-	CGameInstance*		m_pGameInstance = nullptr;
+	CGameObject*			m_pGameObject = nullptr;
+	CGameInstance*			m_pGameInstance = nullptr;
+	CMonoBehaviour*			m_pController = nullptr;
 
-	CMonoBehaviour*		m_pController = nullptr;
-
-	vector<CBT_Node*>	m_vecChildren;
-	BT_RETURN			m_eReturn = BT_RETURN::RETURN_END;
+	CBehaviorTree*			m_pBehaviorTree = nullptr;
+	vector<CBT_Node*>		m_vecChildren;
+	BT_RETURN				m_eReturn = BT_RETURN::RETURN_END;
 
 public:
 	virtual void Free() override;
