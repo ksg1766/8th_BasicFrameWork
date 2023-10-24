@@ -24,8 +24,8 @@ protected:
 	virtual ~CState() = default;
 	
 public:
-	virtual HRESULT	Initialize(CGameObject* pGameObject, const STATEANIMS& tStateAnim, CMonoBehaviour* pController = nullptr);
-	virtual HRESULT	Enter(_int = 0);
+	virtual HRESULT			Initialize(CGameObject* pGameObject, const STATEANIMS& tStateAnim, CMonoBehaviour* pController = nullptr);
+	virtual HRESULT			Enter(_int = 0);
 
 	virtual void			Tick(const _float& fTimeDelta)		PURE;
 	virtual const wstring&	LateTick(const _float& fTimeDelta)	PURE;
@@ -41,7 +41,7 @@ protected:
 
 	CModel*			m_pModel = nullptr;
 	CMonoBehaviour* m_pController = nullptr;
-	CNavMeshAgent*	m_pNavMeshAgent = nullptr;
+
 	wstring			m_strStateName = TEXT("");
 	
 	vector<wstring>	m_vecTransition;
