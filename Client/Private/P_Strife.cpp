@@ -121,13 +121,13 @@ HRESULT CP_Strife::Ready_Scripts()
 {
 	if (LEVEL_GAMEPLAY == m_pGameInstance->GetCurrentLevelIndex())
 	{
-		///* Com_PlayerController */
+		/* Com_PlayerController */
 		if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::Script, TEXT("Prototype_Component_PlayerController"))))
 			return E_FAIL;
 	
 		CMonoBehaviour* pController = m_vecScripts.back();
 
-		///* Com_StateMachine */
+		/* Com_StateMachine */
 		if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::Script, TEXT("Prototype_Component_StateMachine"))))
 			return E_FAIL;
 		

@@ -20,13 +20,13 @@ HRESULT CBT_Abort::Initialize(CGameObject* pGameObject, CBehaviorTree* pBehavior
 	return S_OK;
 }
 
-void CBT_Abort::OnStart(const _float& fTimeDelta)
+void CBT_Abort::OnStart()
 {
 }
 
 CBT_Node::BT_RETURN CBT_Abort::OnUpdate(const _float& fTimeDelta)
 {
-	switch (m_eAbortType)
+	/*switch (m_eAbortType)
 	{
 	case AbortType::SELF:
 	{
@@ -52,10 +52,12 @@ CBT_Node::BT_RETURN CBT_Abort::OnUpdate(const _float& fTimeDelta)
 			
 	}
 	break;
-	}
+	}*/
+
+	return BT_SUCCESS;
 }
 
-void CBT_Abort::OnEnd(const _float& fTimeDelta)
+void CBT_Abort::OnEnd()
 {
 }
 

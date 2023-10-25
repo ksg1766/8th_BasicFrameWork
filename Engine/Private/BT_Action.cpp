@@ -12,19 +12,26 @@ CBT_Action::CBT_Action(const CBT_Action& rhs)
 {
 }
 
-void CBT_Action::OnStart(const _float& fTimeDelta)
+HRESULT CBT_Action::Initialize(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tStateAnim, CMonoBehaviour* pController)
 {
-}
+	if(FAILED(Super::Initialize(pGameObject, pBehaviorTree, pController)))
+		return E_FAIL;
 
-CBT_Node::BT_RETURN CBT_Action::OnUpdate(const _float& fTimeDelta)
-{
-}
+	for (const wstring& strAnim : tStateAnim.vecAnimations)
+	{
+		_int iAnimIndex = m_pModel->GetAnimationIndexByName(strAnim);
+		_float fAnimTimes = m_pModel->GetAnimationTimeByIndex(iAnimIndex);
+		if (iAnimIndex < 0)
+			return E_FAIL;
 
-void CBT_Action::OnEnd(const _float& fTimeDelta)
-{
+		m_vecAnimIndexTime.push_back(make_pair(iAnimIndex, fAnimTimes));
+	}
+
+	return S_OK;
 }
 
 void CBT_Action::Free()
 {
 	Super::Free();
+
 }

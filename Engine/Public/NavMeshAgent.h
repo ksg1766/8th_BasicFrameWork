@@ -3,7 +3,6 @@
 
 BEGIN(Engine)
 
-class CNavMeshSurface;
 class ENGINE_DLL CNavMeshAgent final : public CComponent
 {
 	using Super = CComponent;

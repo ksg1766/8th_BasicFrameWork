@@ -38,14 +38,12 @@ public:
 protected:
 	CGameObject*	m_pGameObject = nullptr;
 	CGameInstance*	m_pGameInstance = nullptr;
-
-	CModel*			m_pModel = nullptr;
 	CMonoBehaviour* m_pController = nullptr;
 
 	wstring			m_strStateName = TEXT("");
-	
 	vector<wstring>	m_vecTransition;
 
+	CModel*			m_pModel = nullptr;
 	_int			m_iCurrAnimation;
 	vector<pair<_int, _float>> m_vecAnimIndexTime;
 	_float			m_fTimeSum = 0.f;

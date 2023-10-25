@@ -30,6 +30,7 @@ using namespace SimpleMath;
 
 #include <memory>
 #include <array>
+#include <stack>
 #include <iostream>
 #include <vector> /* 배열 */
 #include <list> /* 더블링크드리스트 */
@@ -37,6 +38,7 @@ using namespace SimpleMath;
 #include <unordered_map> /* 해시테이블 */
 #include <queue>
 #include <algorithm>
+#include <functional>
 //
 #include <typeinfo>
 

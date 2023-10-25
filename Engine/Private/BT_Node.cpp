@@ -28,12 +28,12 @@ HRESULT CBT_Node::Initialize(CGameObject* pGameObject, CBehaviorTree* pBehaviorT
 CBT_Node::BT_RETURN CBT_Node::Tick(const _float& fTimeDelta)
 {
 	if (BT_RETURN::BT_RUNNING != m_eReturn)
-		OnStart(fTimeDelta);
+		OnStart();
 
 	m_eReturn = OnUpdate(fTimeDelta);
 
 	if (BT_RETURN::BT_RUNNING != m_eReturn)
-		OnEnd(fTimeDelta);
+		OnEnd();
 
 	return m_eReturn;
 }
@@ -47,8 +47,8 @@ HRESULT CBT_Node::AddChild(CBT_Node* pChild)
 	else if (BT_NODETYPE::COMPOSITE == NodeType())
 	{
 		m_vecChildren.push_back(pChild);
-		if (BT_NODETYPE::ABORT == pChild->NodeType())
-			static_cast<CBT_Composite*>(this)->SetAbort(static_cast<CBT_Abort*>(pChild));
+		/*if (BT_NODETYPE::ABORT == pChild->NodeType())
+			static_cast<CBT_Composite*>(this)->SetAbort(static_cast<CBT_Abort*>(pChild));*/
 	}
 	else
 		m_vecChildren.push_back(pChild);

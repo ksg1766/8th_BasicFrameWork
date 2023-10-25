@@ -183,9 +183,20 @@
     <ClInclude Include="..\Public\DebugDraw.h" />
     <ClInclude Include="..\Public\DissolveManager.h" />
     <ClInclude Include="..\Public\HellHound.h" />
+    <ClInclude Include="..\Public\HellHound_BT_Attack.h" />
+    <ClInclude Include="..\Public\HellHound_BT_Chase.h" />
+    <ClInclude Include="..\Public\HellHound_BT_Dead.h" />
+    <ClInclude Include="..\Public\HellHound_BT_Hit.h" />
+    <ClInclude Include="..\Public\HellHound_BT_Idle.h" />
+    <ClInclude Include="..\Public\HellHound_BT_Roaming.h" />
+    <ClInclude Include="..\Public\HellHound_BT_Sleep.h" />
+    <ClInclude Include="..\Public\HellHound_BT_Spawn.h" />
+    <ClInclude Include="..\Public\HellHound_BT_StepBack.h" />
+    <ClInclude Include="..\Public\HellHound_BT_Wait.h" />
     <ClInclude Include="..\Public\LavaTerrain.h" />
     <ClInclude Include="..\Public\MainCamera.h" />
     <ClInclude Include="..\Public\MainCameraController.h" />
+    <ClInclude Include="..\Public\MonsterController.h" />
     <ClInclude Include="..\Public\NavMeshView.h" />
     <ClInclude Include="..\Public\P_Strife.h" />
     <ClInclude Include="..\Public\P_Strife_State_Aim.h" />
@@ -242,9 +253,20 @@
     <ClCompile Include="..\Private\DebugDraw.cpp" />
     <ClCompile Include="..\Private\DissolveManager.cpp" />
     <ClCompile Include="..\Private\HellHound.cpp" />
+    <ClCompile Include="..\Private\HellHound_BT_Attack.cpp" />
+    <ClCompile Include="..\Private\HellHound_BT_Chase.cpp" />
+    <ClCompile Include="..\Private\HellHound_BT_Dead.cpp" />
+    <ClCompile Include="..\Private\HellHound_BT_Hit.cpp" />
+    <ClCompile Include="..\Private\HellHound_BT_Idle.cpp" />
+    <ClCompile Include="..\Private\HellHound_BT_Roaming.cpp" />
+    <ClCompile Include="..\Private\HellHound_BT_Sleep.cpp" />
+    <ClCompile Include="..\Private\HellHound_BT_Spawn.cpp" />
+    <ClCompile Include="..\Private\HellHound_BT_StepBack.cpp" />
+    <ClCompile Include="..\Private\HellHound_BT_Wait.cpp" />
     <ClCompile Include="..\Private\LavaTerrain.cpp" />
     <ClCompile Include="..\Private\MainCamera.cpp" />
     <ClCompile Include="..\Private\MainCameraController.cpp" />
+    <ClCompile Include="..\Private\MonsterController.cpp" />
     <ClCompile Include="..\Private\NavMeshView.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>

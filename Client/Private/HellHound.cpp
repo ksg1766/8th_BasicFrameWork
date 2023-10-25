@@ -1,6 +1,18 @@
 #include "stdafx.h"
 #include "..\Public\HellHound.h"
 #include "GameInstance.h"
+#include "BT_Composite.h"
+#include "BT_Decorator.h"
+#include "HellHound_BT_Spawn.h"
+#include "HellHound_BT_Dead.h"
+#include "HellHound_BT_Attack.h"
+#include "HellHound_BT_StepBack.h"
+#include "HellHound_BT_Wait.h"
+#include "HellHound_BT_Chase.h"
+#include "HellHound_BT_Sleep.h"
+#include "HellHound_BT_Idle.h"
+#include "HellHound_BT_Roaming.h"
+#include "HellHound_BT_Hit.h"
 
 CHellHound::CHellHound(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: Super(pDevice, pContext)
@@ -100,6 +112,99 @@ HRESULT CHellHound::Ready_FixedComponents()
 
 HRESULT CHellHound::Ready_Scripts()
 {
+	if (LEVEL_GAMEPLAY == m_pGameInstance->GetCurrentLevelIndex())
+	{
+		/* Com_MonsterController */
+		if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::Script, TEXT("Prototype_Component_MonsterController"))))
+			return E_FAIL;
+
+		CMonoBehaviour* pController = m_vecScripts.back();
+
+		/* Com_StateMachine */
+		if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::Script, TEXT("Prototype_Component_BehaviorTree"))))
+			return E_FAIL;
+
+		CBehaviorTree* pBehaviorTree = dynamic_cast<CBehaviorTree*>(m_vecScripts.back());
+		{
+			CBT_Action::BEHAVEANIMS desc;
+			
+			desc.vecAnimations.clear();
+			desc.vecAnimations.push_back(TEXT("HellHound_Death"));
+			CBT_Action* pDead = CHellHound_BT_Dead::Create(this, pBehaviorTree, desc, pController);
+
+			CBT_Decorator* pIfDead = CBT_Decorator::Create(this, pBehaviorTree, pController, CBT_Decorator::DecoratorType::IF);//죽었는가
+			pIfDead->AddChild(pDead);
+
+			desc.vecAnimations.clear();
+			desc.vecAnimations.push_back(TEXT("HellHound_Atk_Bite"));
+			CBT_Action* pAttack = CHellHound_BT_Attack::Create(this, pBehaviorTree, desc, pController);
+
+			CBT_Decorator* pAtkCool = CBT_Decorator::Create(this, pBehaviorTree, pController, CBT_Decorator::DecoratorType::IF);//공격쿨
+			if (FAILED(pAtkCool->AddChild(pAttack))) return E_FAIL;
+
+			desc.vecAnimations.clear();
+			desc.vecAnimations.push_back(TEXT("HellHound_Evade_B"));
+			CBT_Action* pStepBack = CHellHound_BT_StepBack::Create(this, pBehaviorTree, desc, pController);
+
+			CBT_Decorator* pStpBckCool = CBT_Decorator::Create(this, pBehaviorTree, pController, CBT_Decorator::DecoratorType::IF);//스텝백쿨
+			if (FAILED(pStpBckCool->AddChild(pStepBack))) return E_FAIL;
+
+			desc.vecAnimations.clear();
+			desc.vecAnimations.push_back(TEXT("HellHound_Taunt_01"));
+			CBT_Action* pWait = CHellHound_BT_Wait::Create(this, pBehaviorTree, desc, pController);
+
+			CBT_Composite* pSuccessAtkRng = CBT_Composite::Create(this, pBehaviorTree, pController, CBT_Composite::CompositeType::SELECTOR);//사거리 내에 있을 경우
+			if (FAILED(pSuccessAtkRng->AddChild(pAtkCool))) return E_FAIL;
+			if (FAILED(pSuccessAtkRng->AddChild(pStpBckCool))) return E_FAIL;
+			if (FAILED(pSuccessAtkRng->AddChild(pWait))) return E_FAIL;
+
+			CBT_Decorator* pIfAtkRng = CBT_Decorator::Create(this, pBehaviorTree, pController, CBT_Decorator::DecoratorType::IF);//사거리
+			if (FAILED(pIfAtkRng->AddChild(pSuccessAtkRng))) return E_FAIL;
+
+			desc.vecAnimations.clear();
+			desc.vecAnimations.push_back(TEXT("HellHound_Run_F"));
+			CBT_Action* pChase = CHellHound_BT_Chase::Create(this, pBehaviorTree, desc, pController);
+
+			CBT_Composite* pInSightTrue = CBT_Composite::Create(this, pBehaviorTree, pController, CBT_Composite::CompositeType::SELECTOR);//시야 내에 있을 경우
+			if (FAILED(pInSightTrue->AddChild(pIfAtkRng))) return E_FAIL;
+			if (FAILED(pInSightTrue->AddChild(pChase))) return E_FAIL;
+
+			CBT_Decorator* pIfInSight = CBT_Decorator::Create(this, pBehaviorTree, pController, CBT_Decorator::DecoratorType::IF);//If 시야내 or Hit (==Awake)
+			if (FAILED(pIfInSight->AddChild(pInSightTrue))) return E_FAIL;
+
+			//desc.vecAnimations.clear();
+			//desc.vecAnimations.push_back(TEXT("HellHound_Sleeping_Idle"));
+			//CBT_Action* pSleep = CHellHound_BT_Sleep::Create(this, pBehaviorTree, desc, pController);
+
+			//CBT_Decorator* pIfSleep = CBT_Decorator::Create(this, pBehaviorTree, pController, CBT_Decorator::DecoratorType::IF);//if 자는가? // 아 맞다 자는거 보류;;
+			//if (FAILED(pIfSleep->AddChild(pSleep))) return E_FAIL;
+
+			desc.vecAnimations.clear();
+			desc.vecAnimations.push_back(TEXT("HellHound_Idle"));
+			CBT_Action* pIdle = CHellHound_BT_Idle::Create(this, pBehaviorTree, desc, pController);
+
+			desc.vecAnimations.clear();
+			desc.vecAnimations.push_back(TEXT("HellHound_Walk_F"));
+			desc.vecAnimations.push_back(TEXT("HellHound_Turn_90_L"));
+			desc.vecAnimations.push_back(TEXT("HellHound_Turn_90_R"));
+			CBT_Action* pRoaming = CHellHound_BT_Roaming::Create(this, pBehaviorTree, desc, pController);
+
+			CBT_Composite* pPeace = CBT_Composite::Create(this, pBehaviorTree, pController, CBT_Composite::CompositeType::SEQUENCE); //평화로운 상태
+			if (FAILED(pPeace->AddChild(pIdle))) return E_FAIL;
+			if (FAILED(pPeace->AddChild(pRoaming))) return E_FAIL;
+			
+			// Spawn, Hit도 보류
+			//desc.vecAnimations.push_back(TEXT("HellHound_Turn_90_R"));
+			//desc.vecAnimations.push_back(TEXT("HellHound_Imapact_F"));
+
+			CBT_Composite* pRoot = CBT_Composite::Create(this, pBehaviorTree, pController, CBT_Composite::CompositeType::SELECTOR);
+			if (FAILED(pPeace->AddChild(pIfDead))) return E_FAIL;
+			if (FAILED(pPeace->AddChild(pIfInSight))) return E_FAIL;
+			if (FAILED(pPeace->AddChild(pPeace))) return E_FAIL;
+			pBehaviorTree->SetRoot(pRoot);
+		}
+	}
+
 	return S_OK;
 }
 

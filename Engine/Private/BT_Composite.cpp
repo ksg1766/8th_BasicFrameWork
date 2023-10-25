@@ -20,8 +20,9 @@ HRESULT CBT_Composite::Initialize(CGameObject* pGameObject, CBehaviorTree* pBeha
 	return S_OK;
 }
 
-void CBT_Composite::OnStart(const _float& fTimeDelta)
+void CBT_Composite::OnStart()
 {
+	Super::OnStart();
 	m_RunningChild = m_vecChildren.begin();
 }
 
@@ -55,17 +56,22 @@ CBT_Node::BT_RETURN CBT_Composite::OnUpdate(const _float& fTimeDelta)
 	}
 }
 
-void CBT_Composite::OnEnd(const _float& fTimeDelta)
+void CBT_Composite::OnEnd()
 {
+	Super::OnEnd();
 }
 
-HRESULT CBT_Composite::SetAbort(CBT_Abort* pAbort)
+CBT_Composite* CBT_Composite::Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, CMonoBehaviour* pController, CompositeType eCompositeType)
 {
-	if (m_pConditionalAbort)
-		return E_FAIL;
+	CBT_Composite* pInstance = new CBT_Composite;
 
-	m_pConditionalAbort = pAbort;
-	return S_OK;
+	if (FAILED(pInstance->Initialize(pGameObject, pBehaviorTree, pController, eCompositeType)))
+	{
+		MSG_BOX("Failed to Created : CBT_Composite");
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
 }
 
 void CBT_Composite::Free()

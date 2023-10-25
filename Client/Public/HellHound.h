@@ -8,7 +8,6 @@ BEGIN(Client)
 class CHellHound final : public CGameObject
 {
 	using Super = CGameObject;
-
 private:
 	/* 원형을 생성할 때 */
 	CHellHound(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

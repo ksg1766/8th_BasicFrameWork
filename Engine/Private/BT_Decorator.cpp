@@ -20,8 +20,9 @@ HRESULT CBT_Decorator::Initialize(CGameObject* pGameObject, CBehaviorTree* pBeha
 	return S_OK;
 }
 
-void CBT_Decorator::OnStart(const _float& fTimeDelta)
+void CBT_Decorator::OnStart()
 {
+	Super::OnStart();
 	if (DecoratorType::REPEAT == m_eDecoratorType)
 		m_iCounter = m_iLimitCount;
 }
@@ -63,8 +64,21 @@ CBT_Node::BT_RETURN CBT_Decorator::OnUpdate(const _float& fTimeDelta)
 	}
 }
 
-void CBT_Decorator::OnEnd(const _float& fTimeDelta)
+void CBT_Decorator::OnEnd()
 {
+}
+
+CBT_Decorator* CBT_Decorator::Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, CMonoBehaviour* pController, DecoratorType eDecoratorType)
+{
+	CBT_Decorator* pInstance = new CBT_Decorator;
+
+	if (FAILED(pInstance->Initialize(pGameObject, pBehaviorTree, pController, eDecoratorType)))
+	{
+		MSG_BOX("Failed to Created : CBT_Decorator");
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
 }
 
 void CBT_Decorator::Free()

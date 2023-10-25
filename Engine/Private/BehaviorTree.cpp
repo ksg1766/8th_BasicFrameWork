@@ -1,6 +1,7 @@
 #include "BehaviorTree.h"
 #include "GameObject.h"
 #include "BT_Node.h"
+#include "BT_Composite.h"
 
 CBehaviorTree::CBehaviorTree(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: Super(pDevice, pContext)
@@ -28,14 +29,17 @@ HRESULT CBehaviorTree::Initialize(void* pArg)
 
 void CBehaviorTree::Tick(const _float& fTimeDelta)
 {
-	if (m_NodeStack.size())
+	while (true)
 	{
-		if (CBT_Node::BT_RETURN::BT_RUNNING != m_NodeStack.top()->Tick(fTimeDelta))
-			m_NodeStack.pop();
-	}
-	else
-	{
-		m_pRootNode->Tick(fTimeDelta);
+		if (m_NodeStack.size())
+		{
+			if (CBT_Node::BT_RETURN::BT_RUNNING != m_NodeStack.top()->OnUpdate(fTimeDelta))
+				m_NodeStack.top()->OnEnd();
+			else
+				break;
+		}
+		else
+			m_pRootNode->OnStart();
 	}
 }
 
