@@ -2,6 +2,8 @@
 #include "Client_Defines.h"
 #include "MonoBehaviour.h"
 #include "RigidDynamic.h"
+#include "Transform.h"
+#include "NavMeshAgent.h"
 
 BEGIN(Engine)
 
@@ -29,23 +31,31 @@ public:
 	virtual void	DebugRender()						override;
 
 public:
-	void	GetMoveMessage(const Vec3& vDir)						{ m_vNetMove += vDir; }
-	void	GetTranslateMessage(const Vec3& vDir)					{ m_vNetTrans += vDir; }
-	void	GetAttackMessage(const _bool& IsAttack)					{  }
-	void	GetChaseMessage(const _bool& IsChase)					{  }
+	void	GetMoveMessage(const Vec3& vDir)		{ m_vNetMove += vDir; }
+	void	GetTranslateMessage(const Vec3& vDir)	{ m_vNetTrans += vDir; }
+	void	GetAttackMessage()						{ Attack(); }
+	void	GetChaseMessage(_bool bMax)				{ m_bMax = bMax; }
 
-	void	ForceHeight()				{ m_pTransform->Translate(Vec3(0.f, m_pNavMeshAgent->GetHeightOffset(), 0.f)); }
-	_float	GetHeightOffset()			{ return m_pNavMeshAgent->GetHeightOffset(); }
-	_bool	Walkable(_fvector vPoint)	{ return m_pNavMeshAgent->Walkable(vPoint); }
+	void	ForceHeight()							{ m_pTransform->Translate(Vec3(0.f, m_pNavMeshAgent->GetHeightOffset(), 0.f)); }
+	_float	GetHeightOffset()						{ return m_pNavMeshAgent->GetHeightOffset(); }
+	_bool	Walkable(_fvector vPoint)				{ return m_pNavMeshAgent->Walkable(vPoint); }
 
 	void	Look(const Vec3& vPoint, const _float& fTimeDelta);
 
+	void	SetTarget(CGameObject* pTarget)			{ m_pTarget = pTarget; }	// 안쓰일 듯. BlackBoard에서 처리
+	void	SetTargetPoint(Vec3& vTargetPoint)		{ m_vTargetPoint = vTargetPoint; }
+
+	// functor
+	_bool	MyMemberFunction()
+	{
+		
+		return true;
+	}
+
 private:
-	void	Input(const _float& fTimeDelta);
 	void	Move(const _float& fTimeDelta);
 	void	Translate(const _float& fTimeDelta);
 	void	Attack();
-	void	Chase();
 
 	void	LimitAllAxisVelocity();
 
@@ -60,9 +70,13 @@ private:
 
 	Vec3			m_vMaxLinearSpeed;
 	Vec3			m_vLinearSpeed;
+	_bool			m_bMax = false;
 
 	Vec3			m_vMaxAngularSpeed;
 	Vec3			m_vAngularSpeed;
+
+	CGameObject*	m_pTarget = nullptr;
+	Vec3			m_vTargetPoint;
 
 public:
 	static	CMonsterController* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

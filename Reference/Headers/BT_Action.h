@@ -18,13 +18,20 @@ public:
 
 protected:
 	CBT_Action();
-	CBT_Action(const CBT_Action& rhs);
+	CBT_Action(const CBT_Action& rhs) = delete;
 	virtual ~CBT_Action() = default;
 	
 public:
 	virtual HRESULT		Initialize(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tStateAnim, CMonoBehaviour* pController);
 
+
+	virtual void		OnStart(_int iAnimIndex = 0);
+	//virtual void		OnEnd()		override { Super::OnEnd(); }
+
 	virtual BT_NODETYPE	NodeType() override { return BT_NODETYPE::ACTION; }
+
+protected:
+	virtual void				ConditionalAbort(const _float& fTimeDelta) PURE;
 
 protected:
 	CModel*						m_pModel = nullptr;

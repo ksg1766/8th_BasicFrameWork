@@ -30,12 +30,18 @@ CBT_Node::BT_RETURN CBT_Composite::OnUpdate(const _float& fTimeDelta)
 {
 	while (true)
 	{
-		m_eReturn = (*m_RunningChild)->Tick(fTimeDelta);
+		//m_eReturn = (*m_RunningChild)->Tick(fTimeDelta);
 
 		switch (m_eCompositeType)
 		{
 		case CompositeType::SELECTOR:
 		{
+			// 만약 이렇게 하면?
+			if (BT_FAIL != m_eReturn && ++m_RunningChild == m_vecChildren.end())
+				return BT_FAIL;
+
+			m_eReturn = (*m_RunningChild)->Tick(fTimeDelta);
+			//
 			if (BT_FAIL != m_eReturn)
 				return m_eReturn;
 
@@ -45,6 +51,12 @@ CBT_Node::BT_RETURN CBT_Composite::OnUpdate(const _float& fTimeDelta)
 		break;
 		case CompositeType::SEQUENCE:
 		{
+			// 만약 이렇게 하면?
+			if (BT_SUCCESS != m_eReturn && ++m_RunningChild == m_vecChildren.end())
+				return BT_SUCCESS;
+
+			m_eReturn = (*m_RunningChild)->Tick(fTimeDelta);
+			//
 			if (BT_SUCCESS != m_eReturn)
 				return m_eReturn;
 

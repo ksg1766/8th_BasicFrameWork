@@ -4,6 +4,28 @@
 
 BEGIN(Engine)
 
+struct tagBlackBoard
+{
+	virtual void*	GetValue() PURE;
+};
+
+template<typename T>
+struct tagBlackBoardData : public tagBlackBoard
+{
+public:
+	tagBlackBoardData(T _value) { value = _value; }
+	virtual void*	GetValue() override	{ return &value; } // 이거 캐스팅 안되면 value 바로 가져오도록
+	void			SetValue(T _value)	{ value = _value; }
+
+private:
+	T value;
+};
+
+#define GET_VALUE(type, var) static_cast<type*>(var->second->GetValue())
+#define SET_VALUE(type, var, value) static_cast<tagBlackBoardData<type>*>(var->second)->SetValue(value)
+
+using BLACKBOARD = unordered_map<wstring, tagBlackBoard*, djb2Hasher>;
+
 class CBT_Node;
 class CBT_Composite;
 class ENGINE_DLL CBehaviorTree final : public CMonoBehaviour
@@ -24,11 +46,13 @@ public:
 	void			SetRoot(CBT_Composite* pComposite)	{ m_pRootNode = pComposite; }
 	void			PushStack(CBT_Node* pNode)			{ m_NodeStack.push(pNode); }
 	void			PopStack()							{ m_NodeStack.pop(); }
+	
+	BLACKBOARD&		GetBlackBoard()						{ return m_BlackBoard; }
 
 protected:
 	CBT_Composite*		m_pRootNode = nullptr;
 	stack<CBT_Node*>	m_NodeStack;
-	using BLACKBOARD = unordered_map<wstring, _float, djb2Hasher>;
+	
 	BLACKBOARD			m_BlackBoard;
 
 public:

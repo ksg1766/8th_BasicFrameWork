@@ -15,7 +15,11 @@ private:
 	virtual void		OnStart()							override;
 	virtual BT_RETURN	OnUpdate(const _float& fTimeDelta)	override;
 	virtual void		OnEnd()								override;
-	
+
+private:
+	virtual void		ConditionalAbort(const _float& fTimeDelta);
+	void				SetRoamingPoint();
+
 public:
 	static	CHellHound_BT_Roaming* Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController);
 	virtual void Free() override;

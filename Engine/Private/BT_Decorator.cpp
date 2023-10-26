@@ -66,6 +66,7 @@ CBT_Node::BT_RETURN CBT_Decorator::OnUpdate(const _float& fTimeDelta)
 
 void CBT_Decorator::OnEnd()
 {
+	Super::OnEnd();
 }
 
 CBT_Decorator* CBT_Decorator::Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, CMonoBehaviour* pController, DecoratorType eDecoratorType)

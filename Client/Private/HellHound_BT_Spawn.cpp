@@ -8,10 +8,10 @@ CHellHound_BT_Spawn::CHellHound_BT_Spawn()
 {
 }
 
-CHellHound_BT_Spawn::CHellHound_BT_Spawn(const CHellHound_BT_Spawn& rhs)
-	:Super(rhs)
+void CHellHound_BT_Spawn::ConditionalAbort(const Engine::_float& fTimeDelta)
 {
 }
+
 
 void CHellHound_BT_Spawn::OnStart()
 {

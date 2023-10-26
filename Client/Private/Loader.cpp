@@ -9,8 +9,10 @@
 #include "TempCube.h"
 #include "CollisionTest.h"
 #include "PlayerController.h"
+#include "MonsterController.h"
 #include "MainCameraController.h"
 #include "StateMachine.h"
+#include "BehaviorTree.h"
 #include "TestAIController.h"
 #include "FlyingCamera.h"
 #include "MainCamera.h"
@@ -199,6 +201,11 @@ HRESULT CLoader::Loading_Components_For_Level_GamePlay()
 		CStateMachine::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_StateMachine */
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_BehaviorTree"),
+		CBehaviorTree::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	/* For.Prototype_Component_NavMeshAgent */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_NavMeshAgent"),
 		CNavMeshAgent::Create(m_pDevice, m_pContext, TEXT("../Bin/LevelData/NavMesh/NavigationMesh.dat")))))
@@ -216,6 +223,11 @@ HRESULT CLoader::Loading_Scripts_For_Level_GamePlay()
 	/* For.Prototype_Component_PlayerController*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_PlayerController"),
 		CPlayerController::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_MonsterController*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_MonsterController"),
+		CMonsterController::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_MainCameraController*/

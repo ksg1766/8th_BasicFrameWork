@@ -188,6 +188,11 @@
     <ClInclude Include="..\Public\HellHound_BT_Dead.h" />
     <ClInclude Include="..\Public\HellHound_BT_Hit.h" />
     <ClInclude Include="..\Public\HellHound_BT_Idle.h" />
+    <ClInclude Include="..\Public\HellHound_BT_IF_AttackCool.h" />
+    <ClInclude Include="..\Public\HellHound_BT_IF_Dead.h" />
+    <ClInclude Include="..\Public\HellHound_BT_IF_InRange.h" />
+    <ClInclude Include="..\Public\HellHound_BT_IF_InSight.h" />
+    <ClInclude Include="..\Public\HellHound_BT_IF_StepBackCool.h" />
     <ClInclude Include="..\Public\HellHound_BT_Roaming.h" />
     <ClInclude Include="..\Public\HellHound_BT_Sleep.h" />
     <ClInclude Include="..\Public\HellHound_BT_Spawn.h" />

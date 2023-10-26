@@ -8,6 +8,10 @@ CHellHound_BT_Hit::CHellHound_BT_Hit()
 {
 }
 
+void CHellHound_BT_Hit::ConditionalAbort(const _float& fTimeDelta)
+{
+}
+
 void CHellHound_BT_Hit::OnStart()
 {
 	Super::OnStart();

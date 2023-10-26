@@ -16,6 +16,10 @@ private:
 	virtual BT_RETURN	OnUpdate(const _float& fTimeDelta)	override;
 	virtual void		OnEnd()								override;
 
+private:
+	virtual void		ConditionalAbort(const _float& fTimeDelta);
+	_bool				IsInRange();
+
 public:
 	static	CHellHound_BT_Chase* Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController);
 	virtual void Free() override;

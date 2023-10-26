@@ -7,15 +7,12 @@ CBT_Action::CBT_Action()
 {
 }
 
-CBT_Action::CBT_Action(const CBT_Action& rhs)
-	:Super(rhs)
-{
-}
-
 HRESULT CBT_Action::Initialize(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tStateAnim, CMonoBehaviour* pController)
 {
 	if(FAILED(Super::Initialize(pGameObject, pBehaviorTree, pController)))
 		return E_FAIL;
+
+	m_pModel = m_pGameObject->GetModel();
 
 	for (const wstring& strAnim : tStateAnim.vecAnimations)
 	{
@@ -28,6 +25,13 @@ HRESULT CBT_Action::Initialize(CGameObject* pGameObject, CBehaviorTree* pBehavio
 	}
 
 	return S_OK;
+}
+
+void CBT_Action::OnStart(_int iAnimIndex)
+{
+	Super::OnStart();
+	m_pModel->SetNextAnimationIndex(m_vecAnimIndexTime[iAnimIndex].first);
+	m_fTimeSum = 0.f;
 }
 
 void CBT_Action::Free()

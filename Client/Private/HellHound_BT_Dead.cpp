@@ -8,14 +8,9 @@ CHellHound_BT_Dead::CHellHound_BT_Dead()
 {
 }
 
-CHellHound_BT_Dead::CHellHound_BT_Dead(const CHellHound_BT_Dead& rhs)
-	:Super(rhs)
-{
-}
-
 void CHellHound_BT_Dead::OnStart()
 {
-	Super::OnStart();
+	Super::OnStart(0);
 }
 
 CBT_Node::BT_RETURN CHellHound_BT_Dead::OnUpdate(const _float& fTimeDelta)
@@ -26,6 +21,10 @@ CBT_Node::BT_RETURN CHellHound_BT_Dead::OnUpdate(const _float& fTimeDelta)
 void CHellHound_BT_Dead::OnEnd()
 {
 	Super::OnEnd();
+}
+
+void CHellHound_BT_Dead::ConditionalAbort(const _float& fTimeDelta)
+{
 }
 
 CHellHound_BT_Dead* CHellHound_BT_Dead::Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController)

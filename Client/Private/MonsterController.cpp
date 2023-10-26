@@ -8,8 +8,8 @@ constexpr auto EPSILON = 0.001f;
 
 CMonsterController::CMonsterController(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:Super(pDevice, pContext)
-	, m_vLinearSpeed(Vec3(7.f, 7.f, 7.f))
-	, m_vMaxLinearSpeed(Vec3(20.f, 20.f, 20.f))
+	, m_vLinearSpeed(Vec3(5.f, 5.f, 5.f))
+	, m_vMaxLinearSpeed(Vec3(10.f, 10.f, 10.f))
 	, m_vAngularSpeed(Vec3(0.f, 360.f, 0.f))
 	, m_vMaxAngularSpeed(Vec3(0.f, 540.f, 0.f))
 {
@@ -74,8 +74,20 @@ void CMonsterController::DebugRender()
 void CMonsterController::Move(const _float& fTimeDelta)
 {
 	m_vNetMove.Normalize();
-	Vec3 vSpeed = fTimeDelta * m_vLinearSpeed * m_vNetMove;
-	m_pTransform->Translate(vSpeed);
+
+	/*Vec3 vSpeed = (m_bMax ? m_vMaxLinearSpeed : m_vLinearSpeed) * fTimeDelta * m_vNetMove;
+	m_pTransform->Translate(vSpeed);*/ //TODO: 테스트 해볼 것
+
+	if(m_bMax)
+	{
+		Vec3 vSpeed = fTimeDelta * m_vMaxLinearSpeed * m_vNetMove;
+		m_pTransform->Translate(vSpeed);
+	}
+	else
+	{
+		Vec3 vSpeed = fTimeDelta * m_vLinearSpeed * m_vNetMove;
+		m_pTransform->Translate(vSpeed);
+	}
 
 	const Vec3& vForward = m_pTransform->GetForward();
 	_float fRadian = acos(vForward.Dot(m_vNetMove));
@@ -107,10 +119,6 @@ void CMonsterController::Attack()
 {
 }
 
-void CMonsterController::Chase()
-{
-}
-
 void CMonsterController::Look(const Vec3& vPoint, const _float& fTimeDelta)
 {
 	Vec3 vDir = vPoint - m_pTransform->GetPosition();
@@ -127,14 +135,6 @@ void CMonsterController::Look(const Vec3& vPoint, const _float& fTimeDelta)
 
 		m_pTransform->RotateYAxisFixed(0.3f * vRotateAmount);
 	}
-}
-
-void CMonsterController::Input(const _float& fTimeDelta)
-{
-	if (KEY_PRESSING(KEY::SHIFT) && KEY_DOWN(KEY::K))
-		m_pRigidBody->IsKinematic(!m_pRigidBody->IsKinematic());
-	if (KEY_PRESSING(KEY::SHIFT) && KEY_DOWN(KEY::U))
-		m_pRigidBody->UseGravity(!m_pRigidBody->UseGravity());
 }
 
 void CMonsterController::LimitAllAxisVelocity()

@@ -4,7 +4,7 @@
 
 BEGIN(Client)
 
-class CHellHound_BT_StepBack : public CBT_Action
+class CHellHound_BT_StepBack final : public CBT_Action
 {
 	using Super = CBT_Action;
 private:
@@ -15,6 +15,11 @@ private:
 	virtual void		OnStart()							override;
 	virtual BT_RETURN	OnUpdate(const _float& fTimeDelta)	override;
 	virtual void		OnEnd()								override;
+
+private:
+	virtual void		ConditionalAbort(const _float& fTimeDelta)	override;
+	void				StartCoolDown();
+	void				RunAttackCoolDown(const _float& fTimeDelta);
 
 public:
 	static	CHellHound_BT_StepBack* Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController);

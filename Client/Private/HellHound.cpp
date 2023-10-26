@@ -2,7 +2,13 @@
 #include "..\Public\HellHound.h"
 #include "GameInstance.h"
 #include "BT_Composite.h"
-#include "BT_Decorator.h"
+//#include "BT_Decorator.h"
+#include "HellHound_BT_IF_Dead.h"
+#include "HellHound_BT_IF_AttackCool.h"
+#include "HellHound_BT_IF_StepBackCool.h"
+#include "HellHound_BT_IF_InRange.h"
+#include "HellHound_BT_IF_InSight.h"
+
 #include "HellHound_BT_Spawn.h"
 #include "HellHound_BT_Dead.h"
 #include "HellHound_BT_Attack.h"
@@ -107,6 +113,16 @@ HRESULT CHellHound::Ready_FixedComponents()
 		|| FAILED(GetRigidBody()->InitializeCollider()))
 		return E_FAIL;
 
+	if (LEVEL_GAMEPLAY == m_pGameInstance->GetCurrentLevelIndex())
+	{
+		/* Com_NavMeshAgent */
+		CNavMeshAgent::NAVIGATION_DESC pNaviDesc;
+		pNaviDesc.iCurrentIndex = 70;
+
+		if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::NavMeshAgent, TEXT("Prototype_Component_NavMeshAgent"), &pNaviDesc)))
+			return E_FAIL;
+	}
+
 	return S_OK;
 }
 
@@ -120,7 +136,7 @@ HRESULT CHellHound::Ready_Scripts()
 
 		CMonoBehaviour* pController = m_vecScripts.back();
 
-		/* Com_StateMachine */
+		/* Com_BehaviorTree */
 		if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::Script, TEXT("Prototype_Component_BehaviorTree"))))
 			return E_FAIL;
 
@@ -132,33 +148,34 @@ HRESULT CHellHound::Ready_Scripts()
 			desc.vecAnimations.push_back(TEXT("HellHound_Death"));
 			CBT_Action* pDead = CHellHound_BT_Dead::Create(this, pBehaviorTree, desc, pController);
 
-			CBT_Decorator* pIfDead = CBT_Decorator::Create(this, pBehaviorTree, pController, CBT_Decorator::DecoratorType::IF);//Á×¾ú´Â°¡
+			CBT_Decorator* pIfDead = CHellHound_BT_IF_Dead::Create(this, pBehaviorTree, pController, CBT_Decorator::DecoratorType::IF);//Á×¾ú´Â°¡
 			pIfDead->AddChild(pDead);
 
 			desc.vecAnimations.clear();
 			desc.vecAnimations.push_back(TEXT("HellHound_Atk_Bite"));
 			CBT_Action* pAttack = CHellHound_BT_Attack::Create(this, pBehaviorTree, desc, pController);
 
-			CBT_Decorator* pAtkCool = CBT_Decorator::Create(this, pBehaviorTree, pController, CBT_Decorator::DecoratorType::IF);//°ø°ÝÄð
-			if (FAILED(pAtkCool->AddChild(pAttack))) return E_FAIL;
+			//CBT_Decorator* pAttackCool = CBT_Decorator::Create(this, pBehaviorTree, pController, CBT_Decorator::DecoratorType::IF);//°ø°ÝÄð
+			CBT_Decorator* pAttackCool = CHellHound_BT_IF_AttackCool::Create(this, pBehaviorTree, pController, CBT_Decorator::DecoratorType::IF);//°ø°ÝÄð
+			if (FAILED(pAttackCool->AddChild(pAttack))) return E_FAIL;
 
 			desc.vecAnimations.clear();
 			desc.vecAnimations.push_back(TEXT("HellHound_Evade_B"));
 			CBT_Action* pStepBack = CHellHound_BT_StepBack::Create(this, pBehaviorTree, desc, pController);
 
-			CBT_Decorator* pStpBckCool = CBT_Decorator::Create(this, pBehaviorTree, pController, CBT_Decorator::DecoratorType::IF);//½ºÅÜ¹éÄð
-			if (FAILED(pStpBckCool->AddChild(pStepBack))) return E_FAIL;
+			CBT_Decorator* pStepBackCool = CHellHound_BT_IF_StepBackCool::Create(this, pBehaviorTree, pController, CBT_Decorator::DecoratorType::IF);//½ºÅÜ¹éÄð
+			if (FAILED(pStepBackCool->AddChild(pStepBack))) return E_FAIL;
 
 			desc.vecAnimations.clear();
 			desc.vecAnimations.push_back(TEXT("HellHound_Taunt_01"));
 			CBT_Action* pWait = CHellHound_BT_Wait::Create(this, pBehaviorTree, desc, pController);
 
 			CBT_Composite* pSuccessAtkRng = CBT_Composite::Create(this, pBehaviorTree, pController, CBT_Composite::CompositeType::SELECTOR);//»ç°Å¸® ³»¿¡ ÀÖÀ» °æ¿ì
-			if (FAILED(pSuccessAtkRng->AddChild(pAtkCool))) return E_FAIL;
-			if (FAILED(pSuccessAtkRng->AddChild(pStpBckCool))) return E_FAIL;
+			if (FAILED(pSuccessAtkRng->AddChild(pAttackCool))) return E_FAIL;
+			if (FAILED(pSuccessAtkRng->AddChild(pStepBackCool))) return E_FAIL;
 			if (FAILED(pSuccessAtkRng->AddChild(pWait))) return E_FAIL;
 
-			CBT_Decorator* pIfAtkRng = CBT_Decorator::Create(this, pBehaviorTree, pController, CBT_Decorator::DecoratorType::IF);//»ç°Å¸®
+			CBT_Decorator* pIfAtkRng = CHellHound_BT_IF_InRange::Create(this, pBehaviorTree, pController, CBT_Decorator::DecoratorType::IF);//»ç°Å¸®
 			if (FAILED(pIfAtkRng->AddChild(pSuccessAtkRng))) return E_FAIL;
 
 			desc.vecAnimations.clear();
@@ -169,7 +186,7 @@ HRESULT CHellHound::Ready_Scripts()
 			if (FAILED(pInSightTrue->AddChild(pIfAtkRng))) return E_FAIL;
 			if (FAILED(pInSightTrue->AddChild(pChase))) return E_FAIL;
 
-			CBT_Decorator* pIfInSight = CBT_Decorator::Create(this, pBehaviorTree, pController, CBT_Decorator::DecoratorType::IF);//If ½Ã¾ß³» or Hit (==Awake)
+			CBT_Decorator* pIfInSight = CHellHound_BT_IF_InSight::Create(this, pBehaviorTree, pController, CBT_Decorator::DecoratorType::IF);//If ½Ã¾ß³» or Hit (==Awake)
 			if (FAILED(pIfInSight->AddChild(pInSightTrue))) return E_FAIL;
 
 			//desc.vecAnimations.clear();
@@ -198,11 +215,15 @@ HRESULT CHellHound::Ready_Scripts()
 			//desc.vecAnimations.push_back(TEXT("HellHound_Imapact_F"));
 
 			CBT_Composite* pRoot = CBT_Composite::Create(this, pBehaviorTree, pController, CBT_Composite::CompositeType::SELECTOR);
-			if (FAILED(pPeace->AddChild(pIfDead))) return E_FAIL;
-			if (FAILED(pPeace->AddChild(pIfInSight))) return E_FAIL;
-			if (FAILED(pPeace->AddChild(pPeace))) return E_FAIL;
+			if (FAILED(pRoot->AddChild(pIfDead))) return E_FAIL;
+			if (FAILED(pRoot->AddChild(pIfInSight))) return E_FAIL;
+			if (FAILED(pRoot->AddChild(pPeace))) return E_FAIL;
 			pBehaviorTree->SetRoot(pRoot);
 		}
+
+		BLACKBOARD& hashBlackBoard = pBehaviorTree->GetBlackBoard();
+		hashBlackBoard.emplace(TEXT("Sight"), new tagBlackBoardData<_float>(5.f));
+		hashBlackBoard.emplace(TEXT("AttackRange"), new tagBlackBoardData<_float>(1.f));
 	}
 
 	return S_OK;

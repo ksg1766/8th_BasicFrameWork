@@ -9,9 +9,11 @@ class CHellHound_BT_Sleep : public CBT_Action
 	using Super = CBT_Action;
 protected:
 	CHellHound_BT_Sleep();
-	CHellHound_BT_Sleep(const CHellHound_BT_Sleep& rhs);
+	CHellHound_BT_Sleep(const CHellHound_BT_Sleep& rhs) = delete;
 	virtual ~CHellHound_BT_Sleep() = default;
 	
+	virtual void		ConditionalAbort(const _float& fTimeDelta);
+
 	virtual void		OnStart()							override;
 	virtual BT_RETURN	OnUpdate(const _float& fTimeDelta)	override;
 	virtual void		OnEnd()								override;

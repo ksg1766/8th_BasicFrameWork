@@ -190,16 +190,16 @@ HRESULT CLevel_GamePlay::Ready_Layer_UnitGround()
 		pGameObject->GetTransform()->Translate(Vec3(230.f - (_float)i, 100.f, -180.f - (_float)i));
 	}*/
 
-	/*for (_int i = 0; i < 10; ++i)
+	for (_int i = 0; i < 1; ++i)
 	{
 		pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_HellHound"));
 		if (nullptr == pGameObject)	return E_FAIL;
-		_int iRandomPosX = (rand() * i) % 16 - 8;
+		/*_int iRandomPosX = (rand() * i) % 16 - 8;
 		_int iRandomPosZ = (rand() * i) % 16 - 8;
 		_int iRandomAnimIndex = abs(rand()) * i;
 		pGameObject->GetModel()->SetNextAnimationIndex(iRandomAnimIndex);
-		pGameObject->GetTransform()->Translate(Vec3(iRandomPosX, 0.f, iRandomPosZ));
-	}*/
+		pGameObject->GetTransform()->Translate(Vec3(iRandomPosX, 0.f, iRandomPosZ));*/
+	}
 
 	return S_OK;
 }

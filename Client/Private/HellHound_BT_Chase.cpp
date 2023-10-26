@@ -2,7 +2,7 @@
 #include "HellHound_BT_Chase.h"
 #include "GameInstance.h"
 #include "GameObject.h"
-#include "MonoBehaviour.h"
+#include "MonsterController.h"
 
 CHellHound_BT_Chase::CHellHound_BT_Chase()
 {
@@ -10,17 +10,52 @@ CHellHound_BT_Chase::CHellHound_BT_Chase()
 
 void CHellHound_BT_Chase::OnStart()
 {
-	Super::OnStart();
+	Super::OnStart(0);
 }
 
 CBT_Node::BT_RETURN CHellHound_BT_Chase::OnUpdate(const Engine::_float& fTimeDelta)
 {
-	return BT_RETURN();
+	ConditionalAbort(fTimeDelta);
+	if (IsInRange())
+		return BT_SUCCESS;
+
+	BLACKBOARD& hashBlackBoard = m_pBehaviorTree->GetBlackBoard();
+	const auto& attackRange = hashBlackBoard.find(TEXT("AttackRange"));
+	const auto& target = hashBlackBoard.find(TEXT("Target"));
+
+	const Vec3& vTargetPos = GET_VALUE(CGameObject, target)->GetTransform()->GetPosition();
+	const Vec3& vCurrentPos = m_pGameObject->GetTransform()->GetPosition();
+	
+	Vec3 vChaseDir = vTargetPos - vCurrentPos;
+	vChaseDir.Normalize();
+
+	CMonsterController* pController = static_cast<CMonsterController*>(m_pController);
+	pController->GetChaseMessage(true);
+	pController->GetMoveMessage(vChaseDir);
+
+	return BT_RUNNING;
 }
 
 void CHellHound_BT_Chase::OnEnd()
 {
 	Super::OnEnd();
+	static_cast<CMonsterController*>(m_pController)->GetChaseMessage(false);
+}
+
+void CHellHound_BT_Chase::ConditionalAbort(const _float& fTimeDelta)
+{
+}
+
+_bool CHellHound_BT_Chase::IsInRange()
+{
+	BLACKBOARD& hashBlackBoard = m_pBehaviorTree->GetBlackBoard();
+	const auto& attackRange = hashBlackBoard.find(TEXT("AttackRange"));
+	const auto& target = hashBlackBoard.find(TEXT("Target"));
+
+	if ((GET_VALUE(CGameObject, target)->GetTransform()->GetPosition() - m_pGameObject->GetTransform()->GetPosition()).Length() < *GET_VALUE(_float, attackRange))
+		return true;
+	else
+		return false;
 }
 
 CHellHound_BT_Chase* CHellHound_BT_Chase::Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController)

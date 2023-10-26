@@ -8,8 +8,7 @@ CHellHound_BT_Sleep::CHellHound_BT_Sleep()
 {
 }
 
-CHellHound_BT_Sleep::CHellHound_BT_Sleep(const CHellHound_BT_Sleep& rhs)
-	:Super(rhs)
+void CHellHound_BT_Sleep::ConditionalAbort(const _float& fTimeDelta)
 {
 }
 
