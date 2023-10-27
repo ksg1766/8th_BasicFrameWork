@@ -226,7 +226,7 @@
     <Filter Include="03.GameObjects\02.Monster\HellHound\Behavior\00.보류\09.Hit%28보류%29">
       <UniqueIdentifier>{ff4ca980-9569-46f1-af61-65810acfa841}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03.GameObjects\02.Monster\HellHound\Behavior\99.Decorator%28삭제 예정-귀찮지 않다면..%29">
+    <Filter Include="03.GameObjects\02.Monster\HellHound\Behavior\99.Decorator">
       <UniqueIdentifier>{db3994c7-d555-45c5-aa43-7c3bbd9bdf3b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -433,19 +433,19 @@
       <Filter>03.GameObjects\02.Monster\HellHound\Behavior\08.Roaming</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\HellHound_BT_IF_AttackCool.h">
-      <Filter>03.GameObjects\02.Monster\HellHound\Behavior\99.Decorator%28삭제 예정-귀찮지 않다면..%29</Filter>
+      <Filter>03.GameObjects\02.Monster\HellHound\Behavior\99.Decorator</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\HellHound_BT_IF_Dead.h">
-      <Filter>03.GameObjects\02.Monster\HellHound\Behavior\99.Decorator%28삭제 예정-귀찮지 않다면..%29</Filter>
+      <Filter>03.GameObjects\02.Monster\HellHound\Behavior\99.Decorator</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\HellHound_BT_IF_InRange.h">
-      <Filter>03.GameObjects\02.Monster\HellHound\Behavior\99.Decorator%28삭제 예정-귀찮지 않다면..%29</Filter>
+      <Filter>03.GameObjects\02.Monster\HellHound\Behavior\99.Decorator</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\HellHound_BT_IF_InSight.h">
-      <Filter>03.GameObjects\02.Monster\HellHound\Behavior\99.Decorator%28삭제 예정-귀찮지 않다면..%29</Filter>
+      <Filter>03.GameObjects\02.Monster\HellHound\Behavior\99.Decorator</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\HellHound_BT_IF_StepBackCool.h">
-      <Filter>03.GameObjects\02.Monster\HellHound\Behavior\99.Decorator%28삭제 예정-귀찮지 않다면..%29</Filter>
+      <Filter>03.GameObjects\02.Monster\HellHound\Behavior\99.Decorator</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -2,6 +2,7 @@
 #include "QuadTreeNode.h"
 #include "ObjectManager.h"
 #include "GameObject.h"
+#include "GameInstance.h"
 #include "Transform.h"
 #include "Layer.h"
 #include "PipeLine.h"
@@ -122,6 +123,12 @@ void CQuadTree::Update_Frustum(BoundingFrustum& tFrustum)
     //m_tBoundingFrustum.Near *= g_fFrustum_Scale;
     //m_tBoundingFrustum.Far *= g_fFrustum_Scale;
 
+    static _bool bUpdateFrustum = true;
+    if (KEY_PRESSING_EX(KEY::CTRL) && KEY_DOWN_EX(KEY::F7))
+        bUpdateFrustum = !bUpdateFrustum;
+
+    if (!bUpdateFrustum)
+        return;
     m_tBoundingFrustum.Transform(m_tBoundingFrustum, m_pPipeLine->Get_Transform_Matrix_Inverse(CPipeLine::D3DTS_VIEW));
 #endif
 }

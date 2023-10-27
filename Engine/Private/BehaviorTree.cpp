@@ -29,7 +29,9 @@ HRESULT CBehaviorTree::Initialize(void* pArg)
 
 void CBehaviorTree::Tick(const _float& fTimeDelta)
 {
-	while (true)
+	m_pRootNode->Tick(fTimeDelta);
+
+	/*while (true)
 	{
 		if (m_NodeStack.size())
 		{
@@ -40,7 +42,7 @@ void CBehaviorTree::Tick(const _float& fTimeDelta)
 		}
 		else
 			m_pRootNode->OnStart();
-	}
+	}*/
 }
 
 void CBehaviorTree::LateTick(const _float& fTimeDelta)

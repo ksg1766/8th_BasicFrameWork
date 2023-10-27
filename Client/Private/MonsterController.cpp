@@ -8,8 +8,8 @@ constexpr auto EPSILON = 0.001f;
 
 CMonsterController::CMonsterController(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:Super(pDevice, pContext)
-	, m_vLinearSpeed(Vec3(5.f, 5.f, 5.f))
-	, m_vMaxLinearSpeed(Vec3(10.f, 10.f, 10.f))
+	, m_vLinearSpeed(Vec3(3.f, 3.f, 3.f))
+	, m_vMaxLinearSpeed(Vec3(5.f, 5.f, 5.f))
 	, m_vAngularSpeed(Vec3(0.f, 360.f, 0.f))
 	, m_vMaxAngularSpeed(Vec3(0.f, 540.f, 0.f))
 {
@@ -82,6 +82,7 @@ void CMonsterController::Move(const _float& fTimeDelta)
 	{
 		Vec3 vSpeed = fTimeDelta * m_vMaxLinearSpeed * m_vNetMove;
 		m_pTransform->Translate(vSpeed);
+		m_bMax = false;
 	}
 	else
 	{

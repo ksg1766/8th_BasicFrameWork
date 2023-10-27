@@ -24,9 +24,9 @@ public:
 	virtual HRESULT			Initialize(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, CMonoBehaviour* pController);
 
 	virtual	BT_RETURN		Tick(const _float& fTimeDelta);
-	virtual void			OnStart()	{ m_pBehaviorTree->PushStack(this); }
+	virtual void			OnStart()	{/* m_pBehaviorTree->PushStack(this); */}
 	virtual BT_RETURN		OnUpdate(const _float& fTimeDelta)	PURE;
-	virtual void			OnEnd()		{ m_pBehaviorTree->PopStack(); }
+	virtual void			OnEnd()		{/* m_pBehaviorTree->PopStack(); */}
 	
 	virtual BT_NODETYPE		NodeType()							PURE;
 	HRESULT					AddChild(CBT_Node* pChild);

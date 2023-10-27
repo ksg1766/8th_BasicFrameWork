@@ -4,7 +4,7 @@
 
 BEGIN(Engine)
 
-struct tagBlackBoard
+struct tagBlackBoard	// Interface
 {
 	virtual void*	GetValue() PURE;
 };
@@ -13,12 +13,26 @@ template<typename T>
 struct tagBlackBoardData : public tagBlackBoard
 {
 public:
-	tagBlackBoardData(T _value) { value = _value; }
+	tagBlackBoardData() = default;
+	tagBlackBoardData(T _value) :value(_value) {}
 	virtual void*	GetValue() override	{ return &value; } // 이거 캐스팅 안되면 value 바로 가져오도록
 	void			SetValue(T _value)	{ value = _value; }
 
 private:
 	T value;
+};
+
+template<typename T>
+struct tagBlackBoardData<T*> : public tagBlackBoard
+{
+public:
+	tagBlackBoardData() = default;
+	tagBlackBoardData(T* _value) :value(_value) {}
+	virtual void*	GetValue() override { return value; } // 이거 캐스팅 안되면 value 바로 가져오도록
+	void			SetValue(T* _value) { value = _value; }
+
+private:
+	T* value;
 };
 
 #define GET_VALUE(type, var) static_cast<type*>(var->second->GetValue())

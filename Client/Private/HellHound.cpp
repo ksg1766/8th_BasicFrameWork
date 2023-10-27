@@ -53,14 +53,14 @@ void CHellHound::Tick(const _float& fTimeDelta)
 {
 	Super::Tick(fTimeDelta);
 
-	if (KEY_DOWN(KEY::NUM_9))
+	/*if (KEY_DOWN(KEY::NUM_9))
 	{
 		GetModel()->SetNextAnimationIndex(-1 + GetModel()->GetCurAnimationIndex());
 	}
 	if (KEY_DOWN(KEY::NUM_0))
 	{
 		GetModel()->SetNextAnimationIndex(1 + GetModel()->GetCurAnimationIndex());
-	}
+	}*/
 }
 
 void CHellHound::LateTick(const _float& fTimeDelta)
@@ -222,8 +222,8 @@ HRESULT CHellHound::Ready_Scripts()
 		}
 
 		BLACKBOARD& hashBlackBoard = pBehaviorTree->GetBlackBoard();
-		hashBlackBoard.emplace(TEXT("Sight"), new tagBlackBoardData<_float>(5.f));
-		hashBlackBoard.emplace(TEXT("AttackRange"), new tagBlackBoardData<_float>(1.f));
+		hashBlackBoard.emplace(TEXT("Sight"), new tagBlackBoardData<_float>(7.f));
+		hashBlackBoard.emplace(TEXT("AttackRange"), new tagBlackBoardData<_float>(3.f));
 	}
 
 	return S_OK;

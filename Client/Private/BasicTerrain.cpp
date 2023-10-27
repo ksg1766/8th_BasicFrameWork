@@ -57,7 +57,7 @@ HRESULT CBasicTerrain::Render()
 
 #ifdef _DEBUG
 	// DebugRender
-	//Super::DebugRender();
+	Super::DebugRender();
 #endif
 
 	return S_OK;
@@ -71,6 +71,10 @@ HRESULT CBasicTerrain::Ready_FixedComponents(void* pArg)
 	
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Renderer, TEXT("Prototype_Component_Renderer"))))
 		return E_FAIL;
+
+	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Shader, TEXT("Prototype_Component_Shader_VtxDebug"))))
+		return E_FAIL;
+	GetShader()->SetPassIndex(3);
 
 	/* Com_Terrain */
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Terrain, TEXT("Prototype_Component_Terrain"))))

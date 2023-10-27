@@ -34,7 +34,7 @@ public:
 	void	GetMoveMessage(const Vec3& vDir)		{ m_vNetMove += vDir; }
 	void	GetTranslateMessage(const Vec3& vDir)	{ m_vNetTrans += vDir; }
 	void	GetAttackMessage()						{ Attack(); }
-	void	GetChaseMessage(_bool bMax)				{ m_bMax = bMax; }
+	void	GetChaseMessage()						{ m_bMax = true; }
 
 	void	ForceHeight()							{ m_pTransform->Translate(Vec3(0.f, m_pNavMeshAgent->GetHeightOffset(), 0.f)); }
 	_float	GetHeightOffset()						{ return m_pNavMeshAgent->GetHeightOffset(); }

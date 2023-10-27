@@ -44,7 +44,12 @@ private:
 		const auto& attackRange = hashBlackBoard.find(TEXT("AttackRange"));
 		const auto& target = hashBlackBoard.find(TEXT("Target"));
 
-		if ((GET_VALUE(CGameObject, target)->GetTransform()->GetPosition() - m_pGameObject->GetTransform()->GetPosition()).Length() < *GET_VALUE(_float, attackRange))
+		CGameObject* pTarget = static_cast<CGameObject*>(target->second->GetValue());
+		const Vec3& vTargetPos = GET_VALUE(CGameObject, target)->GetTransform()->GetPosition();
+		const Vec3& vCurPos = m_pGameObject->GetTransform()->GetPosition();
+		Vec3 vDist = vTargetPos - vCurPos;
+
+		if (vDist.Length() < *GET_VALUE(_float, attackRange))
 			return true;
 		else
 			return false;

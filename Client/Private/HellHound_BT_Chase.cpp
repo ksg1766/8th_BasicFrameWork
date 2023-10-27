@@ -30,7 +30,7 @@ CBT_Node::BT_RETURN CHellHound_BT_Chase::OnUpdate(const Engine::_float& fTimeDel
 	vChaseDir.Normalize();
 
 	CMonsterController* pController = static_cast<CMonsterController*>(m_pController);
-	pController->GetChaseMessage(true);
+	pController->GetChaseMessage();
 	pController->GetMoveMessage(vChaseDir);
 
 	return BT_RUNNING;
@@ -39,7 +39,6 @@ CBT_Node::BT_RETURN CHellHound_BT_Chase::OnUpdate(const Engine::_float& fTimeDel
 void CHellHound_BT_Chase::OnEnd()
 {
 	Super::OnEnd();
-	static_cast<CMonsterController*>(m_pController)->GetChaseMessage(false);
 }
 
 void CHellHound_BT_Chase::ConditionalAbort(const _float& fTimeDelta)

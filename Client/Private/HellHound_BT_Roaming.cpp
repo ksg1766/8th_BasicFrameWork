@@ -25,7 +25,7 @@ CBT_Node::BT_RETURN CHellHound_BT_Roaming::OnUpdate(const _float& fTimeDelta)
 	Vec3 vRoamingDir = vRoamingPoint - vCurrentPos;
 	vRoamingDir.Normalize();
 
-	if ((vCurrentPos - vRoamingPoint).Length() < 1.f)
+	if ((vRoamingPoint - vCurrentPos).Length() < 1.f)
 		return BT_SUCCESS;
 
 	CMonsterController* pController = static_cast<CMonsterController*>(m_pController);
@@ -55,17 +55,17 @@ void CHellHound_BT_Roaming::SetRoamingPoint()
 
 	if (tRoamingPoint == hashBlackBoard.end())
 	{
-		Vec3 vRandPos(rand() % 3, 0.f, (rand() * 7) % 3);
+		Vec3 vRandPos(rand() % 9 - 5, 0.f, rand() * 7 % 9 - 5);
 
 		CMonsterController* pController = static_cast<CMonsterController*>(m_pController);
 		/*while (!pController->Walkable(vRandPos))
 		{
-			vRandPos.x = (_float)(((_int)vRandPos.x * (_int)pow(-1, rand())) % 3);
-			vRandPos.z = (_float)(((_int)vRandPos.z * (_int)pow(-1, rand())) % 3);
+			vRandPos.x = (_float)(((_int)vRandPos.x * (_int)pow(-1, rand())) % 5);
+			vRandPos.z = (_float)(((_int)vRandPos.z * (_int)pow(-1, rand())) % 5);
 		}*/ // 뭐지... 일단 주석
 
-		tagBlackBoardData<Vec3>* tStepBackCool = new tagBlackBoardData<Vec3>(Vec3(m_pGameObject->GetTransform()->GetPosition()) + vRandPos);
-		hashBlackBoard.emplace(TEXT("RoamingPoint"), tStepBackCool);
+		tagBlackBoardData<Vec3>* pRoamingPoint = new tagBlackBoardData<Vec3>(Vec3(m_pGameObject->GetTransform()->GetPosition()) + vRandPos);
+		hashBlackBoard.emplace(TEXT("RoamingPoint"), pRoamingPoint);
 	}
 	else
 	{
