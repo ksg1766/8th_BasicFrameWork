@@ -48,6 +48,7 @@ public:
 
 public:
 	HRESULT			UpdateTweenData(const _float& fTimeDelta);
+	void			PauseAnimation(const _bool& bPauseAnimation) { m_IsAnimPaused = bPauseAnimation;	}
 
 	void			PushTweenData(const InstancedTweenDesc& desc);
 	HRESULT			BindMaterialTexture(class CShader* pShader, const _char* pConstantName, _uint iMaterialIndex, aiTextureType eType);
@@ -75,6 +76,7 @@ private:
 
 private:
 	// Animation
+	_bool						m_IsAnimPaused = false;
 	TWEENDESC					m_TweenDesc;
 	ID3D11Texture2D*			m_pTexture = nullptr;
 	ID3D11ShaderResourceView*	m_pSRV = nullptr;

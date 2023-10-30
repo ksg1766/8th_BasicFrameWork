@@ -19,6 +19,9 @@ protected:
 private:
 	virtual void		ConditionalAbort(const _float& fTimeDelta)	override;
 
+private:
+	_bool				m_bDissolveFlag = false;
+
 public:
 	static	CHellHound_BT_Dead* Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController);
 	virtual void Free() override;

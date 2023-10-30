@@ -47,7 +47,6 @@ CGameObject* CObjectManager::Add_GameObject(_uint iLevelIndex, const LAYERTAG& e
 	if (nullptr == pGameObject)
 		return nullptr;
 
-	//if (m_pLayers[iLevelIndex].size() < (_uint)LAYERTAG::LAYER_END)
 	if (m_vecLayers[iLevelIndex].size() < (_uint)LAYERTAG::LAYER_END)
 	{
 		CLayer* pLayer = CLayer::Create();
@@ -73,7 +72,6 @@ CGameObject* CObjectManager::Add_GameObject(_uint iLevelIndex, const LAYERTAG& e
 		pLayer->SetLayerTag(eLayerTag);
 
 		/* 생성한 레이어를 iLevelIndex용 레이어로 추가하였다. */
-		//m_pLayers[iLevelIndex].emplace(eLayerTag, pLayer);
 		m_vecLayers[iLevelIndex].emplace(eLayerTag, pLayer);
 		
 		/* 레이어에 객체를 추가하자. */
@@ -92,7 +90,6 @@ void CObjectManager::Tick(const _float& fTimeDelta)
 	{
 		if (i == 2)		// GAMEPLAY
 		{
-			//for (auto& Pair : m_pLayers[i])
 			for (auto& Pair : m_vecLayers[i])
 			{
 				if ((_uint)Pair.first == (_uint)LAYERTAG::DEFAULT_LAYER_END)
@@ -113,7 +110,6 @@ void CObjectManager::Tick(const _float& fTimeDelta)
 		}
 		else if (i != 2)		// !GAMEPLAY
 		{
-			//for (auto& Pair : m_pLayers[i])
 			for (auto& Pair : m_vecLayers[i])
 			{
 				if ((_uint)Pair.first == (_uint)LAYERTAG::DEFAULT_LAYER_END
@@ -142,7 +138,6 @@ void CObjectManager::LateTick(const _float& fTimeDelta)
 	{
 		if (i == 2)		// GAMEPLAY
 		{
-			//for (auto& Pair : m_pLayers[i])
 			for (auto& Pair : m_vecLayers[i])
 			{
 				if ((_uint)Pair.first == (_uint)LAYERTAG::DEFAULT_LAYER_END)
@@ -157,7 +152,6 @@ void CObjectManager::LateTick(const _float& fTimeDelta)
 		}
 		else if (i != 2)	// GAMEPLAY
 		{
-			//for (auto& Pair : m_pLayers[i])
 			for (auto& Pair : m_vecLayers[i])
 			{
 				if ((_uint)Pair.first == (_uint)LAYERTAG::DEFAULT_LAYER_END

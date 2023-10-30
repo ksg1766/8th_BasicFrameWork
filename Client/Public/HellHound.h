@@ -35,6 +35,10 @@ private:
 	_float			m_fDissolveAmount = 0.f;
 
 public:
+	// TODO: Temp (이런 데이터는 BlakcBoard로 옮기자. 디졸브 테스트를 위한 임시 코드)
+	_bool			m_IsZeroHP = false;
+
+public:
 	static	CHellHound* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg) override; /* 사본객체를 생성할때 원본데이터로부터 복제해올 데이터외에 더 추가해 줘야할 데이터가 있다라면 받아오겠다. */
 	virtual void Free() override;

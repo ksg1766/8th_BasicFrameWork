@@ -16,7 +16,7 @@ BEGIN(Client)
 typedef struct DissolveDesc
 {
 	CGameObject* pDissolveObject = nullptr;
-	_float	fPlayTime = 2.f;
+	_float	fPlayTime = 3.f;
 	_float	fCurTime = 0.f;
 	_bool	IsRunning = false;
 

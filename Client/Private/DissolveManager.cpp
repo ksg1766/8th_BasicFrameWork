@@ -12,10 +12,11 @@ CDissolveManager::CDissolveManager()
 
 HRESULT CDissolveManager::Reserve_Manager(ID3D11Device* pDevice)
 {
-	wstring strDissolveFilePath = TEXT("../Bin/Resources/Textures/DissolvePattern4.dds");
+	wstring strDissolveFilePath = TEXT("../Bin/Resources/Textures/Effect/Dissolve/DissolvePattern4.dds");
 	_tchar	szDissolveFilePath[MAX_PATH] = TEXT("");
 	wsprintf(szDissolveFilePath, strDissolveFilePath.c_str());
-	CreateDDSTextureFromFile(pDevice, szDissolveFilePath, nullptr, &m_ppDissolveSRV);
+	if(FAILED(CreateDDSTextureFromFile(pDevice, szDissolveFilePath, nullptr, &m_ppDissolveSRV)))
+		return E_FAIL;
 
 	m_pGameInstance = GET_INSTANCE(CGameInstance);
 

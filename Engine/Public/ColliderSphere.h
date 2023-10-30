@@ -21,8 +21,9 @@ public:
 	virtual _bool	Intersects(Ray& ray, OUT _float& distance)	override;
 	virtual _bool	Intersects(Super* other)					override;
 
-	void			SetRadius(_float radius)		{ m_tBoundingSphere.Radius = radius; }
-	BoundingSphere&	GetBoundingSphere()				{ return m_tBoundingSphere; }
+	void			SetRadius(const _float& radius)		{ m_tBoundingSphere.Radius = radius; }
+	void			SetCenter(const Vec3& vCenter)		{ m_tBoundingSphere.Center = vCenter; }
+	BoundingSphere&	GetBoundingSphere()					{ return m_tBoundingSphere; }
 
 	virtual void	OnTriggerEnter(const CCollider* pOther)	override;
 	virtual void	OnTriggerStay(const CCollider* pOther)	override;

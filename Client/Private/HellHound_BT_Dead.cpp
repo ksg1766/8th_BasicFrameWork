@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "GameObject.h"
 #include "MonoBehaviour.h"
+#include "DissolveManager.h"
 
 CHellHound_BT_Dead::CHellHound_BT_Dead()
 {
@@ -15,7 +16,20 @@ void CHellHound_BT_Dead::OnStart()
 
 CBT_Node::BT_RETURN CHellHound_BT_Dead::OnUpdate(const _float& fTimeDelta)
 {
-	return BT_FAIL;
+	ConditionalAbort(fTimeDelta);
+
+	if (!m_bDissolveFlag && m_fTimeSum > m_vecAnimIndexTime[0].second * 0.8f)
+	{
+		m_pModel->PauseAnimation(true);
+		CDissolveManager::GetInstance()->AddDissolve(m_pGameObject);
+		m_bDissolveFlag = true;
+		//return BT_RUNNING;
+	}
+
+	m_fTimeSum += fTimeDelta;
+
+	return BT_RUNNING;
+	//return BT_FAIL;
 }
 
 void CHellHound_BT_Dead::OnEnd()

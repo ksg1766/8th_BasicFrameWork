@@ -97,7 +97,7 @@ void CMonsterController::LateTick(const _float& fTimeDelta)
 
 void CMonsterController::DebugRender()
 {
-#ifdef _DEBUG
+#ifdef _DEBUG	// Behavior Tree로 옮길 것
 	m_pEffect->SetWorld(XMMatrixIdentity());
 
 	m_pEffect->SetView(m_pGameInstance->Get_Transform_Matrix(CPipeLine::D3DTS_VIEW));

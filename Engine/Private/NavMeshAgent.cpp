@@ -8,7 +8,9 @@
 #include "Cell.h"
 #include "DebugDraw.h"
 
+#ifdef _DEBUG
 _bool CNavMeshAgent::m_IsRendered = false;
+#endif
 vector<CCell*> CNavMeshAgent::m_Cells;
 
 CNavMeshAgent::CNavMeshAgent(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -18,10 +20,15 @@ CNavMeshAgent::CNavMeshAgent(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
 
 CNavMeshAgent::CNavMeshAgent(const CNavMeshAgent& rhs)
 	: Super(rhs)
+#ifdef _DEBUG
 	, m_pBatch(rhs.m_pBatch)
 	, m_pEffect(rhs.m_pEffect)
 	, m_pInputLayout(rhs.m_pInputLayout)
+#endif
 {
+#ifdef _DEBUG
+	Safe_AddRef(m_pInputLayout);
+#endif
 }
 
 HRESULT CNavMeshAgent::Initialize_Prototype(const wstring& strNavigationData)
@@ -92,9 +99,10 @@ HRESULT CNavMeshAgent::Initialize(void* pArg)
 
 void CNavMeshAgent::Tick(const _float& fTimeDelta)
 {
+#ifdef _DEBUG
 	if (m_IsRendered)
 		m_IsRendered = false;
-
+#endif
 }
 
 void CNavMeshAgent::DebugRender()

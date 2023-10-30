@@ -23,11 +23,9 @@ private:
 	virtual BT_RETURN	OnUpdate(const _float& fTimeDelta) override
 	{
 		if (IsInSight())	// 시야에 있는지 없는지 판단해서 키값 삽입or삭제(시야 말고 맞았는지도 추가해야함...)
-			m_eReturn = m_vecChildren[0]->Tick(fTimeDelta);
+			return m_vecChildren[0]->Tick(fTimeDelta);
 		else				// 키값이 없으면 타겟이 시야에 없는 것
-			m_eReturn = BT_FAIL;
-
-		return m_eReturn;
+			return BT_FAIL;
 	}
 
 	virtual void		OnEnd() override

@@ -199,7 +199,8 @@ void CModel::Tick(const _float& fTimeDelta)
 {
 	if (TYPE_ANIM == m_eModelType)
 	{
-		UpdateTweenData(fTimeDelta);
+		if (!m_IsAnimPaused)
+			UpdateTweenData(fTimeDelta);
 
 		for (auto& parts : m_PartsModel)
 		{

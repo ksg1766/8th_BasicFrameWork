@@ -21,7 +21,8 @@ public:
 	virtual _bool	Intersects(Ray& ray, OUT _float& distance)	override;
 	virtual _bool	Intersects(Super* other)					override;
 
-	void			SetExtents(Vec3 vExtents)			{ m_tBoundingBox.Extents = vExtents; }
+	void			SetExtents(const Vec3& vExtents)	{ m_tBoundingBox.Extents = vExtents; }
+	void			SetCenter(const Vec3& vCenter)		{ m_tBoundingBox.Center = vCenter; }
 	BoundingOrientedBox& GetBoundingBox()				{ return m_tBoundingBox; }
 
 private:	

@@ -2,6 +2,9 @@
 #include "..\Public\Strife_Ammo_Default.h"
 #include "GameInstance.h"
 
+// TODO: Áö¿ï°Í!!!!!!!!!!!
+#include "HellHound.h"
+
 CStrife_Ammo_Default::CStrife_Ammo_Default(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: Super(pDevice, pContext)
 {
@@ -31,8 +34,10 @@ HRESULT CStrife_Ammo_Default::Initialize(void* pArg)
 	static_cast<CRigidDynamic*>(GetRigidBody())->UseGravity(false);
 	static_cast<CRigidDynamic*>(GetRigidBody())->IsKinematic(true);
 
-	GetRigidBody()->GetSphereCollider()->SetRadius(1.f);
-	GetRigidBody()->GetOBBCollider()->SetExtents(Vec3(1.f, 1.f, 0.8f));
+	GetRigidBody()->GetSphereCollider()->SetRadius(0.5f);
+
+	Vec3 vExtents(0.25f, 0.25f, 0.25f);
+	GetRigidBody()->GetOBBCollider()->SetExtents(vExtents);
 
 	return S_OK;
 }
@@ -40,6 +45,11 @@ HRESULT CStrife_Ammo_Default::Initialize(void* pArg)
 void CStrife_Ammo_Default::Tick(const _float& fTimeDelta)
 {
 	Super::Tick(fTimeDelta);
+	
+	const Vec3& vPos = GetTransform()->GetPosition();
+
+	GetRigidBody()->GetSphereCollider()->SetCenter(vPos);
+	GetRigidBody()->GetOBBCollider()->SetCenter(vPos);
 }
 
 void CStrife_Ammo_Default::LateTick(const _float& fTimeDelta)
@@ -105,7 +115,8 @@ void CStrife_Ammo_Default::OnCollisionEnter(CGameObject* pOther)
 	const LAYERTAG& eLayerTag = pOther->GetLayerTag();
 	if (LAYERTAG::UNIT_GROUND == eLayerTag)
 	{
-		m_pGameInstance->DeleteObject(pOther);
+		dynamic_cast<CHellHound*>(pOther)->m_IsZeroHP = true;
+		//m_pGameInstance->DeleteObject(pOther);
 	}
 
 	m_pGameInstance->DeleteObject(this);

@@ -58,6 +58,9 @@ HRESULT CBT_Node::AddChild(CBT_Node* pChild)
 
 void CBT_Node::Free()
 {
+	for(auto& iter : m_vecChildren)
+		Safe_Release(iter);
+
 	Super::Free();
 	GET_INSTANCE(CGameInstance);
 }

@@ -2,6 +2,9 @@
 #include "Client_Defines.h"
 #include "BT_Decorator.h"
 
+// TODO : 지울 것!!!!!!!!!
+#include "HellHound.h"
+
 BEGIN(Client)
 
 class CHellHound_BT_IF_Dead : public CBT_Decorator
@@ -19,12 +22,22 @@ private:
 
 	virtual BT_RETURN OnUpdate(const _float& fTimeDelta) override
 	{
-		return BT_FAIL;	// 일단 임시로 상태 만들기 전까진 항상 FAIL;
+		if (IsZeroHP())
+			return m_vecChildren[0]->Tick(fTimeDelta);
+		else
+			return BT_FAIL;	// 일단 임시로 상태 만들기 전까진 항상 FAIL;
 	}
 
 	virtual void OnEnd() override
 	{
 		Reset();
+	}
+
+private:
+	_bool	IsZeroHP()
+	{	// Temp
+		if (dynamic_cast<CHellHound*>(m_pGameObject)->m_IsZeroHP)
+			return true;
 	}
 
 public:

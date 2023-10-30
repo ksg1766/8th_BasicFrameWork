@@ -51,9 +51,9 @@ void ComputeDissolveColor(inout float4 color, float2 texcoord)
     clip(dissolveSample - g_fDissolveAmount);
     float4 emissive = { 0.f, 0.f, 0.f, 0.f };
 	//Make the pixel emissive if the value is below ~f
-    if (dissolveSample - g_fDissolveAmount < 0.08f)
+    if (dissolveSample - g_fDissolveAmount < 0.25f)/*0.08f*/ 
     {
-        emissive = float4(1.f, 0.4f, 0.f, 1.f);
+        emissive = float4(1.f, 0.5f, 0.f, 1.f);
     }
     
     color = (color + emissive) * deffuseCol;

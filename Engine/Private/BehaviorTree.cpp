@@ -71,4 +71,8 @@ CComponent* CBehaviorTree::Clone(CGameObject* pGameObject, void* pArg)
 void CBehaviorTree::Free()
 {
 	Super::Free();
+
+	m_BlackBoard.clear();
+
+	Safe_Release(m_pRootNode);
 }
