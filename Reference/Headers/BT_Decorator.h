@@ -21,7 +21,9 @@ public:
 	virtual BT_RETURN	OnUpdate(const _float& fTimeDelta)	override;
 	virtual void		OnEnd()		override;
 
-	virtual BT_NODETYPE	NodeType() override								{ return BT_NODETYPE::DECORATOR; }
+	virtual void		Reset()		override							{ m_vecChildren[0]->Reset(); }
+
+	virtual BT_NODETYPE	NodeType()	override							{ return BT_NODETYPE::DECORATOR; }
 
 	void				SetFunctionPtr(function<_bool()> ftCondition)	{ m_ftCondition = ftCondition; }
 	void				SetLimitCount(_int iLimitCount)					{ m_iLimitCount = iLimitCount; }

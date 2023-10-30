@@ -19,7 +19,10 @@ private:
 private:
 	virtual void		ConditionalAbort(const _float& fTimeDelta);
 	void				StartIdleCoolDown();
+	void				AbortIdleCoolDown();
 	void				RunIdleCoolDown(const _float& fTimeDelta);
+	
+	_bool				IsAggro();
 
 public:
 	static	CHellHound_BT_Idle* Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController);

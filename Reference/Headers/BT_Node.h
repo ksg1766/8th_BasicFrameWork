@@ -28,6 +28,8 @@ public:
 	virtual BT_RETURN		OnUpdate(const _float& fTimeDelta)	PURE;
 	virtual void			OnEnd()		{/* m_pBehaviorTree->PopStack(); */}
 	
+	virtual void			Reset()								PURE;
+
 	virtual BT_NODETYPE		NodeType()							PURE;
 	HRESULT					AddChild(CBT_Node* pChild);
 

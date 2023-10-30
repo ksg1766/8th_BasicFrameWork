@@ -17,16 +17,27 @@ CBT_Node::BT_RETURN CHellHound_BT_Attack::OnUpdate(const _float& fTimeDelta)
 {
 	ConditionalAbort(fTimeDelta);
 
-	if (m_fTimeSum > m_vecAnimIndexTime[0].second * 0.8f)
+	if (m_fTimeSum > m_vecAnimIndexTime[0].second * 0.9f)
 	{
 		CMonsterController* pController = static_cast<CMonsterController*>(m_pController);
 		pController->GetAttackMessage();
-		StartCoolDown();
+		
 		return BT_SUCCESS;
 	}
-	
+	else if (m_fTimeSum > m_vecAnimIndexTime[0].second * 0.3f && m_fTimeSum < m_vecAnimIndexTime[0].second * 0.6f)
+	{
+		CMonsterController* pController = static_cast<CMonsterController*>(m_pController);
+
+		BLACKBOARD& hashBlackBoard = m_pBehaviorTree->GetBlackBoard();
+		const auto& target = hashBlackBoard.find(TEXT("Target"));
+
+		const Vec3& vTargetPos = GET_VALUE(CGameObject, target)->GetTransform()->GetPosition();
+		const Vec3& vCurPos = m_pGameObject->GetTransform()->GetPosition();
+
+		pController->GetMoveMessage(vTargetPos - vCurPos);
+	}
+
 	m_fTimeSum += fTimeDelta;
-	RunStepBackCoolDown(fTimeDelta);
 
 	return BT_RUNNING;
 	// BT_FAIL 은 중간에 맞았을 때 해주자
@@ -41,44 +52,21 @@ void CHellHound_BT_Attack::ConditionalAbort(const _float& fTimeDelta)
 {
 }
 
-void CHellHound_BT_Attack::StartCoolDown()
+_bool CHellHound_BT_Attack::IsInRange()
 {
 	BLACKBOARD& hashBlackBoard = m_pBehaviorTree->GetBlackBoard();
-	const auto& tAttackCoolDown = hashBlackBoard.find(TEXT("AttackCoolDown"));
+	const auto& attackRange = hashBlackBoard.find(TEXT("AttackRange"));
+	const auto& target = hashBlackBoard.find(TEXT("Target"));
 
-	if (tAttackCoolDown == hashBlackBoard.end())
-	{
-		tagBlackBoardData<_float>* tAttackCool = new tagBlackBoardData<_float>(3.f);
-		hashBlackBoard.emplace(TEXT("AttackCoolDown"), tAttackCool);
-	}
-	else // 애초에 여기로 오면 잘못된 것.
-	{
-		__debugbreak();
-		SET_VALUE(_float, tAttackCoolDown, 3.f);
-	}
-}
+	const Vec3& vTargetPos = GET_VALUE(CGameObject, target)->GetTransform()->GetPosition();
+	const Vec3& vCurPos = m_pGameObject->GetTransform()->GetPosition();
+	Vec3 vDist = vTargetPos - vCurPos;
 
-void CHellHound_BT_Attack::RunStepBackCoolDown(const _float& fTimeDelta)
-{
-	BLACKBOARD& hashBlackBoard = m_pBehaviorTree->GetBlackBoard();
-	const auto& tStepBackCoolDown = hashBlackBoard.find(TEXT("StepBackCoolDown"));
-
-	if (tStepBackCoolDown == hashBlackBoard.end())
-	{
-		return;
-		//	__debugbreak();
-	}
-
-	if (0.f > *GET_VALUE(_float, tStepBackCoolDown))
-	{
-		hashBlackBoard.erase(tStepBackCoolDown);
-	}
+	if (vDist.Length() < *GET_VALUE(_float, attackRange))
+		return true;
 	else
-	{
-		SET_VALUE(_float, tStepBackCoolDown, *GET_VALUE(_float, tStepBackCoolDown) - fTimeDelta);
-	}
+		return false;
 }
-
 
 CHellHound_BT_Attack* CHellHound_BT_Attack::Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController)
 {

@@ -23,6 +23,7 @@ HRESULT CBT_Composite::Initialize(CGameObject* pGameObject, CBehaviorTree* pBeha
 void CBT_Composite::OnStart()
 {
 	Super::OnStart();
+	//Reset();
 	m_RunningChild = m_vecChildren.begin();
 }
 
@@ -59,6 +60,12 @@ CBT_Node::BT_RETURN CBT_Composite::OnUpdate(const _float& fTimeDelta)
 void CBT_Composite::OnEnd()
 {
 	Super::OnEnd();
+}
+
+void CBT_Composite::Reset()
+{
+	for (auto& iter : m_vecChildren)
+		iter->Reset();
 }
 
 CBT_Composite* CBT_Composite::Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, CMonoBehaviour* pController, CompositeType eCompositeType)

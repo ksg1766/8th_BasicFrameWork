@@ -22,8 +22,10 @@ public:
 	virtual BT_RETURN	OnUpdate(const _float& fTimeDelta)	override;
 	virtual void		OnEnd()		override;
 
-	virtual BT_NODETYPE	NodeType() override			{ return BT_NODETYPE::COMPOSITE; }
+	virtual BT_NODETYPE	NodeType()	override			{ return BT_NODETYPE::COMPOSITE; }
 	//void				AddAbort(CBT_Abort* pAbort)	{ m_vecConditionalAbort.push_back(pAbort); }
+
+	virtual void		Reset()		override;
 
 protected:
 	CompositeType		m_eCompositeType = CompositeType::TYPE_END;

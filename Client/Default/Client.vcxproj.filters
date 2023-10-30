@@ -220,14 +220,14 @@
     <Filter Include="03.GameObjects\02.Monster\HellHound\Behavior\00.보류\00.Spwan%28보류%29">
       <UniqueIdentifier>{fdfc7495-5be9-482f-be81-3bb03feeb7c7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03.GameObjects\02.Monster\HellHound\Behavior\00.보류\06.Sleep%28보류%29">
-      <UniqueIdentifier>{ed9113e5-4ce9-4f47-ae28-c4e0abb9d87f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="03.GameObjects\02.Monster\HellHound\Behavior\00.보류\09.Hit%28보류%29">
       <UniqueIdentifier>{ff4ca980-9569-46f1-af61-65810acfa841}</UniqueIdentifier>
     </Filter>
     <Filter Include="03.GameObjects\02.Monster\HellHound\Behavior\99.Decorator">
       <UniqueIdentifier>{db3994c7-d555-45c5-aa43-7c3bbd9bdf3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\02.Monster\HellHound\Behavior\98.Composite">
+      <UniqueIdentifier>{70c772af-77f2-4386-99a0-e3454fc689fa}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -417,9 +417,6 @@
     <ClInclude Include="..\Public\HellHound_BT_Wait.h">
       <Filter>03.GameObjects\02.Monster\HellHound\Behavior\04.Wait</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\HellHound_BT_Sleep.h">
-      <Filter>03.GameObjects\02.Monster\HellHound\Behavior\00.보류\06.Sleep%28보류%29</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\HellHound_BT_Chase.h">
       <Filter>03.GameObjects\02.Monster\HellHound\Behavior\05.Chase</Filter>
     </ClInclude>
@@ -432,19 +429,10 @@
     <ClInclude Include="..\Public\HellHound_BT_Roaming.h">
       <Filter>03.GameObjects\02.Monster\HellHound\Behavior\08.Roaming</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\HellHound_BT_IF_AttackCool.h">
-      <Filter>03.GameObjects\02.Monster\HellHound\Behavior\99.Decorator</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\HellHound_BT_IF_Dead.h">
-      <Filter>03.GameObjects\02.Monster\HellHound\Behavior\99.Decorator</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\HellHound_BT_IF_InRange.h">
-      <Filter>03.GameObjects\02.Monster\HellHound\Behavior\99.Decorator</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\HellHound_BT_IF_InSight.h">
       <Filter>03.GameObjects\02.Monster\HellHound\Behavior\99.Decorator</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\HellHound_BT_IF_StepBackCool.h">
+    <ClInclude Include="..\Public\HellHound_BT_IF_Dead.h">
       <Filter>03.GameObjects\02.Monster\HellHound\Behavior\99.Decorator</Filter>
     </ClInclude>
   </ItemGroup>
@@ -628,9 +616,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\HellHound_BT_Chase.cpp">
       <Filter>03.GameObjects\02.Monster\HellHound\Behavior\05.Chase</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\HellHound_BT_Sleep.cpp">
-      <Filter>03.GameObjects\02.Monster\HellHound\Behavior\00.보류\06.Sleep%28보류%29</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\HellHound_BT_Spawn.cpp">
       <Filter>03.GameObjects\02.Monster\HellHound\Behavior\00.보류\00.Spwan%28보류%29</Filter>

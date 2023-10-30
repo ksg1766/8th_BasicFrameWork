@@ -24,7 +24,7 @@ private:
 
 	virtual void OnEnd() override
 	{
-
+		Reset();
 	}
 
 public:

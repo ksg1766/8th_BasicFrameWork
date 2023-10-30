@@ -15,17 +15,19 @@ void CHellHound_BT_Wait::OnStart()
 
 CBT_Node::BT_RETURN CHellHound_BT_Wait::OnUpdate(const _float& fTimeDelta)
 {
-	// 어택 쿨 도는한 여기서 머물러있도록
-	BLACKBOARD& hashBlackBoard = m_pBehaviorTree->GetBlackBoard();
-	const auto& tAttackCoolDown = hashBlackBoard.find(TEXT("AttackCoolDown"));
-	
-	if (tAttackCoolDown == hashBlackBoard.end())
+	ConditionalAbort(fTimeDelta);
+
+	if (!IsInRange())
+	{
+		return BT_FAIL;
+	}
+
+	if (m_fTimeSum > m_vecAnimIndexTime[0].second * 0.8f)
 	{
 		return BT_SUCCESS;
 	}
 
-	RunAttackCoolDown(fTimeDelta);
-	RunStepBackCoolDown(fTimeDelta);
+	m_fTimeSum += fTimeDelta;
 
 	return BT_RUNNING;
 }
@@ -39,40 +41,20 @@ void CHellHound_BT_Wait::ConditionalAbort(const _float& fTimeDelta)
 {
 }
 
-void CHellHound_BT_Wait::RunAttackCoolDown(const _float& fTimeDelta)
+_bool CHellHound_BT_Wait::IsInRange()
 {
 	BLACKBOARD& hashBlackBoard = m_pBehaviorTree->GetBlackBoard();
-	const auto& tAttackCoolDown = hashBlackBoard.find(TEXT("AttackCoolDown"));
+	const auto& attackRange = hashBlackBoard.find(TEXT("AttackRange"));
+	const auto& target = hashBlackBoard.find(TEXT("Target"));
 
-	if (0.f > *GET_VALUE(_float, tAttackCoolDown))
-	{
-		hashBlackBoard.erase(tAttackCoolDown);
-	}
+	const Vec3& vTargetPos = GET_VALUE(CGameObject, target)->GetTransform()->GetPosition();
+	const Vec3& vCurPos = m_pGameObject->GetTransform()->GetPosition();
+	Vec3 vDist = vTargetPos - vCurPos;
+
+	if (vDist.Length() < *GET_VALUE(_float, attackRange))
+		return true;
 	else
-	{
-		SET_VALUE(_float, tAttackCoolDown, *GET_VALUE(_float, tAttackCoolDown) - fTimeDelta);
-	}
-}
-
-void CHellHound_BT_Wait::RunStepBackCoolDown(const _float& fTimeDelta)
-{
-	BLACKBOARD& hashBlackBoard = m_pBehaviorTree->GetBlackBoard();
-	const auto& tStepBackCoolDown = hashBlackBoard.find(TEXT("StepBackCoolDown"));
-
-	if (tStepBackCoolDown == hashBlackBoard.end())
-	{
-		return;
-		//__debugbreak();
-	}
-
-	if (0.f > *GET_VALUE(_float, tStepBackCoolDown))
-	{
-		hashBlackBoard.erase(tStepBackCoolDown);
-	}
-	else
-	{
-		SET_VALUE(_float, tStepBackCoolDown, *GET_VALUE(_float, tStepBackCoolDown) - fTimeDelta);
-	}
+		return false;
 }
 
 CHellHound_BT_Wait* CHellHound_BT_Wait::Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController)

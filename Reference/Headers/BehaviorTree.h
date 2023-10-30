@@ -58,14 +58,11 @@ public:
 	virtual void	DebugRender()						override;
 
 	void			SetRoot(CBT_Composite* pComposite)	{ m_pRootNode = pComposite; }
-	void			PushStack(CBT_Node* pNode)			{ m_NodeStack.push(pNode); }
-	void			PopStack()							{ m_NodeStack.pop(); }
 	
 	BLACKBOARD&		GetBlackBoard()						{ return m_BlackBoard; }
 
 protected:
 	CBT_Composite*		m_pRootNode = nullptr;
-	stack<CBT_Node*>	m_NodeStack;
 	
 	BLACKBOARD			m_BlackBoard;
 

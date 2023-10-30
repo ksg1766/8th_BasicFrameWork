@@ -34,13 +34,13 @@ public:
 	void	GetMoveMessage(const Vec3& vDir)		{ m_vNetMove += vDir; }
 	void	GetTranslateMessage(const Vec3& vDir)	{ m_vNetTrans += vDir; }
 	void	GetAttackMessage()						{ Attack(); }
-	void	GetChaseMessage()						{ m_bMax = true; }
+	void	GetMaxSpeedMessage()					{ m_bMax = true; }
 
 	void	ForceHeight()							{ m_pTransform->Translate(Vec3(0.f, m_pNavMeshAgent->GetHeightOffset(), 0.f)); }
 	_float	GetHeightOffset()						{ return m_pNavMeshAgent->GetHeightOffset(); }
 	_bool	Walkable(_fvector vPoint)				{ return m_pNavMeshAgent->Walkable(vPoint); }
 
-	void	Look(const Vec3& vPoint, const _float& fTimeDelta);
+	void	Look(const Vec3& vPoint, const _float& fTimeDelta = 1.f);
 
 	void	SetTarget(CGameObject* pTarget)			{ m_pTarget = pTarget; }	// 안쓰일 듯. BlackBoard에서 처리
 	void	SetTargetPoint(Vec3& vTargetPoint)		{ m_vTargetPoint = vTargetPoint; }
@@ -77,6 +77,13 @@ private:
 
 	CGameObject*	m_pTarget = nullptr;
 	Vec3			m_vTargetPoint;
+
+#ifdef _DEBUG
+private:
+	PrimitiveBatch<VertexPositionColor>* m_pBatch = nullptr;
+	BasicEffect* m_pEffect = nullptr;
+	ID3D11InputLayout* m_pInputLayout = nullptr;
+#endif
 
 public:
 	static	CMonsterController* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

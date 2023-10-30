@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "GameObject.h"
 #include "Strife_Ammo_Default.h"
+#include "DebugDraw.h"
 
 constexpr auto EPSILON = 0.001f;
 
@@ -21,11 +22,38 @@ CMonsterController::CMonsterController(const CMonsterController& rhs)
 	, m_vMaxLinearSpeed(rhs.m_vMaxLinearSpeed)
 	, m_vAngularSpeed(rhs.m_vAngularSpeed)
 	, m_vMaxAngularSpeed(rhs.m_vMaxAngularSpeed)
+#ifdef _DEBUG
+	, m_pBatch(rhs.m_pBatch)
+	, m_pEffect(rhs.m_pEffect)
+	, m_pInputLayout(rhs.m_pInputLayout)
+#endif
 {
+#ifdef _DEBUG
+	Safe_AddRef(m_pInputLayout);
+#endif
 }
 
 HRESULT CMonsterController::Initialize_Prototype()
 {
+#ifdef _DEBUG
+	m_pBatch = new PrimitiveBatch<VertexPositionColor>(m_pContext);
+
+	m_pEffect = new BasicEffect(m_pDevice);
+	m_pEffect->SetVertexColorEnabled(true);
+
+	const void* pShaderByteCodes = nullptr;
+	size_t		iLength = 0;
+	m_pEffect->GetVertexShaderBytecode(&pShaderByteCodes, &iLength);
+
+	if (FAILED(m_pDevice->CreateInputLayout(VertexPositionColor::InputElements, VertexPositionColor::InputElementCount, pShaderByteCodes, iLength, &m_pInputLayout)))
+	{
+		Safe_Delete(m_pBatch);
+		Safe_Delete(m_pEffect);
+		Safe_Release(m_pInputLayout);
+		return E_FAIL;
+	}
+#endif
+
 	return S_OK;
 }
 
@@ -69,6 +97,22 @@ void CMonsterController::LateTick(const _float& fTimeDelta)
 
 void CMonsterController::DebugRender()
 {
+#ifdef _DEBUG
+	m_pEffect->SetWorld(XMMatrixIdentity());
+
+	m_pEffect->SetView(m_pGameInstance->Get_Transform_Matrix(CPipeLine::D3DTS_VIEW));
+	m_pEffect->SetProjection(m_pGameInstance->Get_Transform_Matrix(CPipeLine::D3DTS_PROJ));
+
+	m_pEffect->Apply(m_pContext);
+	m_pContext->IASetInputLayout(m_pInputLayout);
+
+	m_pBatch->Begin();
+
+	DX::DrawRing(m_pBatch, GetTransform()->GetPosition(), Vec3(10.f, 0.f, 0.f), Vec3(0.f, 0.f, 10.f), Colors::Red);
+	DX::DrawRing(m_pBatch, GetTransform()->GetPosition(), Vec3(4.f, 0.f, 0.f), Vec3(0.f, 0.f, 4.f), Colors::Blue);
+
+	m_pBatch->End();
+#endif // DEBUG
 }
 
 void CMonsterController::Move(const _float& fTimeDelta)
@@ -110,8 +154,18 @@ void CMonsterController::Move(const _float& fTimeDelta)
 void CMonsterController::Translate(const _float& fTimeDelta)
 {
 	m_vNetTrans.Normalize();
-	Vec3 vSpeed = fTimeDelta * m_vLinearSpeed * m_vNetTrans;
-	m_pTransform->Translate(vSpeed);
+
+	if (m_bMax)
+	{
+		Vec3 vSpeed = fTimeDelta * m_vMaxLinearSpeed * m_vNetTrans;
+		m_pTransform->Translate(vSpeed);
+		m_bMax = false;
+	}
+	else
+	{
+		Vec3 vSpeed = fTimeDelta * m_vLinearSpeed * m_vNetTrans;
+		m_pTransform->Translate(vSpeed);
+	}
 
 	m_vNetTrans = Vec3::Zero;
 }
@@ -134,7 +188,7 @@ void CMonsterController::Look(const Vec3& vPoint, const _float& fTimeDelta)
 		if (vLeftRight.y < 0)
 			vRotateAmount.y = -vRotateAmount.y;
 
-		m_pTransform->RotateYAxisFixed(0.3f * vRotateAmount);
+		m_pTransform->RotateYAxisFixed(fTimeDelta * 0.3f * vRotateAmount);
 	}
 }
 

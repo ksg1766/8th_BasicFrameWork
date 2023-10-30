@@ -28,7 +28,9 @@ public:
 	virtual void		OnStart(_int iAnimIndex = 0);
 	//virtual void		OnEnd()		override { Super::OnEnd(); }
 
-	virtual BT_NODETYPE	NodeType() override { return BT_NODETYPE::ACTION; }
+	virtual void		Reset()		override { m_eReturn = RETURN_END; }
+
+	virtual BT_NODETYPE	NodeType()	override { return BT_NODETYPE::ACTION; }
 
 protected:
 	virtual void				ConditionalAbort(const _float& fTimeDelta) PURE;

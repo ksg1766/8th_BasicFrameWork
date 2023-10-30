@@ -15,7 +15,7 @@ void CHellHound_BT_Dead::OnStart()
 
 CBT_Node::BT_RETURN CHellHound_BT_Dead::OnUpdate(const _float& fTimeDelta)
 {
-	return BT_RETURN();
+	return BT_FAIL;
 }
 
 void CHellHound_BT_Dead::OnEnd()

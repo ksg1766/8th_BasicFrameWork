@@ -19,6 +19,9 @@ private:
 private:
 	virtual void		ConditionalAbort(const _float& fTimeDelta);
 	void				SetRoamingPoint();
+	void				AbortRoaming();
+
+	_bool				IsAggro();
 
 public:
 	static	CHellHound_BT_Roaming* Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController);

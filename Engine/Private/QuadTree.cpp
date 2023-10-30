@@ -13,8 +13,6 @@
 #include "DebugDraw.h"
 #endif // _DEBUG
 
-constexpr _float g_fFrustum_Scale = 1.2f;
-
 IMPLEMENT_SINGLETON(CQuadTree)
 
 CQuadTree::CQuadTree()

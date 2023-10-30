@@ -18,8 +18,8 @@ private:
 
 private:
 	virtual void		ConditionalAbort(const _float& fTimeDelta)	override;
-	void				StartCoolDown();
-	void				RunAttackCoolDown(const _float& fTimeDelta);
+
+	_bool				IsInRange();
 
 public:
 	static	CHellHound_BT_StepBack* Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController);
