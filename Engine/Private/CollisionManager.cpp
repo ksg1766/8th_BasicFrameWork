@@ -171,12 +171,16 @@ void CCollisionManager::CheckDynamicCollision(LAYERTAG& eLayerLeft, LAYERTAG& eL
 					{	// 이전에도 충돌
 						if (iterL->IsDead() || iterR->IsDead())
 						{	// 둘 중 하나 삭제 예정이면 충돌 해제
+							iterL->OnCollisionExit(iterR);
+							iterR->OnCollisionExit(iterL);
 							pRigidBodyL->OnCollisionExit(lDesc);
 							pRigidBodyR->OnCollisionExit(rDesc);
 							iter->second = false;
 						}
 						else
 						{
+							iterL->OnCollisionStay(iterR);
+							iterR->OnCollisionStay(iterL);
 							pRigidBodyL->OnCollisionStay(lDesc);
 							pRigidBodyR->OnCollisionStay(rDesc);
 						}
@@ -185,12 +189,16 @@ void CCollisionManager::CheckDynamicCollision(LAYERTAG& eLayerLeft, LAYERTAG& eL
 					{	// 이전에는 충돌 x	// 근데 둘 중 하나 삭제 예정이면 충돌하지 않은 것으로 취급
 						if (!iterL->IsDead() && !iterR->IsDead())
 						{
+							iterL->OnCollisionEnter(iterR);
+							iterR->OnCollisionEnter(iterL);
 							pRigidBodyL->OnCollisionEnter(lDesc);
 							pRigidBodyR->OnCollisionEnter(rDesc);
 							iter->second = true;
 						}
 						else
 						{
+							iterL->OnCollisionExit(iterR);
+							iterR->OnCollisionExit(iterL);
 							pRigidBodyL->OnCollisionExit(lDesc);
 							pRigidBodyR->OnCollisionExit(rDesc);
 							iter->second = false;
@@ -205,6 +213,8 @@ void CCollisionManager::CheckDynamicCollision(LAYERTAG& eLayerLeft, LAYERTAG& eL
 						COLLISION_DESC lDesc, rDesc;
 						MakeCollisionDesc(lDesc, rDesc, pRigidBodyL, pRigidBodyR, fTimeDelta);
 						//
+						iterL->OnCollisionExit(iterR);
+						iterR->OnCollisionExit(iterL);
 						pRigidBodyL->OnCollisionExit(lDesc);
 						pRigidBodyR->OnCollisionExit(rDesc);
 						iter->second = false;
@@ -219,6 +229,8 @@ void CCollisionManager::CheckDynamicCollision(LAYERTAG& eLayerLeft, LAYERTAG& eL
 					COLLISION_DESC lDesc, rDesc;
 					MakeCollisionDesc(lDesc, rDesc, pRigidBodyL, pRigidBodyR, fTimeDelta);
 					//
+					iterL->OnCollisionExit(iterR);
+					iterR->OnCollisionExit(iterL);
 					pRigidBodyL->OnCollisionExit(lDesc);
 					pRigidBodyR->OnCollisionExit(rDesc);
 					iter->second = false;

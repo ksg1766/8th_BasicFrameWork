@@ -3,6 +3,8 @@
 #include "GameInstance.h"
 #include "GameObject.h"
 #include "MonsterController.h"
+// Temp
+#include "HellHound.h"
 
 CHellHound_BT_StepBack::CHellHound_BT_StepBack()
 {
@@ -16,6 +18,8 @@ void CHellHound_BT_StepBack::OnStart()
 CBT_Node::BT_RETURN CHellHound_BT_StepBack::OnUpdate(const _float& fTimeDelta)
 {
 	ConditionalAbort(fTimeDelta);
+	if (IsZeroHP())
+		return BT_FAIL;
 
 	/*if (!IsInRange())
 	{
@@ -69,6 +73,13 @@ _bool CHellHound_BT_StepBack::IsInRange()
 		return true;
 	else
 		return false;
+}
+
+_bool CHellHound_BT_StepBack::IsZeroHP()
+{
+	// Temp
+	if (dynamic_cast<CHellHound*>(m_pGameObject)->m_IsZeroHP)
+		return true;
 }
 
 CHellHound_BT_StepBack* CHellHound_BT_StepBack::Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController)

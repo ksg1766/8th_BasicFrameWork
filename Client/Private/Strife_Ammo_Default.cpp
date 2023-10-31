@@ -33,6 +33,7 @@ HRESULT CStrife_Ammo_Default::Initialize(void* pArg)
 
 	static_cast<CRigidDynamic*>(GetRigidBody())->UseGravity(false);
 	static_cast<CRigidDynamic*>(GetRigidBody())->IsKinematic(true);
+	static_cast<CRigidDynamic*>(GetRigidBody())->SetMass(0.5f);
 
 	GetRigidBody()->GetSphereCollider()->SetRadius(0.5f);
 
@@ -115,7 +116,11 @@ void CStrife_Ammo_Default::OnCollisionEnter(CGameObject* pOther)
 	const LAYERTAG& eLayerTag = pOther->GetLayerTag();
 	if (LAYERTAG::UNIT_GROUND == eLayerTag)
 	{
-		dynamic_cast<CHellHound*>(pOther)->m_IsZeroHP = true;
+		// Temp
+		static_cast<CHellHound*>(pOther)->m_IsZeroHP = true;
+		// 사이클 때문에 어쩔 수 없이 여기서 Kinematic 꺼줘야 함
+		static_cast<CRigidDynamic*>(GetRigidBody())->IsKinematic(false);
+		static_cast<CRigidDynamic*>(static_cast<CHellHound*>(pOther)->GetRigidBody())->IsKinematic(false);
 		//m_pGameInstance->DeleteObject(pOther);
 	}
 

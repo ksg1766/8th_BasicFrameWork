@@ -79,6 +79,23 @@ HRESULT CHellHound::Render()
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
+	GetModel()->Render();
+
+#ifdef _DEBUG
+	DebugRender();
+#endif
+
+	return S_OK;
+}
+
+HRESULT CHellHound::RenderInstance()
+{
+	if (nullptr == GetModel() || nullptr == GetShader())
+		return E_FAIL;
+
+	if (FAILED(Bind_ShaderResources()))
+		return E_FAIL;
+
 #ifdef _DEBUG
 	DebugRender();
 #endif
@@ -113,7 +130,9 @@ HRESULT CHellHound::Ready_FixedComponents()
 	{
 		/* Com_NavMeshAgent */
 		CNavMeshAgent::NAVIGATION_DESC pNaviDesc;
-		pNaviDesc.iCurrentIndex = 70;
+
+		srand(time(NULL));
+		pNaviDesc.iCurrentIndex = 70 + rand() % 30 - 15;
 
 		if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::NavMeshAgent, TEXT("Prototype_Component_NavMeshAgent"), &pNaviDesc)))
 			return E_FAIL;

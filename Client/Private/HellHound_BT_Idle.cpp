@@ -4,6 +4,8 @@
 #include "Layer.h"
 #include "GameObject.h"
 #include "MonoBehaviour.h"
+// Temp
+#include "HellHound.h"
 
 CHellHound_BT_Idle::CHellHound_BT_Idle()
 {
@@ -19,9 +21,10 @@ CBT_Node::BT_RETURN CHellHound_BT_Idle::OnUpdate(const _float& fTimeDelta)
 {
 	// TODO: 이걸 시퀀스 단계에서 판단할 수 있도록 해야 함. // Abort 반환 결과를 받아서 정지시키도록.
 	if (IsAggro())
-	{
 		return BT_FAIL;
-	}
+
+	if (IsZeroHP())
+		return BT_FAIL;
 
 	ConditionalAbort(fTimeDelta);
 	// 맞거나 시야안에 플레이어 있으면 FAIL;
@@ -122,6 +125,13 @@ _bool CHellHound_BT_Idle::IsAggro()
 
 		return false;
 	}
+}
+
+_bool CHellHound_BT_Idle::IsZeroHP()
+{
+	// Temp
+	if (dynamic_cast<CHellHound*>(m_pGameObject)->m_IsZeroHP)
+		return true;
 }
 
 CHellHound_BT_Idle* CHellHound_BT_Idle::Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController)

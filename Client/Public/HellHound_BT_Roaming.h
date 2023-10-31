@@ -22,6 +22,7 @@ private:
 	void				AbortRoaming();
 
 	_bool				IsAggro();
+	_bool				IsZeroHP();
 
 public:
 	static	CHellHound_BT_Roaming* Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController);

@@ -66,7 +66,7 @@ HRESULT CLevel_GamePlay::LateTick(const _float& fTimeDelta)
 {
 	//SetWindowText(g_hWnd, TEXT("게임플레이 레벨입니다."));
 	
-	// TODO: 꼭 영기 말고 더 좋은 위치를 찾도록 하자....
+	// TODO: 꼭 여기 말고 더 좋은 위치를 찾도록 하자....
 	m_pGameInstance->LateTick_Collision(fTimeDelta);
 
 #ifndef DEBUG
@@ -190,7 +190,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_UnitGround()
 		pGameObject->GetTransform()->Translate(Vec3(230.f - (_float)i, 100.f, -180.f - (_float)i));
 	}*/
 
-	for (_int i = 0; i < 1; ++i)
+	for (_int i = 0; i < 10; ++i)
 	{
 		pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_HellHound"));
 		if (nullptr == pGameObject)	return E_FAIL;

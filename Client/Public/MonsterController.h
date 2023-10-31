@@ -78,6 +78,10 @@ private:
 	CGameObject*	m_pTarget = nullptr;
 	Vec3			m_vTargetPoint;
 
+	// Temp: 일단 스탯은 여기다가...
+	
+	//
+
 #ifdef _DEBUG
 private:
 	PrimitiveBatch<VertexPositionColor>* m_pBatch = nullptr;

@@ -20,6 +20,7 @@ private:
 	virtual void		ConditionalAbort(const _float& fTimeDelta)	override;
 
 	_bool				IsInRange();
+	_bool				IsZeroHP();
 
 public:
 	static	CHellHound_BT_StepBack* Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController);

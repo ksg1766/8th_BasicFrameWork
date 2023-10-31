@@ -4,6 +4,8 @@
 #include "GameObject.h"
 #include "MonoBehaviour.h"
 #include "DissolveManager.h"
+//Temp
+#include "HellHound.h"
 
 CHellHound_BT_Dead::CHellHound_BT_Dead()
 {
@@ -12,6 +14,8 @@ CHellHound_BT_Dead::CHellHound_BT_Dead()
 void CHellHound_BT_Dead::OnStart()
 {
 	Super::OnStart(0);
+
+	static_cast<CRigidDynamic*>(m_pGameObject->GetRigidBody())->IsKinematic(false);
 }
 
 CBT_Node::BT_RETURN CHellHound_BT_Dead::OnUpdate(const _float& fTimeDelta)

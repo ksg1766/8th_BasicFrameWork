@@ -3,6 +3,8 @@
 #include "GameInstance.h"
 #include "GameObject.h"
 #include "MonsterController.h"
+// Temp
+#include "HellHound.h"
 
 CHellHound_BT_Attack::CHellHound_BT_Attack()
 {
@@ -16,6 +18,8 @@ void CHellHound_BT_Attack::OnStart()
 CBT_Node::BT_RETURN CHellHound_BT_Attack::OnUpdate(const _float& fTimeDelta)
 {
 	ConditionalAbort(fTimeDelta);
+	if (IsZeroHP())
+		return BT_FAIL;
 
 	if (m_fTimeSum > m_vecAnimIndexTime[0].second * 0.9f)
 	{
@@ -66,6 +70,13 @@ _bool CHellHound_BT_Attack::IsInRange()
 		return true;
 	else
 		return false;
+}
+
+_bool CHellHound_BT_Attack::IsZeroHP()
+{
+	// Temp
+	if (dynamic_cast<CHellHound*>(m_pGameObject)->m_IsZeroHP)
+		return true;
 }
 
 CHellHound_BT_Attack* CHellHound_BT_Attack::Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController)

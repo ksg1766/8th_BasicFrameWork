@@ -20,6 +20,7 @@ private:
 	virtual void		ConditionalAbort(const _float& fTimeDelta);
 	_bool				IsInRange();
 	_bool				IsInSight();
+	_bool				IsZeroHP();
 
 public:
 	static	CHellHound_BT_Chase* Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController);

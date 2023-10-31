@@ -22,14 +22,15 @@ public:
 	virtual void	LateTick(const _float& fTimeDelta)	override;
 	virtual void	DebugRender()						override;
 	virtual HRESULT Render()							override;
+	virtual HRESULT RenderInstance()					override;
 
-	//
+	//	뭐야 이거 지워도 되는건가.
 	void			SetDissolveAmount(_float fDissolveAmount) { m_fDissolveAmount = fDissolveAmount; }
 
 private:
+	HRESULT			Bind_ShaderResources(); /* 셰이더 전역변수에 값 던진다. */
 	HRESULT			Ready_FixedComponents();
 	HRESULT			Ready_Scripts();
-	HRESULT			Bind_ShaderResources(); /* 셰이더 전역변수에 값 던진다. */
 
 	//
 	_float			m_fDissolveAmount = 0.f;

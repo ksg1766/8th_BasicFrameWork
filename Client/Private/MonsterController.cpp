@@ -122,17 +122,9 @@ void CMonsterController::Move(const _float& fTimeDelta)
 	/*Vec3 vSpeed = (m_bMax ? m_vMaxLinearSpeed : m_vLinearSpeed) * fTimeDelta * m_vNetMove;
 	m_pTransform->Translate(vSpeed);*/ //TODO: 테스트 해볼 것
 
-	if(m_bMax)
-	{
-		Vec3 vSpeed = fTimeDelta * m_vMaxLinearSpeed * m_vNetMove;
-		m_pTransform->Translate(vSpeed);
-		m_bMax = false;
-	}
-	else
-	{
-		Vec3 vSpeed = fTimeDelta * m_vLinearSpeed * m_vNetMove;
-		m_pTransform->Translate(vSpeed);
-	}
+	Vec3 vSpeed = fTimeDelta * (m_bMax * m_vMaxLinearSpeed + (1 - m_bMax) * m_vLinearSpeed) * m_vNetMove;
+	m_pTransform->Translate(vSpeed);
+	if (m_bMax) m_bMax = false;
 
 	const Vec3& vForward = m_pTransform->GetForward();
 	_float fRadian = acos(vForward.Dot(m_vNetMove));
@@ -155,17 +147,9 @@ void CMonsterController::Translate(const _float& fTimeDelta)
 {
 	m_vNetTrans.Normalize();
 
-	if (m_bMax)
-	{
-		Vec3 vSpeed = fTimeDelta * m_vMaxLinearSpeed * m_vNetTrans;
-		m_pTransform->Translate(vSpeed);
-		m_bMax = false;
-	}
-	else
-	{
-		Vec3 vSpeed = fTimeDelta * m_vLinearSpeed * m_vNetTrans;
-		m_pTransform->Translate(vSpeed);
-	}
+	Vec3 vSpeed = fTimeDelta * (m_bMax * m_vMaxLinearSpeed + (1 - m_bMax) * m_vLinearSpeed) * m_vNetTrans;
+	m_pTransform->Translate(vSpeed);
+	if (m_bMax) m_bMax = false;
 
 	m_vNetTrans = Vec3::Zero;
 }

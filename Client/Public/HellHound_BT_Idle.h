@@ -23,6 +23,7 @@ private:
 	void				RunIdleCoolDown(const _float& fTimeDelta);
 	
 	_bool				IsAggro();
+	_bool				IsZeroHP();
 
 public:
 	static	CHellHound_BT_Idle* Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController);

@@ -4,6 +4,8 @@
 #include "Layer.h"
 #include "GameObject.h"
 #include "MonsterController.h"
+// Temp
+#include "HellHound.h"
 
 CHellHound_BT_Roaming::CHellHound_BT_Roaming()
 {
@@ -19,9 +21,9 @@ CBT_Node::BT_RETURN CHellHound_BT_Roaming::OnUpdate(const _float& fTimeDelta)
 {
 	// TODO: 이걸 시퀀스 단계에서 판단할 수 있도록 해야 함. // Abort 반환 결과를 받아서 정지시키도록.
 	if (IsAggro())
-	{
 		return BT_FAIL;
-	}
+	if (IsZeroHP())
+		return BT_FAIL;
 
 	BLACKBOARD& hashBlackBoard = m_pBehaviorTree->GetBlackBoard();
 	const auto& tRoamingPoint = hashBlackBoard.find(TEXT("RoamingPoint"));
@@ -120,6 +122,13 @@ _bool CHellHound_BT_Roaming::IsAggro()
 
 		return false;
 	}
+}
+
+_bool CHellHound_BT_Roaming::IsZeroHP()
+{
+	// Temp
+	if (dynamic_cast<CHellHound*>(m_pGameObject)->m_IsZeroHP)
+		return true;
 }
 
 CHellHound_BT_Roaming* CHellHound_BT_Roaming::Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController)

@@ -136,8 +136,7 @@ HRESULT CRenderer::Render_NonBlend_Instance()
 
 		Safe_Delete(tweenDesc);
 
-		vecInstances[0]->Render();	// BindShaderResource 호출을 위함.
-									// 이 경우 수업 코드와 다른 점은 InstanceID당 view, proj matrix 한번만 binding
+		vecInstances[0]->RenderInstance();	// BindShaderResource 호출을 위함.
 		CVIBuffer_Instance*& buffer = m_InstanceBuffers[instanceId];
 		vecInstances[0]->GetModel()->RenderInstancing(buffer);
 	}

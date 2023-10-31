@@ -248,7 +248,8 @@ void CRigidDynamic::OnCollisionEnter(const COLLISION_DESC& desc)
 	{
 		if (!pRigidOther->IsKinematic()) // Kinetic
 		{
-			m_vLinearVelocity = desc.vResultVelocity;
+			AddForce(desc.vResultVelocity, ForceMode::VELOCITY_CHANGE);
+			//m_vLinearVelocity = desc.vResultVelocity;
 		}
 		else	// Kinematic
 		{
@@ -267,7 +268,7 @@ void CRigidDynamic::OnCollisionEnter(const COLLISION_DESC& desc)
 			
 			vDir.Normalize();*/
 
-			GetTransform()->Translate(11.1f * desc.fTimeDelta * desc.vResultVelocity);
+			//GetTransform()->Translate(11.1f * desc.fTimeDelta * desc.vResultVelocity);
 		}
 		else	// Kinetic
 		{	
@@ -294,7 +295,7 @@ void CRigidDynamic::OnCollisionStay(const COLLISION_DESC& desc)
 	{
 		if (pRigidOther->IsKinematic())	// Kinematic
 		{
-			GetTransform()->Translate(11.1f * desc.fTimeDelta * desc.vResultVelocity);
+			//GetTransform()->Translate(11.1f * desc.fTimeDelta * desc.vResultVelocity);
 		}
 		else	// Kinetic
 		{
