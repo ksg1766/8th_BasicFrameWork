@@ -48,22 +48,16 @@ HRESULT CHellHound::Initialize(void* pArg)
 void CHellHound::Tick(const _float& fTimeDelta)
 {
 	Super::Tick(fTimeDelta);
-
-	/*if (KEY_DOWN(KEY::NUM_9))
-	{
-		GetModel()->SetNextAnimationIndex(-1 + GetModel()->GetCurAnimationIndex());
-	}
-	if (KEY_DOWN(KEY::NUM_0))
-	{
-		GetModel()->SetNextAnimationIndex(1 + GetModel()->GetCurAnimationIndex());
-	}*/
 }
 
 void CHellHound::LateTick(const _float& fTimeDelta)
 {
 	Super::LateTick(fTimeDelta);
 
-	GetRenderer()->Add_RenderGroup(CRenderer::RG_NONBLEND_INSTANCE, this);
+	if(IsInstance())
+		GetRenderer()->Add_RenderGroup(CRenderer::RG_NONBLEND_INSTANCE, this);
+	else
+		GetRenderer()->Add_RenderGroup(CRenderer::RG_NONBLEND, this);
 }
 
 void CHellHound::DebugRender()
@@ -74,6 +68,9 @@ void CHellHound::DebugRender()
 HRESULT CHellHound::Render()
 {
 	if (nullptr == GetModel() || nullptr == GetShader())
+		return E_FAIL;
+
+	if (FAILED(GetTransform()->Bind_ShaderResources(GetShader(), "g_WorldMatrix")))
 		return E_FAIL;
 
 	if (FAILED(Bind_ShaderResources()))
@@ -108,6 +105,7 @@ HRESULT CHellHound::Ready_FixedComponents()
 	/* Com_Shader */
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Shader, TEXT("Prototype_Component_Shader_VtxAnimInstancing"))))
 		return E_FAIL;
+	SetInstance(true);
 
 	/* Com_Model */
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Model, TEXT("Prototype_Component_Model_") + GetObjectTag())))

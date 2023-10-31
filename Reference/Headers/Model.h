@@ -90,7 +90,7 @@ private:
 	class CShader*				m_pShader;
 
 	// Instance
-	static map<_int, _bool>		m_mapVTFExist;	// TODO:다른곳에 텍스쳐를 가지고 있는지 기록할 수 있도록 하자.
+	static map<_int, ID3D11ShaderResourceView*>		m_mapVTFExist;	// TODO:다른곳에 텍스쳐를 가지고 있는지 기록할 수 있도록 하자.
 	static _int					m_iNextInstanceID;
 	_int						m_iInstanceID;
 
@@ -121,6 +121,7 @@ public:
 	void			SetNextAnimationIndex(_int iAnimIndex);
 	void			SetTweenDesc(TweenDesc& TweenDesc)		{ m_TweenDesc = TweenDesc; }
 	void			SetSRV(ID3D11ShaderResourceView*& pSRV)	{ m_pSRV = pSRV; }
+	void			SetShader(CShader*& pShader)			{ m_pShader = pShader; }
 	HRESULT			EquipParts(const _int& iSocketIndex, CModel* pModel);
 
 private:

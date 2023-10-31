@@ -207,6 +207,7 @@ call Copy.bat</Command>
     <ClInclude Include="..\Public\PhysicsManager.h" />
     <ClInclude Include="..\Public\PipeLine.h" />
     <ClInclude Include="..\Public\PoolManager.h" />
+    <ClInclude Include="..\Public\ShaderManager.h" />
     <ClInclude Include="..\Public\Socket.h" />
     <ClInclude Include="..\Public\State.h" />
     <ClInclude Include="..\Public\StateMachine.h" />
@@ -280,6 +281,7 @@ call Copy.bat</Command>
     <ClCompile Include="..\Private\PhysicsManager.cpp" />
     <ClCompile Include="..\Private\PipeLine.cpp" />
     <ClCompile Include="..\Private\PoolManager.cpp" />
+    <ClCompile Include="..\Private\ShaderManager.cpp" />
     <ClCompile Include="..\Private\Socket.cpp" />
     <ClCompile Include="..\Private\State.cpp" />
     <ClCompile Include="..\Private\StateMachine.cpp" />

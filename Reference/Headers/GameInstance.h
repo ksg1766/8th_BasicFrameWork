@@ -86,6 +86,9 @@ public:	/* For. KeyManager */
 	KEYSTATE		GetKeyState(KEY _eKey);
 	const POINT&	GetMousePos();
 
+public:	/* For. ShaderManager */
+	HRESULT			SwapShader(CGameObject* pGameObject, const wstring& strShaderFileName);
+
 public: /* For.PipeLine */
 	HRESULT			Bind_TransformToShader(class CShader* pShader, const _char* pConstantName, CPipeLine::TRANSFORMSTATE eState);
 	_float4			Get_CamPosition_Float4() const;
@@ -108,6 +111,7 @@ private:
 	class CCameraManager*			m_pCameraManager = { nullptr };
 	class CEventManager*			m_pEventManager = { nullptr };
 	class CPoolManager*				m_pPoolManager = { nullptr };
+	class CShaderManager*			m_pShaderManager = { nullptr };
 	class CPipeLine*				m_pPipeLine = { nullptr };
 
 public:

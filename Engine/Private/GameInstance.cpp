@@ -9,6 +9,7 @@
 #include "CollisionManager.h"
 #include "CameraManager.h"
 #include "EventManager.h"
+#include "ShaderManager.h"
 #include "PoolManager.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
@@ -26,6 +27,7 @@ CGameInstance::CGameInstance()
 	, m_pCollisionManager(CCollisionManager::GetInstance())
 	, m_pCameraManager(CCameraManager::GetInstance())
 	, m_pPoolManager(CPoolManager::GetInstance())
+	, m_pShaderManager(CShaderManager::GetInstance())
 	, m_pPipeLine(CPipeLine::GetInstance())
 {
 	Safe_AddRef(m_pGraphicDevice);
@@ -39,6 +41,7 @@ CGameInstance::CGameInstance()
 	Safe_AddRef(m_pQuadTree);
 	Safe_AddRef(m_pCollisionManager);
 	Safe_AddRef(m_pCameraManager);
+	Safe_AddRef(m_pShaderManager);
 	Safe_AddRef(m_pPoolManager);
 	Safe_AddRef(m_pPipeLine);
 }
@@ -355,6 +358,14 @@ const POINT& CGameInstance::GetMousePos()
 	return m_pKeyManager->GetMousePos();
 }
 
+HRESULT CGameInstance::SwapShader(CGameObject* pGameObject, const wstring& strShaderFileName)
+{
+	if(FAILED(m_pShaderManager->SwapShader(pGameObject, strShaderFileName)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 HRESULT CGameInstance::Bind_TransformToShader(CShader* pShader, const _char* pConstantName, CPipeLine::TRANSFORMSTATE eState)
 {
 	return m_pPipeLine->Bind_TransformToShader(pShader, pConstantName, eState);
@@ -404,6 +415,7 @@ void CGameInstance::Release_Engine()
 	CKeyManager::GetInstance()->DestroyInstance();
 	CCollisionManager::GetInstance()->DestroyInstance();
 	CEventManager::GetInstance()->DestroyInstance();
+	CShaderManager::GetInstance()->DestroyInstance();
 	CPoolManager::GetInstance()->DestroyInstance();
 	CPipeLine::GetInstance()->DestroyInstance();
 }
@@ -420,6 +432,7 @@ void CGameInstance::Free()
 	Safe_Release(m_pQuadTree);
 	Safe_Release(m_pCollisionManager);
 	Safe_Release(m_pEventManager);
+	Safe_Release(m_pShaderManager);
 	Safe_Release(m_pPoolManager);
 	Safe_Release(m_pPipeLine);
 }

@@ -199,6 +199,9 @@
     <Filter Include="01.Utiltiy\04.Component\13.BehaviorTree\BT_Node\03.BT_Abort">
       <UniqueIdentifier>{c30807fb-6864-4876-999b-14ef7895452e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utiltiy\01.Managers\10.ShaderManager">
+      <UniqueIdentifier>{91e43967-acbd-4c97-bd1e-0976f90d7976}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -420,6 +423,9 @@
     <ClInclude Include="..\Public\BT_Node.h">
       <Filter>01.Utiltiy\04.Component\13.BehaviorTree\BT_Node\00.BT_Base</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\ShaderManager.h">
+      <Filter>01.Utiltiy\01.Managers\10.ShaderManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -622,6 +628,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\BT_Node.cpp">
       <Filter>01.Utiltiy\04.Component\13.BehaviorTree\BT_Node\00.BT_Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ShaderManager.cpp">
+      <Filter>01.Utiltiy\01.Managers\10.ShaderManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -14,7 +14,7 @@
 #include "LevelManager.h"
 
 _int CModel::m_iNextInstanceID = 0;
-map<_int, _bool> CModel::m_mapVTFExist;
+map<_int, ID3D11ShaderResourceView*> CModel::m_mapVTFExist;
 
 CModel::CModel(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: Super(pDevice, pContext, ComponentType::Model)
@@ -156,7 +156,9 @@ HRESULT CModel::Initialize(void * pArg)
 		m_Animations.clear();
 		m_Animations = Animations;
 
-		if (m_Animations.size() && !m_mapVTFExist[m_iInstanceID] && !m_pTexture) // TODO: 크흠...
+		map<_int, ID3D11ShaderResourceView*>::iterator iterSrv = m_mapVTFExist.find(m_iInstanceID);
+
+		if (m_Animations.size() && (iterSrv == m_mapVTFExist.end()) && !m_pTexture) // TODO: 크흠...
 		{
 			if (FAILED(CreateVertexTexture2DArray()))
 				return E_FAIL;
@@ -177,7 +179,12 @@ HRESULT CModel::Initialize(void * pArg)
 				}
 			}
 
-			m_mapVTFExist[m_iInstanceID] = true;
+			m_mapVTFExist.emplace(m_iInstanceID, m_pSRV);
+		}
+		else  if (!(iterSrv == m_mapVTFExist.end()))
+		{
+			m_pSRV = iterSrv->second;
+			Safe_AddRef(m_pSRV);
 		}
 	}
 
@@ -275,7 +282,7 @@ HRESULT CModel::RenderInstancing(CVIBuffer_Instance*& pInstanceBuffer)
 void CModel::PushTweenData(const InstancedTweenDesc& desc)
 {
 	/* 본의 최종 트랜스폼 계산 : <오프셋 * 루트 기준 * 사전변환> */
-	if(FAILED(m_pGameObject->GetShader()->Bind_RawValue("g_TweenInstances", &desc, MAX_INSTANCE * sizeof(TweenDesc))))
+	if(FAILED(m_pGameObject->GetShader()->Bind_RawValue("g_TweenInstances", &desc, MAX_INSTANCE * sizeof(TWEENDESC))))
 		__debugbreak();
 }
 

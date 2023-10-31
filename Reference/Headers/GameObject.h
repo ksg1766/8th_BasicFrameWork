@@ -2,6 +2,7 @@
 
 #include "Base.h"
 #include "Component.h"
+#include "ShaderManager.h"
 /* 클라이엉ㄴ트에서 제작할 다양한 게임오브젝트들의 부모가된다. */
 
 BEGIN(Engine)
@@ -52,30 +53,32 @@ public:
 	CNavMeshAgent*			GetNavMeshAgent();
 
 	CTransform*				GetOrAddTransform(_uint iLevelIndex);
-	_bool					IsDead()		const			{ return m_IsDead; }
-	LAYERTAG				GetLayerTag()	const			{ return m_eLayerTag; }
-	const wstring&			GetObjectTag()	const			{ return m_strObjectTag; }
+	LAYERTAG				GetLayerTag()	const						{ return m_eLayerTag; }
+	const wstring&			GetObjectTag()	const						{ return m_strObjectTag; }
+	_bool					IsDead()		const						{ return m_IsDead; }
+	_bool					IsInstance()	const						{ return m_IsInstance; }
 	
-	void					SetLayerTag(LAYERTAG eLayerTag) { m_eLayerTag = eLayerTag; }
-	void					SetObjectTag(const wstring strObjectTag) { m_strObjectTag = strObjectTag; }
-	void					SetDeadState(_bool bDead)		{ m_IsDead = bDead; }
+	void					SetLayerTag(LAYERTAG eLayerTag)				{ m_eLayerTag = eLayerTag; }
+	void					SetObjectTag(const wstring strObjectTag)	{ m_strObjectTag = strObjectTag; }
+	void					SetDeadState(_bool bDead)					{ m_IsDead = bDead; }
+	void					SetInstance(_bool bInstance)				{ m_IsInstance = bInstance; }
 
 	HRESULT					AddComponent(_uint iLevelIndex, const ComponentType& type, const wstring& strPrototypeTag, void* pArg = nullptr);
 
 	/*void					SetLayerIndex(uint8 layer) { m_i8LayerIndex = layer; }
 	uint8					GetLayerIndex() { return m_i8LayerIndex; }*/
 
-	virtual	void			OnCollisionEnter(CGameObject* pOther) {};
-	virtual	void			OnCollisionStay(CGameObject* pOther) {};
-	virtual	void			OnCollisionExit(CGameObject* pOther) {};
+	virtual	void			OnCollisionEnter(CGameObject* pOther)		{};
+	virtual	void			OnCollisionStay(CGameObject* pOther)		{};
+	virtual	void			OnCollisionExit(CGameObject* pOther)		{};
 
-	virtual	void			OnTriggerEnter(CGameObject* pOther) {};
-	virtual	void			OnTriggerStay(CGameObject* pOther) {};
-	virtual	void			OnTriggerExit(CGameObject* pOther) {};
+	virtual	void			OnTriggerEnter(CGameObject* pOther)			{};
+	virtual	void			OnTriggerStay(CGameObject* pOther)			{};
+	virtual	void			OnTriggerExit(CGameObject* pOther)			{};
 
 protected:
-	ID3D11Device*			m_pDevice = { nullptr };
-	ID3D11DeviceContext*	m_pContext = { nullptr };
+	ID3D11Device*			m_pDevice = nullptr;
+	ID3D11DeviceContext*	m_pContext = nullptr;
 	CGameInstance*			m_pGameInstance = nullptr;
 
 protected:
@@ -84,12 +87,15 @@ protected:
 
 private:
 	_bool					m_IsDead;
+	_bool					m_IsInstance;
 	LAYERTAG				m_eLayerTag;	// 필요없는지 생각해보자.
 	wstring					m_strObjectTag;
 
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;
 	virtual void Free() override;
+
+	HRESULT friend CShaderManager::SwapShader(CGameObject* pGameObject, const wstring& strShaderFileName);
 };
 
 END
