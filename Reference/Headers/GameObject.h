@@ -52,6 +52,9 @@ public:
 	//CTerrain*				GetTerrain();
 	CNavMeshAgent*			GetNavMeshAgent();
 
+
+	vector<CMonoBehaviour*>& GetScripts()								{ return m_vecScripts; }
+
 	CTransform*				GetOrAddTransform(_uint iLevelIndex);
 	LAYERTAG				GetLayerTag()	const						{ return m_eLayerTag; }
 	const wstring&			GetObjectTag()	const						{ return m_strObjectTag; }

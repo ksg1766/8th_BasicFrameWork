@@ -5,6 +5,7 @@
 
 BEGIN(Client)
 
+class CPlayerController;
 class CP_Strife final : public CGameObject
 {
 	using Super = CGameObject;
@@ -24,9 +25,6 @@ public:
 	virtual void	DebugRender()						override;
 	virtual HRESULT Render()							override;
 
-	//
-	void			SetDissolveAmount(_float fDissolveAmount) { m_fDissolveAmount = fDissolveAmount; }
-
 private:
 	HRESULT			Ready_FixedComponents();
 	HRESULT			Ready_Scripts();
@@ -35,8 +33,13 @@ private:
 
 	vector<CGameObject*> m_vecParts;
 
-	//
-	_float			m_fDissolveAmount = 0.f;
+public:
+	virtual	void	OnCollisionEnter(CGameObject* pOther)	override;
+	virtual	void	OnCollisionStay(CGameObject* pOther)	override;
+	virtual	void	OnCollisionExit(CGameObject* pOther)	override;
+
+private:
+	CPlayerController* m_pController = nullptr;
 
 public:
 	static	CP_Strife* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

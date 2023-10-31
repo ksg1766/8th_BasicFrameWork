@@ -435,6 +435,9 @@
     <ClInclude Include="..\Public\HellHound_BT_IF_Dead.h">
       <Filter>03.GameObjects\02.Monster\HellHound\Behavior\99.Decorator</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\MonsterStats.h">
+      <Filter>03.GameObjects\02.Monster\Script</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -622,6 +625,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\HellHound_BT_Dead.cpp">
       <Filter>03.GameObjects\02.Monster\HellHound\Behavior\01.Dead</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MonsterStats.cpp">
+      <Filter>03.GameObjects\02.Monster\Script</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

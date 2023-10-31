@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "..\Public\P_Strife.h"
 #include "GameInstance.h"
+
+#include "PlayerController.h"
 #include "StateMachine.h"
 #include "P_Strife_State_Idle.h"
 #include "P_Strife_State_Run.h"
@@ -224,6 +226,21 @@ HRESULT CP_Strife::Bind_ShaderResources()
 		return E_FAIL;
 
 	return S_OK;
+}
+
+void CP_Strife::OnCollisionEnter(CGameObject* pOther)
+{
+	m_pController->OnCollisionEnter(pOther);
+}
+
+void CP_Strife::OnCollisionStay(CGameObject* pOther)
+{
+	m_pController->OnCollisionStay(pOther);
+}
+
+void CP_Strife::OnCollisionExit(CGameObject* pOther)
+{
+	m_pController->OnCollisionExit(pOther);
 }
 
 CP_Strife* CP_Strife::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

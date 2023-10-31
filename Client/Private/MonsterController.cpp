@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "MonsterController.h"
+#include "MonsterStats.h"
 #include "GameInstance.h"
 #include "GameObject.h"
-#include "Strife_Ammo_Default.h"
 #include "DebugDraw.h"
 
 constexpr auto EPSILON = 0.001f;
@@ -69,9 +69,6 @@ HRESULT CMonsterController::Initialize(void* pArg)
 	m_pRigidBody->IsKinematic(true);
 	m_pRigidBody->SetMass(1.f);
 
-	//m_pRigidBody->GetSphereCollider()->GetBoundingSphere().Radius = GetTransform()->GetLocalScale().Length() / 1.8f;
-	//m_pRigidBody->GetOBBCollider()->GetBoundingBox().Extents = _float3(0.4f * GetTransform()->GetLocalScale().x, 0.9f * GetTransform()->GetLocalScale().y, 0.4f * GetTransform()->GetLocalScale().z);
-
 	m_pNavMeshAgent = m_pGameObject->GetNavMeshAgent();
 
 	return S_OK;
@@ -113,6 +110,12 @@ void CMonsterController::DebugRender()
 
 	m_pBatch->End();
 #endif // DEBUG
+}
+
+void CMonsterController::GetHitMessage(_int iDamage)
+{
+	Hit(iDamage);
+	// BT BlackBoard에 Hit 상태 전달 할 수 있도록.
 }
 
 void CMonsterController::Move(const _float& fTimeDelta)
@@ -158,6 +161,16 @@ void CMonsterController::Attack()
 {
 }
 
+void CMonsterController::Hit(_int iDamage)
+{
+	m_pStats->Damaged(iDamage);
+	if (m_pStats->GetHP() <= 0)
+	{
+		m_IsZeroHP = true;
+		static_cast<CRigidDynamic*>(m_pRigidBody)->IsKinematic(false);
+	}
+}
+
 void CMonsterController::Look(const Vec3& vPoint, const _float& fTimeDelta)
 {
 	Vec3 vDir = vPoint - m_pTransform->GetPosition();
@@ -174,6 +187,18 @@ void CMonsterController::Look(const Vec3& vPoint, const _float& fTimeDelta)
 
 		m_pTransform->RotateYAxisFixed(fTimeDelta * 0.3f * vRotateAmount);
 	}
+}
+
+void CMonsterController::OnCollisionEnter(CGameObject* pOther)
+{
+}
+
+void CMonsterController::OnCollisionStay(CGameObject* pOther)
+{
+}
+
+void CMonsterController::OnCollisionExit(CGameObject* pOther)
+{
 }
 
 void CMonsterController::LimitAllAxisVelocity()

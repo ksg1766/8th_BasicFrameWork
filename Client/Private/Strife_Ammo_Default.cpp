@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\Public\Strife_Ammo_Default.h"
 #include "GameInstance.h"
+#include "MonsterController.h"
 
 // TODO: 지울것!!!!!!!!!!!
 #include "HellHound.h"
@@ -116,12 +117,11 @@ void CStrife_Ammo_Default::OnCollisionEnter(CGameObject* pOther)
 	const LAYERTAG& eLayerTag = pOther->GetLayerTag();
 	if (LAYERTAG::UNIT_GROUND == eLayerTag)
 	{
-		// Temp
-		static_cast<CHellHound*>(pOther)->m_IsZeroHP = true;
+		CMonsterController* pMonsterController = static_cast<CMonsterController*>(pOther->GetScripts()[0]);
+		pMonsterController->GetHitMessage(m_tProps.iDamage);
+
 		// 사이클 때문에 어쩔 수 없이 여기서 Kinematic 꺼줘야 함
 		static_cast<CRigidDynamic*>(GetRigidBody())->IsKinematic(false);
-		static_cast<CRigidDynamic*>(static_cast<CHellHound*>(pOther)->GetRigidBody())->IsKinematic(false);
-		//m_pGameInstance->DeleteObject(pOther);
 	}
 
 	m_pGameInstance->DeleteObject(this);

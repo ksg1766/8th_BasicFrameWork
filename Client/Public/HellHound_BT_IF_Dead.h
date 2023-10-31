@@ -1,9 +1,7 @@
 #pragma once
 #include "Client_Defines.h"
 #include "BT_Decorator.h"
-
-// TODO : Áö¿ï °Í!!!!!!!!!
-#include "HellHound.h"
+#include "MonsterController.h"
 
 BEGIN(Client)
 
@@ -35,9 +33,11 @@ private:
 
 private:
 	_bool	IsZeroHP()
-	{	// Temp
-		if (dynamic_cast<CHellHound*>(m_pGameObject)->m_IsZeroHP)
+	{
+		if (static_cast<CMonsterController*>(m_pController)->IsZeroHP())
 			return true;
+
+		return false;
 	}
 
 public:

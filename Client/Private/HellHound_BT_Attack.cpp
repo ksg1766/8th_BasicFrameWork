@@ -3,8 +3,6 @@
 #include "GameInstance.h"
 #include "GameObject.h"
 #include "MonsterController.h"
-// Temp
-#include "HellHound.h"
 
 CHellHound_BT_Attack::CHellHound_BT_Attack()
 {
@@ -74,9 +72,10 @@ _bool CHellHound_BT_Attack::IsInRange()
 
 _bool CHellHound_BT_Attack::IsZeroHP()
 {
-	// Temp
-	if (dynamic_cast<CHellHound*>(m_pGameObject)->m_IsZeroHP)
+	if(static_cast<CMonsterController*>(m_pController)->IsZeroHP())
 		return true;
+
+	return false;
 }
 
 CHellHound_BT_Attack* CHellHound_BT_Attack::Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController)

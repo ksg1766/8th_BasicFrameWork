@@ -51,6 +51,11 @@ public:
 	_bool	Pick(_uint screenX, _uint screenY, Vec3& pickPos, _float& distance);
 	void	Look(const Vec3& vPoint, const _float& fTimeDelta);
 
+public:
+	void	OnCollisionEnter(CGameObject* pOther);
+	void	OnCollisionStay(CGameObject* pOther);
+	void	OnCollisionExit(CGameObject* pOther);
+
 private:
 	void	Input(const _float& fTimeDelta);
 	void	Move(const _float& fTimeDelta);

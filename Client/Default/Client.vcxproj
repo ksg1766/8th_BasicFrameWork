@@ -198,6 +198,7 @@
     <ClInclude Include="..\Public\MainCamera.h" />
     <ClInclude Include="..\Public\MainCameraController.h" />
     <ClInclude Include="..\Public\MonsterController.h" />
+    <ClInclude Include="..\Public\MonsterStats.h" />
     <ClInclude Include="..\Public\NavMeshView.h" />
     <ClInclude Include="..\Public\P_Strife.h" />
     <ClInclude Include="..\Public\P_Strife_State_Aim.h" />
@@ -267,6 +268,7 @@
     <ClCompile Include="..\Private\MainCamera.cpp" />
     <ClCompile Include="..\Private\MainCameraController.cpp" />
     <ClCompile Include="..\Private\MonsterController.cpp" />
+    <ClCompile Include="..\Private\MonsterStats.cpp" />
     <ClCompile Include="..\Private\NavMeshView.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>

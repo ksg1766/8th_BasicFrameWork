@@ -24,17 +24,12 @@ public:
 	virtual void	DebugRender()						override;
 	virtual HRESULT Render()							override;
 
-	//
-	void			SetDissolveAmount(_float fDissolveAmount) { m_fDissolveAmount = fDissolveAmount; }
-
 private:
 	HRESULT			Ready_FixedComponents();
 	HRESULT			Ready_Scripts();
 	HRESULT			Bind_ShaderResources(); /* 셰이더 전역변수에 값 던진다. */
-
 	//
 	_bool			m_bRendered = false;
-	_float			m_fDissolveAmount = 0.f;
 
 public:
 	static	CStaticBase* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

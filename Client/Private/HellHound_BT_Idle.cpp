@@ -3,9 +3,7 @@
 #include "GameInstance.h"
 #include "Layer.h"
 #include "GameObject.h"
-#include "MonoBehaviour.h"
-// Temp
-#include "HellHound.h"
+#include "MonsterController.h"
 
 CHellHound_BT_Idle::CHellHound_BT_Idle()
 {
@@ -129,9 +127,10 @@ _bool CHellHound_BT_Idle::IsAggro()
 
 _bool CHellHound_BT_Idle::IsZeroHP()
 {
-	// Temp
-	if (dynamic_cast<CHellHound*>(m_pGameObject)->m_IsZeroHP)
+	if (static_cast<CMonsterController*>(m_pController)->IsZeroHP())
 		return true;
+
+	return false;
 }
 
 CHellHound_BT_Idle* CHellHound_BT_Idle::Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController)

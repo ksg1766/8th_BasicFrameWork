@@ -5,6 +5,7 @@
 
 BEGIN(Client)
 
+class CMonsterController;
 class CHellHound final : public CGameObject
 {
 	using Super = CGameObject;
@@ -24,20 +25,18 @@ public:
 	virtual HRESULT Render()							override;
 	virtual HRESULT RenderInstance()					override;
 
-	//	뭐야 이거 지워도 되는건가.
-	void			SetDissolveAmount(_float fDissolveAmount) { m_fDissolveAmount = fDissolveAmount; }
-
 private:
 	HRESULT			Bind_ShaderResources(); /* 셰이더 전역변수에 값 던진다. */
 	HRESULT			Ready_FixedComponents();
 	HRESULT			Ready_Scripts();
 
-	//
-	_float			m_fDissolveAmount = 0.f;
-
 public:
-	// TODO: Temp (이런 데이터는 BlakcBoard로 옮기자. 디졸브 테스트를 위한 임시 코드)
-	_bool			m_IsZeroHP = false;
+	virtual	void	OnCollisionEnter(CGameObject* pOther)	override;
+	virtual	void	OnCollisionStay(CGameObject* pOther)	override;
+	virtual	void	OnCollisionExit(CGameObject* pOther)	override;
+
+private:
+	CMonsterController* m_pController = nullptr;
 
 public:
 	static	CHellHound* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

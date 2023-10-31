@@ -4,8 +4,6 @@
 #include "Layer.h"
 #include "GameObject.h"
 #include "MonsterController.h"
-// Temp
-#include "HellHound.h"
 
 CHellHound_BT_Chase::CHellHound_BT_Chase()
 {
@@ -22,9 +20,9 @@ CBT_Node::BT_RETURN CHellHound_BT_Chase::OnUpdate(const Engine::_float& fTimeDel
 	if (IsZeroHP())
 		return BT_FAIL;
 
-
 	if (IsInRange())
 		return BT_FAIL;
+
 	//if (!IsInSight())// 나중에 빼고 테스트
 	//	return BT_FAIL;
 
@@ -101,9 +99,11 @@ _bool CHellHound_BT_Chase::IsInSight()
 }
 
 _bool CHellHound_BT_Chase::IsZeroHP()
-{	// Temp
-	if (dynamic_cast<CHellHound*>(m_pGameObject)->m_IsZeroHP)
+{
+	if (static_cast<CMonsterController*>(m_pController)->IsZeroHP())
 		return true;
+
+	return false;
 }
 
 CHellHound_BT_Chase* CHellHound_BT_Chase::Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController)

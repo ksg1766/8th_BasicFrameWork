@@ -171,6 +171,18 @@ void CPlayerController::Look(const Vec3& vPoint, const _float& fTimeDelta)
 	}
 }
 
+void CPlayerController::OnCollisionEnter(CGameObject* pOther)
+{
+}
+
+void CPlayerController::OnCollisionStay(CGameObject* pOther)
+{
+}
+
+void CPlayerController::OnCollisionExit(CGameObject* pOther)
+{
+}
+
 void CPlayerController::Jump()
 {
 	m_pRigidBody->IsKinematic(false);
@@ -211,7 +223,7 @@ void CPlayerController::Fire(CStrife_Ammo::AmmoType eAmmoType)
 	switch (eAmmoType)
 	{
 	case CStrife_Ammo::AmmoType::DEFAULT:
-		CStrife_Ammo_Default::AMMOPROPS tProps{ eAmmoType, 7, 0, 1, 50.f * m_pTransform->GetForward(), false, 5.f };
+		CStrife_Ammo_Default::AMMOPROPS tProps{ eAmmoType, 7, 0, 10, 50.f * m_pTransform->GetForward(), false, 5.f };
 		pAmmo = m_pGameInstance->CreateObject(L"Prototype_GameObject_Strife_Ammo_Default", LAYERTAG::EQUIPMENT, &tProps);
 		break;
 

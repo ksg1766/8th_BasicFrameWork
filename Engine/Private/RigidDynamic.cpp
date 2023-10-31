@@ -274,8 +274,6 @@ void CRigidDynamic::OnCollisionEnter(const COLLISION_DESC& desc)
 		{	
 		}
 	}
-
-	m_pGameObject->OnCollisionEnter(desc.pOther->GetGameObject());
 }
 
 void CRigidDynamic::OnCollisionStay(const COLLISION_DESC& desc)
@@ -301,8 +299,6 @@ void CRigidDynamic::OnCollisionStay(const COLLISION_DESC& desc)
 		{
 		}
 	}
-
-	m_pGameObject->OnCollisionStay(desc.pOther->GetGameObject());
 }
 
 void CRigidDynamic::OnCollisionExit(const COLLISION_DESC& desc)

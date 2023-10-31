@@ -2,9 +2,7 @@
 #include "HellHound_BT_Wait.h"
 #include "GameInstance.h"
 #include "GameObject.h"
-#include "MonoBehaviour.h"
-// Temp
-#include "HellHound.h"
+#include "MonsterController.h"
 
 CHellHound_BT_Wait::CHellHound_BT_Wait()
 {
@@ -63,9 +61,10 @@ _bool CHellHound_BT_Wait::IsInRange()
 
 _bool CHellHound_BT_Wait::IsZeroHP()
 {
-	// Temp
-	if (dynamic_cast<CHellHound*>(m_pGameObject)->m_IsZeroHP)
+	if (static_cast<CMonsterController*>(m_pController)->IsZeroHP())
 		return true;
+
+	return false;
 }
 
 CHellHound_BT_Wait* CHellHound_BT_Wait::Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController)
