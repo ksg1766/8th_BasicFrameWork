@@ -71,8 +71,9 @@ void CStrife_Ammo_Static::Tick(const _float& fTimeDelta)
 		CStrife_Ammo_Static* pAmmo = static_cast<CStrife_Ammo_Static*>(m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Strife_Ammo_Static"), LAYERTAG::EQUIPMENT, &m_tProps));
 		//CStrife_Ammo_Static* pAmmo = static_cast<CStrife_Ammo_Static*>(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, LAYERTAG::EQUIPMENT, TEXT("Prototype_GameObject_Strife_Ammo_Static"), &m_tProps));
 
-		Quaternion qRot = m_pTransform->GetRotationQuaternion();
+		Quaternion qRot = Quaternion::CreateFromYawPitchRoll();	// 안되면 그냥 외적으로 쌩으로 각도 구해서 만들 것.
 		pAmmo->GetTransform()->Rotate(qRot);
+		pAmmo->GetTransform()->SetRotation(); SetRotationQuaternion(qRot);
 
 		CTransform* pNewTransform = pAmmo->GetTransform();
 		pNewTransform->SetPosition(m_vecTargets[i]->GetTransform()->GetPosition());
