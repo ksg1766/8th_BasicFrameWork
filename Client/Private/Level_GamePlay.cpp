@@ -69,7 +69,7 @@ HRESULT CLevel_GamePlay::LateTick(const _float& fTimeDelta)
 	// TODO: 꼭 여기 말고 더 좋은 위치를 찾도록 하자....
 	m_pGameInstance->LateTick_Collision(fTimeDelta);
 
-#ifndef DEBUG
+#ifdef _DEBUG
 	m_pGameInstance->Render_QuadTree();
 #endif // !DEBUG
 

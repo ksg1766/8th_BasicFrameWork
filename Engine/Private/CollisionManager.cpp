@@ -109,6 +109,11 @@ void CCollisionManager::CheckDynamicCollision(LAYERTAG& eLayerLeft, LAYERTAG& eL
 	{	// sweep and prune
 		::sort(vecRight.begin(), vecRight.end(), [&](CGameObject* pObjL, CGameObject* pObjR) ->_bool
 			{
+				CRigidBody* pRigidL = pObjL->GetRigidBody();
+				if (!pRigidL) return false;
+				CRigidBody* pRigidR = pObjR->GetRigidBody();
+				if (!pRigidR) return false;
+
 				BoundingSphere& tBoundingSphereL = pObjL->GetRigidBody()->GetSphereCollider()->GetBoundingSphere();
 				BoundingSphere& tBoundingSphereR = pObjR->GetRigidBody()->GetSphereCollider()->GetBoundingSphere();
 				return tBoundingSphereL.Center.z - tBoundingSphereL.Radius < tBoundingSphereR.Center.z - tBoundingSphereR.Radius;
@@ -122,6 +127,7 @@ void CCollisionManager::CheckDynamicCollision(LAYERTAG& eLayerLeft, LAYERTAG& eL
 	for (auto& iterL : vecLeft)
 	{
 		CRigidBody* pRigidBodyL = iterL->GetRigidBody();
+		if (!pRigidBodyL) continue;
 
 		// 일단 DynamicRigid는 무조건 SphereCollider를 가지고 있다는 전제.
 		CSphereCollider* pLeftCol = pRigidBodyL->GetSphereCollider();
@@ -134,6 +140,7 @@ void CCollisionManager::CheckDynamicCollision(LAYERTAG& eLayerLeft, LAYERTAG& eL
 		for (auto& iterR : vecRight)
 		{
 			CRigidBody* pRigidBodyR = iterR->GetRigidBody();
+			if (!pRigidBodyR) continue;
 
 			CSphereCollider* pRightCol = pRigidBodyR->GetSphereCollider();
 			if (nullptr == pRightCol || iterL == iterR)

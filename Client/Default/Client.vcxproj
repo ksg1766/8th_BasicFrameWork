@@ -234,6 +234,7 @@
     <ClInclude Include="..\Public\StaticTest.h" />
     <ClInclude Include="..\Public\Strife_Ammo.h" />
     <ClInclude Include="..\Public\Strife_Ammo_Default.h" />
+    <ClInclude Include="..\Public\Strife_Ammo_Static.h" />
     <ClInclude Include="..\Public\Strife_GunL.h" />
     <ClInclude Include="..\Public\Strife_GunR.h" />
     <ClInclude Include="..\Public\TempCube.h" />
@@ -306,6 +307,7 @@
     <ClCompile Include="..\Private\StaticTest.cpp" />
     <ClCompile Include="..\Private\Strife_Ammo.cpp" />
     <ClCompile Include="..\Private\Strife_Ammo_Default.cpp" />
+    <ClCompile Include="..\Private\Strife_Ammo_Static.cpp" />
     <ClCompile Include="..\Private\Strife_GunL.cpp" />
     <ClCompile Include="..\Private\Strife_GunR.cpp" />
     <ClCompile Include="..\Private\TempCube.cpp" />

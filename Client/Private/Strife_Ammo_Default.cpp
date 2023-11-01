@@ -3,9 +3,6 @@
 #include "GameInstance.h"
 #include "MonsterController.h"
 
-// TODO: Áö¿ï°Í!!!!!!!!!!!
-#include "HellHound.h"
-
 CStrife_Ammo_Default::CStrife_Ammo_Default(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: Super(pDevice, pContext)
 {
@@ -36,6 +33,9 @@ HRESULT CStrife_Ammo_Default::Initialize(void* pArg)
 	static_cast<CRigidDynamic*>(GetRigidBody())->IsKinematic(true);
 	static_cast<CRigidDynamic*>(GetRigidBody())->SetMass(0.5f);
 
+	GetTransform()->SetScale(Vec3(0.28f, 3.6f, 1.f));
+	GetTransform()->Rotate(Vec3(90.f, 0.0f, 0.f));
+
 	GetRigidBody()->GetSphereCollider()->SetRadius(0.5f);
 
 	Vec3 vExtents(0.25f, 0.25f, 0.25f);
@@ -48,6 +48,11 @@ void CStrife_Ammo_Default::Tick(const _float& fTimeDelta)
 {
 	Super::Tick(fTimeDelta);
 	
+	if (!LifeTime(fTimeDelta))
+		return;
+
+	Move(fTimeDelta);
+
 	const Vec3& vPos = GetTransform()->GetPosition();
 
 	GetRigidBody()->GetSphereCollider()->SetCenter(vPos);
@@ -83,6 +88,11 @@ HRESULT CStrife_Ammo_Default::Render()
 HRESULT CStrife_Ammo_Default::Ready_FixedComponents()
 {
  	if (FAILED(Super::Ready_FixedComponents()))
+		return E_FAIL;
+
+	/* Com_RigidBody */
+	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::RigidBody, TEXT("Prototype_Component_RigidDynamic")))
+		|| FAILED(GetRigidBody()->InitializeCollider()))
 		return E_FAIL;
 
 	/* Com_Texture */

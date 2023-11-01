@@ -15,7 +15,6 @@ void CHellHound_BT_Dead::OnStart()
 {
 	Super::OnStart(0);
 
-	static_cast<CRigidDynamic*>(m_pGameObject->GetRigidBody())->IsKinematic(false);
 	m_pGameObject->SetInstance(false);
 	m_pGameInstance->SwapShader(m_pGameObject, TEXT("Shader_VtxTexFetchAnim"));
 }

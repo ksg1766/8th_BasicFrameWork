@@ -27,8 +27,6 @@ HRESULT CStrife_Ammo::Initialize(void* pArg)
 void CStrife_Ammo::Tick(const _float& fTimeDelta)
 {
 	Super::Tick(fTimeDelta);
-
-	Move(fTimeDelta);
 }
 
 void CStrife_Ammo::LateTick(const _float& fTimeDelta)
@@ -69,11 +67,6 @@ HRESULT CStrife_Ammo::Ready_FixedComponents()
 
 	/* Com_Transform */
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Buffer, TEXT("Prototype_Component_VIBuffer_Rect"))))
-		return E_FAIL;
-
-	/* Com_RigidBody */
-	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::RigidBody, TEXT("Prototype_Component_RigidDynamic")))
-		|| FAILED(GetRigidBody()->InitializeCollider()))
 		return E_FAIL;
 
 	/* Com_Renderer */
@@ -129,16 +122,20 @@ void CStrife_Ammo::OnCollisionExit(CGameObject* pOther)
 {
 }
 
-void CStrife_Ammo::Move(const _float& fTimeDelta)
+_bool CStrife_Ammo::LifeTime(const _float& fTimeDelta)
 {
 	m_tProps.fLifeTime -= fTimeDelta;
 
 	if (m_tProps.fLifeTime < 0.f)
 	{
 		m_pGameInstance->DeleteObject(this);
-		return;
+		return false;
 	}
+	return true;
+}
 
+void CStrife_Ammo::Move(const _float& fTimeDelta)
+{
 	static_cast<CRigidDynamic*>(GetRigidBody())->AddForce(m_tProps.vVelocity, ForceMode::VELOCITY_CHANGE);
 
 	(m_tProps.iKeyFrame >= m_tProps.iMaxKeyFrame) ? m_tProps.iKeyFrame = 0 : ++m_tProps.iKeyFrame;

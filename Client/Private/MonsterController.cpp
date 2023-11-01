@@ -166,7 +166,10 @@ void CMonsterController::Hit(_int iDamage)
 {
 	m_pStats->Damaged(iDamage);
 	if (m_pStats->GetHP() <= 0)
+	{
 		m_IsZeroHP = true;
+		m_pRigidBody->IsKinematic(false);
+	}
 }
 
 void CMonsterController::Look(const Vec3& vPoint, const _float& fTimeDelta)

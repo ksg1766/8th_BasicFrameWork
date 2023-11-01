@@ -40,6 +40,9 @@ protected:
 	HRESULT			Ready_Scripts();
 	HRESULT			Bind_ShaderResources(); /* 셰이더 전역변수에 값 던진다. */
 
+	_bool			LifeTime(const _float& fTimeDelta);
+	void			Move(const _float& fTimeDelta);
+
 protected:
 	virtual	void	OnCollisionEnter(CGameObject* pOther)	override;
 	virtual	void	OnCollisionStay(CGameObject* pOther)	override;
@@ -47,9 +50,6 @@ protected:
 
 protected:
 	AMMOPROPS		m_tProps;
-
-private:
-	void			Move(const _float& fTimeDelta);
 
 public:
 	virtual void	Free() override;
