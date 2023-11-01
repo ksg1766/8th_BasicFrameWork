@@ -18,10 +18,10 @@ void CHellHound_BT_Idle::OnStart()
 CBT_Node::BT_RETURN CHellHound_BT_Idle::OnUpdate(const _float& fTimeDelta)
 {
 	// TODO: 이걸 시퀀스 단계에서 판단할 수 있도록 해야 함. // Abort 반환 결과를 받아서 정지시키도록.
-	if (IsAggro())
+	if (IsZeroHP())
 		return BT_FAIL;
 
-	if (IsZeroHP())
+	if (IsAggro())
 		return BT_FAIL;
 
 	ConditionalAbort(fTimeDelta);

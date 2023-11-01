@@ -22,6 +22,7 @@ CMonsterController::CMonsterController(const CMonsterController& rhs)
 	, m_vMaxLinearSpeed(rhs.m_vMaxLinearSpeed)
 	, m_vAngularSpeed(rhs.m_vAngularSpeed)
 	, m_vMaxAngularSpeed(rhs.m_vMaxAngularSpeed)
+	, m_IsZeroHP(rhs.m_IsZeroHP)
 #ifdef _DEBUG
 	, m_pBatch(rhs.m_pBatch)
 	, m_pEffect(rhs.m_pEffect)
@@ -165,10 +166,7 @@ void CMonsterController::Hit(_int iDamage)
 {
 	m_pStats->Damaged(iDamage);
 	if (m_pStats->GetHP() <= 0)
-	{
 		m_IsZeroHP = true;
-		static_cast<CRigidDynamic*>(m_pRigidBody)->IsKinematic(false);
-	}
 }
 
 void CMonsterController::Look(const Vec3& vPoint, const _float& fTimeDelta)

@@ -150,20 +150,20 @@ HRESULT CHellHound::Ready_Scripts()
 		if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::Script, TEXT("Prototype_Component_MonsterController"))))
 			return E_FAIL;
 
-		m_pController = dynamic_cast<CMonsterController*>(m_vecScripts.back());
+		m_pController = dynamic_cast<CMonsterController*>(m_vecScripts[0]);
 
 		/* Com_MonsterStats */
-		CMonsterStats::MONSTERSTAT stats { 50, 5 };
+		CMonsterStats::MONSTERSTAT stats = { 50, 5 };
 		if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::Script, TEXT("Prototype_Component_MonsterStats"), &stats)))
 			return E_FAIL;
 
-		m_pController->SetStats(dynamic_cast<CMonsterStats*>(m_vecScripts.back()));
+		m_pController->SetStats(dynamic_cast<CMonsterStats*>(m_vecScripts[1]));
 
 		/* Com_BehaviorTree */
 		if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::Script, TEXT("Prototype_Component_BehaviorTree"))))
 			return E_FAIL;
 
-		CBehaviorTree* pBehaviorTree = dynamic_cast<CBehaviorTree*>(m_vecScripts.back());
+		CBehaviorTree* pBehaviorTree = dynamic_cast<CBehaviorTree*>(m_vecScripts[2]);
 		{
 			CBT_Action::BEHAVEANIMS desc;
 
@@ -228,8 +228,6 @@ HRESULT CHellHound::Ready_Scripts()
 			hashBlackBoard.emplace(TEXT("Sight"), new tagBlackBoardData<_float>(10.f));
 			hashBlackBoard.emplace(TEXT("AttackRange"), new tagBlackBoardData<_float>(4.f));
 		}
-
-
 	}
 
 	return S_OK;

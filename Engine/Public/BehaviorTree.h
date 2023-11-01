@@ -15,7 +15,7 @@ struct tagBlackBoardData : public tagBlackBoard
 public:
 	tagBlackBoardData() = default;
 	tagBlackBoardData(T _value) :value(_value) {}
-	virtual void*	GetValue() override	{ return &value; } // 이거 캐스팅 안되면 value 바로 가져오도록
+	virtual void*	GetValue() override	{ return &value; }
 	void			SetValue(T _value)	{ value = _value; }
 
 private:
