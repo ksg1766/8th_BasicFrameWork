@@ -692,5 +692,8 @@
     <FxCompile Include="..\Bin\ShaderFiles\Client_Shader_Defines.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNonAnimInstancing.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

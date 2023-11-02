@@ -109,8 +109,9 @@ public:
 	const _int		GetNextAnimationIndex() const			{ return m_iNextAnimIndex; }
 	
 	// Instancing
+	_bool			IsAnimModel()							{ return m_eModelType; }
 	TweenDesc&		GetTweenDesc()							{ return m_TweenDesc; }
-	const InstanceID& GetInstanceID() const					{ return make_pair((_int)m_eModelType, m_iInstanceID); }
+	const _int&		GetInstanceID() const					{ return m_iInstanceID; }
 
 	// Tool : NavMeshView
 	vector<Vec3>&	GetSurfaceVtx()							{ return m_vecSurfaceVtx; }

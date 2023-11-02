@@ -40,7 +40,7 @@ public:
 private:
 	list<DISSOLVE_DESC>	m_listDissolve;
 
-	_float					m_fDissolveTimer = 0.f;
+	//_float					m_fDissolveTimer = 0.f;
 	ID3D11ShaderResourceView* m_ppDissolveSRV;
 	CGameInstance*			m_pGameInstance = nullptr;
 

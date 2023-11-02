@@ -23,6 +23,7 @@ public:
 	virtual void	LateTick(const _float& fTimeDelta)	override;
 	virtual void	DebugRender()						override;
 	virtual HRESULT Render()							override;
+	virtual HRESULT RenderInstance()					override;
 
 private:
 	HRESULT			Ready_FixedComponents();

@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "Transform.h"
 #include "Model.h"
+#include "Shader.h"
 #include "VIBuffer_Instance.h"
 
 CRenderer::CRenderer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -104,8 +105,10 @@ HRESULT CRenderer::Render_NonBlend_Instance()
 		if (nullptr == pGameObject->GetModel())
 			continue;
 
-		const InstanceID instanceId = pGameObject->GetModel()->GetInstanceID();
-		cache[instanceId].push_back(pGameObject);
+		const _int iPassIndex = pGameObject->GetShader()->GetPassIndex();
+		const _int instanceId = pGameObject->GetModel()->GetInstanceID();
+		InstanceID ID(iPassIndex, instanceId);
+		cache[ID].push_back(pGameObject);
 
 		Safe_Release(pGameObject);
 	}
@@ -118,27 +121,34 @@ HRESULT CRenderer::Render_NonBlend_Instance()
 
 		const InstanceID instanceId = mapIter.first;
 
+		CGameObject*& pChief = vecInstances[0];
+
 		for (_int i = 0; i < vecInstances.size(); i++)
 		{
 			CGameObject*& pGameObject = vecInstances[i];
 			InstancingData data;
-			data.matWorld = pGameObject->GetTransform()->WorldMatrix().Transpose();
+			data.matWorld = pGameObject->GetTransform()->WorldMatrix();
 
 			AddInstanceData(instanceId, data);
-
-			// INSTANCING
-			if(CModel::TYPE_ANIM == instanceId.first)
-				tweenDesc->tweens[i] = pGameObject->GetModel()->GetTweenDesc();	// 소켓 아이템의 경우 어떻게 할지.(굳이 인스턴싱이 필요 없을 듯 함 근데.)
 		}
 
-		if (CModel::TYPE_ANIM == instanceId.first)
-			vecInstances[0]->GetModel()->PushTweenData(*tweenDesc);
+		if(pChief->GetModel()->IsAnimModel())
+		{// INSTANCING
+			InstancedTweenDesc* tweenDesc = new InstancedTweenDesc;
+			for (_int i = 0; i < vecInstances.size(); i++)
+			{
+				CGameObject*& pGameObject = vecInstances[i];
+				tweenDesc->tweens[i] = pGameObject->GetModel()->GetTweenDesc();	// 소켓 아이템의 경우 어떻게 할지.(굳이 인스턴싱이 필요 없을 듯 함 근데.)
+			}
+
+			pChief->GetModel()->PushTweenData(*tweenDesc);
+		}
 
 		Safe_Delete(tweenDesc);
 
-		vecInstances[0]->RenderInstance();	// BindShaderResource 호출을 위함.
+		pChief->RenderInstance();	// BindShaderResource 호출을 위함.
 		CVIBuffer_Instance*& buffer = m_InstanceBuffers[instanceId];
-		vecInstances[0]->GetModel()->RenderInstancing(buffer);
+		pChief->GetModel()->RenderInstancing(buffer);
 	}
 	
 	m_RenderObjects[RG_NONBLEND_INSTANCE].clear();

@@ -80,6 +80,7 @@ private:
 
 	CMonsterStats*	m_pStats		= nullptr;
 	_bool			m_IsZeroHP		= false;
+	_int			m_iHitEffectCount = -1;
 
 #ifdef _DEBUG
 private:

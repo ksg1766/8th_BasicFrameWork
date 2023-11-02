@@ -21,48 +21,13 @@ vector g_vMtrlEmissive = vector(1.f, 0.843137324f, 0.f, 1.f);
 
 vector g_vCamPosition;
 
-struct tagKeyframeDesc
-{
-    int animIndex;
-    uint currFrame;
-    uint nextFrame;
-    float ratio;
-    float sumTime;
-    float speed;
-    float2 padding;
-};
-
-struct tagTweenFrameDesc
-{
-    float tweenDuration;
-    float tweenRatio;
-    float tweenSumTime;
-    float padding;
-    tagKeyframeDesc curr;
-    tagKeyframeDesc next;
-};
-
-struct tagTweenBuffer
-{
-    tagTweenFrameDesc TweenFrames[MAX_INSTANCE];
-};
-
-tagTweenBuffer g_TweenInstances;
-
-Texture2DArray g_TransformMap;
-//Texture2D g_CurTransformMap;
-//Texture2D g_NextTransformMap;
-
 struct VS_IN
 {
     float3 vPosition : POSITION;
     float3 vNormal : NORMAL;
     float2 vTexcoord : TEXCOORD0;
     float3 vTangent : TANGENT;
-    uint4 vBlendIndex : BLENDINDEX;
-    float4 vBlendWeight : BLENDWEIGHT;
     // Instancing
-    uint iInstanceID : SV_INSTANCEID;
     row_major matrix matWorld : INST;
 };
 
@@ -75,73 +40,6 @@ struct VS_OUT
     float3 vTangent : TANGENT;
 };
 
-matrix GetAnimationMatrix(VS_IN input)
-{
-    float indices[4] = { input.vBlendIndex.x, input.vBlendIndex.y, input.vBlendIndex.z, input.vBlendIndex.w };
-    float weights[4] = { input.vBlendWeight.x, input.vBlendWeight.y, input.vBlendWeight.z, input.vBlendWeight.w };
-
-    int animIndex[2];
-    int currFrame[2];
-    int nextFrame[2];
-    float ratio[2];
-    
-    animIndex[0] = g_TweenInstances.TweenFrames[input.iInstanceID].curr.animIndex;
-    currFrame[0] = g_TweenInstances.TweenFrames[input.iInstanceID].curr.currFrame;
-    nextFrame[0] = g_TweenInstances.TweenFrames[input.iInstanceID].curr.nextFrame;
-    ratio[0] = g_TweenInstances.TweenFrames[input.iInstanceID].curr.ratio;
-    
-    animIndex[1] = g_TweenInstances.TweenFrames[input.iInstanceID].next.animIndex;
-    currFrame[1] = g_TweenInstances.TweenFrames[input.iInstanceID].next.currFrame;
-    nextFrame[1] = g_TweenInstances.TweenFrames[input.iInstanceID].next.nextFrame;
-    ratio[1] = g_TweenInstances.TweenFrames[input.iInstanceID].next.ratio;
-    
-    float4 c0, c1, c2, c3;
-    float4 n0, n1, n2, n3;
-    
-    matrix curr = 0;
-    matrix next = 0;
-    matrix transform = 0;
-
-    for (int i = 0; i < 4; i++)
-    {
-        c0 = g_TransformMap.Load(int4(indices[i] * 4 + 0, currFrame[0], animIndex[0], 0));
-        c1 = g_TransformMap.Load(int4(indices[i] * 4 + 1, currFrame[0], animIndex[0], 0));
-        c2 = g_TransformMap.Load(int4(indices[i] * 4 + 2, currFrame[0], animIndex[0], 0));
-        c3 = g_TransformMap.Load(int4(indices[i] * 4 + 3, currFrame[0], animIndex[0], 0));
-        curr = matrix(c0, c1, c2, c3);
-        
-        n0 = g_TransformMap.Load(int4(indices[i] * 4 + 0, nextFrame[0], animIndex[0], 0));
-        n1 = g_TransformMap.Load(int4(indices[i] * 4 + 1, nextFrame[0], animIndex[0], 0));
-        n2 = g_TransformMap.Load(int4(indices[i] * 4 + 2, nextFrame[0], animIndex[0], 0));
-        n3 = g_TransformMap.Load(int4(indices[i] * 4 + 3, nextFrame[0], animIndex[0], 0));
-        next = matrix(n0, n1, n2, n3);
-        
-        matrix result = lerp(curr, next, ratio[0]);
-        
-        if (animIndex[1] >= 0)
-        {
-            c0 = g_TransformMap.Load(int4(indices[i] * 4 + 0, currFrame[1], animIndex[1], 0));
-            c1 = g_TransformMap.Load(int4(indices[i] * 4 + 1, currFrame[1], animIndex[1], 0));
-            c2 = g_TransformMap.Load(int4(indices[i] * 4 + 2, currFrame[1], animIndex[1], 0));
-            c3 = g_TransformMap.Load(int4(indices[i] * 4 + 3, currFrame[1], animIndex[1], 0));
-            curr = matrix(c0, c1, c2, c3);
-
-            n0 = g_TransformMap.Load(int4(indices[i] * 4 + 0, nextFrame[1], animIndex[1], 0));
-            n1 = g_TransformMap.Load(int4(indices[i] * 4 + 1, nextFrame[1], animIndex[1], 0));
-            n2 = g_TransformMap.Load(int4(indices[i] * 4 + 2, nextFrame[1], animIndex[1], 0));
-            n3 = g_TransformMap.Load(int4(indices[i] * 4 + 3, nextFrame[1], animIndex[1], 0));
-            next = matrix(n0, n1, n2, n3);
-
-            matrix nextResult = lerp(curr, next, ratio[1]);
-            result = lerp(result, nextResult, g_TweenInstances.TweenFrames[input.iInstanceID].tweenRatio);
-        }
-        
-        transform += mul(weights[i], result);
-    }
-
-    return transform;
-}
-
 VS_OUT VS_MAIN(VS_IN In)
 {
     VS_OUT Out = (VS_OUT) 0;
@@ -151,13 +49,8 @@ VS_OUT VS_MAIN(VS_IN In)
     matWV = mul(In.matWorld, g_ViewMatrix);
     matWVP = mul(matWV, g_ProjMatrix);
 
-    matrix m = GetAnimationMatrix(In);
-    
-    vector vPosition = mul(vector(In.vPosition, 1.f), m);
-    vector vNormal = mul(vector(In.vNormal, 0.f), m);
-
-    Out.vPosition = mul(vPosition, matWVP);
-    Out.vNormal = normalize(mul(vNormal, In.matWorld));
+    Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
+    Out.vNormal = normalize(mul(float4(In.vNormal, 0.f), In.matWorld));
     Out.vTexcoord = In.vTexcoord;
     Out.vWorldPos = mul(float4(In.vPosition, 1.f), In.matWorld);
     Out.vTangent = normalize(mul(float4(In.vTangent, 0.f), In.matWorld)).xyz;

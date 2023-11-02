@@ -77,6 +77,16 @@ HRESULT CMonsterController::Initialize(void* pArg)
 
 void CMonsterController::Tick(const _float& fTimeDelta)
 {
+	if (0 < m_iHitEffectCount)
+	{
+		--m_iHitEffectCount;
+	}
+	else if (0 == m_iHitEffectCount)
+	{
+		m_pGameObject->GetShader()->SetPassIndex(0);
+		--m_iHitEffectCount;
+	}
+
 	if (m_vNetMove.Length() > EPSILON)
 		Move(fTimeDelta);
 	else if (m_vNetTrans.Length() > EPSILON)
@@ -169,7 +179,11 @@ void CMonsterController::Hit(_int iDamage)
 	{
 		m_IsZeroHP = true;
 		m_pRigidBody->IsKinematic(false);
+		return;
 	}
+
+	m_iHitEffectCount = 20;
+	m_pGameObject->GetShader()->SetPassIndex(1);
 }
 
 void CMonsterController::Look(const Vec3& vPoint, const _float& fTimeDelta)
