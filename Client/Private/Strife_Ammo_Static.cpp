@@ -43,6 +43,11 @@ HRESULT CStrife_Ammo_Static::Initialize(void* pArg)
 
 void CStrife_Ammo_Static::Tick(const _float& fTimeDelta)
 {
+	if (m_IsChain)
+	{
+		m_pGameInstance->DeleteObject(this);
+		return;
+	}
 	Super::Tick(fTimeDelta);
 	FindTargets();
 
@@ -64,42 +69,60 @@ void CStrife_Ammo_Static::Tick(const _float& fTimeDelta)
 	vOffset.y = 0.f;
 	pTransform->Translate(vOffset);
 
-	Attack(pFirstTarget, fTimeDelta);
+	Attack(this, pFirstTarget, fTimeDelta);
+	m_pGameInstance->DeleteObject(this);
 
 	for (_int i = 0; i < m_vecTargets.size() - 1; ++i)
 	{
 		CStrife_Ammo_Static* pAmmo = static_cast<CStrife_Ammo_Static*>(m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Strife_Ammo_Static"), LAYERTAG::EQUIPMENT, &m_tProps));
 		//CStrife_Ammo_Static* pAmmo = static_cast<CStrife_Ammo_Static*>(m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, LAYERTAG::EQUIPMENT, TEXT("Prototype_GameObject_Strife_Ammo_Static"), &m_tProps));
-
-		Quaternion qRot = Quaternion::CreateFromYawPitchRoll();	// 안되면 그냥 외적으로 쌩으로 각도 구해서 만들 것.
-		pAmmo->GetTransform()->Rotate(qRot);
-		pAmmo->GetTransform()->SetRotation(); SetRotationQuaternion(qRot);
+		pAmmo->m_IsChain = true;
 
 		CTransform* pNewTransform = pAmmo->GetTransform();
-		pNewTransform->SetPosition(m_vecTargets[i]->GetTransform()->GetPosition());
+		//pNewTransform->SetPosition(m_vecTargets[i]->GetTransform()->GetPosition());
 		CGameObject*& pNextTarget = m_vecTargets[i + 1];
 
 		const Vec3& vNewPos = pNewTransform->GetPosition();
 		const Vec3& vNextTargetPos = pNextTarget->GetTransform()->GetPosition();
+		Vec3 vNewForward(vNextTargetPos - m_vecTargets[i + 1]->GetTransform()->GetPosition());
 
-		_float fLength = (vNextTargetPos - vNewPos).Length();
+		_float fLength = vNewForward.Length();
 		pNewTransform->SetScale(Vec3(0.5f, fLength, 1.f));
-		Vec3 vNextOffset = (vNextTargetPos - vNewPos) / 2.f;
+
+		Vec3 vNextOffset = vNewForward / 2.f;
 		vNextOffset.y = 0.f;
-		pNewTransform->Translate(vNextOffset);
+		
+
+		vNewForward.Normalize();
+		const Vec3& vForward = pNewTransform->GetUp();
+		_float fRadian = acos(vNewForward.Dot(vForward));
+		Quaternion qRot = Quaternion::CreateFromAxisAngle(Vec3::UnitY, fRadian);
+		pNewTransform->Rotate(qRot);
+		pNewTransform->Translate(vNextOffset + m_vecTargets[i]->GetTransform()->GetPosition());
+		//pNewTransform->GetRight();
+
+
+		/*pNewTransform->SetForward(vNewForward);
+		Quaternion qRot = Quaternion::CreateFromAxisAngle(Vec3::UnitZ, XMConvertToRadians(90.f));
+		pNewTransform->Rotate(qRot);*/
+		//pNewTransform->SetRight(vNewForward);
+
+		Attack(pAmmo, m_vecTargets[i + 1], fTimeDelta);
 	}
 }
 
 void CStrife_Ammo_Static::LateTick(const _float& fTimeDelta)
 {
+	GetRenderer()->Add_RenderGroup(CRenderer::RG_NONBLEND, this);
+
+	if (m_IsChain)
+		return;
 	if (m_vecTargets.empty())
 		return;
 
 	m_vecTargets.clear();
 
 	Super::LateTick(fTimeDelta);
-
-	GetRenderer()->Add_RenderGroup(CRenderer::RG_NONBLEND, this);
 }
 
 void CStrife_Ammo_Static::DebugRender()
@@ -213,7 +236,7 @@ void CStrife_Ammo_Static::FindTargets()
 
 	m_vecTargets.push_back(pTarget);
 	//
-	for (_int i = 0; i < 4; i++)
+	for (_int i = 0; i < 3; i++)
 	{
 		CGameObject*& pChainer = m_vecTargets.back();
 		pTarget = nullptr;
@@ -221,7 +244,12 @@ void CStrife_Ammo_Static::FindTargets()
 
 		for (auto& iter : vecUnits)
 		{
-			if (pChainer == iter)
+			_bool bAlreadyTarget = false;
+			for (auto& _iter : m_vecTargets)
+				if (_iter == iter)
+					bAlreadyTarget = true;
+
+			if (bAlreadyTarget)
 				continue;
 
 			const Vec3& targetPos = iter->GetTransform()->GetPosition();
@@ -246,7 +274,7 @@ void CStrife_Ammo_Static::FindTargets()
 	}
 }
 
-void CStrife_Ammo_Static::Attack(CGameObject* pTarget, const _float& fTimeDelta)
+void CStrife_Ammo_Static::Attack(CStrife_Ammo_Static* pAmmo, CGameObject* pTarget, const _float& fTimeDelta)
 {
 	CMonsterController* pMonsterController = static_cast<CMonsterController*>(pTarget->GetScripts()[0]);
 	
@@ -257,8 +285,6 @@ void CStrife_Ammo_Static::Attack(CGameObject* pTarget, const _float& fTimeDelta)
 		pMonsterController->GetHitMessage(1);
 		m_fFR_Default_Timer = m_fFR_Default;
 	}
-
-	m_pGameInstance->DeleteObject(this);
 }
 
 CStrife_Ammo_Static* CStrife_Ammo_Static::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

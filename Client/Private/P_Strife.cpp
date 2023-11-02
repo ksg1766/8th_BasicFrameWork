@@ -142,7 +142,6 @@ HRESULT CP_Strife::Ready_Scripts()
 
 			desc.vecAnimations.clear();
 			desc.vecAnimations.push_back(TEXT("Strife_Run"));
-			desc.vecAnimations.push_back(TEXT("Strife_Run_B"));
 			pState = CP_Strife_State_Run::Create(this, desc, pController);
 			if (FAILED(pStateMachine->AddState(pState))) return E_FAIL;
 

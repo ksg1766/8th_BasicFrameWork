@@ -33,7 +33,7 @@ HRESULT CStrife_Ammo_Default::Initialize(void* pArg)
 	static_cast<CRigidDynamic*>(GetRigidBody())->IsKinematic(true);
 	static_cast<CRigidDynamic*>(GetRigidBody())->SetMass(0.5f);
 
-	GetTransform()->SetScale(Vec3(0.28f, 3.6f, 1.f));
+	GetTransform()->SetScale(Vec3(0.35f, 4.5f, 1.f));
 	GetTransform()->Rotate(Vec3(90.f, 0.0f, 0.f));
 
 	GetRigidBody()->GetSphereCollider()->SetRadius(0.5f);

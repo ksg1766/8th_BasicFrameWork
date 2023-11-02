@@ -132,8 +132,12 @@ HRESULT CHellHound::Ready_FixedComponents()
 		/* Com_NavMeshAgent */
 		CNavMeshAgent::NAVIGATION_DESC pNaviDesc;
 
-		//srand(time(NULL));
-		pNaviDesc.iCurrentIndex = 70 + GetTickCount64() % 30 - 15;
+		random_device		RandomDevice;
+
+		mt19937_64							RandomNumber(RandomDevice());
+		uniform_int_distribution<_int>		iRandom(25, 75);
+
+		pNaviDesc.iCurrentIndex = iRandom(RandomNumber);
 
 		if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::NavMeshAgent, TEXT("Prototype_Component_NavMeshAgent"), &pNaviDesc)))
 			return E_FAIL;

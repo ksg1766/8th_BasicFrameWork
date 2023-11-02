@@ -190,7 +190,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_UnitGround()
 		pGameObject->GetTransform()->Translate(Vec3(230.f - (_float)i, 100.f, -180.f - (_float)i));
 	}*/
 
-	for (_int i = 0; i < 5; ++i)
+	for (_int i = 0; i < 100; ++i)
 	{
 		pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_HellHound"));
 		if (nullptr == pGameObject)	return E_FAIL;

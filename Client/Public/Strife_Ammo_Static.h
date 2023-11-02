@@ -28,7 +28,7 @@ private:
 	HRESULT			Bind_ShaderResources(); /* 셰이더 전역변수에 값 던진다. */
 
 	void			FindTargets();
-	void			Attack(CGameObject* pTarget, const _float& fTimeDelta);
+	void			Attack(CStrife_Ammo_Static* pAmmo, CGameObject* pTarget, const _float& fTimeDelta);
 
 private:	// 몰라 그냥 여기 다 때려 넣어
 	vector<CGameObject*>	m_vecTargets;
@@ -38,6 +38,8 @@ private:	// 몰라 그냥 여기 다 때려 넣어
 
 	static _float			m_fFR_Default;
 	static _float			m_fFR_Default_Timer;
+
+	_bool					m_IsChain = false;
 
 public:
 

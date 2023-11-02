@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 #include "GameObject.h"
 #include "Terrain.h"
+#include <filesystem>
 #include "Utils.h"
 
 CPrefabsView::CPrefabsView(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -107,9 +108,9 @@ void CPrefabsView::TapGroups()
 		{
 			const _char* items[] =
 			{
-				"Arena", "FloorTiles_A", "FloorTiles_B", "RuinsFloor_A_Half", "RuinsFloor_A_Sqr",
-				 "Staircase_A",
-				"Stairs_Rock_A", "Stairs_Rock_B", "TileFloor_Mammon", "WallRubble"
+				"Arena", "Desert_Rock_A", "Desert_Rock_B", "FloorTiles_A", "FloorTiles_B", "FortressTerrain", "FortressTerrain_Alt",
+				"RuinsFloor_A_Half", "RuinsFloor_A_Sqr", "Staircase_A",
+				"Stairs_Rock_A", "Stairs_Rock_B", "TileFloor_Mammon", "WallRubble", "Wood_Platform_A", "Wood_Platform_B"
 			};
 
 			if (m_Item_Current >= IM_ARRAYSIZE(items))
@@ -122,9 +123,13 @@ void CPrefabsView::TapGroups()
 		}
 		if (ImGui::BeginTabItem("Wall"))
 		{
-			const _char* items[] = { "Obelisk_A", "Pillar_LG", "RuinsPillar_4m_A", "RuinsPillar_4m_B",
+			const _char* items[] = 
+			{
+				"Cliff_Rock_A", "Desert_Rock_Tall_A", "Obelisk_A", "Pillar_LG", "RuinsPillar_4m_A", "RuinsPillar_4m_B",
 				"RuinsPillar_5m_A", "RuinsPillar_5m_Arch_A", "RuinsPillar_5m_Arch_DMG",
-				"RuinsPillar_5m_B", "RuinsWall_A", "RuinsWall_B", "RuinWall_CNR_A", "RuinWall_CNR_B", };
+				"RuinsPillar_5m_B", "RuinsWall_A", "RuinsWall_B", "RuinWall_CNR_A", "RuinWall_CNR_B",
+				"SM_Fortress_WoodTower_A", "SM_Fortress_WoodTower_B", "SM_Fortress_WoodTower_C"
+			};
 
 			if (m_Item_Current >= IM_ARRAYSIZE(items))
 				m_Item_Current = IM_ARRAYSIZE(items) - 1;

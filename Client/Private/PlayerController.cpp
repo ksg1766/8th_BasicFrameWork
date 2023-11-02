@@ -228,7 +228,7 @@ void CPlayerController::Fire(CStrife_Ammo::AmmoType eAmmoType)
 	switch (eAmmoType)
 	{
 	case CStrife_Ammo::AmmoType::DEFAULT:
-		tProps = { eAmmoType, 7, 0, 10, 50.f * m_pTransform->GetForward(), false, 5.f };
+		tProps = { eAmmoType, 7, 0, 10, 70.f * m_pTransform->GetForward(), false, 5.f };
 		pAmmo = m_pGameInstance->CreateObject(L"Prototype_GameObject_Strife_Ammo_Default", LAYERTAG::EQUIPMENT, &tProps);
 		vFireOffset = m_pTransform->GetPosition() + 2.f * m_pTransform->GetForward() - (m_bFireLR * 0.35f - 0.175f) * m_pTransform->GetRight() + 1.7f * m_pTransform->GetUp();
 		m_bFireLR = !m_bFireLR;

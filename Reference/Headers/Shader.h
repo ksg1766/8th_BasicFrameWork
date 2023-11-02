@@ -26,13 +26,14 @@ public:
 	HRESULT Get_Matrix(const _char* pConstantName, OUT _matrix* pMatrix) const;
 	HRESULT Get_Matrices(const _char* pConstantName, OUT _float4x4* pMatrices, _uint iNumMatrices) const;
 
-	void	SetPassIndex(_uint iPassIndex)	{ m_iPassIndex = iPassIndex; }
+	_int	GetPassIndex()					{ return m_iPassIndex; }
+	void	SetPassIndex(_int iPassIndex)	{ m_iPassIndex = iPassIndex; }
 
 private:	
 	ID3DX11Effect*				m_pEffect = { nullptr };
 	vector<ID3D11InputLayout*>	m_InputLayouts; /* 각 패스마다 인풋레이아웃을 만들어서 추가했다. */
 
-	_uint						m_iPassIndex = 0;
+	_int						m_iPassIndex = 0;
 
 public:
 	static CShader* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strShaderFilePath, 

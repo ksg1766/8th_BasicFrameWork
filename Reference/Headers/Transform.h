@@ -55,7 +55,7 @@ public:
 	Vec3	GetForward()							{ return static_cast<Vec3>(m_matWorld.Backward()); }
 	Vec3	GetPosition()							{ return static_cast<Vec3>(m_matWorld.Translation()); }
 	void	SetRight(Vec3& vRight);// { m_matWorld.Right(vRight); }
-	void	SetUp(Vec3& vUp);// { m_matWorld.Up(vUp); }
+	//void	SetUp(Vec3& vUp);// { m_matWorld.Up(vUp); }
 	void	SetForward(Vec3& vForward);// { m_matWorld.Backward(vForward); }
 
 public:
