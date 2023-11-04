@@ -2,7 +2,6 @@
 
 /* 모델의 특정 파츠를 의미하는 메시. */
 /* 각 파츠(메시)마다 정점, 인덱스버퍼를 가진다. */
-#include "VIBuffer.h"
 #include "VIBuffer_Instance.h"
 
 BEGIN(Engine)

@@ -1,9 +1,12 @@
 #include "..\Public\Renderer.h"
 #include "GameObject.h"
+#include "GameInstance.h"
 #include "Transform.h"
 #include "Model.h"
 #include "Shader.h"
 #include "VIBuffer_Instance.h"
+#include "VIBuffer_Point.h"
+#include "StructuredBuffer.h"
 
 CRenderer::CRenderer(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CComponent(pDevice, pContext, ComponentType::Renderer)
@@ -43,6 +46,8 @@ HRESULT CRenderer::Draw_RenderObjects()
 	if (FAILED(Render_NonBlend()))
 		return S_OK;
 	if (FAILED(Render_NonBlend_Instance()))
+		return S_OK;
+	if (FAILED(Render_Particle_Instance()))
 		return S_OK;
 	if (FAILED(Render_Blend()))
 		return S_OK;
@@ -115,8 +120,6 @@ HRESULT CRenderer::Render_NonBlend_Instance()
 
 	for (auto& mapIter : cache)
 	{
-		InstancedTweenDesc* tweenDesc = new InstancedTweenDesc;
-
 		vector<CGameObject*>& vecInstances = mapIter.second;
 
 		const InstanceID instanceId = mapIter.first;
@@ -132,7 +135,7 @@ HRESULT CRenderer::Render_NonBlend_Instance()
 			AddInstanceData(instanceId, data);
 		}
 
-		if(pChief->GetModel()->IsAnimModel())
+		if (pChief->GetModel()->IsAnimModel())
 		{// INSTANCING
 			InstancedTweenDesc* tweenDesc = new InstancedTweenDesc;
 			for (_int i = 0; i < vecInstances.size(); i++)
@@ -142,16 +145,86 @@ HRESULT CRenderer::Render_NonBlend_Instance()
 			}
 
 			pChief->GetModel()->PushTweenData(*tweenDesc);
-		}
 
-		Safe_Delete(tweenDesc);
+			Safe_Delete(tweenDesc);
+		}
 
 		pChief->RenderInstance();	// BindShaderResource 호출을 위함.
 		CVIBuffer_Instance*& buffer = m_InstanceBuffers[instanceId];
 		pChief->GetModel()->RenderInstancing(buffer);
 	}
-	
+
 	m_RenderObjects[RG_NONBLEND_INSTANCE].clear();
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_Particle_Instance()
+{
+	map<InstanceID, vector<CGameObject*>> cache;
+
+	for (auto& pGameObject : m_RenderObjects[RG_PARTICLE_INSTANCE])
+	{
+		if (nullptr == pGameObject->GetBuffer())
+			continue;
+
+		const _int iPassIndex = pGameObject->GetShader()->GetPassIndex();
+		const _int instanceId = static_cast<CVIBuffer_Point*>(pGameObject->GetBuffer())->GetInstanceID();
+		InstanceID ID(iPassIndex, instanceId);
+		cache[ID].push_back(pGameObject);
+
+		Safe_Release(pGameObject);
+	}
+
+	for (auto& mapIter : cache)
+	{
+		vector<CGameObject*>& vecInstances = mapIter.second;
+
+		const InstanceID instanceId = mapIter.first;
+
+		CGameObject*& pChief = vecInstances[0];
+		CVIBuffer_Point* pPointBuffer = static_cast<CVIBuffer_Point*>(pChief->GetBuffer());
+
+		for (_int i = 0; i < vecInstances.size(); i++)
+		{
+			CGameObject*& pGameObject = vecInstances[i];
+			InstancingData data;
+			data.matWorld = pGameObject->GetTransform()->WorldMatrix();
+
+			AddInstanceData(instanceId, data);
+		}
+
+		//////////
+
+		CShader* pShader = static_cast<CShader*>(CComponentManager::GetInstance()
+			->Clone_Component(m_pGameObject, 0, TEXT("Prototype_Component_Shader_ComputeParticles"), nullptr));
+		//Safe_AddRef(pShader);
+
+		vector<InstancingData>& vecInstanceData = m_InstanceBuffers[instanceId]->GetInstanceData();
+		_int iDataSize = vecInstanceData.size();
+		CStructuredBuffer* pStructuredBuffer = CStructuredBuffer::Create(m_pDevice, m_pContext, vecInstanceData.data(), sizeof(InstancingData), iDataSize, sizeof(InstancingData), iDataSize);
+		//Safe_AddRef(pStructuredBuffer);
+
+		pShader->Bind_Texture("Input", pStructuredBuffer->GetSRV());	// Texture지만 BindResource라고 생각하자
+		pShader->Get_UAV("Output", pStructuredBuffer->GetUAV());
+		
+		// Input
+		pShader->Dispatch(0, 1, 1, 1);
+
+		// Output
+		//vector<InstancingData> vecInstanceData(iDataSize);
+		pStructuredBuffer->CopyFromOutput(vecInstanceData.data());
+
+		//////////
+		pChief->RenderInstance();	// BindShaderResource 호출을 위함.
+		CVIBuffer_Instance*& buffer = m_InstanceBuffers[instanceId];
+		buffer->Render(pPointBuffer);
+
+		Safe_Release(pShader);
+		Safe_Release(pStructuredBuffer);
+	}
+
+	m_RenderObjects[RG_PARTICLE_INSTANCE].clear();
 
 	return S_OK;
 }

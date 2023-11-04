@@ -170,6 +170,11 @@ HRESULT CMainApp::Ready_Prototype_Components()
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxAnimInstancing.hlsl"), VTXANIMMESH::Elements, VTXANIMMESH::iNumElements))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_Shader_Point_Instance */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_Point_Instance"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Point_Instance.hlsl"), VTXPOINT::Elements, VTXPOINT::iNumElements))))
+		return E_FAIL;
+
 	// TODO: StaticInstancing도 셰이더 만들어 둘 것
 
 	/* For.Prototype_Component_Shader_VtxPosTex */
@@ -197,6 +202,11 @@ HRESULT CMainApp::Ready_Prototype_Components()
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxDebug.hlsl"), VTXPOS::Elements, VTXPOS::iNumElements))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_Shader_ComputeParticles*/
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_ComputeParticles"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_ComputeParticles.hlsl"), nullptr, 0))))
+		return E_FAIL;
+
 	/* For.Prototype_Component_VIBuffer_Rect */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"),
 		CVIBuffer_Rect::Create(m_pDevice, m_pContext))))
@@ -210,6 +220,11 @@ HRESULT CMainApp::Ready_Prototype_Components()
 	/* For.Prototype_Component_VIBuffer_Grid */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Grid"),
 		CVIBuffer_Grid::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_VIBuffer_Point */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Point"),
+		CVIBuffer_Point::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_VIBuffer_Rect */

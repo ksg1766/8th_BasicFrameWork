@@ -25,6 +25,8 @@
 #include "Strife_GunR.h"
 #include "Strife_Ammo_Default.h"
 #include "Strife_Ammo_Static.h"
+#include "Particle.h"
+#include "ParticleController.h"
 
 CLoader::CLoader(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: m_pDevice(pDevice)
@@ -203,6 +205,11 @@ HRESULT CLoader::Loading_Components_For_Level_GamePlay()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Ammo/Strife_Muzzle_%d.png"), 8))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_Texture_FlameMask*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_FlameMask"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Particles/FlameMask_%d.png"), 4))))
+		return E_FAIL;
+
 	/* For.Prototype_Component_StateMachine */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_StateMachine"),
 		CStateMachine::Create(m_pDevice, m_pContext))))
@@ -235,6 +242,11 @@ HRESULT CLoader::Loading_Scripts_For_Level_GamePlay()
 	/* For.Prototype_Component_MonsterController*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_MonsterController"),
 		CMonsterController::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_ParticleController*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_ParticleController"),
+		CParticleController::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_MonsterStats*/
@@ -308,6 +320,10 @@ HRESULT CLoader::Loading_GameObjects_For_Level_GamePlay()
 	
 	/* For.Prototype_GameObject_Strife_Ammo_Static */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Strife_Ammo_Static"), CStrife_Ammo_Static::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Particle */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Particle"), CParticle::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_Static */

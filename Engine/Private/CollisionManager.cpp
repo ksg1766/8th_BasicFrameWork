@@ -92,6 +92,9 @@ bool CCollisionManager::IsCollided(CCollider* pLeft, CCollider* pRight)
 
 void CCollisionManager::CheckDynamicCollision(LAYERTAG& eLayerLeft, LAYERTAG& eLayerRight , const _float& fTimeDelta)
 {
+	if (eLayerLeft == LAYERTAG::IGNORECOLLISION || eLayerRight == LAYERTAG::IGNORECOLLISION)
+		return;
+
 	map<LAYERTAG, class CLayer*>& mapLayers = CObjectManager::GetInstance()->GetCurrentLevelLayers();
 
 	auto iterL = mapLayers.find(eLayerLeft);

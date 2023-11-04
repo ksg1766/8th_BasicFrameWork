@@ -28,7 +28,7 @@ sampler PointSampler = sampler_state
 struct VS_IN
 {
     float3 vPosition : POSITION;
-    float2 vTexcoord : TEXCOORD0;
+    float2 vTexcoord : TEXCOORD0;    
 };
 
 struct VS_OUT

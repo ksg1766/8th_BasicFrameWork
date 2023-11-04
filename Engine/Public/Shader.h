@@ -21,10 +21,12 @@ public:
 	HRESULT Bind_Matrices(const _char* pConstantName, const _float4x4* pMatrices, _uint iNumMatrices) const;
 	HRESULT Bind_Texture(const _char* pConstantName, ID3D11ShaderResourceView* pSRV) const;
 	HRESULT Bind_Textures(const _char* pConstantName, ID3D11ShaderResourceView** ppSRVs, _uint iNumTextures) const;
-	
+	HRESULT Dispatch(UINT iPass, UINT iX, UINT iY, UINT iZ);
+
 	HRESULT Get_RawValue(const _char* pConstantName, OUT void* pData, _uint iLength) const;
 	HRESULT Get_Matrix(const _char* pConstantName, OUT _matrix* pMatrix) const;
 	HRESULT Get_Matrices(const _char* pConstantName, OUT _float4x4* pMatrices, _uint iNumMatrices) const;
+	HRESULT Get_UAV(const _char* pConstantName, OUT void* pData) const;
 
 	_int	GetPassIndex()					{ return m_iPassIndex; }
 	void	SetPassIndex(_int iPassIndex)	{ m_iPassIndex = iPassIndex; }

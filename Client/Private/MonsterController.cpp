@@ -4,6 +4,8 @@
 #include "GameInstance.h"
 #include "GameObject.h"
 #include "DebugDraw.h"
+#include "Particle.h"
+#include "ParticleController.h"
 
 constexpr auto EPSILON = 0.001f;
 
@@ -175,6 +177,13 @@ void CMonsterController::Attack()
 void CMonsterController::Hit(_int iDamage)
 {
 	m_pStats->Damaged(iDamage);
+
+	CParticleController::PARTICLE_DESC tParticleDesc;
+	tParticleDesc.eType = CParticleController::ParticleType::FLY;
+	tParticleDesc.vCenter = m_pTransform->GetPosition();
+	for (_int i = 0; i < 20; ++i)
+		m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Particle"), LAYERTAG::IGNORECOLLISION, &tParticleDesc);
+
 	if (m_pStats->GetHP() <= 0)
 	{
 		m_IsZeroHP = true;

@@ -211,6 +211,7 @@ call Copy.bat</Command>
     <ClInclude Include="..\Public\Socket.h" />
     <ClInclude Include="..\Public\State.h" />
     <ClInclude Include="..\Public\StateMachine.h" />
+    <ClInclude Include="..\Public\StructuredBuffer.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\Public\Transform.h" />
     <ClInclude Include="..\Public\TransformBurger.h" />
@@ -245,6 +246,7 @@ call Copy.bat</Command>
     <ClInclude Include="..\Public\VIBuffer_Cube.h" />
     <ClInclude Include="..\Public\VIBuffer_Grid.h" />
     <ClInclude Include="..\Public\VIBuffer_Instance.h" />
+    <ClInclude Include="..\Public\VIBuffer_Point.h" />
     <ClInclude Include="..\public\VIBuffer_Rect.h" />
   </ItemGroup>
   <ItemGroup>
@@ -285,6 +287,7 @@ call Copy.bat</Command>
     <ClCompile Include="..\Private\Socket.cpp" />
     <ClCompile Include="..\Private\State.cpp" />
     <ClCompile Include="..\Private\StateMachine.cpp" />
+    <ClCompile Include="..\Private\StructuredBuffer.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\Private\Transform.cpp" />
     <ClCompile Include="..\Private\TransformBurger.cpp" />
@@ -315,6 +318,7 @@ call Copy.bat</Command>
     <ClCompile Include="..\Private\VIBuffer_Cube.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Grid.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Instance.cpp" />
+    <ClCompile Include="..\Private\VIBuffer_Point.cpp" />
     <ClCompile Include="..\private\VIBuffer_Rect.cpp" />
   </ItemGroup>
   <ItemGroup>

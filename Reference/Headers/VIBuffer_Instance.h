@@ -4,10 +4,10 @@
 
 BEGIN(Engine)
 
-class ENGINE_DLL CVIBuffer_Instance final : public CVIBuffer
+class ENGINE_DLL CVIBuffer_Instance : public CVIBuffer
 {
 	using Super = CVIBuffer;
-private:
+protected:
 	CVIBuffer_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CVIBuffer_Instance(const CVIBuffer_Instance& rhs);
 	virtual ~CVIBuffer_Instance() = default;
@@ -15,6 +15,7 @@ private:
 public:
 	virtual HRESULT Initialize_Prototype()	override;
 	virtual HRESULT Initialize(void* pArg)	override;
+	HRESULT Render(class CVIBuffer_Point* pPoint);
 	HRESULT Render(class CMesh* pMesh);
 
 protected:
@@ -45,8 +46,9 @@ private:
 public:
 	void ClearData();
 	void AddData(InstancingData& data);
+	vector<InstancingData>& GetInstanceData() {	return m_vecData; }
 
-private:
+protected:
 	_uint						m_iMaxCount = 0;
 	vector<InstancingData>		m_vecData;
 

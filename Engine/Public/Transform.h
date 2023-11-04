@@ -42,8 +42,9 @@ public:
 	void	Translate(const Vec3& vTranslation)		{ Translate(const_cast<Vec3&>(vTranslation)); }
 	void	SetPosition(Vec3& vPosition)			{ m_matWorld.Translation(vPosition); }
 	void	SetPosition(const Vec3& vPosition)		{ SetPosition(const_cast<Vec3&>(vPosition)); }
-	
-	const Matrix	WorldMatrix()					{ return m_matWorld; }
+
+	//const	Matrix	WorldMatrix()					{ return m_matWorld; }
+	Matrix&	WorldMatrix()							{ return m_matWorld; }
 	void	Set_WorldMatrix(const Matrix& matWorld) { ::CopyMemory(&m_matWorld, &matWorld, sizeof(Matrix)); }
 
 	Vec3	GetLocalScale();

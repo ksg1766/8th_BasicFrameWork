@@ -232,6 +232,12 @@
     <Filter Include="03.GameObjects\01.Playable\00.P_Strife\Ammo\Static">
       <UniqueIdentifier>{ce52ed99-b126-4552-9725-dd2012f4aa24}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.GameObjects\05.Particle">
+      <UniqueIdentifier>{12377550-5943-4235-a460-ed11c4fa3ea9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\05.Particle\Script">
+      <UniqueIdentifier>{235fcff1-0585-4907-82ad-8450231857f3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -444,6 +450,12 @@
     <ClInclude Include="..\Public\Strife_Ammo_Static.h">
       <Filter>03.GameObjects\01.Playable\00.P_Strife\Ammo\Static</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Particle.h">
+      <Filter>03.GameObjects\05.Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ParticleController.h">
+      <Filter>03.GameObjects\05.Particle\Script</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -638,6 +650,12 @@
     <ClCompile Include="..\Private\Strife_Ammo_Static.cpp">
       <Filter>03.GameObjects\01.Playable\00.P_Strife\Ammo\Static</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Particle.cpp">
+      <Filter>03.GameObjects\05.Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ParticleController.cpp">
+      <Filter>03.GameObjects\05.Particle\Script</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -693,6 +711,12 @@
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNonAnimInstancing.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Point_Instance.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_ComputeParticles.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

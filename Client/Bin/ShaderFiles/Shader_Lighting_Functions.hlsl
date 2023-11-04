@@ -20,6 +20,13 @@ sampler AlphaSampler = sampler_state
     AddressV = wrap;
 };
 
+sampler PointSampler = sampler_state
+{
+    Filter = MIN_MAG_MIP_POINT;
+    AddressU = wrap;
+    AddressV = wrap;
+};
+
 void ComputeNormalMapping(inout float4 normal, float3 tangent, float2 texcoord)
 {
 	// [0,255] 범위에서 [0,1]로 변환

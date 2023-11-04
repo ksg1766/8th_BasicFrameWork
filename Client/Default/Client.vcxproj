@@ -200,6 +200,8 @@
     <ClInclude Include="..\Public\MonsterController.h" />
     <ClInclude Include="..\Public\MonsterStats.h" />
     <ClInclude Include="..\Public\NavMeshView.h" />
+    <ClInclude Include="..\Public\Particle.h" />
+    <ClInclude Include="..\Public\ParticleController.h" />
     <ClInclude Include="..\Public\P_Strife.h" />
     <ClInclude Include="..\Public\P_Strife_State_Aim.h" />
     <ClInclude Include="..\Public\P_Strife_State_Dash.h" />
@@ -273,6 +275,8 @@
     <ClCompile Include="..\Private\NavMeshView.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\Private\Particle.cpp" />
+    <ClCompile Include="..\Private\ParticleController.cpp" />
     <ClCompile Include="..\Private\P_Strife.cpp" />
     <ClCompile Include="..\Private\P_Strife_State_Aim.cpp" />
     <ClCompile Include="..\Private\P_Strife_State_Dash.cpp" />
@@ -381,6 +385,7 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Matrix.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_ComputeParticles.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Lighting_Functions.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
@@ -389,6 +394,7 @@
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       </EntryPointName>
     </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Point_Instance.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VTFSocket.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnimInstancing.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnimMesh.hlsl" />

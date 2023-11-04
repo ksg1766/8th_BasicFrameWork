@@ -17,11 +17,11 @@
 #include "ColliderCylinder.h"
 #include "MonoBehaviour.h"
 
+#include "VIBuffer_Point.h"
 #include "VIBuffer_Rect.h"
 #include "VIBuffer_Cube.h"
 #include "VIBuffer_Grid.h"
 #include "VIBuffer_Instance.h"
-
 
 
 /* 컴포넌트들의 원형을 보관한다. */

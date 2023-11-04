@@ -52,7 +52,6 @@ HRESULT CShader::Initialize_Prototype(const wstring & strShaderFilePath, const D
 		/* pTechnique->GetPassByIndex(i) : i번째 패스객체를 얻어온다. */
 		ID3DX11EffectPass*		pPass = pTechnique->GetPassByIndex(i);
 
-
 		/* 패스의 정보를 얻어온다. */
 		D3DX11_PASS_DESC		PassDesc;
 		pPass->GetDesc(&PassDesc);
@@ -60,10 +59,13 @@ HRESULT CShader::Initialize_Prototype(const wstring & strShaderFilePath, const D
 		ID3D11InputLayout*			pInputLayout = { nullptr };
 
 		/* 패스안에 선언된 정점정보와 내가 던져준 정점정보가 일치한다면 ID3D11InputLayout를 생성해준다. */
-		if (FAILED(m_pDevice->CreateInputLayout(pElements, iNumElements, PassDesc.pIAInputSignature, PassDesc.IAInputSignatureSize, &pInputLayout)))
-			return E_FAIL;
+		if (iNumElements > 0)
+		{
+			if (FAILED(m_pDevice->CreateInputLayout(pElements, iNumElements, PassDesc.pIAInputSignature, PassDesc.IAInputSignatureSize, &pInputLayout)))
+				return E_FAIL;
 
-		m_InputLayouts.push_back(pInputLayout);
+			m_InputLayouts.push_back(pInputLayout);
+		}
 	}
 
 	return S_OK;
@@ -153,6 +155,22 @@ HRESULT CShader::Bind_Textures(const _char * pConstantName, ID3D11ShaderResource
 	return pSRVariable->SetResourceArray(ppSRVs, 0, iNumTextures);	
 }
 
+HRESULT CShader::Dispatch(UINT iPass, UINT iX, UINT iY, UINT iZ)
+{
+	m_pEffect->GetTechniqueByIndex(0)->GetPassByIndex(iPass)->Apply(0, m_pContext);
+	m_pContext->Dispatch(iX, iY, iZ);
+
+	ID3D11ShaderResourceView* null[1] = { 0 };
+	m_pContext->CSSetShaderResources(0, 1, null);
+
+	ID3D11UnorderedAccessView* nullUav[1] = { 0 };
+	m_pContext->CSSetUnorderedAccessViews(0, 1, nullUav, NULL);
+
+	m_pContext->CSSetShader(NULL, NULL, 0);
+
+	return S_OK;
+}
+
 HRESULT CShader::Get_RawValue(const _char* pConstantName, OUT void* pData, _uint iLength) const
 {
 	ID3DX11EffectVariable* pVariable = m_pEffect->GetVariableByName(pConstantName);
@@ -190,6 +208,19 @@ HRESULT CShader::Get_Matrices(const _char* pConstantName, OUT _float4x4* pMatric
 		return E_FAIL;
 
 	return pMatrix->GetMatrixArray((_float*)pMatrices, 0, iNumMatrices);
+}
+
+HRESULT CShader::Get_UAV(const _char* pConstantName, OUT void* pData) const
+{
+	ID3DX11EffectVariable* pVariable = m_pEffect->GetVariableByName(pConstantName);
+	if (nullptr == pVariable)
+		return E_FAIL;
+
+	ID3DX11EffectUnorderedAccessViewVariable* pUAV = pVariable->AsUnorderedAccessView();
+	if (nullptr == pUAV)
+		return E_FAIL;
+
+	return pUAV->SetUnorderedAccessView((ID3D11UnorderedAccessView*)pData);
 }
 
 CShader * CShader::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext, const wstring & strShaderFilePath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements, _bool pArg)

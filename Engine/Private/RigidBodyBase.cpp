@@ -43,9 +43,9 @@ void CRigidBody::DebugRender()
 
 HRESULT CRigidBody::InitializeCollider()
 {
-	m_pSphereCollider = dynamic_cast<CSphereCollider*>(CComponentManager::GetInstance()
+	m_pSphereCollider = static_cast<CSphereCollider*>(CComponentManager::GetInstance()
 		->Clone_Component(m_pGameObject, 0, TEXT("Prototype_Component_SphereCollider"), nullptr));
-	m_pOBBCollider = dynamic_cast<COBBCollider*>(CComponentManager::GetInstance()
+	m_pOBBCollider = static_cast<COBBCollider*>(CComponentManager::GetInstance()
 		->Clone_Component(m_pGameObject, 0, TEXT("Prototype_Component_OBBCollider"), nullptr));
 
 	if (!m_pSphereCollider || !m_pOBBCollider)

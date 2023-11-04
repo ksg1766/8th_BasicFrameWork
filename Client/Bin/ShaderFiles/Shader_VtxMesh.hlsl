@@ -18,12 +18,6 @@ vector			g_vMtrlEmissive = vector(1.f, 0.f, 0.f, 1.f);
 
 vector			g_vCamPosition;
 
-sampler PointSampler = sampler_state {
-	Filter = MIN_MAG_MIP_POINT;
-	AddressU = wrap;
-	AddressV = wrap;
-};
-
 struct VS_IN
 {
 	float3		vPosition : POSITION;

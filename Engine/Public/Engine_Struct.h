@@ -152,17 +152,17 @@ namespace Engine
 
 	}VTXCUBENOM;
 
-	/*typedef struct ENGINE_DLL tagVertex_Mesh
+	typedef struct ENGINE_DLL tagVertex_Position_Size
 	{
 		XMFLOAT3		vPosition;
-		XMFLOAT3		vNormal;
-		XMFLOAT2		vTexcoord;
-		XMFLOAT3		vTangent;
+		XMFLOAT2		vPSize;
+		// Instance
+		XMFLOAT4X4		matWorld;
 
-		static const _uint				iNumElements = 4;
+		static const unsigned int				iNumElements = 6;
 		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
 
-	}VTXMESH;*/
+	}VTXPOINT;
 
 	typedef struct ENGINE_DLL tagVertex_Mesh
 	{
@@ -177,19 +177,6 @@ namespace Engine
 		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
 
 	}VTXMESH;
-
-	//typedef struct ENGINE_DLL tagVertex_Anim_Mesh
-	//{
-	//	XMFLOAT3		vPosition;
-	//	XMFLOAT3		vNormal;
-	//	XMFLOAT2		vTexture;
-	//	XMFLOAT3		vTangent;
-	//	XMUINT4			vBlendIndex; /* 이 정점에 영향을 주는 뼈의 인덱스 네개. */
-	//	XMFLOAT4		vBlendWeight; /* 영향르 주고 있는 각 뼈대의 영향 비율 */
-
-	//	static const _uint iNumElements = 6;
-	//	static const D3D11_INPUT_ELEMENT_DESC Elements[iNumElements];
-	//}VTXANIMMESH;
 
 	typedef struct ENGINE_DLL tagVertex_Anim_Mesh
 	{

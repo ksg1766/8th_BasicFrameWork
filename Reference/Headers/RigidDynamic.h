@@ -40,6 +40,9 @@ public:
 	void	SetMass(_float fMass)						{ m_fMass = fMass; }
 	_float	GetDrag()	const							{ return m_fDrag; }
 	_float	GetAngularDrag()	const					{ return m_fAngularDrag; }
+	void	SetMaterialDrag(_float fMaterialDrag)		{ m_fMaterialDrag = fMaterialDrag; }
+	void	SetMaterialAngularDrag(_float fMaterialAngularDrag)	
+														{ m_fMaterialAngularDrag = fMaterialAngularDrag; }
 
 	_bool	IsFrozePosition(Axis eAxis)					{ return m_byConstraints & 1 << (_int)eAxis; }
 	void	FreezePosition(Axis eAxis)					{ m_byConstraints ^= 1 << (_int)eAxis; }		// Switch On/Off
