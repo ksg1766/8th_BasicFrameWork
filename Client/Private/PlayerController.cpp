@@ -190,7 +190,7 @@ void CPlayerController::Jump()
 	m_pRigidBody->UseGravity(true);
 	m_pRigidBody->ClearForce(ForceMode::FORCE);
 	m_pRigidBody->ClearForce(ForceMode::IMPULSE);
-	m_pRigidBody->AddForce(10.f * Vec3::UnitY, ForceMode::IMPULSE);
+	m_pRigidBody->AddForce(12.f * Vec3::UnitY, ForceMode::IMPULSE);
 }
 
 void CPlayerController::Land()

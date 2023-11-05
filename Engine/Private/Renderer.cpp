@@ -124,7 +124,7 @@ HRESULT CRenderer::Render_NonBlend_Instance()
 
 		const InstanceID instanceId = mapIter.first;
 
-		CGameObject*& pChief = vecInstances[0];
+		CGameObject*& pHead = vecInstances[0];
 
 		for (_int i = 0; i < vecInstances.size(); i++)
 		{
@@ -135,7 +135,7 @@ HRESULT CRenderer::Render_NonBlend_Instance()
 			AddInstanceData(instanceId, data);
 		}
 
-		if (pChief->GetModel()->IsAnimModel())
+		if (pHead->GetModel()->IsAnimModel())
 		{// INSTANCING
 			InstancedTweenDesc* tweenDesc = new InstancedTweenDesc;
 			for (_int i = 0; i < vecInstances.size(); i++)
@@ -144,14 +144,14 @@ HRESULT CRenderer::Render_NonBlend_Instance()
 				tweenDesc->tweens[i] = pGameObject->GetModel()->GetTweenDesc();	// 소켓 아이템의 경우 어떻게 할지.(굳이 인스턴싱이 필요 없을 듯 함 근데.)
 			}
 
-			pChief->GetModel()->PushTweenData(*tweenDesc);
+			pHead->GetModel()->PushTweenData(*tweenDesc);
 
 			Safe_Delete(tweenDesc);
 		}
 
-		pChief->RenderInstance();	// BindShaderResource 호출을 위함.
+		pHead->RenderInstance();	// BindShaderResource 호출을 위함.
 		CVIBuffer_Instance*& buffer = m_InstanceBuffers[instanceId];
-		pChief->GetModel()->RenderInstancing(buffer);
+		pHead->GetModel()->RenderInstancing(buffer);
 	}
 
 	m_RenderObjects[RG_NONBLEND_INSTANCE].clear();
@@ -182,8 +182,8 @@ HRESULT CRenderer::Render_Particle_Instance()
 
 		const InstanceID instanceId = mapIter.first;
 
-		CGameObject*& pChief = vecInstances[0];
-		CVIBuffer_Point* pPointBuffer = static_cast<CVIBuffer_Point*>(pChief->GetBuffer());
+		CGameObject*& pHead = vecInstances[0];
+		CVIBuffer_Point* pPointBuffer = static_cast<CVIBuffer_Point*>(pHead->GetBuffer());
 
 		for (_int i = 0; i < vecInstances.size(); i++)
 		{
@@ -212,11 +212,15 @@ HRESULT CRenderer::Render_Particle_Instance()
 		pShader->Dispatch(0, 1, 1, 1);
 
 		// Output
-		//vector<InstancingData> vecInstanceData(iDataSize);
+		//vector<InstancingData> vecInstanceDataOut(iDataSize);
 		pStructuredBuffer->CopyFromOutput(vecInstanceData.data());
 
+		for (_int i = 0; i < vecInstances.size(); ++i)
+		{
+			vecInstances[i]->GetTransform()->Set_WorldMatrix(vecInstanceData[i].matWorld);
+		}
 		//////////
-		pChief->RenderInstance();	// BindShaderResource 호출을 위함.
+		pHead->RenderInstance();	// BindShaderResource 호출을 위함.
 		CVIBuffer_Instance*& buffer = m_InstanceBuffers[instanceId];
 		buffer->Render(pPointBuffer);
 
