@@ -239,6 +239,7 @@
     <ClInclude Include="..\Public\Strife_Ammo_Static.h" />
     <ClInclude Include="..\Public\Strife_GunL.h" />
     <ClInclude Include="..\Public\Strife_GunR.h" />
+    <ClInclude Include="..\Public\Strife_MotionTrail.h" />
     <ClInclude Include="..\Public\TempCube.h" />
     <ClInclude Include="..\Public\TestAIController.h" />
     <ClInclude Include="..\Public\ViewMediator.h" />
@@ -314,6 +315,7 @@
     <ClCompile Include="..\Private\Strife_Ammo_Static.cpp" />
     <ClCompile Include="..\Private\Strife_GunL.cpp" />
     <ClCompile Include="..\Private\Strife_GunR.cpp" />
+    <ClCompile Include="..\Private\Strife_MotionTrail.cpp" />
     <ClCompile Include="..\Private\TempCube.cpp" />
     <ClCompile Include="..\Private\TestAIController.cpp" />
     <ClCompile Include="..\Private\ViewMediator.cpp" />

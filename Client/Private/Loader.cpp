@@ -27,6 +27,7 @@
 #include "Strife_Ammo_Static.h"
 #include "Particle.h"
 #include "ParticleController.h"
+#include "Strife_MotionTrail.h"
 
 CLoader::CLoader(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: m_pDevice(pDevice)
@@ -324,6 +325,10 @@ HRESULT CLoader::Loading_GameObjects_For_Level_GamePlay()
 
 	/* For.Prototype_GameObject_Particle */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Particle"), CParticle::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Strife_MotionTrail */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Strife_MotionTrail"), CStrife_MotionTrail::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_Static */

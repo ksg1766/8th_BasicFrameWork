@@ -7,7 +7,7 @@
 BEGIN(Engine)
 
 class CModel;
-class CMesh final : public CVIBuffer
+class ENGINE_DLL CMesh final : public CVIBuffer
 {
 	using Super = CVIBuffer;
 private:

@@ -61,6 +61,16 @@ struct VS_OUT
     float3 vTangent : TANGENT;
 };
 
+struct VS_OUT_ALPHA
+{
+    float4 vPosition : SV_POSITION;
+    float4 vNormal : NORMAL;
+    float2 vTexcoord : TEXCOORD0;
+    float4 vWorldPos : TEXCOORD1;
+    float3 vTangent : TANGENT;
+    float4 vProjPos : TEXCOORD2;
+};
+
 matrix GetAnimationMatrix(VS_IN input)
 {
     float indices[4] = { input.vBlendIndex.x, input.vBlendIndex.y, input.vBlendIndex.z, input.vBlendIndex.w };
@@ -151,6 +161,30 @@ VS_OUT VS_MAIN(VS_IN In)
     return Out;
 }
 
+VS_OUT VS_MAIN_ALPHA(VS_IN In)
+{
+    VS_OUT_ALPHA Out = (VS_OUT) 0;
+
+    matrix matWV, matWVP;
+
+    matWV = mul(g_WorldMatrix, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
+
+    matrix m = GetAnimationMatrix(In);
+    
+    vector vPosition = mul(vector(In.vPosition, 1.f), m);
+    vector vNormal = mul(vector(In.vNormal, 0.f), m);
+
+    Out.vPosition = mul(vPosition, matWVP);
+    Out.vNormal = normalize(mul(vNormal, g_WorldMatrix));
+    Out.vTexcoord = In.vTexcoord;
+    Out.vWorldPos = mul(float4(In.vPosition, 1.f), g_WorldMatrix);
+    Out.vTangent = normalize(mul(float4(In.vTangent, 0.f), g_WorldMatrix)).xyz;
+    Out.vProjPos = Out.vPosition;
+
+    return Out;
+}
+
 struct PS_IN
 {
     float4 vPosition : SV_POSITION;
@@ -158,6 +192,16 @@ struct PS_IN
     float2 vTexcoord : TEXCOORD0;
     float4 vWorldPos : TEXCOORD1;
     float3 vTangent : TANGENT;
+};
+
+struct PS_IN_ALPHA
+{
+    float4 vPosition : SV_POSITION;
+    float4 vNormal : NORMAL;
+    float2 vTexcoord : TEXCOORD0;
+    float4 vWorldPos : TEXCOORD1;
+    float3 vTangent : TANGENT;
+    float4 vProjPos : TEXCOORD2;
 };
 
 struct PS_OUT
@@ -253,6 +297,41 @@ PS_OUT PS_DISSOLVE_MAIN(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_ALPHA_MAIN(PS_IN_ALPHA In)
+{
+    ComputeNormalMapping(In.vNormal, In.vTangent, In.vTexcoord);
+	
+    PS_OUT Out = (PS_OUT) 0;
+	
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
+
+    if (vMtrlDiffuse.a < 0.3f)
+        discard;
+	
+    float2 vProjPos = In.vProjPos.xy / In.vProjPos.w;
+    
+    float2 vTexUV;
+
+    vTexUV.x = vProjPos.x * 0.5f + 0.5f;
+    vTexUV.y = vProjPos.y * -0.5f + 0.5f;
+    //
+    
+    vector vShade = max(dot(normalize(g_vLightDir) * -1.f, normalize(In.vNormal)), 0.f) +
+		g_vLightAmbient * g_vMtrlAmbient;
+
+    vector vReflect = reflect(normalize(g_vLightDir), normalize(In.vNormal));
+    vector vLook = In.vWorldPos - g_vCamPosition;
+
+    float fSpecular = pow(max(dot(normalize(vLook) * -1.f, normalize(vReflect)), 0.f), 30.f);
+
+    Out.vColor = (g_vLightDiffuse * vMtrlDiffuse) * saturate(vShade) +
+		(g_vLightSpecular * g_vMtrlSpecular) * fSpecular;
+    
+    Out.vColor.a = 0.1f;
+    
+    return Out;
+}
+
 technique11 DefaultTechnique
 {
     pass Mesh
@@ -286,5 +365,18 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_DISSOLVE_MAIN();
+    }
+
+    pass AlphaMesh
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_ALPHA_MAIN();
     }
 }

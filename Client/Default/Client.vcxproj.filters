@@ -238,6 +238,9 @@
     <Filter Include="03.GameObjects\05.Particle\Script">
       <UniqueIdentifier>{235fcff1-0585-4907-82ad-8450231857f3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.GameObjects\01.Playable\00.P_Strife\MotionTrail">
+      <UniqueIdentifier>{c9d6acb2-b31e-4b9c-9e63-eea59647ce87}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -456,6 +459,9 @@
     <ClInclude Include="..\Public\ParticleController.h">
       <Filter>03.GameObjects\05.Particle\Script</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Strife_MotionTrail.h">
+      <Filter>03.GameObjects\01.Playable\00.P_Strife\MotionTrail</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -655,6 +661,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\ParticleController.cpp">
       <Filter>03.GameObjects\05.Particle\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Strife_MotionTrail.cpp">
+      <Filter>03.GameObjects\01.Playable\00.P_Strife\MotionTrail</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

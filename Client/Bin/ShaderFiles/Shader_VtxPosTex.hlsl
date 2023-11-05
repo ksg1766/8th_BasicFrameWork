@@ -1,4 +1,5 @@
-
+#include "Client_Shader_Defines.hlsl"
+#include "Shader_Lighting_Functions.hlsl"
 /* 상수테이블. */
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
@@ -10,20 +11,6 @@ Texture2D g_Textures[2];
 
 float2 g_UVoffset = float2(0.f, 0.f);
 // textureCUBE
-
-
-sampler LinearSampler = sampler_state
-{
-    Filter = MIN_MAG_MIP_LINEAR;
-    AddressU = wrap;
-    AddressV = wrap;
-};
-
-sampler PointSampler = sampler_state
-{
-    Filter = MIN_MAG_MIP_POINT;
-};
-
 
 struct VS_IN
 {

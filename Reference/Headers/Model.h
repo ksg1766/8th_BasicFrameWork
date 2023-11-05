@@ -100,6 +100,7 @@ private:
 
 public:
 	_uint			GetNumMeshes() const					{ return (_uint)m_Meshes.size(); }
+	vector<CMesh*>& GetMeshes()								{ return m_Meshes; }
 	_uint			GetMaterialIndex(_uint iMeshIndex);
 	CBone*			GetBone(const _char* pNodeName);
 	CBone*			GetBone(const _int& iIndex);
@@ -118,6 +119,7 @@ public:
 	vector<FACEINDICES32>&	GetSurfaceIdx()					{ return m_vecSurfaceIdx; }
 
 public:
+	ID3D11ShaderResourceView*& GetSRV()						{ return m_pSRV; }
 	void			SetAnimation(_int iAnimIndex)			{ m_iCurrentAnimIndex = iAnimIndex; }
 	void			SetNextAnimationIndex(_int iAnimIndex);
 	void			SetTweenDesc(TweenDesc& TweenDesc)		{ m_TweenDesc = TweenDesc; }
