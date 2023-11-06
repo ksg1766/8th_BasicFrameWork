@@ -267,8 +267,8 @@ PS_OUT PS_ALPHA_MAIN(PS_IN In)
 
     Out.vColor = (g_vLightDiffuse * vMtrlDiffuse) * saturate(vShade);
     
-    Out.vColor.b += 0.2f;
-    Out.vColor.a = 0.4f;
+    Out.vColor.b += 0.18f;
+    Out.vColor.a = 0.45f;
     
     return Out;
 }

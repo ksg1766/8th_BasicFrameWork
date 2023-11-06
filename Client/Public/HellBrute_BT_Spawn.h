@@ -4,14 +4,14 @@
 
 BEGIN(Client)
 
-class CHellHound_BT_Hit : public CBT_Action
+class CHellBrute_BT_Spawn : public CBT_Action
 {
 	using Super = CBT_Action;
-private:
-	CHellHound_BT_Hit();
-	CHellHound_BT_Hit(const CHellHound_BT_Hit& rhs) = delete;
-	virtual ~CHellHound_BT_Hit() = default;
-	
+protected:
+	CHellBrute_BT_Spawn();
+	CHellBrute_BT_Spawn(const CHellBrute_BT_Spawn& rhs) = delete;
+	virtual ~CHellBrute_BT_Spawn() = default;
+
 	virtual void		ConditionalAbort(const _float& fTimeDelta);
 
 	virtual void		OnStart()							override;
@@ -19,7 +19,7 @@ private:
 	virtual void		OnEnd()								override;
 
 public:
-	static	CHellHound_BT_Hit* Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController);
+	static	CHellBrute_BT_Spawn* Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController);
 	virtual void Free() override;
 };
 

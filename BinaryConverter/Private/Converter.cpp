@@ -470,16 +470,16 @@ HRESULT CConverter::Read_MaterialData()
 					material->diffuseFilePath = filesystem::path(name).filename().string();
 				}
 
-				if (aiReturn_SUCCESS == srcMaterial->GetTexture(aiTextureType_SPECULAR, 0, &file))
-				{
-					name = file.C_Str();
-					material->specularFilePath = filesystem::path(name).filename().string();
-				}
-
 				if (aiReturn_SUCCESS == srcMaterial->GetTexture(aiTextureType_NORMALS, 0, &file))
 				{
 					name = file.C_Str();
 					material->normalFilePath = filesystem::path(name).filename().string();
+				}
+
+				if (aiReturn_SUCCESS == srcMaterial->GetTexture(aiTextureType_EMISSIVE, 0, &file))
+				{
+					name = file.C_Str();
+					material->emissiveFilePath = filesystem::path(name).filename().string();
 				}
 			}
 		}
@@ -522,14 +522,14 @@ HRESULT CConverter::Write_MaterialData(wstring srcPath, wstring savePath)
 				filesystem::copy(filesystem::path(finalSrcPath), filesystem::path(finalSavePath));
 		}
 
-		if (!material->specularFilePath.empty())
+		if (!material->emissiveFilePath.empty())
 		{
 			/* Specular */
-			finalSrcPath = srcPath + TEXT("/") + Utils::ToWString(material->specularFilePath);
+			finalSrcPath = srcPath + TEXT("/") + Utils::ToWString(material->emissiveFilePath);
 			finalSrcPath = filesystem::absolute(finalSrcPath).wstring();
 			finalSavePath = filesystem::absolute(savePath).wstring();
 
-			filePath = finalSavePath + TEXT("\\") + Utils::ToWString(material->specularFilePath);
+			filePath = finalSavePath + TEXT("\\") + Utils::ToWString(material->emissiveFilePath);
 			if (!filesystem::exists(filePath))
 				filesystem::copy(filesystem::path(finalSrcPath), filesystem::path(finalSavePath));
 		}
@@ -547,8 +547,8 @@ HRESULT CConverter::Write_MaterialData(wstring srcPath, wstring savePath)
 	for (shared_ptr<asMaterial> material : _materials)
 	{
 		if (!material->diffuseFilePath.empty()) { file->Write<string>(material->diffuseFilePath); }
-		if (!material->specularFilePath.empty()) { file->Write<string>(material->specularFilePath); }
 		if (!material->normalFilePath.empty()) { file->Write<string>(material->normalFilePath); }
+		//if (!material->emissiveFilePath.empty()) { file->Write<string>(material->emissiveFilePath); }
 	}
 
 	return S_OK;

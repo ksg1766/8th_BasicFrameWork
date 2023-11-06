@@ -80,7 +80,19 @@ void CMainCameraController::Trace(const _float& fTimeDelta)
 	m_pTransform->SetPosition(m_vOffset + vTargetPos);
 
 	vDist.Normalize();
-	m_pTransform->SetForward(vDist);
+	
+	Matrix& matWorld = m_pTransform->WorldMatrix();
+
+	_float fRight = matWorld.Right().Length();
+	_float fUp = matWorld.Up().Length();
+	_float fLook = matWorld.Backward().Length();
+
+	matWorld.Backward(fLook * vDist);
+	Vec3 vRight = Vec3::UnitY.Cross(vDist);
+	vRight.Normalize();
+	matWorld.Right(fRight * vRight);
+	Vec3 vUp = vDist.Cross(vRight);
+	matWorld.Up(fUp * vUp);
 }
 
 CMainCameraController* CMainCameraController::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

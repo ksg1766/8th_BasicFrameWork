@@ -21,10 +21,11 @@
 #include "StaticBase.h"
 #include "P_Strife.h"
 #include "HellHound.h"
+#include "HellBrute.h"
 #include "Strife_GunL.h"
 #include "Strife_GunR.h"
 #include "Strife_Ammo_Default.h"
-#include "Strife_Ammo_Static.h"
+#include "Strife_Ammo_Beam.h"
 #include "Particle.h"
 #include "ParticleController.h"
 #include "Strife_MotionTrail.h"
@@ -126,7 +127,7 @@ HRESULT CLoader::Loading_Components_For_Level_Logo()
 
 	/* For.Prototype_Component_Texture_BackGround */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_LOGO, TEXT("Prototype_Component_Texture_BackGround"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Default%d.jpg"), 2))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/TitleMenu.png")))))
 		return E_FAIL;
 
 	RELEASE_INSTANCE(CGameInstance);
@@ -197,8 +198,13 @@ HRESULT CLoader::Loading_Components_For_Level_GamePlay()
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_Strife_Ammo_Static*/
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Strife_Ammo_Static"),
+	/*if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Strife_Ammo_Static"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Ammo/Strife_Ammo_Static_%d.png"), 9))))
+		return E_FAIL;*/
+	
+	/* For.Prototype_Component_Texture_Strife_Ammo_Static*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Strife_Ammo_Beam"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Ammo/Strife_Ammo_Beam_%d.png"), 2))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_Strife_Muzzle_Default*/
@@ -307,6 +313,10 @@ HRESULT CLoader::Loading_GameObjects_For_Level_GamePlay()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_HellHound"), CHellHound::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 	
+	/* For.Prototype_GameObject_HellBrute */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_HellBrute"), CHellBrute::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	
 	/* For.Prototype_GameObject_Strife_GunL */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Strife_GunL"), CStrife_GunL::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
@@ -320,8 +330,12 @@ HRESULT CLoader::Loading_GameObjects_For_Level_GamePlay()
 		return E_FAIL;
 	
 	/* For.Prototype_GameObject_Strife_Ammo_Static */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Strife_Ammo_Static"), CStrife_Ammo_Static::Create(m_pDevice, m_pContext))))
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Strife_Ammo_Beam"), CStrife_Ammo_Beam::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
+	/* For.Prototype_GameObject_Strife_Ammo_Static */
+	/*if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Strife_Ammo_Static"), CStrife_Ammo_Static::Create(m_pDevice, m_pContext))))
+		return E_FAIL;*/
 
 	/* For.Prototype_GameObject_Particle */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Particle"), CParticle::Create(m_pDevice, m_pContext))))
@@ -447,6 +461,10 @@ HRESULT CLoader::Loading_GameObjects_For_Level_GameTool()
 
 	/* For.Prototype_GameObject_HellHound */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_HellHound"), CHellHound::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_HellBrute */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_HellBrute"), CHellBrute::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_Strife_Ammo_Default */

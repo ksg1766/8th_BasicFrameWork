@@ -1,19 +1,19 @@
 #include "stdafx.h"
-#include "HellHound_BT_Attack.h"
+#include "HellBrute_BT_Melee.h"
 #include "GameInstance.h"
 #include "GameObject.h"
 #include "MonsterController.h"
 
-CHellHound_BT_Attack::CHellHound_BT_Attack()
+CHellBrute_BT_Melee::CHellBrute_BT_Melee()
 {
 }
 
-void CHellHound_BT_Attack::OnStart()
+void CHellBrute_BT_Melee::OnStart()
 {
 	Super::OnStart(0);
 }
 
-CBT_Node::BT_RETURN CHellHound_BT_Attack::OnUpdate(const _float& fTimeDelta)
+CBT_Node::BT_RETURN CHellBrute_BT_Melee::OnUpdate(const _float& fTimeDelta)
 {
 	ConditionalAbort(fTimeDelta);
 	if (IsZeroHP())
@@ -35,26 +35,23 @@ CBT_Node::BT_RETURN CHellHound_BT_Attack::OnUpdate(const _float& fTimeDelta)
 
 		const Vec3& vTargetPos = GET_VALUE(CGameObject, target)->GetTransform()->GetPosition();
 		const Vec3& vCurPos = m_pGameObject->GetTransform()->GetPosition();
-
-		pController->GetMoveMessage(vTargetPos - vCurPos);
 	}
 
 	m_fTimeSum += fTimeDelta;
 
 	return BT_RUNNING;
-	// BT_FAIL 은 중간에 맞았을 때 해주자
 }
 
-void CHellHound_BT_Attack::OnEnd()
+void CHellBrute_BT_Melee::OnEnd()
 {
 	Super::OnEnd();
 }
 
-void CHellHound_BT_Attack::ConditionalAbort(const _float& fTimeDelta)
+void CHellBrute_BT_Melee::ConditionalAbort(const _float& fTimeDelta)
 {
 }
 
-_bool CHellHound_BT_Attack::IsZeroHP()
+_bool CHellBrute_BT_Melee::IsZeroHP()
 {
 	if(static_cast<CMonsterController*>(m_pController)->IsZeroHP())
 		return true;
@@ -62,20 +59,20 @@ _bool CHellHound_BT_Attack::IsZeroHP()
 	return false;
 }
 
-CHellHound_BT_Attack* CHellHound_BT_Attack::Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController)
+CHellBrute_BT_Melee* CHellBrute_BT_Melee::Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController)
 {
-	CHellHound_BT_Attack* pInstance = new CHellHound_BT_Attack;
+	CHellBrute_BT_Melee* pInstance = new CHellBrute_BT_Melee;
 
 	if (FAILED(pInstance->Initialize(pGameObject, pBehaviorTree, tBehaveAnim, pController)))
 	{
-		MSG_BOX("Failed to Created : CHellHound_BT_Attack");
+		MSG_BOX("Failed to Created : CHellBrute_BT_Melee");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CHellHound_BT_Attack::Free()
+void CHellBrute_BT_Melee::Free()
 {
 	Super::Free();
 }

@@ -118,9 +118,16 @@ void CMonsterController::DebugRender()
 
 	m_pBatch->Begin();
 
-	DX::DrawRing(m_pBatch, GetTransform()->GetPosition(), Vec3(10.f, 0.f, 0.f), Vec3(0.f, 0.f, 10.f), Colors::Red);
-	DX::DrawRing(m_pBatch, GetTransform()->GetPosition(), Vec3(4.f, 0.f, 0.f), Vec3(0.f, 0.f, 4.f), Colors::Blue);
-
+	if (TEXT("HellHound") == m_pGameObject->GetObjectTag())
+	{
+		DX::DrawRing(m_pBatch, GetTransform()->GetPosition(), Vec3(10.f, 0.f, 0.f), Vec3(0.f, 0.f, 10.f), Colors::Red);
+		DX::DrawRing(m_pBatch, GetTransform()->GetPosition(), Vec3(4.f, 0.f, 0.f), Vec3(0.f, 0.f, 4.f), Colors::Blue);
+	}
+	else if (TEXT("HellBrute") == m_pGameObject->GetObjectTag())
+	{
+		DX::DrawRing(m_pBatch, GetTransform()->GetPosition(), Vec3(14.f, 0.f, 0.f), Vec3(0.f, 0.f, 14.f), Colors::Red);
+		DX::DrawRing(m_pBatch, GetTransform()->GetPosition(), Vec3(4.f, 0.f, 0.f), Vec3(0.f, 0.f, 4.f), Colors::Blue);
+	}
 	m_pBatch->End();
 #endif // DEBUG
 }
@@ -172,6 +179,14 @@ void CMonsterController::Translate(const _float& fTimeDelta)
 
 void CMonsterController::Attack()
 {
+	/*if (TEXT("HellHound") == m_pGameObject->GetObjectTag())
+	{
+		
+	}
+	else if (TEXT("HellBrute") == m_pGameObject->GetObjectTag())
+	{
+		if ()
+	}*/
 }
 
 void CMonsterController::Hit(_int iDamage)

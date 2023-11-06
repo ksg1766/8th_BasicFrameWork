@@ -207,7 +207,7 @@ void CPlayerController::Dash(const Vec3& vDir)
 	m_pRigidBody->ClearForce(ForceMode::IMPULSE);
 	m_pRigidBody->IsKinematic(false);
 	m_pRigidBody->UseGravity(false);
-	m_pRigidBody->AddForce(30.f * m_pTransform->GetForward(), ForceMode::IMPULSE);
+	m_pRigidBody->AddForce(35.f * m_pTransform->GetForward(), ForceMode::IMPULSE);
 }
 
 void CPlayerController::DashEnd()
@@ -234,42 +234,41 @@ void CPlayerController::Fire(CStrife_Ammo::AmmoType eAmmoType)
 		m_bFireLR = !m_bFireLR;
 		break;
 
-	case CStrife_Ammo::AmmoType::STATIC:
+	case CStrife_Ammo::AmmoType::BEAM:
+		tProps = { eAmmoType, 4, 0, 5, m_pTransform->GetForward(), false, 0.f };
+		pAmmo = m_pGameInstance->CreateObject(L"Prototype_GameObject_Strife_Ammo_Beam", LAYERTAG::EQUIPMENT, &tProps);
+		vFireOffset = m_pTransform->GetPosition() + 21.f * m_pTransform->GetForward() + 1.7f * m_pTransform->GetUp();
+		break;
+
+	/*case CStrife_Ammo::AmmoType::STATIC:
 		tProps = { eAmmoType, 4, 0, 10, m_pTransform->GetForward(), false, 0.f };
 		pAmmo = m_pGameInstance->CreateObject(L"Prototype_GameObject_Strife_Ammo_Static", LAYERTAG::EQUIPMENT, &tProps);
 		vFireOffset = m_pTransform->GetPosition() + 2.f * m_pTransform->GetForward() + 1.7f * m_pTransform->GetUp();
 		break;
 
-	/*case CStrife_Ammo::AmmoType::CHARGE:
-		CStrife_Ammo::AMMOPROPS tPros{ eAmmoType, 4, 0, 1, 10.f * m_pTransform->GetForward(), false, 5.f };
+	*case CStrife_Ammo::AmmoType::CHARGE:
+		CStrife_Ammo::AMMOPROPS tProps{ eAmmoType, 4, 0, 1, 10.f * m_pTransform->GetForward(), false, 5.f };
 		pAmmo = m_pGameInstance->CreateObject(L"Prototype_GameObject_Strife_Ammo_Charge", LAYERTAG::EQUIPMENT, &tProps);
 		break;
 
 	case CStrife_Ammo::AmmoType::GRAVITY:
-		CStrife_Ammo::AMMOPROPS tPros{ eAmmoType, 4, 0, 1, 10.f * m_pTransform->GetForward(), false, 5.f };
+		CStrife_Ammo::AMMOPROPS tProps{ eAmmoType, 4, 0, 1, 10.f * m_pTransform->GetForward(), false, 5.f };
 		pAmmo = m_pGameInstance->CreateObject(L"Prototype_GameObject_Strife_Ammo_Gravity", LAYERTAG::EQUIPMENT, &tProps);
 		break;
 
 	case CStrife_Ammo::AmmoType::NATURE:
-		CStrife_Ammo::AMMOPROPS tPros{ eAmmoType, 4, 0, 1, 10.f * m_pTransform->GetForward(), false, 5.f };
+		CStrife_Ammo::AMMOPROPS tProps{ eAmmoType, 4, 0, 1, 10.f * m_pTransform->GetForward(), false, 5.f };
 		pAmmo = m_pGameInstance->CreateObject(L"Prototype_GameObject_Strife_Ammo_Nature", LAYERTAG::EQUIPMENT, &tProps);
 		break;
 
-	case CStrife_Ammo::AmmoType::BEAM:
-		CStrife_Ammo::AMMOPROPS tPros{ eAmmoType, 4, 0, 1, 10.f * m_pTransform->GetForward(), false, 5.f };
-		pAmmo = m_pGameInstance->CreateObject(L"Prototype_GameObject_Strife_Ammo_Beam", LAYERTAG::EQUIPMENT, &tProps);
-		break;
-
 	case CStrife_Ammo::AmmoType::LAVA:
-		CStrife_Ammo::AMMOPROPS tPros{ eAmmoType, 4, 0, 1, 10.f * m_pTransform->GetForward(), false, 5.f };
+		CStrife_Ammo::AMMOPROPS tProps{ eAmmoType, 4, 0, 1, 10.f * m_pTransform->GetForward(), false, 5.f };
 		pAmmo = m_pGameInstance->CreateObject(L"Prototype_GameObject_Strife_Ammo_Lava", LAYERTAG::EQUIPMENT, &tProps);
 		break;*/
 	}
 
 	pAmmo->GetTransform()->Rotate(qRot);
 	pAmmo->GetTransform()->SetPosition(vFireOffset);
-
-	m_bFireLR = !m_bFireLR;
 }
 
 _bool CPlayerController::Pick(_uint screenX, _uint screenY, Vec3& pickPos, _float& distance)

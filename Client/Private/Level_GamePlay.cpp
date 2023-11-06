@@ -192,8 +192,12 @@ HRESULT CLevel_GamePlay::Ready_Layer_UnitGround()
 
 	for (_int i = 0; i < 1; ++i)
 	{
-		pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_HellHound"));
+		//pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_HellHound"));
+		//if (nullptr == pGameObject)	return E_FAIL;
+		
+		pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_HellBrute"));
 		if (nullptr == pGameObject)	return E_FAIL;
+
 		/*_int iRandomPosX = (rand() * i) % 16 - 8;
 		_int iRandomPosZ = (rand() * i) % 16 - 8;
 		_int iRandomAnimIndex = abs(rand()) * i;

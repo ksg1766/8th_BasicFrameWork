@@ -24,7 +24,7 @@ public:
 
 		_float3			vCenter = _float3(0.f, 0.f, 0.f);
 		_float3			vRange = _float3(2.f, 1.f, 2.f);
-		_float3			vSpeedMin = _float3(-5.f, 8.f, -5.f), vSpeedMax = _float3(5.f, 12.f, 5.f);
+		_float3			vSpeedMin = _float3(-5.f, 4.f, -5.f), vSpeedMax = _float3(5.f, 6.f, 5.f);
 		_float			fScaleMin = 0.1f, fScaleMax = 0.2f;
 		_float			fLifeTimeMin = 1.f, fLifeTimeMax = 2.f;
 	}PARTICLE_DESC;

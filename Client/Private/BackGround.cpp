@@ -30,7 +30,6 @@ HRESULT CBackGround::Initialize(void* pArg)
 
 void CBackGround::Tick(const _float& fTimeDelta)
 {
-	int a = 10;
 }
 
 void CBackGround::LateTick(const _float& fTimeDelta)
@@ -75,12 +74,16 @@ HRESULT CBackGround::Ready_Components()
 
 HRESULT CBackGround::Bind_ShaderResources()
 {
+	_float4x4		WorldMatrix;
 	_float4x4		IdentityMatrix;
 
+	XMStoreFloat4x4(&WorldMatrix, XMMatrixIdentity());
 	XMStoreFloat4x4(&IdentityMatrix, XMMatrixIdentity());
 
 	/* 셰이더 전역변수로 던져야 할 값들을 던지자. */
-	if (FAILED(GetShader()->Bind_Matrix("g_WorldMatrix", &IdentityMatrix)))
+	WorldMatrix._11 = 2.f;
+	WorldMatrix._22 = 2.f;
+	if (FAILED(GetShader()->Bind_Matrix("g_WorldMatrix", &WorldMatrix)))
 		return E_FAIL;
 	if (FAILED(GetShader()->Bind_Matrix("g_ViewMatrix", &IdentityMatrix)))
 		return E_FAIL;

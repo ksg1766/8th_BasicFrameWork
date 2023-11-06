@@ -214,15 +214,6 @@
     <Filter Include="03.GameObjects\02.Monster\HellHound\Behavior\03.StepBack">
       <UniqueIdentifier>{31036d20-c604-4f62-ab70-b9a1647a7070}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03.GameObjects\02.Monster\HellHound\Behavior\00.보류">
-      <UniqueIdentifier>{48882d34-9efa-4a15-97db-5f267bc98e69}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03.GameObjects\02.Monster\HellHound\Behavior\00.보류\00.Spwan%28보류%29">
-      <UniqueIdentifier>{fdfc7495-5be9-482f-be81-3bb03feeb7c7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03.GameObjects\02.Monster\HellHound\Behavior\00.보류\09.Hit%28보류%29">
-      <UniqueIdentifier>{ff4ca980-9569-46f1-af61-65810acfa841}</UniqueIdentifier>
-    </Filter>
     <Filter Include="03.GameObjects\02.Monster\HellHound\Behavior\99.Decorator">
       <UniqueIdentifier>{db3994c7-d555-45c5-aa43-7c3bbd9bdf3b}</UniqueIdentifier>
     </Filter>
@@ -240,6 +231,45 @@
     </Filter>
     <Filter Include="03.GameObjects\01.Playable\00.P_Strife\MotionTrail">
       <UniqueIdentifier>{c9d6acb2-b31e-4b9c-9e63-eea59647ce87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\01.Playable\00.P_Strife\Ammo\Beam">
+      <UniqueIdentifier>{646703a9-b60d-41be-a761-3683e53d3f23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\02.Monster\HellBrute">
+      <UniqueIdentifier>{3a55bc59-aff3-448e-addc-36328c9fe659}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\02.Monster\HellHound\Behavior\00.Spwan%28보류%29">
+      <UniqueIdentifier>{fdfc7495-5be9-482f-be81-3bb03feeb7c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\02.Monster\HellBrute\Behavior">
+      <UniqueIdentifier>{e86cb4c1-b1a0-44d4-bb72-4cca8e4814b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\02.Monster\HellBrute\Behavior\00.Spawn%28보류%29">
+      <UniqueIdentifier>{f8014d2a-80b7-45b5-90e2-165c7320b81c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\02.Monster\HellBrute\Behavior\01.Dead">
+      <UniqueIdentifier>{81e4f089-2958-4a74-b5c0-8a2e62389f2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\02.Monster\HellBrute\Behavior\02.Attack">
+      <UniqueIdentifier>{83085d18-90f6-43ca-bcca-a003b0b464b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\02.Monster\HellBrute\Behavior\98.Composite">
+      <UniqueIdentifier>{330d5447-9a02-4b37-adbe-4d7abc495bce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\02.Monster\HellBrute\Behavior\99.Decorator">
+      <UniqueIdentifier>{e497a3bb-2682-4a56-9930-ef336b355dce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\02.Monster\HellBrute\Behavior\03.Wait">
+      <UniqueIdentifier>{64a469ec-753c-4b32-92db-0e513fb4b463}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\02.Monster\HellBrute\Behavior\05.Idle">
+      <UniqueIdentifier>{480f4e75-3a77-4597-8320-beff3310f2d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\02.Monster\HellBrute\Behavior\06.Roaming">
+      <UniqueIdentifier>{d105341d-93ea-4288-842c-9996e98eb0df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\02.Monster\HellBrute\Behavior\04.Fire">
+      <UniqueIdentifier>{ee8b80ec-bd99-461d-91a5-1dbd698a9581}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -423,9 +453,6 @@
     <ClInclude Include="..\Public\MonsterController.h">
       <Filter>03.GameObjects\02.Monster\Script</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\HellHound_BT_Hit.h">
-      <Filter>03.GameObjects\02.Monster\HellHound\Behavior\00.보류\09.Hit%28보류%29</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\HellHound_BT_Wait.h">
       <Filter>03.GameObjects\02.Monster\HellHound\Behavior\04.Wait</Filter>
     </ClInclude>
@@ -433,7 +460,7 @@
       <Filter>03.GameObjects\02.Monster\HellHound\Behavior\05.Chase</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\HellHound_BT_Spawn.h">
-      <Filter>03.GameObjects\02.Monster\HellHound\Behavior\00.보류\00.Spwan%28보류%29</Filter>
+      <Filter>03.GameObjects\02.Monster\HellHound\Behavior\00.Spwan%28보류%29</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\HellHound_BT_Dead.h">
       <Filter>03.GameObjects\02.Monster\HellHound\Behavior\01.Dead</Filter>
@@ -461,6 +488,39 @@
     </ClInclude>
     <ClInclude Include="..\Public\Strife_MotionTrail.h">
       <Filter>03.GameObjects\01.Playable\00.P_Strife\MotionTrail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Strife_Ammo_Beam.h">
+      <Filter>03.GameObjects\01.Playable\00.P_Strife\Ammo\Beam</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HellBrute.h">
+      <Filter>03.GameObjects\02.Monster\HellBrute</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HellBrute_BT_Melee.h">
+      <Filter>03.GameObjects\02.Monster\HellBrute\Behavior\02.Attack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HellBrute_BT_Dead.h">
+      <Filter>03.GameObjects\02.Monster\HellBrute\Behavior\01.Dead</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HellBrute_BT_Idle.h">
+      <Filter>03.GameObjects\02.Monster\HellBrute\Behavior\05.Idle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HellBrute_BT_IF_Dead.h">
+      <Filter>03.GameObjects\02.Monster\HellBrute\Behavior\99.Decorator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HellBrute_BT_IF_InSight.h">
+      <Filter>03.GameObjects\02.Monster\HellBrute\Behavior\99.Decorator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HellBrute_BT_Roaming.h">
+      <Filter>03.GameObjects\02.Monster\HellBrute\Behavior\06.Roaming</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HellBrute_BT_Spawn.h">
+      <Filter>03.GameObjects\02.Monster\HellBrute\Behavior\00.Spawn%28보류%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HellBrute_BT_Wait.h">
+      <Filter>03.GameObjects\02.Monster\HellBrute\Behavior\03.Wait</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HellBrute_BT_Fire.h">
+      <Filter>03.GameObjects\02.Monster\HellBrute\Behavior\04.Fire</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -635,9 +695,6 @@
     <ClCompile Include="..\Private\MonsterController.cpp">
       <Filter>03.GameObjects\02.Monster\Script</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\HellHound_BT_Hit.cpp">
-      <Filter>03.GameObjects\02.Monster\HellHound\Behavior\00.보류\09.Hit%28보류%29</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\HellHound_BT_Wait.cpp">
       <Filter>03.GameObjects\02.Monster\HellHound\Behavior\04.Wait</Filter>
     </ClCompile>
@@ -645,7 +702,7 @@
       <Filter>03.GameObjects\02.Monster\HellHound\Behavior\05.Chase</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\HellHound_BT_Spawn.cpp">
-      <Filter>03.GameObjects\02.Monster\HellHound\Behavior\00.보류\00.Spwan%28보류%29</Filter>
+      <Filter>03.GameObjects\02.Monster\HellHound\Behavior\00.Spwan%28보류%29</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\HellHound_BT_Dead.cpp">
       <Filter>03.GameObjects\02.Monster\HellHound\Behavior\01.Dead</Filter>
@@ -664,6 +721,33 @@
     </ClCompile>
     <ClCompile Include="..\Private\Strife_MotionTrail.cpp">
       <Filter>03.GameObjects\01.Playable\00.P_Strife\MotionTrail</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Strife_Ammo_Beam.cpp">
+      <Filter>03.GameObjects\01.Playable\00.P_Strife\Ammo\Beam</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HellBrute.cpp">
+      <Filter>03.GameObjects\02.Monster\HellBrute</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HellBrute_BT_Wait.cpp">
+      <Filter>03.GameObjects\02.Monster\HellBrute\Behavior\03.Wait</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HellBrute_BT_Spawn.cpp">
+      <Filter>03.GameObjects\02.Monster\HellBrute\Behavior\00.Spawn%28보류%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HellBrute_BT_Roaming.cpp">
+      <Filter>03.GameObjects\02.Monster\HellBrute\Behavior\06.Roaming</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HellBrute_BT_Idle.cpp">
+      <Filter>03.GameObjects\02.Monster\HellBrute\Behavior\05.Idle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HellBrute_BT_Dead.cpp">
+      <Filter>03.GameObjects\02.Monster\HellBrute\Behavior\01.Dead</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HellBrute_BT_Melee.cpp">
+      <Filter>03.GameObjects\02.Monster\HellBrute\Behavior\02.Attack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HellBrute_BT_Fire.cpp">
+      <Filter>03.GameObjects\02.Monster\HellBrute\Behavior\04.Fire</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

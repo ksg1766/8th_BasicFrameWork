@@ -4,8 +4,6 @@
 #include "GameObject.h"
 #include "DebugDraw.h"
 
-constexpr auto EPSILON = 0.001f;
-
 CParticleController::CParticleController(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:Super(pDevice, pContext)
 {

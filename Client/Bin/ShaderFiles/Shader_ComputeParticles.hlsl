@@ -12,15 +12,15 @@ struct OutputDesc
 StructuredBuffer<InputDesc> Input;
 RWStructuredBuffer<OutputDesc> Output;
 
-[numthreads(500, 1, 1)]
+[numthreads(128, 1, 1)]
 void CS_MAIN(uint id : SV_GroupIndex)
 {
     float fTimeDelta = 0.008f;
     
     float3 vLinearVelocity = Input[id].input._31_32_33;
-    vLinearVelocity.y = vLinearVelocity.y + (-9.81f * fTimeDelta /**/ * 2.f);
+    vLinearVelocity.y = vLinearVelocity.y + (-9.81f * fTimeDelta * 0.5f);
 
-    float fLinearResistance = 0.011f; // drag0.01f + material drag0.001f
+    //float fLinearResistance = 0.011f; // drag0.01f + material drag0.001f
 
     vLinearVelocity = vLinearVelocity * 0.989f;
    

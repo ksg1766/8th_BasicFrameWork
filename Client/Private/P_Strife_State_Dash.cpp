@@ -31,7 +31,7 @@ void CP_Strife_State_Dash::Tick(const _float& fTimeDelta)
 
 	if (3 == m_iFrameCOunter++)
 	{
-		CStrife_MotionTrail::MOTIONTRAIL_DESC desc{ m_pModel, &m_pModel->GetTweenDesc(), m_pGameObject->GetTransform()->WorldMatrix(), 0.15f };
+		CStrife_MotionTrail::MOTIONTRAIL_DESC desc{ m_pModel, &m_pModel->GetTweenDesc(), m_pGameObject->GetTransform()->WorldMatrix(), 0.18f };
 		m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Strife_MotionTrail"), LAYERTAG::IGNORECOLLISION, &desc);
 		m_iFrameCOunter = 0;
 	}

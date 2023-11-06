@@ -1,20 +1,20 @@
 #include "stdafx.h"
-#include "HellHound_BT_Chase.h"
+#include "HellBrute_BT_Fire.h"
 #include "GameInstance.h"
 #include "Layer.h"
 #include "GameObject.h"
 #include "MonsterController.h"
 
-CHellHound_BT_Chase::CHellHound_BT_Chase()
+CHellBrute_BT_Fire::CHellBrute_BT_Fire()
 {
 }
 
-void CHellHound_BT_Chase::OnStart()
+void CHellBrute_BT_Fire::OnStart()
 {
 	Super::OnStart(0);
 }
 
-CBT_Node::BT_RETURN CHellHound_BT_Chase::OnUpdate(const Engine::_float& fTimeDelta)
+CBT_Node::BT_RETURN CHellBrute_BT_Fire::OnUpdate(const _float& fTimeDelta)
 {
 	ConditionalAbort(fTimeDelta);
 	if (IsZeroHP())
@@ -27,40 +27,40 @@ CBT_Node::BT_RETURN CHellHound_BT_Chase::OnUpdate(const Engine::_float& fTimeDel
 	const auto& target = hashBlackBoard.find(TEXT("Target"));
 
 	const Vec3& vTargetPos = GET_VALUE(CGameObject, target)->GetTransform()->GetPosition();
-	const Vec3& vCurrentPos = m_pGameObject->GetTransform()->GetPosition();
-	
-	Vec3 vChaseDir = vTargetPos - vCurrentPos;
-	vChaseDir.Normalize();
 
 	CMonsterController* pController = static_cast<CMonsterController*>(m_pController);
-	pController->GetMaxSpeedMessage();
-	pController->GetMoveMessage(vChaseDir);
+	pController->Look(vTargetPos);
+	pController->GetAttackMessage();
 
 	return BT_RUNNING;
 }
 
-void CHellHound_BT_Chase::OnEnd()
+void CHellBrute_BT_Fire::OnEnd()
 {
 	Super::OnEnd();
 }
 
-void CHellHound_BT_Chase::ConditionalAbort(const _float& fTimeDelta)
+void CHellBrute_BT_Fire::ConditionalAbort(const _float& fTimeDelta)
 {
 }
 
-_bool CHellHound_BT_Chase::IsInRange()
+_bool CHellBrute_BT_Fire::IsInRange()
 {
 	BLACKBOARD& hashBlackBoard = m_pBehaviorTree->GetBlackBoard();
-	const auto& attackRange = hashBlackBoard.find(TEXT("AttackRange"));
+	const auto& meleeRange = hashBlackBoard.find(TEXT("MeleeRange"));
 	const auto& target = hashBlackBoard.find(TEXT("Target"));
 
-	if ((GET_VALUE(CGameObject, target)->GetTransform()->GetPosition() - m_pGameObject->GetTransform()->GetPosition()).Length() < *GET_VALUE(_float, attackRange))
+	const Vec3& vTargetPos = GET_VALUE(CGameObject, target)->GetTransform()->GetPosition();
+	const Vec3& vCurPos = m_pGameObject->GetTransform()->GetPosition();
+	Vec3 vDist = vTargetPos - vCurPos;
+
+	if (vDist.Length() < *GET_VALUE(_float, meleeRange))
 		return true;
 	else
 		return false;
 }
 
-_bool CHellHound_BT_Chase::IsInSight()
+_bool CHellBrute_BT_Fire::IsInSight()
 {
 	map<LAYERTAG, class CLayer*>& mapLayers = m_pGameInstance->GetCurrentLevelLayers();
 	const map<LAYERTAG, class CLayer*>::iterator& pPlayerLayer = mapLayers.find(LAYERTAG::PLAYER);
@@ -94,30 +94,28 @@ _bool CHellHound_BT_Chase::IsInSight()
 	}
 }
 
-_bool CHellHound_BT_Chase::IsZeroHP()
+_bool CHellBrute_BT_Fire::IsZeroHP()
 {
-	if (static_cast<CMonsterController*>(m_pController)->IsZeroHP())
+	if(static_cast<CMonsterController*>(m_pController)->IsZeroHP())
 		return true;
 
 	return false;
 }
 
-CHellHound_BT_Chase* CHellHound_BT_Chase::Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController)
+CHellBrute_BT_Fire* CHellBrute_BT_Fire::Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController)
 {
-	CHellHound_BT_Chase* pInstance = new CHellHound_BT_Chase;
+	CHellBrute_BT_Fire* pInstance = new CHellBrute_BT_Fire;
 
 	if (FAILED(pInstance->Initialize(pGameObject, pBehaviorTree, tBehaveAnim, pController)))
 	{
-		MSG_BOX("Failed to Created : CP_Strife_State_Dash");
+		MSG_BOX("Failed to Created : CHellBrute_BT_Fire");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CHellHound_BT_Chase::Free()
+void CHellBrute_BT_Fire::Free()
 {
 	Super::Free();
 }
-
-

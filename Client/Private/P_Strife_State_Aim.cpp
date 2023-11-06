@@ -117,13 +117,13 @@ void CP_Strife_State_Aim::Input(const _float& fTimeDelta)
 	}
 	if (MOUSE_DOWN(MOUSEKEYSTATE::DIM_RB) || MOUSE_PRESSING(MOUSEKEYSTATE::DIM_RB))
 	{
-		/*const POINT& p = m_pGameInstance->GetMousePos();
+		const POINT& p = m_pGameInstance->GetMousePos();
 		Vec3 vPickPos;	_float fDistance;
 
 		pController->Pick(p.x, p.y, vPickPos, fDistance);
 		pController->Look(vPickPos, fTimeDelta);
 
-		pController->GetFireMessage(CStrife_Ammo::AmmoType::STATIC);*/
+		pController->GetFireMessage(CStrife_Ammo::AmmoType::BEAM);
 	}//АјАн
 }
 

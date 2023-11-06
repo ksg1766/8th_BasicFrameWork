@@ -5,8 +5,6 @@ matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
 float4 g_Color;
 Texture2D g_Texture;
-Texture2D g_TextureEx1;
-Texture2D g_TextureEx2;
 Texture2D g_Textures[2];
 
 float2 g_UVoffset = float2(0.f, 0.f);
@@ -94,33 +92,51 @@ PS_OUT PS_COLOR_MAIN(PS_IN In)
     return Out;
 }
 
-PS_OUT PS_CHAIN_MAIN(PS_IN In)
+PS_OUT PS_BEAM_MAIN(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
 
-    vector vLightning = g_TextureEx2.Sample(LinearSampler, In.vTexcoord);
-    vector vBolt = vector(0.f, 0.f, 0.f, 0.f);
-    vector vAir = vector(0.f, 0.f, 0.f, 0.f);
-    
-    vector vColor;
-    
-    if (vLightning.r < 0.01f)
-    {
-        vBolt = g_TextureEx1.Sample(LinearSampler, In.vTexcoord);
-        if (vBolt.r < 0.01f)
-            vAir = g_Texture.Sample(LinearSampler, In.vTexcoord + g_UVoffset);
-    }
-
-    vColor = vLightning + vBolt + vAir;
-
-    if (vColor.r < 0.01f)
+    vector vSourColor = g_Textures[0].Sample(LinearSampler, In.vTexcoord + g_UVoffset);
+    if (vSourColor.r < 0.1f)
         discard;
     
-    Out.vColor = 1.f - g_Color * (1.f - vColor.r);
-    Out.vColor.a = 1.f;
+    vector vDestColor = g_Textures[1].Sample(LinearSampler, In.vTexcoord);
+    
+    vector vBeamColor = vSourColor * vDestColor;
+    
+    Out.vColor = 0.9f * vBeamColor;
+    Out.vColor.a = 0.6f;
     
     return Out;
 }
+
+//PS_OUT PS_CHAIN_MAIN(PS_IN In)
+//{
+//    PS_OUT Out = (PS_OUT) 0;
+
+//    vector vLightning = g_TextureEx2.Sample(LinearSampler, In.vTexcoord);
+//    vector vBolt = vector(0.f, 0.f, 0.f, 0.f);
+//    vector vAir = vector(0.f, 0.f, 0.f, 0.f);
+    
+//    vector vColor;
+    
+//    if (vLightning.r < 0.01f)
+//    {
+//        vBolt = g_TextureEx1.Sample(LinearSampler, In.vTexcoord);
+//        if (vBolt.r < 0.01f)
+//            vAir = g_Texture.Sample(LinearSampler, In.vTexcoord + g_UVoffset);
+//    }
+
+//    vColor = vLightning + vBolt + vAir;
+
+//    if (vColor.r < 0.01f)
+//        discard;
+    
+//    Out.vColor = 1.f - g_Color * (1.f - vColor.r);
+//    Out.vColor.a = 1.f;
+    
+//    return Out;
+//}
 
 technique11 DefaultTechnique
 {
@@ -135,7 +151,7 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN();
     }
 
-    pass COLORTEX
+    pass AMMO_DEFAULT
     {
 		/* 여러 셰이더에 대해서 각각 어떤 버젼으로 빌드하고 어떤 함수를 호출하여 해당 셰이더가 구동되는지를 설정한다. */
         VertexShader = compile vs_5_0 VS_MAIN();
@@ -145,14 +161,17 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_COLOR_MAIN();
     }
 
-    pass CHAINLIGHTNING
+    pass AMMO_BEAM
     {
-		/* 여러 셰이더에 대해서 각각 어떤 버젼으로 빌드하고 어떤 함수를 호출하여 해당 셰이더가 구동되는지를 설정한다. */
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         HullShader = NULL;
         DomainShader = NULL;
-        PixelShader = compile ps_5_0 PS_CHAIN_MAIN();
+        PixelShader = compile ps_5_0 PS_BEAM_MAIN();
     }
 }
 

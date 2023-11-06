@@ -98,7 +98,7 @@ void CAnimationView::InfoView()
 	if (m_pAnimModelObject)
 	{
 		Matrix matTransformCam = m_pGameInstance->Get_Transform_float4x4_Inverse(CPipeLine::D3DTS_VIEW);
-		m_pAnimModelObject->GetTransform()->SetPosition(matTransformCam.Translation() + 10.f * matTransformCam.Backward());
+		m_pAnimModelObject->GetTransform()->SetPosition(matTransformCam.Translation() + 15.f * matTransformCam.Backward());
 		m_pAnimModelObject->GetTransform()->SetRotation(Vec3(0.f, 180.f, 0.f));
 	}
 

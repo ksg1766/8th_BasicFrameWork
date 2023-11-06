@@ -4,13 +4,13 @@
 
 BEGIN(Client)
 
-class CHellHound_BT_Attack final : public CBT_Action
+class CHellBrute_BT_Fire final : public CBT_Action
 {
 	using Super = CBT_Action;
 private:
-	CHellHound_BT_Attack();
-	CHellHound_BT_Attack(const CHellHound_BT_Attack& rhs) = delete;
-	virtual ~CHellHound_BT_Attack() = default;
+	CHellBrute_BT_Fire();
+	CHellBrute_BT_Fire(const CHellBrute_BT_Fire& rhs) = delete;
+	virtual ~CHellBrute_BT_Fire() = default;
 	
 	virtual void		OnStart()							override;
 	virtual BT_RETURN	OnUpdate(const _float& fTimeDelta)	override;
@@ -18,11 +18,12 @@ private:
 
 private:
 	virtual void		ConditionalAbort(const _float& fTimeDelta)	override;
-
+	_bool				IsInRange();
+	_bool				IsInSight();
 	_bool				IsZeroHP();
 
 public:
-	static	CHellHound_BT_Attack* Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController);
+	static	CHellBrute_BT_Fire* Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController);
 	virtual void Free() override;
 };
 

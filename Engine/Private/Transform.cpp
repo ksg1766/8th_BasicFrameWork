@@ -233,47 +233,6 @@ Quaternion CTransform::GetRotationQuaternion()
 	return quat;
 }
 
-void CTransform::SetRight(Vec3& vRight)
-{
-	_float fRight = m_matWorld.Right().Length();
-	_float fUp = m_matWorld.Up().Length();
-	_float fLook = m_matWorld.Backward().Length();
-
-	m_matWorld.Right(fRight * vRight);
-	Vec3 vForward = vRight.Cross(Vec3::UnitY);
-	vForward.Normalize();
-	m_matWorld.Backward(fLook * vForward);
-	Vec3 vUp = vForward.Cross(vRight);
-	m_matWorld.Up(fUp * vUp);
-}
-
-//void CTransform::SetUp(Vec3& vUp)
-//{
-//	_float fRight = m_matWorld.Right().Length();
-//	_float fUp = m_matWorld.Up().Length();
-//	_float fLook = m_matWorld.Backward().Length();
-//
-//	m_matWorld.Up(fUp * vUp);
-//	Vec3 vRight = Vec3::UnitY.Cross(vUp);
-//	m_matWorld.Right(vRight);
-//	Vec3 vForward = vRight.Cross(vUp);
-//	m_matWorld.Backward(vForward);
-//}
-
-void CTransform::SetForward(Vec3& vForward)
-{
-	_float fRight = m_matWorld.Right().Length();
-	_float fUp = m_matWorld.Up().Length();
-	_float fLook = m_matWorld.Backward().Length();
-
-	m_matWorld.Backward(fLook * vForward);
-	Vec3 vRight = Vec3::UnitY.Cross(vForward);
-	vRight.Normalize();
-	m_matWorld.Right(fRight * vRight);
-	Vec3 vUp = vForward.Cross(vRight);
-	m_matWorld.Up(fUp * vUp);
-}
-
 Vec3 CTransform::ToEulerAngles(Quaternion q)
 {
 	Vec3 angles;

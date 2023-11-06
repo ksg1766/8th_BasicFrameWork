@@ -35,8 +35,8 @@ struct asMesh
 struct asMaterial
 {
 	string diffuseFilePath;
-	string specularFilePath;
 	string normalFilePath;
+	string emissiveFilePath;
 };
 
 struct asKeyFrame
