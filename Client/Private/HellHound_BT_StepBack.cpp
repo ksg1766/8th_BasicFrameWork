@@ -19,11 +19,6 @@ CBT_Node::BT_RETURN CHellHound_BT_StepBack::OnUpdate(const _float& fTimeDelta)
 	if (IsZeroHP())
 		return BT_FAIL;
 
-	/*if (!IsInRange())
-	{
-		return BT_FAIL;
-	}*/
-
 	if (m_fTimeSum > m_vecAnimIndexTime[0].second * 0.9f)
 	{
 		return BT_SUCCESS;

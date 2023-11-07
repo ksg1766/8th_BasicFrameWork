@@ -65,7 +65,9 @@ void CBT_Composite::OnEnd()
 void CBT_Composite::Reset()
 {
 	for (auto& iter : m_vecChildren)
+	{
 		iter->Reset();
+	}
 }
 
 CBT_Composite* CBT_Composite::Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, CMonoBehaviour* pController, CompositeType eCompositeType)

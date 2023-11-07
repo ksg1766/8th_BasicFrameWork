@@ -126,7 +126,16 @@ void CMonsterController::DebugRender()
 	else if (TEXT("HellBrute") == m_pGameObject->GetObjectTag())
 	{
 		DX::DrawRing(m_pBatch, GetTransform()->GetPosition(), Vec3(14.f, 0.f, 0.f), Vec3(0.f, 0.f, 14.f), Colors::Red);
-		DX::DrawRing(m_pBatch, GetTransform()->GetPosition(), Vec3(4.f, 0.f, 0.f), Vec3(0.f, 0.f, 4.f), Colors::Blue);
+		DX::DrawRing(m_pBatch, GetTransform()->GetPosition(), Vec3(6.f, 0.f, 0.f), Vec3(0.f, 0.f, 6.f), Colors::Blue);
+	}
+	else if (TEXT("Goblin") == m_pGameObject->GetObjectTag())
+	{
+		DX::DrawRing(m_pBatch, GetTransform()->GetPosition(), Vec3(10.f, 0.f, 0.f), Vec3(0.f, 0.f, 10.f), Colors::Red);
+		DX::DrawRing(m_pBatch, GetTransform()->GetPosition(), Vec3(1.5f, 0.f, 0.f), Vec3(0.f, 0.f, 1.5f), Colors::Blue);
+	}
+	else if (TEXT("DemonCaster") == m_pGameObject->GetObjectTag())
+	{
+		DX::DrawRing(m_pBatch, GetTransform()->GetPosition(), Vec3(14.f, 0.f, 0.f), Vec3(0.f, 0.f, 14.f), Colors::Blue);
 	}
 	m_pBatch->End();
 #endif // DEBUG

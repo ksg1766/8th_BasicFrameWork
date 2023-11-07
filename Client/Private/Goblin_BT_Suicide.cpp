@@ -1,19 +1,19 @@
 #include "stdafx.h"
-#include "HellBrute_BT_Melee.h"
+#include "Goblin_BT_Suicide.h"
 #include "GameInstance.h"
 #include "GameObject.h"
 #include "MonsterController.h"
 
-CHellBrute_BT_Melee::CHellBrute_BT_Melee()
+CGoblin_BT_Suicide::CGoblin_BT_Suicide()
 {
 }
 
-void CHellBrute_BT_Melee::OnStart()
+void CGoblin_BT_Suicide::OnStart()
 {
 	Super::OnStart(0);
 }
 
-CBT_Node::BT_RETURN CHellBrute_BT_Melee::OnUpdate(const _float& fTimeDelta)
+CBT_Node::BT_RETURN CGoblin_BT_Suicide::OnUpdate(const _float& fTimeDelta)
 {
 	ConditionalAbort(fTimeDelta);
 	if (IsZeroHP())
@@ -24,6 +24,8 @@ CBT_Node::BT_RETURN CHellBrute_BT_Melee::OnUpdate(const _float& fTimeDelta)
 		CMonsterController* pController = static_cast<CMonsterController*>(m_pController);
 		pController->GetAttackMessage();
 		
+		m_pGameInstance->DeleteObject(m_pGameObject);
+
 		return BT_SUCCESS;
 	}
 
@@ -32,16 +34,16 @@ CBT_Node::BT_RETURN CHellBrute_BT_Melee::OnUpdate(const _float& fTimeDelta)
 	return BT_RUNNING;
 }
 
-void CHellBrute_BT_Melee::OnEnd()
+void CGoblin_BT_Suicide::OnEnd()
 {
 	Super::OnEnd();
 }
 
-void CHellBrute_BT_Melee::ConditionalAbort(const _float& fTimeDelta)
+void CGoblin_BT_Suicide::ConditionalAbort(const _float& fTimeDelta)
 {
 }
 
-_bool CHellBrute_BT_Melee::IsZeroHP()
+_bool CGoblin_BT_Suicide::IsZeroHP()
 {
 	if(static_cast<CMonsterController*>(m_pController)->IsZeroHP())
 		return true;
@@ -49,20 +51,20 @@ _bool CHellBrute_BT_Melee::IsZeroHP()
 	return false;
 }
 
-CHellBrute_BT_Melee* CHellBrute_BT_Melee::Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController)
+CGoblin_BT_Suicide* CGoblin_BT_Suicide::Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController)
 {
-	CHellBrute_BT_Melee* pInstance = new CHellBrute_BT_Melee;
+	CGoblin_BT_Suicide* pInstance = new CGoblin_BT_Suicide;
 
 	if (FAILED(pInstance->Initialize(pGameObject, pBehaviorTree, tBehaveAnim, pController)))
 	{
-		MSG_BOX("Failed to Created : CHellBrute_BT_Melee");
+		MSG_BOX("Failed to Created : CGoblin_BT_Suicide");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CHellBrute_BT_Melee::Free()
+void CGoblin_BT_Suicide::Free()
 {
 	Super::Free();
 }

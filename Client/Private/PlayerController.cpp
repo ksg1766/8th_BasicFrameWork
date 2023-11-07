@@ -237,7 +237,7 @@ void CPlayerController::Fire(CStrife_Ammo::AmmoType eAmmoType)
 	case CStrife_Ammo::AmmoType::BEAM:
 		tProps = { eAmmoType, 4, 0, 5, m_pTransform->GetForward(), false, 0.f };
 		pAmmo = m_pGameInstance->CreateObject(L"Prototype_GameObject_Strife_Ammo_Beam", LAYERTAG::EQUIPMENT, &tProps);
-		vFireOffset = m_pTransform->GetPosition() + 21.f * m_pTransform->GetForward() + 1.7f * m_pTransform->GetUp();
+		vFireOffset = m_pTransform->GetPosition() + 11.f * m_pTransform->GetForward() + 1.7f * m_pTransform->GetUp();
 		break;
 
 	/*case CStrife_Ammo::AmmoType::STATIC:

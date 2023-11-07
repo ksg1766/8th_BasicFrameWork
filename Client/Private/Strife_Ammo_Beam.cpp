@@ -35,7 +35,7 @@ HRESULT CStrife_Ammo_Beam::Initialize(void* pArg)
 	if (FAILED(Ready_Scripts()))
 		return E_FAIL;
 
-	GetTransform()->SetScale(Vec3(1.2f, 40.f, 1.f));
+	GetTransform()->SetScale(Vec3(1.2f, 20.f, 1.f));
 	GetTransform()->Rotate(Vec3(90.f, 0.0f, 0.f));
 
 	static_cast<CRigidDynamic*>(GetRigidBody())->IsKinematic(true);
@@ -51,9 +51,9 @@ void CStrife_Ammo_Beam::Tick(const _float& fTimeDelta)
 	
 	m_fFR_Default_Timer -= fTimeDelta;
 
-	Vec3 vExtents(0.6f, 21.f, 0.5f);
+	Vec3 vExtents(0.6f, 11.f, 0.5f);
 	const Vec3& vPos = GetTransform()->GetPosition();
-	GetRigidBody()->GetSphereCollider()->SetRadius(21.f);
+	GetRigidBody()->GetSphereCollider()->SetRadius(11.f);
 	GetRigidBody()->GetOBBCollider()->SetCenter(vPos);
 	GetRigidBody()->GetOBBCollider()->SetExtents(vExtents);
 

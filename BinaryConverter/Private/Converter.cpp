@@ -522,17 +522,17 @@ HRESULT CConverter::Write_MaterialData(wstring srcPath, wstring savePath)
 				filesystem::copy(filesystem::path(finalSrcPath), filesystem::path(finalSavePath));
 		}
 
-		if (!material->emissiveFilePath.empty())
-		{
-			/* Specular */
-			finalSrcPath = srcPath + TEXT("/") + Utils::ToWString(material->emissiveFilePath);
-			finalSrcPath = filesystem::absolute(finalSrcPath).wstring();
-			finalSavePath = filesystem::absolute(savePath).wstring();
+		//if (!material->emissiveFilePath.empty())
+		//{
+		//	/* Specular */
+		//	finalSrcPath = srcPath + TEXT("/") + Utils::ToWString(material->emissiveFilePath);
+		//	finalSrcPath = filesystem::absolute(finalSrcPath).wstring();
+		//	finalSavePath = filesystem::absolute(savePath).wstring();
 
-			filePath = finalSavePath + TEXT("\\") + Utils::ToWString(material->emissiveFilePath);
-			if (!filesystem::exists(filePath))
-				filesystem::copy(filesystem::path(finalSrcPath), filesystem::path(finalSavePath));
-		}
+		//	filePath = finalSavePath + TEXT("\\") + Utils::ToWString(material->emissiveFilePath);
+		//	if (!filesystem::exists(filePath))
+		//		filesystem::copy(filesystem::path(finalSrcPath), filesystem::path(finalSavePath));
+		//}
 	}
 
 	/* 매태리얼 정보 저장 */

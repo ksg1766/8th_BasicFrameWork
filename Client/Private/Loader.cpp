@@ -22,6 +22,8 @@
 #include "P_Strife.h"
 #include "HellHound.h"
 #include "HellBrute.h"
+#include "Goblin.h"
+#include "DemonCaster.h"
 #include "Strife_GunL.h"
 #include "Strife_GunR.h"
 #include "Strife_Ammo_Default.h"
@@ -317,6 +319,14 @@ HRESULT CLoader::Loading_GameObjects_For_Level_GamePlay()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_HellBrute"), CHellBrute::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 	
+	/* For.Prototype_GameObject_Goblin */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Goblin"), CGoblin::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_DemonCaster */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_DemonCaster"), CDemonCaster::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	/* For.Prototype_GameObject_Strife_GunL */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Strife_GunL"), CStrife_GunL::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
@@ -465,6 +475,14 @@ HRESULT CLoader::Loading_GameObjects_For_Level_GameTool()
 
 	/* For.Prototype_GameObject_HellBrute */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_HellBrute"), CHellBrute::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Goblin */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Goblin"), CGoblin::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_DemonCaster */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_DemonCaster"), CDemonCaster::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_Strife_Ammo_Default */

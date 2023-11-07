@@ -326,9 +326,23 @@ HRESULT CMainApp::Ready_Prototype_Components()
 					CModel::Create(m_pDevice, m_pContext, strSkeletalFilePath + strFileName, desc, matPivot))))
 					return E_FAIL;
 			}
-			else if(TEXT("HellBrute") == strFileName)
+			else if (TEXT("HellBrute") == strFileName)
 			{
 				XMStoreFloat4x4(&matPivot, XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f)));
+				if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_" + strFileName),
+					CModel::Create(m_pDevice, m_pContext, strSkeletalFilePath + strFileName, desc, matPivot))))
+					return E_FAIL;
+			}
+			else if (TEXT("Goblin") == strFileName)
+			{
+				XMStoreFloat4x4(&matPivot, XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.0f)));
+				if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_" + strFileName),
+					CModel::Create(m_pDevice, m_pContext, strSkeletalFilePath + strFileName, desc, matPivot))))
+					return E_FAIL;
+			}
+			else if (TEXT("DemonCaster") == strFileName)
+			{
+				XMStoreFloat4x4(&matPivot, XMMatrixScaling(0.015f, 0.015f, 0.015f) * XMMatrixTranslation(0.f, 0.5f, 0.f));
 				if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_" + strFileName),
 					CModel::Create(m_pDevice, m_pContext, strSkeletalFilePath + strFileName, desc, matPivot))))
 					return E_FAIL;
