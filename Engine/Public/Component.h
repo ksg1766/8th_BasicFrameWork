@@ -19,7 +19,7 @@ enum class ComponentType
 	Renderer,
 	Texture,
 	Camera,
-	Animator,
+	//Animator,
 	Light,
 	Terrain,
 	NavMeshAgent,

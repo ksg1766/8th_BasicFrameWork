@@ -98,6 +98,10 @@ public: /* For.PipeLine */
 	_float4x4		Get_Transform_float4x4_Inverse(CPipeLine::TRANSFORMSTATE eState) const;
 	_matrix			Get_Transform_Matrix_Inverse(CPipeLine::TRANSFORMSTATE eState) const;
 
+public: /* For.LightManager */
+	const LIGHT_DESC* Get_LightDesc(_uint iLightIndex);
+	HRESULT			Add_Light(const LIGHT_DESC& LightDesc);
+
 private:
 	class CTimerManager*			m_pTimerManager = { nullptr };
 	class CGraphicDevice*			m_pGraphicDevice = { nullptr };
@@ -113,6 +117,8 @@ private:
 	class CPoolManager*				m_pPoolManager = { nullptr };
 	class CShaderManager*			m_pShaderManager = { nullptr };
 	class CPipeLine*				m_pPipeLine = { nullptr };
+	class CLightManager*			m_pLightManager = { nullptr };
+	class CTargetManager*			m_pTargetManager = { nullptr };
 
 public:
 	static void Release_Engine();

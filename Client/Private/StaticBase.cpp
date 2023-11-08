@@ -155,31 +155,31 @@ HRESULT CStaticBase::Bind_ShaderResources()
 
 	//if (LIGHT_DESC::LIGHT_DIRECTIONAL == pLightDesc->eLightType)
 	//{
-	_float4 vLightDir = _float4(1.f, -1.f, 1.f, 0.f);
-		if (FAILED(GetShader()->Bind_RawValue("g_vLightDir", &vLightDir, sizeof(_float4))))
-			return E_FAIL;
-	//	iPassIndex = 0;
-	//}
-	/*else
-	{
-		if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightPos", &pLightDesc->vLightPos, sizeof(_float4))))
-			return E_FAIL;
-		if (FAILED(m_pShaderCom->Bind_RawValue("g_fLightRange", &pLightDesc->fLightRange, sizeof(_float))))
-			return E_FAIL;
-		iPassIndex = 1;
-	}*/
+	//_float4 vLightDir = _float4(1.f, -1.f, 1.f, 0.f);
+	//	if (FAILED(GetShader()->Bind_RawValue("g_vLightDir", &vLightDir, sizeof(_float4))))
+	//		return E_FAIL;
+	////	iPassIndex = 0;
+	////}
+	///*else
+	//{
+	//	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightPos", &pLightDesc->vLightPos, sizeof(_float4))))
+	//		return E_FAIL;
+	//	if (FAILED(m_pShaderCom->Bind_RawValue("g_fLightRange", &pLightDesc->fLightRange, sizeof(_float))))
+	//		return E_FAIL;
+	//	iPassIndex = 1;
+	//}*/
 
-	_float4	vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
-	if (FAILED(GetShader()->Bind_RawValue("g_vLightDiffuse", &vDiffuse, sizeof(_float4))))
-		return E_FAIL;
+	//_float4	vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
+	//if (FAILED(GetShader()->Bind_RawValue("g_vLightDiffuse", &vDiffuse, sizeof(_float4))))
+	//	return E_FAIL;
 
-	_float4 vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
-	if (FAILED(GetShader()->Bind_RawValue("g_vLightAmbient", &vAmbient, sizeof(_float4))))
-		return E_FAIL;
+	//_float4 vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
+	//if (FAILED(GetShader()->Bind_RawValue("g_vLightAmbient", &vAmbient, sizeof(_float4))))
+	//	return E_FAIL;
 
-	_float4 vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
-	if (FAILED(GetShader()->Bind_RawValue("g_vLightSpecular", &vSpecular, sizeof(_float4))))
-		return E_FAIL;
+	//_float4 vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
+	//if (FAILED(GetShader()->Bind_RawValue("g_vLightSpecular", &vSpecular, sizeof(_float4))))
+	//	return E_FAIL;
 
 	return S_OK;
 }

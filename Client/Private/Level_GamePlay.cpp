@@ -19,6 +19,9 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(LoadData_Map()))
 		return E_FAIL;
 
+	if (FAILED(Ready_Lights()))
+		return E_FAIL;
+
 	if (FAILED(Ready_Layer_Terrain()))
 		return E_FAIL;
 
@@ -73,6 +76,38 @@ HRESULT CLevel_GamePlay::LateTick(const _float& fTimeDelta)
 	m_pGameInstance->Render_QuadTree();
 #endif // !DEBUG
 
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Lights()
+{
+	LIGHT_DESC			LightDesc;
+
+	/* 방향성 광원을 추가하낟. */
+	ZeroMemory(&LightDesc, sizeof LightDesc);
+	LightDesc.eLightType = LIGHT_DESC::LIGHT_DIRECTIONAL;
+	LightDesc.vLightDir = _float4(1.f, -1.f, 1.f, 0.f);
+
+	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
+
+	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
+		return E_FAIL;
+
+	/* 점 광원을 추가한다. */
+	/*ZeroMemory(&LightDesc, sizeof LightDesc);
+	LightDesc.eLightType = LIGHT_DESC::LIGHT_POINT;
+	LightDesc.vLightPos = _float4(35.f, 3.f, 35.f, 1.f);
+	LightDesc.fLightRange = 20.f;
+
+	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
+
+	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
+		return E_FAIL;*/
 
 	return S_OK;
 }

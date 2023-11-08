@@ -9,9 +9,7 @@ CGraphicDevice::CGraphicDevice()
 	/*ID3D11Texture2D*		pTexture2D = nullptr;
 	ID3D11Resource*
 	ID3D11ShaderResourceView*
-	m_pDevice->CreateShaderResourceView(pTexture2D, , ID3D11ShaderResourceView);
-*/
-
+	m_pDevice->CreateShaderResourceView(pTexture2D, , ID3D11ShaderResourceView);*/
 }
 
 HRESULT CGraphicDevice::Ready_GraphicDevice(HWND hWnd, GRAPHIC_DESC::WINMODE eWinMode, _uint iWinCX, _uint iWinCY, ID3D11Device** ppDeviceOut, ID3D11DeviceContext** ppDeviceContextOut)
@@ -97,8 +95,6 @@ HRESULT CGraphicDevice::Present()
 {
 	if (nullptr == m_pSwapChain)
 		return E_FAIL;
-
-	
 	
 	/* 전면 버퍼와 후면버퍼를 교체하여 후면버퍼를 전면으로 보여주는 역할을 한다. */
 	/* 후면버퍼를 직접화면에 보여줄께. */	
@@ -146,8 +142,6 @@ HRESULT CGraphicDevice::Ready_SwapChain(HWND hWnd, GRAPHIC_DESC::WINMODE eWinMod
 	if (FAILED(pFactory->CreateSwapChain(m_pDevice, &SwapChain, &m_pSwapChain)))
 		return E_FAIL;
 
-	
-
 	Safe_Release(pFactory);
 	Safe_Release(pAdapter);
 	Safe_Release(pDevice);
@@ -161,8 +155,6 @@ HRESULT CGraphicDevice::Ready_BackBufferRenderTargetView()
 	if (nullptr == m_pDevice)
 		return E_FAIL;
 
-	
-
 	/* 내가 앞으로 사용하기위한 용도의 텍스쳐를 생성하기위한 베이스 데이터를 가지고 있는 객체이다. */
 	/* 내가 앞으로 사용하기위한 용도의 텍스쳐 : ID3D11RenderTargetView, ID3D11ShaderResoureView, ID3D11DepthStencilView */
 	ID3D11Texture2D*		pBackBufferTexture = nullptr;
@@ -173,8 +165,6 @@ HRESULT CGraphicDevice::Ready_BackBufferRenderTargetView()
 
 	if (FAILED(m_pDevice->CreateRenderTargetView(pBackBufferTexture, nullptr, &m_pBackBufferRTV)))
 		return E_FAIL;	
-
-
 
 	Safe_Release(pBackBufferTexture);
 

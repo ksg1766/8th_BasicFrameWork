@@ -172,6 +172,15 @@ call Copy.bat</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\Downloads\Framework\Engine\Public\RenderTarget.h" />
+    <FxCompile Include="..\Bin\ShaderFiles\Engine_Shader_Defines.hlsl">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">../Bin/ShaderFiles/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <FileType>Document</FileType>
+    </FxCompile>
     <ClInclude Include="..\Public\Animation.h" />
     <ClInclude Include="..\public\Base.h" />
     <ClInclude Include="..\Public\BehaviorTree.h" />
@@ -200,6 +209,8 @@ call Copy.bat</Command>
     <ClInclude Include="..\Public\Hasher.h" />
     <ClInclude Include="..\Public\InputDevice.h" />
     <ClInclude Include="..\Public\KeyManager.h" />
+    <ClInclude Include="..\Public\Light.h" />
+    <ClInclude Include="..\Public\LightManager.h" />
     <ClInclude Include="..\Public\Mesh.h" />
     <ClInclude Include="..\Public\Model.h" />
     <ClInclude Include="..\Public\MurmurHash3.h" />
@@ -212,6 +223,7 @@ call Copy.bat</Command>
     <ClInclude Include="..\Public\State.h" />
     <ClInclude Include="..\Public\StateMachine.h" />
     <ClInclude Include="..\Public\StructuredBuffer.h" />
+    <ClInclude Include="..\Public\TargetManager.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\Public\Transform.h" />
     <ClInclude Include="..\Public\TransformBurger.h" />
@@ -276,6 +288,8 @@ call Copy.bat</Command>
     <ClCompile Include="..\Private\FileUtils.cpp" />
     <ClCompile Include="..\Private\InputDevice.cpp" />
     <ClCompile Include="..\Private\KeyManager.cpp" />
+    <ClCompile Include="..\Private\Light.cpp" />
+    <ClCompile Include="..\Private\LightManager.cpp" />
     <ClCompile Include="..\Private\Mesh.cpp" />
     <ClCompile Include="..\Private\Model.cpp" />
     <ClCompile Include="..\Private\MurmurHash3.cpp" />
@@ -283,11 +297,13 @@ call Copy.bat</Command>
     <ClCompile Include="..\Private\PhysicsManager.cpp" />
     <ClCompile Include="..\Private\PipeLine.cpp" />
     <ClCompile Include="..\Private\PoolManager.cpp" />
+    <ClCompile Include="..\Private\RenderTarget.cpp" />
     <ClCompile Include="..\Private\ShaderManager.cpp" />
     <ClCompile Include="..\Private\Socket.cpp" />
     <ClCompile Include="..\Private\State.cpp" />
     <ClCompile Include="..\Private\StateMachine.cpp" />
     <ClCompile Include="..\Private\StructuredBuffer.cpp" />
+    <ClCompile Include="..\Private\TargetManager.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\Private\Transform.cpp" />
     <ClCompile Include="..\Private\TransformBurger.cpp" />
@@ -323,6 +339,13 @@ call Copy.bat</Command>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Public\SimpleMath.inl" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Deferred.hlsl">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">../Bin/ShaderFiles/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -77,7 +77,8 @@ struct PS_IN
 /* 받아온 픽셀의 정보를 바탕으로 하여 화면에 그려질 픽셀의 최종적인 색을 결정하낟. */
 struct PS_OUT
 {
-	float4	vColor : SV_TARGET0;
+    float4 vDiffuse : SV_TARGET0;
+    float4 vNormal : SV_TARGET1;
 };
 
 /* 전달받은 픽셀의 정보를 이용하여 픽셀의 최종적인 색을 결정하자. */
@@ -92,16 +93,19 @@ PS_OUT PS_MAIN(PS_IN In)
     if (vMtrlDiffuse.a < 0.3f)
         discard;
 	
-	vector	vShade = max(dot(normalize(g_vLightDir) * -1.f, normalize(In.vNormal)), 0.f) +
-		g_vLightAmbient * g_vMtrlAmbient;		
+    Out.vDiffuse = vMtrlDiffuse;
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
 
-	vector	vReflect = reflect(normalize(g_vLightDir), normalize(In.vNormal));
-	vector	vLook = In.vWorldPos - g_vCamPosition;
+	//vector	vShade = max(dot(normalize(g_vLightDir) * -1.f, normalize(In.vNormal)), 0.f) +
+	//	g_vLightAmbient * g_vMtrlAmbient;		
 
-	float	fSpecular = pow(max(dot(normalize(vLook) * -1.f, normalize(vReflect)), 0.f), 30.f);
+	//vector	vReflect = reflect(normalize(g_vLightDir), normalize(In.vNormal));
+	//vector	vLook = In.vWorldPos - g_vCamPosition;
 
-	Out.vColor = (g_vLightDiffuse * vMtrlDiffuse) * saturate(vShade) +
-		(g_vLightSpecular * g_vMtrlSpecular) * fSpecular;
+	//float	fSpecular = pow(max(dot(normalize(vLook) * -1.f, normalize(vReflect)), 0.f), 30.f);
+
+  //  Out.vDiffuse = (g_vLightDiffuse * vMtrlDiffuse) * saturate(vShade) +
+		//(g_vLightSpecular * g_vMtrlSpecular) * fSpecular;
 
 	return Out;
 }
@@ -117,28 +121,44 @@ PS_OUT PS_RIM_MAIN(PS_IN In)
     if (vMtrlDiffuse.a < 0.3f)
         discard;
 	
-    vector vShade = max(dot(normalize(g_vLightDir) * -1.f, normalize(In.vNormal)), 0.f) +
-		g_vLightAmbient * g_vMtrlAmbient;
+    Out.vDiffuse = vMtrlDiffuse;
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+    
+ //   vector vShade = max(dot(normalize(g_vLightDir) * -1.f, normalize(In.vNormal)), 0.f) +
+	//	g_vLightAmbient * g_vMtrlAmbient;
 
-    vector vReflect = reflect(normalize(g_vLightDir), normalize(In.vNormal));
-    vector vLook = In.vWorldPos - g_vCamPosition;
+ //   vector vReflect = reflect(normalize(g_vLightDir), normalize(In.vNormal));
+ //   vector vLook = In.vWorldPos - g_vCamPosition;
 	
-    float fSpecular = pow(max(dot(normalize(vLook) * -1.f, normalize(vReflect)), 0.f), 30.f);
+ //   float fSpecular = pow(max(dot(normalize(vLook) * -1.f, normalize(vReflect)), 0.f), 30.f);
 
-	// Rim Light
+	//// Rim Light
+ //   float3 E = normalize(-vLook);
+
+ //   float value = saturate(dot(E, float3(In.vNormal.xyz)));
+ //   float fEmissive = 1.0f - value;
+
+	//// min, max, x
+ //   fEmissive = smoothstep(0.0f, 1.0f, fEmissive);
+ //   fEmissive = pow(fEmissive, 2);
+	////
+ //   Out.vColor = (g_vLightDiffuse * vMtrlDiffuse) * saturate(vShade) +
+	//	(g_vLightSpecular * g_vMtrlSpecular) * fSpecular +
+	//(g_vLightEmissive * g_vMtrlEmissive) * fEmissive;
+	
+    // Temp
+    vector vLook = In.vWorldPos - g_vCamPosition;
     float3 E = normalize(-vLook);
-
+    
     float value = saturate(dot(E, float3(In.vNormal.xyz)));
     float fEmissive = 1.0f - value;
-
-	// min, max, x
+    
     fEmissive = smoothstep(0.0f, 1.0f, fEmissive);
     fEmissive = pow(fEmissive, 2);
-	//
-    Out.vColor = (g_vLightDiffuse * vMtrlDiffuse) * saturate(vShade) +
-		(g_vLightSpecular * g_vMtrlSpecular) * fSpecular +
+    
+    Out.vDiffuse = Out.vDiffuse +
 	(g_vLightEmissive * g_vMtrlEmissive) * fEmissive;
-	
+    
     return Out;
 }
 
@@ -153,22 +173,25 @@ PS_OUT PS_DISSOLVE_MAIN(PS_IN In)
     if (vMtrlDiffuse.a < 0.3f)
         discard;
 	
-    vector vShade = max(dot(normalize(g_vLightDir) * -1.f, normalize(In.vNormal)), 0.f) +
-		g_vLightAmbient * g_vMtrlAmbient;
+    Out.vDiffuse = vMtrlDiffuse;
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+    
+ //   vector vShade = max(dot(normalize(g_vLightDir) * -1.f, normalize(In.vNormal)), 0.f) +
+	//	g_vLightAmbient * g_vMtrlAmbient;
 
-    vector vReflect = reflect(normalize(g_vLightDir), normalize(In.vNormal));
-    vector vLook = In.vWorldPos - g_vCamPosition;
+ //   vector vReflect = reflect(normalize(g_vLightDir), normalize(In.vNormal));
+ //   vector vLook = In.vWorldPos - g_vCamPosition;
 	
-    float fSpecular = pow(max(dot(normalize(vLook) * -1.f, normalize(vReflect)), 0.f), 30.f);
+ //   float fSpecular = pow(max(dot(normalize(vLook) * -1.f, normalize(vReflect)), 0.f), 30.f);
 
-	//
-    Out.vColor = (g_vLightDiffuse * vMtrlDiffuse) * saturate(vShade) +
-		(g_vLightSpecular * g_vMtrlSpecular) * fSpecular;
+	////
+ //   Out.vColor = (g_vLightDiffuse * vMtrlDiffuse) * saturate(vShade) +
+	//	(g_vLightSpecular * g_vMtrlSpecular) * fSpecular;
 
     //
     //  Dissolve
     
-    ComputeDissolveColor(Out.vColor, In.vTexcoord);
+    ComputeDissolveColor(Out.vDiffuse, In.vTexcoord);
     
     //
     
@@ -181,6 +204,8 @@ technique11 DefaultTechnique
 	pass Mesh
     {
         SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
 
 		/* 여러 셰이더에 대해서 각각 어떤 버젼으로 빌드하고 어떤 함수를 호출하여 해당 셰이더가 구동되는지를 설정한다. */
 		VertexShader = compile vs_5_0 VS_MAIN();
@@ -193,6 +218,8 @@ technique11 DefaultTechnique
     pass RimMesh
     {
         SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
 
 		/* 여러 셰이더에 대해서 각각 어떤 버젼으로 빌드하고 어떤 함수를 호출하여 해당 셰이더가 구동되는지를 설정한다. */
         VertexShader = compile vs_5_0 VS_MAIN();
@@ -205,6 +232,8 @@ technique11 DefaultTechnique
     pass DissolveMesh
     {
         SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
 
 		/* 여러 셰이더에 대해서 각각 어떤 버젼으로 빌드하고 어떤 함수를 호출하여 해당 셰이더가 구동되는지를 설정한다. */
         VertexShader = compile vs_5_0 VS_MAIN();

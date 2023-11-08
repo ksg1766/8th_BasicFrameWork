@@ -208,6 +208,21 @@
     <Filter Include="01.Utiltiy\04.Component\05.Buffer\StructuredBuffer">
       <UniqueIdentifier>{29c64f62-f767-46f8-b180-c0c1aa5940d3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="00.System\04.Deffered">
+      <UniqueIdentifier>{97b07c4c-a2b7-4856-b034-d309626d70d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.System\04.Deffered\00.TargetManager">
+      <UniqueIdentifier>{229fb6c8-034a-4d19-b143-30c5ba48129c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.System\04.Deffered\01.RenderTarget">
+      <UniqueIdentifier>{36452250-b878-4f4d-9af3-19810795a8d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utiltiy\04.Component\15.Light">
+      <UniqueIdentifier>{40d05749-601c-46cb-8de7-915740860bef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utiltiy\04.Component\06.Shader\ShaderFiles">
+      <UniqueIdentifier>{138519d8-a1c4-4005-b2b0-7879c16c1854}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -438,6 +453,18 @@
     <ClInclude Include="..\Public\StructuredBuffer.h">
       <Filter>01.Utiltiy\04.Component\05.Buffer\StructuredBuffer</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\TargetManager.h">
+      <Filter>00.System\04.Deffered\00.TargetManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\Downloads\Framework\Engine\Public\RenderTarget.h">
+      <Filter>00.System\04.Deffered\01.RenderTarget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\LightManager.h">
+      <Filter>01.Utiltiy\01.Managers\07.LightManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Light.h">
+      <Filter>01.Utiltiy\04.Component\15.Light</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -650,10 +677,30 @@
     <ClCompile Include="..\Private\StructuredBuffer.cpp">
       <Filter>01.Utiltiy\04.Component\05.Buffer\StructuredBuffer</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\TargetManager.cpp">
+      <Filter>00.System\04.Deffered\00.TargetManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\RenderTarget.cpp">
+      <Filter>00.System\04.Deffered\01.RenderTarget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\LightManager.cpp">
+      <Filter>01.Utiltiy\01.Managers\07.LightManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Light.cpp">
+      <Filter>01.Utiltiy\04.Component\15.Light</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Public\SimpleMath.inl">
       <Filter>98.Utils</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Deferred.hlsl">
+      <Filter>01.Utiltiy\04.Component\06.Shader\ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Engine_Shader_Defines.hlsl">
+      <Filter>01.Utiltiy\04.Component\06.Shader\ShaderFiles</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

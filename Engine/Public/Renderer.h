@@ -27,9 +27,33 @@ public:
 	HRESULT Add_RenderGroup(RENDERGROUP eRenderGroup, class CGameObject* pGameObject);
 	HRESULT Draw_RenderObjects();
 
+#ifdef _DEBUG
+public:
+	HRESULT Add_Debug(class CComponent* pDebug)
+	{
+		m_RenderDebug.push_back(pDebug);
+		Safe_AddRef(pDebug);
+		return S_OK;
+	}
+#endif
+
 private:
-	vector<class CGameObject*>			m_RenderObjects[RG_END];
-	map<InstanceID, class CVIBuffer_Instance*> m_InstanceBuffers;
+	vector<CGameObject*>						m_RenderObjects[RG_END];
+	map<InstanceID, class CVIBuffer_Instance*>	m_InstanceBuffers;
+
+	class CTargetManager*						m_pTargetManager = { nullptr };
+	class CLightManager*						m_pLightManager = { nullptr };
+
+private:
+	class CVIBuffer_Rect*						m_pVIBuffer = { nullptr };
+	class CShader*								m_pShader = { nullptr };
+
+	_float4x4									m_WorldMatrix, m_ViewMatrix, m_ProjMatrix;
+
+#ifdef _DEBUG
+private:
+	vector<CComponent*>							m_RenderDebug;
+#endif
 
 private:
 	HRESULT Render_Priority();
@@ -37,9 +61,17 @@ private:
 	HRESULT Render_NonBlend();
 	HRESULT Render_NonBlend_Instance();
 	HRESULT Render_Particle_Instance();
+
+	HRESULT Render_LightAcc();
+	HRESULT Render_Deferred();
+
 	HRESULT Render_Blend();
 	HRESULT Render_Blend_Instance();
 	HRESULT Render_UI();
+
+#ifdef _DEBUG
+	HRESULT Render_Debug();
+#endif
 
 private:
 	void	AddInstanceData(InstanceID instanceId, InstancingData& data);

@@ -18,6 +18,8 @@ public:
 	virtual HRESULT LateTick(const _float& fTimeDelta)	override;
 
 private:
+	HRESULT			Ready_Lights();
+
 	HRESULT			Ready_Layer_Terrain();
 	HRESULT			Ready_Layer_Ground();
 	HRESULT			Ready_Layer_Player();

@@ -165,6 +165,11 @@ _bool CNavMeshAgent::Walkable(_fvector vPoint)
 		return true;
 }
 
+void CNavMeshAgent::ForceHeight()
+{
+	m_pTransform->Translate(Vec3(0.f, GetHeightOffset(), 0.f));
+}
+
 _float CNavMeshAgent::GetHeightOffset()
 {
 	_float3 vPos(m_pTransform->GetPosition());

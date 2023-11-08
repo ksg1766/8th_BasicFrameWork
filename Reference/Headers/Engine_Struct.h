@@ -73,7 +73,22 @@ namespace Engine
 	{
 		TweenDesc tweens[MAX_INSTANCE];
 	};
-	//
+
+	typedef struct tagLightDesc
+	{
+		enum TYPE { LIGHT_DIRECTIONAL, LIGHT_POINT, LIGHT_END };
+
+		TYPE		eLightType = { LIGHT_END };
+
+		XMFLOAT4	vLightPos;
+		float		fLightRange;
+
+		XMFLOAT4	vLightDir;
+
+		XMFLOAT4	vDiffuse;
+		XMFLOAT4	vAmbient;
+		XMFLOAT4	vSpecular;
+	}LIGHT_DESC;
 
 	typedef struct tagMeshMaterial
 	{

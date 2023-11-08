@@ -58,7 +58,8 @@ struct PS_IN
 /* 받아온 픽셀의 정보를 바탕으로 하여 화면에 그려질 픽셀의 최종적인 색을 결정하낟. */
 struct PS_OUT
 {
-    float4 vColor : SV_TARGET0;
+    float4 vDiffuse : SV_TARGET0;
+    float4 vNormal : SV_TARGET1;
 };
 
 /* 전달받은 픽셀의 정보를 이용하여 픽셀의 최종적인 색을 결정하자. */
@@ -74,7 +75,7 @@ PS_OUT PS_MAIN(PS_IN In)
     vector vSourColor = g_Textures[0].Sample(LinearSampler, In.vTexcoord);
     vector vDestColor = g_Textures[1].Sample(LinearSampler, In.vTexcoord);
 
-    Out.vColor = vSourColor + vDestColor;
+    Out.vDiffuse = vSourColor + vDestColor;
 
     return Out;
 }
@@ -87,7 +88,7 @@ PS_OUT PS_COLOR_MAIN(PS_IN In)
     if (vColor.r < 0.01f)
         discard;
 
-    Out.vColor = g_Color;
+    Out.vDiffuse = g_Color;
 
     return Out;
 }
@@ -104,8 +105,8 @@ PS_OUT PS_BEAM_MAIN(PS_IN In)
     
     vector vBeamColor = vSourColor * vDestColor;
     
-    Out.vColor = 0.9f * vBeamColor;
-    Out.vColor.a = 0.6f;
+    Out.vDiffuse = 0.9f * vBeamColor;
+    Out.vDiffuse.a = 0.6f;
     
     return Out;
 }
@@ -143,6 +144,9 @@ technique11 DefaultTechnique
 	/* */
     pass UI
     {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
 		/* 여러 셰이더에 대해서 각각 어떤 버젼으로 빌드하고 어떤 함수를 호출하여 해당 셰이더가 구동되는지를 설정한다. */
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
@@ -153,6 +157,9 @@ technique11 DefaultTechnique
 
     pass AMMO_DEFAULT
     {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
 		/* 여러 셰이더에 대해서 각각 어떤 버젼으로 빌드하고 어떤 함수를 호출하여 해당 셰이더가 구동되는지를 설정한다. */
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;

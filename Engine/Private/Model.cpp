@@ -241,12 +241,16 @@ HRESULT CModel::Render()
 
 	for (_uint i = 0; i < m_iNumMeshes; i++)
 	{
-		BindMaterialTexture(m_pShader, "g_DiffuseTexture", i, aiTextureType_DIFFUSE);
-		BindMaterialTexture(m_pShader, "g_NormalTexture", i, aiTextureType_NORMALS);
+		if (FAILED(BindMaterialTexture(m_pShader, "g_DiffuseTexture", i, aiTextureType_DIFFUSE)))
+			return E_FAIL;
+		if (FAILED(BindMaterialTexture(m_pShader, "g_NormalTexture", i, aiTextureType_NORMALS)))
+			return E_FAIL;
 	
-		m_pShader->Begin();
+		if (FAILED(m_pShader->Begin()))
+			return E_FAIL;
 
-		m_Meshes[i]->Render();
+		if (FAILED(m_Meshes[i]->Render()))
+			return E_FAIL;
 	}
 
 	for (auto& pParts : m_PartsModel)
@@ -263,17 +267,22 @@ HRESULT CModel::RenderInstancing(CVIBuffer_Instance*& pInstanceBuffer)
 	if (m_pSRV)
 	{
 		if (FAILED(m_pShader->Bind_Texture("g_TransformMap", m_pSRV)))
-			__debugbreak();
+			return E_FAIL;
 	}
 
 	for (_uint i = 0; i < m_iNumMeshes; i++)
 	{
-		BindMaterialTexture(m_pShader, "g_DiffuseTexture", i, aiTextureType_DIFFUSE);
-		BindMaterialTexture(m_pShader, "g_NormalTexture", i, aiTextureType_NORMALS);
+		if (FAILED(BindMaterialTexture(m_pShader, "g_DiffuseTexture", i, aiTextureType_DIFFUSE)))
+			return E_FAIL;
 
-		m_pShader->Begin();
+		if (FAILED(BindMaterialTexture(m_pShader, "g_NormalTexture", i, aiTextureType_NORMALS)))
+			return E_FAIL;
 
-		pInstanceBuffer->Render(m_Meshes[i]);
+		if (FAILED(m_pShader->Begin()))
+			return E_FAIL;
+
+		if (FAILED(pInstanceBuffer->Render(m_Meshes[i])))
+			return E_FAIL;
 	}
 
 	return S_OK;

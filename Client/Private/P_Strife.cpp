@@ -208,7 +208,7 @@ HRESULT CP_Strife::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
-	_float4 vLightDir = _float4(1.f, -1.f, 1.f, 0.f);
+	/*_float4 vLightDir = _float4(1.f, -1.f, 1.f, 0.f);
 	if (FAILED(GetShader()->Bind_RawValue("g_vLightDir", &vLightDir, sizeof(_float4))))
 		return E_FAIL;
 
@@ -222,7 +222,7 @@ HRESULT CP_Strife::Bind_ShaderResources()
 
 	_float4 vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
 	if (FAILED(GetShader()->Bind_RawValue("g_vLightSpecular", &vSpecular, sizeof(_float4))))
-		return E_FAIL;
+		return E_FAIL;*/
 
 	return S_OK;
 }

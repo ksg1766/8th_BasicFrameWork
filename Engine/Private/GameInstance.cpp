@@ -11,6 +11,8 @@
 #include "EventManager.h"
 #include "ShaderManager.h"
 #include "PoolManager.h"
+#include "LightManager.h"
+#include "TargetManager.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -29,6 +31,8 @@ CGameInstance::CGameInstance()
 	, m_pPoolManager(CPoolManager::GetInstance())
 	, m_pShaderManager(CShaderManager::GetInstance())
 	, m_pPipeLine(CPipeLine::GetInstance())
+	, m_pLightManager(CLightManager::GetInstance())
+	, m_pTargetManager(CTargetManager::GetInstance())
 {
 	Safe_AddRef(m_pGraphicDevice);
 	Safe_AddRef(m_pTimerManager);
@@ -44,6 +48,8 @@ CGameInstance::CGameInstance()
 	Safe_AddRef(m_pShaderManager);
 	Safe_AddRef(m_pPoolManager);
 	Safe_AddRef(m_pPipeLine);
+	Safe_AddRef(m_pLightManager);
+	Safe_AddRef(m_pTargetManager);
 }
 
 HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, const GRAPHIC_DESC& GraphicDesc, _Inout_ ID3D11Device** ppDevice, _Inout_ ID3D11DeviceContext** ppContext, _In_ HINSTANCE hInst)
@@ -401,6 +407,16 @@ _matrix CGameInstance::Get_Transform_Matrix_Inverse(CPipeLine::TRANSFORMSTATE eS
 	return m_pPipeLine->Get_Transform_Matrix_Inverse(eState);
 }
 
+const LIGHT_DESC* CGameInstance::Get_LightDesc(_uint iLightIndex)
+{
+	return m_pLightManager->Get_LightDesc(iLightIndex);
+}
+
+HRESULT CGameInstance::Add_Light(const LIGHT_DESC& LightDesc)
+{
+	return m_pLightManager->Add_Light(LightDesc);
+}
+
 
 void CGameInstance::Release_Engine()
 {
@@ -418,6 +434,8 @@ void CGameInstance::Release_Engine()
 	CShaderManager::GetInstance()->DestroyInstance();
 	CPoolManager::GetInstance()->DestroyInstance();
 	CPipeLine::GetInstance()->DestroyInstance();
+	CLightManager::GetInstance()->DestroyInstance();
+	CTargetManager::GetInstance()->DestroyInstance();
 }
 
 void CGameInstance::Free()
@@ -435,4 +453,6 @@ void CGameInstance::Free()
 	Safe_Release(m_pShaderManager);
 	Safe_Release(m_pPoolManager);
 	Safe_Release(m_pPipeLine);
+	Safe_Release(m_pLightManager);
+	Safe_Release(m_pTargetManager);
 }

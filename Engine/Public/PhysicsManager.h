@@ -14,7 +14,7 @@ typedef struct PhysicsDesc
 class CPhysicsManager final : public CBase
 {
 	using Super = CBase;
-    DECLARE_SINGLETON(CPhysicsManager);
+	DECLARE_SINGLETON(CPhysicsManager);
 
 private:
 	CPhysicsManager();
@@ -25,7 +25,7 @@ public:
 
 public:
 	HRESULT Reserve_Manager(_uint iNumLevels);
-	
+
 private:
 
 private:

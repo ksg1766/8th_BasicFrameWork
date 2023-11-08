@@ -334,6 +334,9 @@
     <Filter Include="03.GameObjects\02.Monster\DemonCaster\Behavior\05.StepBack">
       <UniqueIdentifier>{10806104-fd97-46bc-916c-a6bd2f15ac88}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.GameObjects\06.PostProcessing">
+      <UniqueIdentifier>{f82fc678-6211-4a3e-ac44-e0b9f1f17242}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -642,6 +645,9 @@
     <ClInclude Include="..\Public\DemonCaster_BT_StepBack.h">
       <Filter>03.GameObjects\02.Monster\DemonCaster\Behavior\05.StepBack</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Shockwave.h">
+      <Filter>03.GameObjects\06.PostProcessing</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -914,6 +920,9 @@
     <ClCompile Include="..\Private\DemonCaster_BT_StepBack.cpp">
       <Filter>03.GameObjects\02.Monster\DemonCaster\Behavior\05.StepBack</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Shockwave.cpp">
+      <Filter>03.GameObjects\06.PostProcessing</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -975,6 +984,9 @@
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_ComputeParticles.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Shockwave.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

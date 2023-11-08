@@ -8,15 +8,15 @@ matrix			g_ViewMatrix, g_ProjMatrix;
 Texture2D		g_Texture;
 
 vector g_vLightDir = vector(1.f, -1.f, 1.f, 0.f);
-vector g_vLightPos = vector(0.f, 0.f, 0.f, 1.f);
-float g_fLightRange = 0.f;
-vector g_vLightDiffuse = vector(1.f, 1.f, 1.f, 1.f);
-vector g_vLightAmbient = vector(1.f, 1.f, 1.f, 1.f);
-vector g_vLightSpecular = vector(1.f, 1.f, 1.f, 1.f);
+//vector g_vLightPos = vector(0.f, 0.f, 0.f, 1.f);
+//float g_fLightRange = 0.f;
+//vector g_vLightDiffuse = vector(1.f, 1.f, 1.f, 1.f);
+//vector g_vLightAmbient = vector(1.f, 1.f, 1.f, 1.f);
+//vector g_vLightSpecular = vector(1.f, 1.f, 1.f, 1.f);
 vector g_vLightEmissive = vector(1.f, 1.f, 1.f, 1.f);
 
-vector g_vMtrlAmbient = vector(0.4f, 0.4f, 0.4f, 1.f);
-vector g_vMtrlSpecular = vector(1.f, 1.f, 1.f, 1.f);
+//vector g_vMtrlAmbient = vector(0.4f, 0.4f, 0.4f, 1.f);
+//vector g_vMtrlSpecular = vector(1.f, 1.f, 1.f, 1.f);
 //vector g_vMtrlEmissive = vector(1.f, 1.f, 0.f, 1.f);
 vector g_vMtrlEmissive = vector(1.f, 1.f, 0.1f, 1.f);
 
