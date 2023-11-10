@@ -138,26 +138,30 @@ HRESULT CStructuredBuffer::CreateResult()
 	return S_OK;
 }
 
-void CStructuredBuffer::CopyToInput(void* data)
+HRESULT CStructuredBuffer::CopyToInput(void* data)
 {
 	D3D11_MAPPED_SUBRESOURCE subResource;
-	m_pContext->Map(m_pInput, 0, D3D11_MAP_WRITE_DISCARD, 0, &subResource);
-	{
-		memcpy(subResource.pData, data, GetInputByteWidth());
-	}
+	if(FAILED(m_pContext->Map(m_pInput, 0, D3D11_MAP_WRITE_DISCARD, 0, &subResource)))
+		return E_FAIL;
+
+	memcpy(subResource.pData, data, GetInputByteWidth());
+
 	m_pContext->Unmap(m_pInput, 0);
+	return S_OK;
 }
 
-void CStructuredBuffer::CopyFromOutput(void* data)
+HRESULT CStructuredBuffer::CopyFromOutput(void* data)
 {
 	m_pContext->CopyResource(m_pResult, m_pOutput);
 
 	D3D11_MAPPED_SUBRESOURCE subResource;
-	m_pContext->Map(m_pResult, 0, D3D11_MAP_READ, 0, &subResource);
-	{
-		memcpy(data, subResource.pData, GetOutputByteWidth());
-	}
+	if (FAILED(m_pContext->Map(m_pResult, 0, D3D11_MAP_READ, 0, &subResource)))
+		return E_FAIL;
+
+	memcpy(data, subResource.pData, GetOutputByteWidth());
+
 	m_pContext->Unmap(m_pResult, 0);
+	return S_OK;
 }
 
 CStructuredBuffer* CStructuredBuffer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext,

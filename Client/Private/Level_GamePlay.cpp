@@ -91,7 +91,7 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 
 	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
 	LightDesc.vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
-	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vSpecular = LightDesc.vDiffuse;
 
 	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
 		return E_FAIL;
@@ -163,6 +163,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_IgnoreCollision()
 	/* 원형객체를 복제하여 사본객체를 생성하고 레이어에 추가한다. */
 	CGameObject* pGameObject = nullptr;
 	LAYERTAG	eLayerTag = LAYERTAG::IGNORECOLLISION;
+
+	pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_Shockwave"));
+	if (nullptr == pGameObject)	return E_FAIL;
 
 	return S_OK;
 }

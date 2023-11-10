@@ -27,8 +27,8 @@ public:
 	_uint GetInputByteWidth()	{ return m_iInputStride * m_iInputCount; }
 	_uint GetOutputByteWidth()	{ return m_iOutputStride * m_iOutputCount; }
 
-	void CopyToInput(void* data);
-	void CopyFromOutput(void* data);
+	HRESULT CopyToInput(void* data);
+	HRESULT CopyFromOutput(void* data);
 
 public:
 	ID3D11ShaderResourceView*	GetSRV()	{ return m_pSRV; }

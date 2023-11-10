@@ -94,6 +94,7 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_RED();
+        ComputeShader = NULL;
     }
 
     pass GREEN
@@ -105,6 +106,7 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_GREEN();
+        ComputeShader = NULL;
     }
 
     pass BLUE
@@ -116,6 +118,7 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_BLUE();
+        ComputeShader = NULL;
     }
 
     pass WHITE
@@ -127,6 +130,7 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_WHITE();
+        ComputeShader = NULL;
     }
 }
 

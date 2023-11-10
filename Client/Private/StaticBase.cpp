@@ -134,52 +134,10 @@ HRESULT CStaticBase::Bind_ShaderResources()
 {
 	/* 셰이더 전역변수로 던져야 할 값들을 던지자. */
 	if (FAILED(m_pGameInstance->Bind_TransformToShader(GetShader(), "g_ViewMatrix", CPipeLine::D3DTS_VIEW)) ||
-		FAILED(m_pGameInstance->Bind_TransformToShader(GetShader(), "g_ProjMatrix", CPipeLine::D3DTS_PROJ)) ||
-		FAILED(GetShader()->Bind_RawValue("g_vCamPosition", &static_cast<const _float4&>(m_pGameInstance->Get_CamPosition_Float4()), sizeof(_float4))))
+		FAILED(m_pGameInstance->Bind_TransformToShader(GetShader(), "g_ProjMatrix", CPipeLine::D3DTS_PROJ)))
 	{
 		return E_FAIL;
 	}
-
-	// Dissolve Test
-	/*if (FAILED(GetShader()->Bind_RawValue("g_fDissolveAmount", &m_fDissolveAmount, sizeof(_float))))
-		return E_FAIL;*/
-
-	//
-	//return S_OK;
-
-	//const LIGHT_DESC* pLightDesc = pGameInstance->Get_LightDesc(0);
-	/*if (nullptr == pLightDesc)
-		return E_FAIL;*/
-
-	//_uint		iPassIndex = 0;
-
-	//if (LIGHT_DESC::LIGHT_DIRECTIONAL == pLightDesc->eLightType)
-	//{
-	//_float4 vLightDir = _float4(1.f, -1.f, 1.f, 0.f);
-	//	if (FAILED(GetShader()->Bind_RawValue("g_vLightDir", &vLightDir, sizeof(_float4))))
-	//		return E_FAIL;
-	////	iPassIndex = 0;
-	////}
-	///*else
-	//{
-	//	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightPos", &pLightDesc->vLightPos, sizeof(_float4))))
-	//		return E_FAIL;
-	//	if (FAILED(m_pShaderCom->Bind_RawValue("g_fLightRange", &pLightDesc->fLightRange, sizeof(_float))))
-	//		return E_FAIL;
-	//	iPassIndex = 1;
-	//}*/
-
-	//_float4	vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
-	//if (FAILED(GetShader()->Bind_RawValue("g_vLightDiffuse", &vDiffuse, sizeof(_float4))))
-	//	return E_FAIL;
-
-	//_float4 vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
-	//if (FAILED(GetShader()->Bind_RawValue("g_vLightAmbient", &vAmbient, sizeof(_float4))))
-	//	return E_FAIL;
-
-	//_float4 vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
-	//if (FAILED(GetShader()->Bind_RawValue("g_vLightSpecular", &vSpecular, sizeof(_float4))))
-	//	return E_FAIL;
 
 	return S_OK;
 }

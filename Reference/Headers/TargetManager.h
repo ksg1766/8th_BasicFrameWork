@@ -39,7 +39,7 @@ private:
 	map<const wstring, CRenderTarget*>			m_RenderTargets;
 
 	/* 장치에 동시에 바인딩되어야하는 타겟들을 미리 묶어두겠다. */
-	map<const wstring, vector<CRenderTarget*>>		m_MRTs;
+	map<const wstring, vector<CRenderTarget*>>	m_MRTs;
 
 private:
 	ID3D11RenderTargetView* m_pBackBufferRTV = { nullptr };

@@ -185,6 +185,7 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN();
+        ComputeShader = NULL;
     }
 
     pass RimMesh
@@ -196,6 +197,7 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_RIM_MAIN();
+        ComputeShader = NULL;
     }
 
     pass DissolveMesh
@@ -207,5 +209,6 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_DISSOLVE_MAIN();
+        ComputeShader = NULL;
     }
 }

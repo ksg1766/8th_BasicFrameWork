@@ -123,6 +123,7 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN();
+        ComputeShader = NULL;
     }
 }
 

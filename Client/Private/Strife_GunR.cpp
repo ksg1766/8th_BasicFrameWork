@@ -96,28 +96,10 @@ HRESULT CStrife_GunR::Bind_ShaderResources()
 	/* 셰이더 전역변수로 던져야 할 값들을 던지자. */
 	if (FAILED(GetTransform()->Bind_ShaderResources(GetShader(), "g_WorldMatrix")) || 
 		FAILED(m_pGameInstance->Bind_TransformToShader(GetShader(), "g_ViewMatrix", CPipeLine::D3DTS_VIEW)) ||
-		FAILED(m_pGameInstance->Bind_TransformToShader(GetShader(), "g_ProjMatrix", CPipeLine::D3DTS_PROJ)) ||
-		FAILED(GetShader()->Bind_RawValue("g_vCamPosition", &static_cast<const _float4&>(m_pGameInstance->Get_CamPosition_Float4()), sizeof(_float4))))
+		FAILED(m_pGameInstance->Bind_TransformToShader(GetShader(), "g_ProjMatrix", CPipeLine::D3DTS_PROJ)))
 	{
 		return E_FAIL;
 	}
-
-
-	_float4 vLightDir = _float4(1.f, -1.f, 1.f, 0.f);
-	if (FAILED(GetShader()->Bind_RawValue("g_vLightDir", &vLightDir, sizeof(_float4))))
-		return E_FAIL;
-
-	_float4	vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
-	if (FAILED(GetShader()->Bind_RawValue("g_vLightDiffuse", &vDiffuse, sizeof(_float4))))
-		return E_FAIL;
-
-	_float4 vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
-	if (FAILED(GetShader()->Bind_RawValue("g_vLightAmbient", &vAmbient, sizeof(_float4))))
-		return E_FAIL;
-
-	_float4 vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
-	if (FAILED(GetShader()->Bind_RawValue("g_vLightSpecular", &vSpecular, sizeof(_float4))))
-		return E_FAIL;
 
 	return S_OK;
 }

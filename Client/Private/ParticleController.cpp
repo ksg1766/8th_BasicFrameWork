@@ -51,12 +51,12 @@ HRESULT CParticleController::Initialize(void* pArg)
 	m_fLifeTIme = RandomLifeTime(RandomDevice);
 
 	m_pTransform->SetScale(Vec3(fScale));
-	m_pTransform->SetPosition(Vec3(m_tProps.vCenter.x + RandomX(RandomNumber), m_tProps.vCenter.y + RandomY(RandomNumber), m_tProps.vCenter.z + RandomZ(RandomNumber)));
+	m_pTransform->SetPosition(Vec3(m_tProps.vCenter.x + RandomX(RandomNumber), 1.f + m_tProps.vCenter.y + RandomY(RandomNumber), m_tProps.vCenter.z + RandomZ(RandomNumber)));
 
-	m_pTransform->WorldMatrix().Backward(m_vSpeed);
+	//m_pTransform->WorldMatrix().Backward(m_vSpeed);
 
 	//m_pRigidBody->AddForce(m_vSpeed, ForceMode::IMPULSE);
-	//m_pRigidBody->SetMaterialDrag(0.001f);
+	//m_pRigidBody->SetMaterialDrag(0.0f);
 
 	return S_OK;
 }
@@ -91,7 +91,8 @@ void CParticleController::RandomFly(const _float& fTimeDelta)
 
 	if (m_fLifeTIme > 0.f)
 	{
-		//m_pTransform->Translate(m_vSpeed * fTimeDelta);
+		m_vSpeed.y -= 0.07f;
+		m_pTransform->Translate(m_vSpeed * fTimeDelta);
 	}
 	else
 	{

@@ -205,7 +205,7 @@ void CMonsterController::Hit(_int iDamage)
 	CParticleController::PARTICLE_DESC tParticleDesc;
 	tParticleDesc.eType = CParticleController::ParticleType::FLY;
 	tParticleDesc.vCenter = m_pTransform->GetPosition();
-	for (_int i = 0; i < 20; ++i)
+	for (_int i = 0; i < 25; ++i)
 		m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Particle"), LAYERTAG::IGNORECOLLISION, &tParticleDesc);
 
 	if (m_pStats->GetHP() <= 0)

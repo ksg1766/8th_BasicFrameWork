@@ -65,7 +65,9 @@ struct GS_IN
 struct GS_OUT
 {
 	float4		vPosition : SV_POSITION;
+    //float4		vNormal : NORMAL;
 	float2		vTexcoord : TEXCOORD0;
+    //float4		vProjPos : TEXCOORD1;
 };
 
 /* 여러개의 정점을 생성한다. */
@@ -88,19 +90,32 @@ void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> OutStream)
 	Out[0].vPosition = vector(In[0].vPosition.xyz + vRight + vUp, 1.f);
 	Out[0].vPosition = mul(Out[0].vPosition, matVP);
 	Out[0].vTexcoord = float2(0.0f, 0.f);
+    //Out[0].vProjPos = Out[0].vPosition;
 
 	Out[1].vPosition = vector(In[0].vPosition.xyz - vRight + vUp, 1.f);
 	Out[1].vPosition = mul(Out[1].vPosition, matVP);
 	Out[1].vTexcoord = float2(1.0f, 0.f);
+    //Out[1].vProjPos = Out[1].vPosition;
 
 	Out[2].vPosition = vector(In[0].vPosition.xyz - vRight - vUp, 1.f);
 	Out[2].vPosition = mul(Out[2].vPosition, matVP);
 	Out[2].vTexcoord = float2(1.0f, 1.0f);
+    //Out[2].vProjPos = Out[2].vPosition;
 
 	Out[3].vPosition = vector(In[0].vPosition.xyz + vRight - vUp, 1.f);
 	Out[3].vPosition = mul(Out[3].vPosition, matVP);
 	Out[3].vTexcoord = float2(0.0f, 1.0f);
+    //Out[3].vProjPos = Out[3].vPosition;
 
+    //float3 v2 = float3(Out[2].vPosition.xyz - Out[1].vPosition.xyz);
+    //float3 v1 = float3(Out[0].vPosition.xyz - Out[1].vPosition.xyz);
+    //float4 vNormal = float4(normalize(cross(v2, v1)), 0.f);
+	
+    //Out[0].vNormal = vNormal;
+    //Out[1].vNormal = vNormal;
+    //Out[2].vNormal = vNormal;
+    //Out[3].vNormal = vNormal;
+	
 	OutStream.Append(Out[0]);
 	OutStream.Append(Out[1]);
 	OutStream.Append(Out[2]);
@@ -119,28 +134,33 @@ void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> OutStream)
 
 struct PS_IN
 {
-	float4		vPosition : SV_POSITION;
-	float2		vTexcoord : TEXCOORD0;
+	float4 vPosition : SV_POSITION;
+    //float4 vNormal : NORMAL;
+	float2 vTexcoord : TEXCOORD0;
+    //float4 vProjPos : TEXCOORD1;
 };
 
 /* 받아온 픽셀의 정보를 바탕으로 하여 화면에 그려질 픽셀의 최종적인 색을 결정하낟. */
 struct PS_OUT
 {
-	float4	vColor : SV_TARGET0;
+    float4 vGlow : SV_TARGET0;
+    //float4 vNormal : SV_TARGET1;
+    //float4 vDepth : SV_TARGET2;
 };
 
 /* 전달받은 픽셀의 정보를 이용하여 픽셀의 최종적인 색을 결정하자. */
 PS_OUT PS_MAIN(PS_IN In) 
 {
-	PS_OUT			Out = (PS_OUT)0;
+	PS_OUT Out = (PS_OUT)0;
 
-	vector vColor = g_Texture.Sample(PointSampler, In.vTexcoord);
-    Out.vColor = vColor;
-	
-    if (Out.vColor.r < 0.01f)
+    vector vDiffuse = g_Texture.Sample(PointSampler, In.vTexcoord);
+   
+    if (vDiffuse.r < 0.01f)
         discard;
 	
-    Out.vColor = g_vMtrlEmissive;
+    Out.vGlow = g_vMtrlEmissive;
+	//Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+    //Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);
 
 	return Out;
 }
@@ -160,7 +180,9 @@ technique11 DefaultTechnique
 		HullShader = NULL;
 		DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN();
-	}
+        ComputeShader = NULL;
+
+    }
 }
 
 

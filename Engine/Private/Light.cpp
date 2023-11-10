@@ -15,10 +15,29 @@ HRESULT CLight::Initialize(const LIGHT_DESC & LightDesc)
 
 HRESULT CLight::Render(CShader * pShader, CVIBuffer_Rect * pVIBuffer)
 {
-	if (FAILED(pShader->Bind_RawValue("g_vLightDir", &m_LightDesc.vLightDir, sizeof(_float4))))
-		return E_FAIL;
+	if (LIGHT_DESC::LIGHT_DIRECTIONAL == m_LightDesc.eLightType)
+	{
+		if (FAILED(pShader->Bind_RawValue("g_vLightDir", &m_LightDesc.vLightDir, sizeof(_float4))))
+			return E_FAIL;
+		pShader->SetPassIndex(1);
+	}
+
+	else if (LIGHT_DESC::LIGHT_POINT == m_LightDesc.eLightType)
+	{
+		if (FAILED(pShader->Bind_RawValue("g_vLightPos", &m_LightDesc.vLightPos, sizeof(_float4))))
+			return E_FAIL;
+		if (FAILED(pShader->Bind_RawValue("g_fLightRange", &m_LightDesc.fLightRange, sizeof(_float))))
+			return E_FAIL;
+		pShader->SetPassIndex(2);
+	}
 	
-	pShader->SetPassIndex(1);
+	if (FAILED(pShader->Bind_RawValue("g_vLightDiffuse", &m_LightDesc.vDiffuse, sizeof(_float4))))
+		return E_FAIL;
+	if (FAILED(pShader->Bind_RawValue("g_vLightAmbient", &m_LightDesc.vAmbient, sizeof(_float4))))
+		return E_FAIL;
+	if (FAILED(pShader->Bind_RawValue("g_vLightSpecular", &m_LightDesc.vSpecular, sizeof(_float4))))
+		return E_FAIL;
+
 	if (FAILED(pShader->Begin()))
 		return E_FAIL;
 

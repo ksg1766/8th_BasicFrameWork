@@ -31,6 +31,7 @@
 #include "Particle.h"
 #include "ParticleController.h"
 #include "Strife_MotionTrail.h"
+#include "Shockwave.h"
 
 CLoader::CLoader(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: m_pDevice(pDevice)
@@ -219,6 +220,11 @@ HRESULT CLoader::Loading_Components_For_Level_GamePlay()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Particles/FlameMask_%d.png"), 4))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_Texture_Shockwave*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Shockwave"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/ScreenSpace/Shockwave.png")))))
+		return E_FAIL;
+
 	/* For.Prototype_Component_StateMachine */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_StateMachine"),
 		CStateMachine::Create(m_pDevice, m_pContext))))
@@ -353,6 +359,10 @@ HRESULT CLoader::Loading_GameObjects_For_Level_GamePlay()
 
 	/* For.Prototype_GameObject_Strife_MotionTrail */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Strife_MotionTrail"), CStrife_MotionTrail::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Shockwave */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Shockwave"), CShockwave::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_Static */

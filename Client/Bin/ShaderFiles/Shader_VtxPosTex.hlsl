@@ -60,6 +60,7 @@ struct PS_OUT
 {
     float4 vDiffuse : SV_TARGET0;
     float4 vNormal : SV_TARGET1;
+    float4 vDepth : SV_TARGET2;
 };
 
 /* 전달받은 픽셀의 정보를 이용하여 픽셀의 최종적인 색을 결정하자. */
@@ -153,6 +154,7 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN();
+        ComputeShader = NULL;
     }
 
     pass AMMO_DEFAULT
@@ -166,6 +168,7 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_COLOR_MAIN();
+        ComputeShader = NULL;
     }
 
     pass AMMO_BEAM
@@ -179,6 +182,7 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_BEAM_MAIN();
+        ComputeShader = NULL;
     }
 }
 

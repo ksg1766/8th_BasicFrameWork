@@ -132,23 +132,6 @@ HRESULT CParticle::Bind_ShaderResources()
 
 	srand(time(NULL));
 	if (FAILED(GetTexture()->Bind_ShaderResource(GetShader(), "g_Texture", rand() % 4)))
-	//if (FAILED(GetTexture()->Bind_ShaderResources(GetShader(), "g_Textures")))
-		return E_FAIL;
-
-	_float4 vLightDir = _float4(1.f, -1.f, 1.f, 0.f);
-		if (FAILED(GetShader()->Bind_RawValue("g_vLightDir", &vLightDir, sizeof(_float4))))
-			return E_FAIL;
-	
-	_float4	vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
-	if (FAILED(GetShader()->Bind_RawValue("g_vLightDiffuse", &vDiffuse, sizeof(_float4))))
-		return E_FAIL;
-
-	_float4 vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
-	if (FAILED(GetShader()->Bind_RawValue("g_vLightAmbient", &vAmbient, sizeof(_float4))))
-		return E_FAIL;
-
-	_float4 vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
-	if (FAILED(GetShader()->Bind_RawValue("g_vLightSpecular", &vSpecular, sizeof(_float4))))
 		return E_FAIL;
 
 	return S_OK;

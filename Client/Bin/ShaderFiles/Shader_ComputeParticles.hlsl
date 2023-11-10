@@ -32,6 +32,8 @@ void CS_MAIN(uint id : SV_GroupIndex)
     result._41_42_43 = result._41_42_43 + vLinearVelocity * fTimeDelta;
     
     Output[id].result = result;
+    
+    GroupMemoryBarrierWithGroupSync();
 }
 
 technique11 T0

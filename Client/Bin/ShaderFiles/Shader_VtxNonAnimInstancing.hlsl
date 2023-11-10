@@ -38,6 +38,7 @@ struct VS_OUT
     float2 vTexcoord : TEXCOORD0;
     float4 vWorldPos : TEXCOORD1;
     float3 vTangent : TANGENT;
+    float4 vProjPos : TEXCOORD2;
 };
 
 VS_OUT VS_MAIN(VS_IN In)
@@ -54,7 +55,8 @@ VS_OUT VS_MAIN(VS_IN In)
     Out.vTexcoord = In.vTexcoord;
     Out.vWorldPos = mul(float4(In.vPosition, 1.f), In.matWorld);
     Out.vTangent = normalize(mul(float4(In.vTangent, 0.f), In.matWorld)).xyz;
-
+    Out.vProjPos = Out.vPosition;
+    
     return Out;
 }
 
@@ -65,12 +67,14 @@ struct PS_IN
     float2 vTexcoord : TEXCOORD0;
     float4 vWorldPos : TEXCOORD1;
     float3 vTangent : TANGENT;
+    float4 vProjPos : TEXCOORD2;
 };
 
 struct PS_OUT
 {
     float4 vDiffuse : SV_TARGET0;
     float4 vNormal : SV_TARGET1;
+    float4 vDepth : SV_TARGET2;
 };
 
 PS_OUT PS_MAIN(PS_IN In)
@@ -86,7 +90,8 @@ PS_OUT PS_MAIN(PS_IN In)
 	
     Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
-    
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);
+
   //  vector vShade = max(dot(normalize(g_vLightDir) * -1.f, normalize(In.vNormal)), 0.f) +
 		//g_vLightAmbient * g_vMtrlAmbient;
 
@@ -114,7 +119,8 @@ PS_OUT PS_RIM_MAIN(PS_IN In)
 	
     Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
-    
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);
+
  //   vector vShade = max(dot(normalize(g_vLightDir) * -1.f, normalize(In.vNormal)), 0.f) +
 	//	g_vLightAmbient * g_vMtrlAmbient;
 
@@ -166,7 +172,8 @@ PS_OUT PS_DISSOLVE_MAIN(PS_IN In)
 	
     Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
-    
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);
+
   //  vector vShade = max(dot(normalize(g_vLightDir) * -1.f, normalize(In.vNormal)), 0.f) +
 		//g_vLightAmbient * g_vMtrlAmbient;
 
@@ -196,6 +203,7 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN();
+        ComputeShader = NULL;
     }
 
     pass RimMesh
@@ -209,6 +217,7 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_RIM_MAIN();
+        ComputeShader = NULL;
     }
 
     pass DissolveMesh
@@ -222,5 +231,6 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_DISSOLVE_MAIN();
+        ComputeShader = NULL;
     }
 }
