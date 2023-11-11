@@ -17,7 +17,7 @@ HRESULT CVIBuffer_Cube::Initialize_Prototype()
 	m_iNumVBs = 1;
 	m_iNumVertices = 8;
 	//m_iStride = sizeof(VTXCUBETEX);
-	m_iStride = sizeof(VTXCUBENOM);
+	m_iStride = sizeof(VTXCUBETEX);
 
 	ZeroMemory(&m_BufferDesc, sizeof(D3D11_BUFFER_DESC));
 	m_BufferDesc.ByteWidth = m_iNumVertices * m_iStride;
@@ -29,39 +29,39 @@ HRESULT CVIBuffer_Cube::Initialize_Prototype()
 
 	/*VTXCUBETEX* pVertices = new VTXCUBETEX[8];
 	ZeroMemory(pVertices, sizeof(VTXCUBETEX) * 8);*/
-	VTXCUBENOM* pVertices = new VTXCUBENOM[8];
-	ZeroMemory(pVertices, sizeof(VTXCUBENOM) * 8);
+	VTXCUBETEX* pVertices = new VTXCUBETEX[8];
+	ZeroMemory(pVertices, sizeof(VTXCUBETEX) * 8);
 
 	pVertices[0].vPosition = _float3(-0.5f, 0.5f, -0.5f);
-	pVertices[0].vNormal = _float3(-0.577350259f, 0.577350259f, 0.577350259f);
+	//pVertices[0].vNormal = _float3(-0.577350259f, 0.577350259f, 0.577350259f);
 	pVertices[0].vTexture = pVertices[0].vPosition;
 
 	pVertices[1].vPosition = _float3(0.5f, 0.5f, -0.5f);
-	pVertices[1].vNormal = _float3(0.577350259f, 0.577350259f, 0.577350259f);
+	//pVertices[1].vNormal = _float3(0.577350259f, 0.577350259f, 0.577350259f);
 	pVertices[1].vTexture = pVertices[1].vPosition;
 
 	pVertices[2].vPosition = _float3(0.5f, -0.5f, -0.5f);
-	pVertices[2].vNormal = _float3(0.577350259f, 0.577350259f, -0.577350259f);
+	//pVertices[2].vNormal = _float3(0.577350259f, 0.577350259f, -0.577350259f);
 	pVertices[2].vTexture = pVertices[2].vPosition;
 
 	pVertices[3].vPosition = _float3(-0.5f, -0.5f, -0.5f);
-	pVertices[3].vNormal = _float3(-0.577350259f, 0.577350259f, -0.577350259f);
+	//pVertices[3].vNormal = _float3(-0.577350259f, 0.577350259f, -0.577350259f);
 	pVertices[3].vTexture = pVertices[3].vPosition;
 
 	pVertices[4].vPosition = _float3(-0.5f, 0.5f, 0.5f);
-	pVertices[4].vNormal = _float3(-0.577350259f, -0.577350259f, 0.577350259f);
+	//pVertices[4].vNormal = _float3(-0.577350259f, -0.577350259f, 0.577350259f);
 	pVertices[4].vTexture = pVertices[4].vPosition;
 
 	pVertices[5].vPosition = _float3(0.5f, 0.5f, 0.5f);
-	pVertices[5].vNormal = _float3(0.577350259f, -0.577350259f, 0.577350259f);
+	//pVertices[5].vNormal = _float3(0.577350259f, -0.577350259f, 0.577350259f);
 	pVertices[5].vTexture = pVertices[5].vPosition;
 
 	pVertices[6].vPosition = _float3(0.5f, -0.5f, 0.5f);
-	pVertices[6].vNormal = _float3(0.577350259f, -0.577350259f, -0.577350259f);
+	//pVertices[6].vNormal = _float3(0.577350259f, -0.577350259f, -0.577350259f);
 	pVertices[6].vTexture = pVertices[6].vPosition;
 
 	pVertices[7].vPosition = _float3(-0.5f, -0.5f, 0.5f);
-	pVertices[7].vNormal = _float3(-0.577350259f, -0.577350259f, -0.577350259f);
+	//pVertices[7].vNormal = _float3(-0.577350259f, -0.577350259f, -0.577350259f);
 	pVertices[7].vTexture = pVertices[7].vPosition;
 
 	::ZeroMemory(&m_SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));

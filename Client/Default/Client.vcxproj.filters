@@ -337,6 +337,9 @@
     <Filter Include="03.GameObjects\06.PostProcessing">
       <UniqueIdentifier>{f82fc678-6211-4a3e-ac44-e0b9f1f17242}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.GameObjects\00.Static\SkyBox">
+      <UniqueIdentifier>{f4a2fcae-ca40-4f7a-bed8-a4f0c9f40e69}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -648,6 +651,9 @@
     <ClInclude Include="..\Public\Shockwave.h">
       <Filter>03.GameObjects\06.PostProcessing</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\SkyBox.h">
+      <Filter>03.GameObjects\00.Static\SkyBox</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -922,6 +928,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Shockwave.cpp">
       <Filter>03.GameObjects\06.PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SkyBox.cpp">
+      <Filter>03.GameObjects\00.Static\SkyBox</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

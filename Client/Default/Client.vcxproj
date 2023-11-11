@@ -261,6 +261,7 @@
     <ClInclude Include="..\Public\PrefabsView.h" />
     <ClInclude Include="..\Public\PlayerController.h" />
     <ClInclude Include="..\Public\Shockwave.h" />
+    <ClInclude Include="..\Public\SkyBox.h" />
     <ClInclude Include="..\Public\StaticBase.h" />
     <ClInclude Include="..\Public\StaticTest.h" />
     <ClInclude Include="..\Public\Strife_Ammo.h" />
@@ -361,6 +362,7 @@
     </ClCompile>
     <ClCompile Include="..\Private\PlayerController.cpp" />
     <ClCompile Include="..\Private\Shockwave.cpp" />
+    <ClCompile Include="..\Private\SkyBox.cpp" />
     <ClCompile Include="..\Private\StaticBase.cpp" />
     <ClCompile Include="..\Private\StaticTest.cpp" />
     <ClCompile Include="..\Private\Strife_Ammo.cpp" />

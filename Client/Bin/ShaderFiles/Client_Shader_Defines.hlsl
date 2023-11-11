@@ -3,10 +3,10 @@
 
 RasterizerState RS_Skybox
 {
-	FillMode = solid;
+	FillMode = Solid;
 
 	/* 앞면을 컬링하겠다. == 후면을 보여주겠다. */
-	CullMode = Front;
+	CullMode = None;
 
 	/* 앞면을 시계방향으로 쓰겠다. */
 	FrontCounterClockwise = false;
@@ -15,7 +15,7 @@ RasterizerState RS_Skybox
 
 RasterizerState RS_Default
 {
-	FillMode = solid;
+    FillMode = Solid;
 };
 
 RasterizerState RS_Wireframe
@@ -49,6 +49,17 @@ BlendState BS_AlphaBlend
 	SrcBlend = Src_Alpha;
 	DestBlend = Inv_Src_Alpha;
 	BlendOp = Add;
+};
+
+BlendState BS_OneBlend
+{
+    BlendEnable[0] = true;
+    BlendEnable[1] = true;
+
+    SrcBlend = One;
+    DestBlend = One;
+    BlendOp = Add;
+
 };
 
 #endif

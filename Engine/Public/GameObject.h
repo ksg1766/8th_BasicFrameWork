@@ -60,7 +60,8 @@ public:
 	const wstring&			GetObjectTag()	const						{ return m_strObjectTag; }
 	_bool					IsDead()		const						{ return m_IsDead; }
 	_bool					IsInstance()	const						{ return m_IsInstance; }
-	
+	void					InitRendered()								{ m_bRendered = false; }
+
 	void					SetLayerTag(LAYERTAG eLayerTag)				{ m_eLayerTag = eLayerTag; }
 	void					SetObjectTag(const wstring strObjectTag)	{ m_strObjectTag = strObjectTag; }
 	void					SetDeadState(_bool bDead)					{ m_IsDead = bDead; }
@@ -83,6 +84,7 @@ protected:
 	ID3D11Device*			m_pDevice = nullptr;
 	ID3D11DeviceContext*	m_pContext = nullptr;
 	CGameInstance*			m_pGameInstance = nullptr;
+	_bool					m_bRendered = false;
 
 protected:
 	array<CComponent*, FIXED_COMPONENT_COUNT> m_arrComponents = { nullptr };

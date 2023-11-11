@@ -22,13 +22,13 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Lights()))
 		return E_FAIL;
 
+	if (FAILED(Ready_Layer_Default()))
+		return E_FAIL;
+
 	if (FAILED(Ready_Layer_Terrain()))
 		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Ground()))
-		return E_FAIL;
-	
-	if (FAILED(Ready_Layer_Default()))
 		return E_FAIL;
 	
 	if (FAILED(Ready_Layer_Player()))
@@ -112,6 +112,18 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 	return S_OK;
 }
 
+HRESULT CLevel_GamePlay::Ready_Layer_Default()
+{
+	/* 원형객체를 복제하여 사본객체를 생성하고 레이어에 추가한다. */
+	CGameObject* pGameObject = nullptr;
+	LAYERTAG	eLayerTag = LAYERTAG::DEFAULT;
+
+	pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_SkyBox"));
+	if (nullptr == pGameObject)	return E_FAIL;
+
+	return S_OK;
+}
+
 HRESULT CLevel_GamePlay::Ready_Layer_Terrain()
 {
 	/* 원형객체를 복제하여 사본객체를 생성하고 레이어에 추가한다. */
@@ -166,15 +178,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_IgnoreCollision()
 
 	pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_Shockwave"));
 	if (nullptr == pGameObject)	return E_FAIL;
-
-	return S_OK;
-}
-
-HRESULT CLevel_GamePlay::Ready_Layer_Default()
-{
-	/* 원형객체를 복제하여 사본객체를 생성하고 레이어에 추가한다. */
-	CGameObject* pGameObject = nullptr;
-	LAYERTAG	eLayerTag = LAYERTAG::DEFAULT;
 
 	return S_OK;
 }
@@ -262,12 +265,12 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera()
 	CGameObject* pGameObject = nullptr;
 	LAYERTAG	eLayerTag = LAYERTAG::CAMERA;
 
+	pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_MainCamera"));
+	if (nullptr == pGameObject)	return E_FAIL;
+
 	pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_FlyingCamera"));
 	if (nullptr == pGameObject)	return E_FAIL;
 	pGameObject->GetTransform()->Translate(Vec3(0.f, 400.f, 0.f));
-
-	pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_MainCamera"));
-	if (nullptr == pGameObject)	return E_FAIL;
 
 	m_pGameInstance->ChangeCamera(TEXT("MainCamera"));
 
@@ -310,6 +313,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Wall()
 HRESULT CLevel_GamePlay::LoadData_Map()
 {
 	shared_ptr<FileUtils> file = make_shared<FileUtils>();
+	//file->Open(TEXT("../Bin/LevelData/MainStage_v00.dat"), Read);
 	file->Open(TEXT("../Bin/LevelData/NavTest.dat"), Read);
 
 	while (true)

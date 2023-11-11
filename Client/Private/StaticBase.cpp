@@ -40,14 +40,17 @@ void CStaticBase::Tick(const _float& fTimeDelta)
 		return;
 
 	Super::Tick(fTimeDelta);
-	m_bRendered = true;
 }
 
 void CStaticBase::LateTick(const _float& fTimeDelta)
 {
+	if (m_bRendered)
+		return;
+
 	Super::LateTick(fTimeDelta);
 
 	GetRenderer()->Add_RenderGroup(CRenderer::RG_NONBLEND_INSTANCE, this);
+	m_bRendered = true;
 }
 
 void CStaticBase::DebugRender()
@@ -64,8 +67,6 @@ HRESULT CStaticBase::Render()
 
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
-
-	_uint		iNumMeshes = GetModel()->GetNumMeshes();
 
 	GetModel()->Render();
 

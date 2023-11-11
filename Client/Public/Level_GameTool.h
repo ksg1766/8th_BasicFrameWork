@@ -21,6 +21,8 @@ public:
 	void			ImGUIDemo();
 
 private:
+	HRESULT			Ready_Lights();
+	HRESULT			Ready_Layer_Default();
 	HRESULT			Ready_Layer_Terrain();
 	HRESULT			Ready_Layer_Ground();
 	HRESULT			Ready_Layer_Camera();

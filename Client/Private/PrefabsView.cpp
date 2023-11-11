@@ -108,9 +108,9 @@ void CPrefabsView::TapGroups()
 		{
 			const _char* items[] =
 			{
-				"Arena", "Desert_Rock_A", "Desert_Rock_B", "FloorTiles_A", "FloorTiles_B", "FortressTerrain", "FortressTerrain_Alt",
+				"Arena", "DesertRoad", "DesertRoad_Lighter", "DesertRoad_Combine", "Desert_Rock_A", "Desert_Rock_B", "FloorTiles_A", "FloorTiles_B", "FortressTerrain", "FortressTerrain_Alt",
 				"RuinsFloor_A_Half", "RuinsFloor_A_Sqr", "Staircase_A",
-				"Stairs_Rock_A", "Stairs_Rock_B", "TileFloor_Mammon", "WallRubble", "Wood_Platform_A", "Wood_Platform_B"
+				"Stairs_Rock_A", "Stairs_Rock_B", "TileFloor_Mammon", "WallRubble", "Wood_Platform_A", "Wood_Platform_B", "Lava_East_A1", "Lava_East_B1"
 			};
 
 			if (m_Item_Current >= IM_ARRAYSIZE(items))

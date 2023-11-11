@@ -296,6 +296,13 @@ HRESULT CRenderer::Render_NonBlend_Instance()
 
 			Safe_Delete(tweenDesc);
 		}
+		else
+		{
+			for (auto& iter : vecInstances)
+			{
+				iter->InitRendered();
+			}
+		}
 
 		pHead->RenderInstance();	// BindShaderResource 호출을 위함.
 		CVIBuffer_Instance*& buffer = m_InstanceBuffers[instanceId];
@@ -420,9 +427,9 @@ HRESULT CRenderer::Render_LightAcc()
 
 	RELEASE_INSTANCE(CPipeLine);
 
-	if (FAILED(m_pTargetManager->Bind_SRV(m_pShader, TEXT("Target_Normal"), "g_NormalTexture")))
+	if (FAILED(m_pTargetManager->Bind_SRV(m_pShader, TEXT("Target_Normal"), "g_NormalTarget")))
 		return E_FAIL;
-	if (FAILED(m_pTargetManager->Bind_SRV(m_pShader, TEXT("Target_Depth"), "g_DepthTexture")))
+	if (FAILED(m_pTargetManager->Bind_SRV(m_pShader, TEXT("Target_Depth"), "g_DepthTarget")))
 		return E_FAIL;
 
 	m_pLightManager->Render(m_pShader, m_pVIBuffer);
@@ -450,10 +457,10 @@ HRESULT CRenderer::Render_Deferred()
 	if (FAILED(m_pTargetManager->Bind_SRV(m_pShader, TEXT("Target_Diffuse"), "g_DiffuseTarget")))
 		return E_FAIL;
 
-	if (FAILED(m_pTargetManager->Bind_SRV(m_pShader, TEXT("Target_Shade"), "g_ShadeTexture")))
+	if (FAILED(m_pTargetManager->Bind_SRV(m_pShader, TEXT("Target_Shade"), "g_ShadeTarget")))
 		return E_FAIL;
 
-	if (FAILED(m_pTargetManager->Bind_SRV(m_pShader, TEXT("Target_Specular"), "g_SpecularTexture")))
+	if (FAILED(m_pTargetManager->Bind_SRV(m_pShader, TEXT("Target_Specular"), "g_SpecularTarget")))
 		return E_FAIL;
 
 	m_pShader->SetPassIndex(3);
@@ -494,10 +501,10 @@ HRESULT CRenderer::Render_Blur()
 	if (FAILED(m_pTargetManager->Begin_MRT(m_pContext, TEXT("MRT_BlurHorizontal"))))
 		return E_FAIL;
 
-	if (FAILED(m_pTargetManager->Bind_SRV(m_pShader, TEXT("Target_Glow"), "g_GlowTexture")))
+	if (FAILED(m_pTargetManager->Bind_SRV(m_pShader, TEXT("Target_Glow"), "g_GlowTarget")))
 		return E_FAIL;
 
-	if (FAILED(m_pTargetManager->Bind_SRV(m_pShader, TEXT("Target_Specular"), "g_SpecularTexture")))
+	if (FAILED(m_pTargetManager->Bind_SRV(m_pShader, TEXT("Target_Specular"), "g_SpecularTarget")))
 		return E_FAIL;
 
 	m_pShader->SetPassIndex(4);
@@ -513,7 +520,7 @@ HRESULT CRenderer::Render_Blur()
 	if (FAILED(m_pTargetManager->Begin_MRT(m_pContext, TEXT("MRT_BlurVertical"))))
 		return E_FAIL;
 
-	if (FAILED(m_pTargetManager->Bind_SRV(m_pShader, TEXT("Target_BlurH"), "g_BlurHTexture")))
+	if (FAILED(m_pTargetManager->Bind_SRV(m_pShader, TEXT("Target_BlurH"), "g_BlurHTarget")))
 		return E_FAIL;
 
 	m_pShader->SetPassIndex(5);
@@ -528,14 +535,14 @@ HRESULT CRenderer::Render_Blur()
 
 	///////////////////////////// Scene
 
-	if (FAILED(m_pTargetManager->Bind_SRV(m_pShader, TEXT("Target_Scene"), "g_SceneTexture")))
+	if (FAILED(m_pTargetManager->Bind_SRV(m_pShader, TEXT("Target_Scene"), "g_SceneTarget")))
 		return E_FAIL;
 
-	if (FAILED(m_pTargetManager->Bind_SRV(m_pShader, TEXT("Target_BlurHV"), "g_BlurHVTexture")))
+	if (FAILED(m_pTargetManager->Bind_SRV(m_pShader, TEXT("Target_BlurHV"), "g_BlurHVTarget")))
 		return E_FAIL;
 
-	if (FAILED(m_pTargetManager->Bind_SRV(m_pShader, TEXT("Target_Distortion"), "g_DistortionTexture")))
-		return E_FAIL;
+	//if (FAILED(m_pTargetManager->Bind_SRV(m_pShader, TEXT("Target_Distortion"), "g_DistortionTarget")))
+	//	return E_FAIL;
 
 	m_pShader->SetPassIndex(6);
 	if (FAILED(m_pShader->Begin()))
@@ -594,7 +601,10 @@ HRESULT CRenderer::Render_Debug()
 {
 	CLevelManager* pInstance = GET_INSTANCE(CLevelManager);
 
-	if (2 == pInstance->GetCurrentLevelIndex())
+	if (KEY_PRESSING(KEY::CTRL) && KEY_PRESSING(KEY::SHIFT) && KEY_DOWN(KEY::T))
+		m_bTargetOnOff = !m_bTargetOnOff;
+
+	if (m_bTargetOnOff)
 	{
 		/*for (auto& pDebugCom : m_RenderDebug)
 		{

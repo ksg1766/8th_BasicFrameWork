@@ -143,6 +143,12 @@ void CObjectManager::LateTick(const _float& fTimeDelta)
 				if ((_uint)Pair.first == (_uint)LAYERTAG::DEFAULT_LAYER_END)
 					continue;
 
+				if ((_uint)Pair.first == (_uint)LAYERTAG::CAMERA)
+				{
+					CCameraManager::GetInstance()->LateTick(fTimeDelta);
+					continue;
+				}
+
 				if ((_uint)Pair.first < (_uint)LAYERTAG::DYNAMIC_LAYER_END)
 					Pair.second->LateTick(fTimeDelta);
 				// Temp
@@ -157,6 +163,12 @@ void CObjectManager::LateTick(const _float& fTimeDelta)
 				if ((_uint)Pair.first == (_uint)LAYERTAG::DEFAULT_LAYER_END
 					|| (_uint)Pair.first == (_uint)LAYERTAG::DYNAMIC_LAYER_END)
 					continue;
+
+				if ((_uint)Pair.first == (_uint)LAYERTAG::CAMERA)
+				{
+					CCameraManager::GetInstance()->LateTick(fTimeDelta);
+					continue;
+				}
 
 				if ((_uint)Pair.first < (_uint)LAYERTAG::STATIC_LAYER_END)
 					Pair.second->LateTick(fTimeDelta);

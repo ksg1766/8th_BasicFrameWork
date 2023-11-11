@@ -268,6 +268,11 @@ HRESULT CMainApp::Ready_Prototype_Components()
 		CCamera::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 	
+	/* For.Prototype_Component_Texture_SkyBox */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_SkyBox"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/SkyBox/Hell.dds")))))
+		return E_FAIL;
+
 	/* For.Prototype_Component_Texture_Dissolve */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Dissolve"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Dissolve/DissolvePattern%d.dds"), 5))))

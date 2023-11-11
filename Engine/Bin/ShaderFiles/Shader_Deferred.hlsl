@@ -20,20 +20,20 @@ vector	g_vLightSpecular;
 vector  g_vMtrlAmbient = vector(0.4f, 0.4f, 0.4f, 1.f);
 vector  g_vMtrlSpecular = vector(1.f, 1.f, 1.f, 1.f);
 
-Texture2D	g_NormalTexture;
-Texture2D	g_DiffuseTexture;
-Texture2D	g_DepthTexture;
+Texture2D	g_NormalTarget;
+Texture2D	g_DiffuseTarget;
+Texture2D	g_DepthTarget;
 
-Texture2D	g_ShadeTexture;
-Texture2D	g_SpecularTexture;
+Texture2D	g_ShadeTarget;
+Texture2D	g_SpecularTarget;
 
-Texture2D	g_GlowTexture;
-Texture2D	g_BlurHTexture;
-Texture2D	g_BlurHVTexture;
+Texture2D	g_GlowTarget;
+Texture2D	g_BlurHTarget;
+Texture2D	g_BlurHVTarget;
 
-Texture2D	g_DistortionTexture;
+Texture2D	g_DistortionTarget;
 
-Texture2D	g_SceneTexture;
+Texture2D	g_SceneTarget;
 
 Texture2D	g_Texture;
 
@@ -182,8 +182,8 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 {
 	PS_OUT_LIGHT		Out = (PS_OUT_LIGHT)0;
 
-	vector		vNormalDesc = g_NormalTexture.Sample(PointSampler, In.vTexcoord);
-    vector		vDepthDesc = g_DepthTexture.Sample(PointSampler, In.vTexcoord);
+	vector		vNormalDesc = g_NormalTarget.Sample(PointSampler, In.vTexcoord);
+    vector		vDepthDesc = g_DepthTarget.Sample(PointSampler, In.vTexcoord);
     float		fViewZ = vDepthDesc.y * 2000.f;
 
 	vector		vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
@@ -218,8 +218,8 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
 {
     PS_OUT_LIGHT Out = (PS_OUT_LIGHT) 0;
 
-    vector vNormalDesc = g_NormalTexture.Sample(PointSampler, In.vTexcoord);
-    vector vDepthDesc = g_DepthTexture.Sample(PointSampler, In.vTexcoord);
+    vector vNormalDesc = g_NormalTarget.Sample(PointSampler, In.vTexcoord);
+    vector vDepthDesc = g_DepthTarget.Sample(PointSampler, In.vTexcoord);
     float fViewZ = vDepthDesc.y * 2000.f;
 
     vector vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
@@ -259,11 +259,11 @@ PS_OUT PS_MAIN_DEFERRED(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;
 
-	vector		vDiffuse = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
+	vector		vDiffuse = g_DiffuseTarget.Sample(PointSampler, In.vTexcoord);
 	if (vDiffuse.a == 0.f)
 		discard;
-	vector		vShade = g_ShadeTexture.Sample(LinearSampler, In.vTexcoord);
-    vector		vSpecular = g_SpecularTexture.Sample(LinearSampler, In.vTexcoord);
+	vector		vShade = g_ShadeTarget.Sample(LinearSampler, In.vTexcoord);
+    vector		vSpecular = g_SpecularTarget.Sample(LinearSampler, In.vTexcoord);
 
     Out.vColor = vDiffuse * vShade + vSpecular;
 
@@ -327,19 +327,19 @@ PS_OUT_BLURH PS_MAIN_BLURH(PS_IN_BLUR In)
     
     color = float4(0.0f, 0.0f, 0.0f, 0.0f);
     
-    color += g_GlowTexture.Sample(LinearSampler, In.vTexcoord1) * weight4 + g_SpecularTexture.Sample(LinearSampler, In.vTexcoord1) * weight4;
-    color += g_GlowTexture.Sample(LinearSampler, In.vTexcoord2) * weight3 + g_SpecularTexture.Sample(LinearSampler, In.vTexcoord2) * weight3;
-    color += g_GlowTexture.Sample(LinearSampler, In.vTexcoord3) * weight2 + g_SpecularTexture.Sample(LinearSampler, In.vTexcoord3) * weight2;
-    color += g_GlowTexture.Sample(LinearSampler, In.vTexcoord4) * weight1 + g_SpecularTexture.Sample(LinearSampler, In.vTexcoord4) * weight1;
-    color += g_GlowTexture.Sample(LinearSampler, In.vTexcoord5) * weight0 + g_SpecularTexture.Sample(LinearSampler, In.vTexcoord5) * weight0;
-    color += g_GlowTexture.Sample(LinearSampler, In.vTexcoord6) * weight1 + g_SpecularTexture.Sample(LinearSampler, In.vTexcoord6) * weight1;
-    color += g_GlowTexture.Sample(LinearSampler, In.vTexcoord7) * weight2 + g_SpecularTexture.Sample(LinearSampler, In.vTexcoord7) * weight2;
-    color += g_GlowTexture.Sample(LinearSampler, In.vTexcoord8) * weight3 + g_SpecularTexture.Sample(LinearSampler, In.vTexcoord8) * weight3;
-    color += g_GlowTexture.Sample(LinearSampler, In.vTexcoord9) * weight4 + g_SpecularTexture.Sample(LinearSampler, In.vTexcoord9) * weight4;
-    //color += g_GlowTexture.Sample(LinearSampler, In.vTexcoord10) * weight3;
-    //color += g_GlowTexture.Sample(LinearSampler, In.vTexcoord11) * weight4;
-    //color += g_GlowTexture.Sample(LinearSampler, In.vTexcoord12) * weight5;
-    //color += g_GlowTexture.Sample(LinearSampler, In.vTexcoord13) * weight6;
+    color += g_GlowTarget.Sample(LinearSampler, In.vTexcoord1) * weight4 + g_SpecularTarget.Sample(LinearSampler, In.vTexcoord1) * weight4;
+    color += g_GlowTarget.Sample(LinearSampler, In.vTexcoord2) * weight3 + g_SpecularTarget.Sample(LinearSampler, In.vTexcoord2) * weight3;
+    color += g_GlowTarget.Sample(LinearSampler, In.vTexcoord3) * weight2 + g_SpecularTarget.Sample(LinearSampler, In.vTexcoord3) * weight2;
+    color += g_GlowTarget.Sample(LinearSampler, In.vTexcoord4) * weight1 + g_SpecularTarget.Sample(LinearSampler, In.vTexcoord4) * weight1;
+    color += g_GlowTarget.Sample(LinearSampler, In.vTexcoord5) * weight0 + g_SpecularTarget.Sample(LinearSampler, In.vTexcoord5) * weight0;
+    color += g_GlowTarget.Sample(LinearSampler, In.vTexcoord6) * weight1 + g_SpecularTarget.Sample(LinearSampler, In.vTexcoord6) * weight1;
+    color += g_GlowTarget.Sample(LinearSampler, In.vTexcoord7) * weight2 + g_SpecularTarget.Sample(LinearSampler, In.vTexcoord7) * weight2;
+    color += g_GlowTarget.Sample(LinearSampler, In.vTexcoord8) * weight3 + g_SpecularTarget.Sample(LinearSampler, In.vTexcoord8) * weight3;
+    color += g_GlowTarget.Sample(LinearSampler, In.vTexcoord9) * weight4 + g_SpecularTarget.Sample(LinearSampler, In.vTexcoord9) * weight4;
+    //color += g_GlowTarget.Sample(LinearSampler, In.vTexcoord10) * weight3;
+    //color += g_GlowTarget.Sample(LinearSampler, In.vTexcoord11) * weight4;
+    //color += g_GlowTarget.Sample(LinearSampler, In.vTexcoord12) * weight5;
+    //color += g_GlowTarget.Sample(LinearSampler, In.vTexcoord13) * weight6;
     
     color.a = 1.0f;
     
@@ -386,19 +386,19 @@ PS_OUT_BLURV PS_MAIN_BLURV(PS_IN_BLUR In)
     
     color = float4(0.0f, 0.0f, 0.0f, 0.0f);
     
-    color += g_BlurHTexture.Sample(LinearSampler, In.vTexcoord1) * weight4;
-    color += g_BlurHTexture.Sample(LinearSampler, In.vTexcoord2) * weight3;
-    color += g_BlurHTexture.Sample(LinearSampler, In.vTexcoord3) * weight2;
-    color += g_BlurHTexture.Sample(LinearSampler, In.vTexcoord4) * weight1;
-    color += g_BlurHTexture.Sample(LinearSampler, In.vTexcoord5) * weight0;
-    color += g_BlurHTexture.Sample(LinearSampler, In.vTexcoord6) * weight1;
-    color += g_BlurHTexture.Sample(LinearSampler, In.vTexcoord7) * weight2;
-    color += g_BlurHTexture.Sample(LinearSampler, In.vTexcoord8) * weight3;
-    color += g_BlurHTexture.Sample(LinearSampler, In.vTexcoord9) * weight4;
-    //color += g_BlurHTexture.Sample(LinearSampler, In.vTexcoord10) * weight3;
-    //color += g_BlurHTexture.Sample(LinearSampler, In.vTexcoord11) * weight4;
-    //color += g_BlurHTexture.Sample(LinearSampler, In.vTexcoord12) * weight5;
-    //color += g_BlurHTexture.Sample(LinearSampler, In.vTexcoord13) * weight6;
+    color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord1) * weight4;
+    color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord2) * weight3;
+    color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord3) * weight2;
+    color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord4) * weight1;
+    color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord5) * weight0;
+    color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord6) * weight1;
+    color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord7) * weight2;
+    color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord8) * weight3;
+    color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord9) * weight4;
+    //color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord10) * weight3;
+    //color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord11) * weight4;
+    //color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord12) * weight5;
+    //color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord13) * weight6;
     
     color.a = 1.0f;
     
@@ -411,10 +411,10 @@ PS_OUT PS_MAIN_SCENE(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
 
-    vector vScene = g_SceneTexture.Sample(PointSampler, In.vTexcoord);
+    vector vScene = g_SceneTarget.Sample(PointSampler, In.vTexcoord);
     if (vScene.a == 0.f)
         discard;
-    vector vBlur = g_BlurHVTexture.Sample(LinearSampler, In.vTexcoord);
+    vector vBlur = g_BlurHVTarget.Sample(LinearSampler, In.vTexcoord);
 
     Out.vColor = vScene + vBlur;
 

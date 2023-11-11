@@ -37,8 +37,14 @@ HRESULT CLevel_GameTool::Initialize()
 	// Setup Platform/Renderer backends
 	ImGui_ImplWin32_Init(g_hWnd);
 	ImGui_ImplDX11_Init(m_pDevice, m_pContext);
+	
+	if (FAILED(Ready_Lights()))
+		return E_FAIL;
 
- 	if (FAILED(Ready_Layer_Terrain()))
+ 	if (FAILED(Ready_Layer_Default()))
+		return E_FAIL;
+	
+	if (FAILED(Ready_Layer_Terrain()))
 		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Ground()))
@@ -114,6 +120,49 @@ HRESULT CLevel_GameTool::DebugRender()
 		m_pAnimationView->DebugRender();
 		m_pNavMeshView->DebugRender();
 	}
+
+	return S_OK;
+}
+
+HRESULT CLevel_GameTool::Ready_Lights()
+{
+	LIGHT_DESC			LightDesc;
+
+	/* 방향성 광원을 추가하낟. */
+	ZeroMemory(&LightDesc, sizeof LightDesc);
+	LightDesc.eLightType = LIGHT_DESC::LIGHT_DIRECTIONAL;
+	LightDesc.vLightDir = _float4(1.f, -1.f, 1.f, 0.f);
+
+	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vSpecular = LightDesc.vDiffuse;
+
+	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
+		return E_FAIL;
+
+	/* 점 광원을 추가한다. */
+	/*ZeroMemory(&LightDesc, sizeof LightDesc);
+	LightDesc.eLightType = LIGHT_DESC::LIGHT_POINT;
+	LightDesc.vLightPos = _float4(35.f, 3.f, 35.f, 1.f);
+	LightDesc.fLightRange = 20.f;
+
+	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
+
+	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
+		return E_FAIL;*/
+
+	return S_OK;
+}
+
+HRESULT CLevel_GameTool::Ready_Layer_Default()
+{
+	CGameObject* pGameObject = nullptr;
+	LAYERTAG	eLayerTag = LAYERTAG::DEFAULT;
+
+	pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMETOOL, eLayerTag, TEXT("Prototype_GameObject_SkyBox"));
+	if (nullptr == pGameObject)	return E_FAIL;
 
 	return S_OK;
 }

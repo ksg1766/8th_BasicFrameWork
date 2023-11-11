@@ -53,6 +53,7 @@ private:
 #ifdef _DEBUG
 private:
 	vector<CComponent*>							m_RenderDebug;
+	_bool										m_bTargetOnOff = false;
 #endif
 
 private:

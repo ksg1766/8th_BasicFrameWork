@@ -5,14 +5,14 @@ TextureCube	g_DiffuseTexture;
 
 sampler DefaultSampler = sampler_state {
 
-	filter = min_mag_mip_linear;
+    Filter = MIN_MAG_MIP_LINEAR;
 	AddressU = WRAP;
 	AddressV = WRAP;
 };
 
 sampler PointSampler = sampler_state {
 
-	filter = min_mag_mip_Point;
+    Filter = MIN_MAG_MIP_LINEAR;
 	AddressU = WRAP;
 	AddressV = WRAP;
 };
@@ -20,13 +20,13 @@ sampler PointSampler = sampler_state {
 struct VS_IN
 {
 	float3		vPosition : POSITION;	
-	float3		vTexUV : TEXCOORD0;
+    float3		vTexcoord : TEXCOORD0;
 };
 
 struct VS_OUT
 {
 	float4		vPosition : SV_POSITION;	
-	float3		vTexUV : TEXCOORD0;	
+    float3		vTexcoord : TEXCOORD0;
 };
 
 
@@ -40,7 +40,7 @@ VS_OUT VS_MAIN(VS_IN In)
 	matWVP = mul(matWV, g_ProjMatrix);
 
 	Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
-	Out.vTexUV = In.vTexUV;
+    Out.vTexcoord = In.vTexcoord;
 	
 	return Out;
 }
@@ -48,7 +48,7 @@ VS_OUT VS_MAIN(VS_IN In)
 struct PS_IN
 {
 	float4		vPosition : SV_POSITION;
-	float3		vTexUV : TEXCOORD0;
+    float3	vTexcoord : TEXCOORD0;
 };
 
 struct PS_OUT
@@ -60,7 +60,7 @@ PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;
 
-    Out.vColor = g_DiffuseTexture.Sample(DefaultSampler, In.vTexUV);
+    Out.vColor = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
 	//Out.vColor = (vector)0.f;
 
 	return Out;
@@ -80,8 +80,8 @@ technique11 DefaultTechnique
 	{
 		SetRasterizerState(RS_Skybox);
 		SetDepthStencilState(DSS_Skybox, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
 
-		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 	/*	SetBlendState(DefaultBlendState);
 		SetRasterizerState();
 		*/

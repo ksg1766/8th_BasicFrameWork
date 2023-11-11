@@ -56,15 +56,15 @@ void CQuadTreeNode::Render_QuadTreeNode()
 {
 	if (!m_vecChildren.empty())
 	{
-		for (auto& iter : m_vecChildren)
+		for (auto& pNode : m_vecChildren)
 		{
-			if (DISJOINT == iter->IsCulled())
+			if (DISJOINT == pNode->IsCulled())
 				continue;
-			else if (INTERSECTS == iter->IsCulled())
-				iter->Render_QuadTreeNode();
+			else if (INTERSECTS == pNode->IsCulled())
+				pNode->Render_QuadTreeNode();
 			else // CONTAINS
 			{
-				for (auto& _iter : iter->GetObjectList())
+				for (auto& _iter : pNode->GetObjectList())
 				{
 					_iter->Tick(0.0167f);
 					_iter->LateTick(0.0167f);
