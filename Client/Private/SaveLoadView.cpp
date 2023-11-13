@@ -156,7 +156,7 @@ HRESULT CSaveLoadView::Clear()
 		LAYERTAG eLayer = static_cast<LAYERTAG>(iLayer);
 
 		if (/*eLayer == LAYERTAG::DEFAULT_LAYER_END || eLayer == LAYERTAG::DYNAMIC_LAYER_END ||
-			eLayer == LAYERTAG::STATIC_LAYER_END || */eLayer == LAYERTAG::CAMERA || eLayer == LAYERTAG::TERRAIN)
+			eLayer == LAYERTAG::STATIC_LAYER_END || */eLayer == LAYERTAG::DEFAULT || eLayer == LAYERTAG::CAMERA || eLayer == LAYERTAG::TERRAIN)
 			continue;
 
 		map<LAYERTAG, CLayer*>::iterator iterLayer = mapLayers.find(eLayer);
@@ -194,11 +194,11 @@ void CSaveLoadView::InfoView()
 	}
 	else
 	{
-		ImGui::SameLine();
+		/*ImGui::SameLine();
 		if (ImGui::Button("Save Override"))
 		{
 			Save();
-		}
+		}*/
 		ImGui::SameLine();
 		if (ImGui::Button("Load"))
 		{

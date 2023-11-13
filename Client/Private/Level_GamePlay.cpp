@@ -313,8 +313,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Wall()
 HRESULT CLevel_GamePlay::LoadData_Map()
 {
 	shared_ptr<FileUtils> file = make_shared<FileUtils>();
-	//file->Open(TEXT("../Bin/LevelData/MainStage_v00.dat"), Read);
-	file->Open(TEXT("../Bin/LevelData/NavTest.dat"), Read);
+	file->Open(TEXT("../Bin/LevelData/MainStage_v01.dat"), Read);
+	//file->Open(TEXT("../Bin/LevelData/NavTest.dat"), Read);
 
 	while (true)
 	{

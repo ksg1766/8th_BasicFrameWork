@@ -108,15 +108,15 @@ void CPrefabsView::TapGroups()
 		{
 			const _char* items[] =
 			{
-				"Arena", "DesertRoad", "DesertRoad_Lighter", "DesertRoad_Combine", "Desert_Rock_A", "Desert_Rock_B", "FloorTiles_A", "FloorTiles_B", "FortressTerrain", "FortressTerrain_Alt",
-				"RuinsFloor_A_Half", "RuinsFloor_A_Sqr", "Staircase_A",
-				"Stairs_Rock_A", "Stairs_Rock_B", "TileFloor_Mammon", "WallRubble", "Wood_Platform_A", "Wood_Platform_B", "Lava_East_A1", "Lava_East_B1"
+				"Arena", "AtherSpark","Blockout_AtherSpark", "DesertRoad", "DesertRoad_Lighter", "DesertRoad_Combine", "Desert_Rock_A", "Desert_Rock_B", "FloorTiles_A", "FloorTiles_B", "FortressTerrain", "FortressTerrain_Alt",
+				"Half_Pond", "Outlook_Boss", "RuinsFloor_A_Half", "RuinsFloor_A_Sqr", "Staircase_A", "Stairs_16m",
+				"Stairs_Rock_A", "Stairs_Rock_B", "TileFloor_Mammon", "WallRubble", "Wood_Platform_A", "Wood_Platform_B", "Lava_East_A1", "Lava_East_B1", "LavaUpdate", "LavaUpdate2", "Water_Pond"
 			};
 
 			if (m_Item_Current >= IM_ARRAYSIZE(items))
 				m_Item_Current = IM_ARRAYSIZE(items) - 1;
 
-			ImGui::ListBox("Ground Objects", &m_Item_Current, items, IM_ARRAYSIZE(items), 5);
+			ImGui::ListBox("Ground Objects", &m_Item_Current, items, IM_ARRAYSIZE(items), 10);
 			m_ePickedLayerTag = LAYERTAG::GROUND;
 			m_strPickedObject = Utils::ToWString(items[m_Item_Current]);
 			ImGui::EndTabItem();
@@ -125,16 +125,16 @@ void CPrefabsView::TapGroups()
 		{
 			const _char* items[] = 
 			{
-				"Cliff_Rock_A", "Desert_Rock_Tall_A", "Obelisk_A", "Pillar_LG", "RuinsPillar_4m_A", "RuinsPillar_4m_B",
+				"Cliff_Rock_A", "Desert_Rock_Tall_A", "Obelisk_A", "Pillar_LG", "Pillar_Square_A", "RuinsPillar_4m_A", "RuinsPillar_4m_B",
 				"RuinsPillar_5m_A", "RuinsPillar_5m_Arch_A", "RuinsPillar_5m_Arch_DMG",
 				"RuinsPillar_5m_B", "RuinsWall_A", "RuinsWall_B", "RuinWall_CNR_A", "RuinWall_CNR_B",
-				"SM_Fortress_WoodTower_A", "SM_Fortress_WoodTower_B", "SM_Fortress_WoodTower_C"
+				"SM_Fortress_WoodTower_A", "SM_Fortress_WoodTower_B", "SM_Fortress_WoodTower_C", "Main_Waterfall", "Waterfall_Foar", "Water_Hole_A", "Water_Hole_B"
 			};
 
 			if (m_Item_Current >= IM_ARRAYSIZE(items))
 				m_Item_Current = IM_ARRAYSIZE(items) - 1;
 
-			ImGui::ListBox("Wall Objects", &m_Item_Current, items, IM_ARRAYSIZE(items), 5);
+			ImGui::ListBox("Wall Objects", &m_Item_Current, items, IM_ARRAYSIZE(items), 10);
 			m_ePickedLayerTag = LAYERTAG::WALL;
 			m_strPickedObject = Utils::ToWString(items[m_Item_Current]);
 			

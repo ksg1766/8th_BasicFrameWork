@@ -270,7 +270,8 @@ HRESULT CMainApp::Ready_Prototype_Components()
 	
 	/* For.Prototype_Component_Texture_SkyBox */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_SkyBox"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/SkyBox/Hell.dds")))))
+		//CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/SkyBox/Hell.dds")))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/SkyBox/Sunset.dds")))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_Dissolve */

@@ -242,7 +242,7 @@ void CLayersView::TapGroups(_uint iIndex)
 				if (m_Item_Current >= vecItems.size())
 					m_Item_Current = vecItems.size() - 1;
 
-				ImGui::ListBox(LayerTag_string[iLayer], &m_Item_Current, vecItems.data(), vecItems.size(), 5);
+				ImGui::ListBox(LayerTag_string[iLayer], &m_Item_Current, vecItems.data(), vecItems.size(), 7);
 				
 				if (0 <= m_Item_Current && !m_IsPickingActivated)
 				{
