@@ -5,6 +5,15 @@
 #include "MonsterStats.h"
 
 #include "BT_Composite.h"
+#include "Moloch_BT_IF_Dead.h"
+#include "Moloch_BT_REPEAT.h"
+#include "Moloch_BT_WHILE_Phase1.h"
+#include "Moloch_BT_WHILE_Phase2.h"
+
+#include "Moloch_BT_Dash.h"
+#include "Moloch_BT_Dead.h"
+#include "Moloch_BT_Idle.h"
+#include "Moloch_BT_Chase.h"
 
 CMoloch::CMoloch(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: Super(pDevice, pContext)
@@ -123,29 +132,76 @@ HRESULT CMoloch::Ready_Scripts()
 	if (LEVEL_GAMEPLAY == m_pGameInstance->GetCurrentLevelIndex())
 	{
 		/* Com_BossController */
-		//if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::Script, TEXT("Prototype_Component_BossController"))))
-		//	return E_FAIL;
+		if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::Script, TEXT("Prototype_Component_BossController"))))
+			return E_FAIL;
 
-		//m_pController = dynamic_cast<CBossController*>(m_vecScripts[0]);
+		m_pController = dynamic_cast<CBossController*>(m_vecScripts[0]);
 
-		///* Com_MonsterStats */
-		//CMonsterStats::MONSTERSTAT stats = { 2000, 20 };
-		//if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::Script, TEXT("Prototype_Component_MonsterStats"), &stats)))
-		//	return E_FAIL;
+		/* Com_MonsterStats */
+		CMonsterStats::MONSTERSTAT stats = { 3000, 20 };
+		if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::Script, TEXT("Prototype_Component_MonsterStats"), &stats)))
+			return E_FAIL;
 
-		//m_pController->SetStats(dynamic_cast<CMonsterStats*>(m_vecScripts[1]));
+		m_pController->SetStats(dynamic_cast<CMonsterStats*>(m_vecScripts[1]));
 
 		///* Com_BehaviorTree */
-		//if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::Script, TEXT("Prototype_Component_BehaviorTree"))))
-		//	return E_FAIL;
+		if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::Script, TEXT("Prototype_Component_BehaviorTree"))))
+			return E_FAIL;
 
-		//CBehaviorTree* pBehaviorTree = dynamic_cast<CBehaviorTree*>(m_vecScripts[2]);
-		//{
+		CBehaviorTree* pBehaviorTree = dynamic_cast<CBehaviorTree*>(m_vecScripts[2]);
+		{
+			CBT_Action::BEHAVEANIMS desc;
 
+			desc.vecAnimations.clear();
+			desc.vecAnimations.push_back(TEXT("Moloch_Full_Impact_Stun"));
+			CBT_Action* pDead = CMoloch_BT_Dead::Create(this, pBehaviorTree, desc, m_pController);
 
-		//	BLACKBOARD& hashBlackBoard = pBehaviorTree->GetBlackBoard();
-		//	hashBlackBoard.emplace(TEXT("Sight"), new tagBlackBoardData<_float>(30.f));
-		//}
+			CBT_Decorator* pIfDead = CMoloch_BT_IF_Dead::Create(this, pBehaviorTree, m_pController, CBT_Decorator::DecoratorType::IF);//Á×¾ú´Â°¡
+			pIfDead->AddChild(pDead);
+
+			//
+
+			desc.vecAnimations.clear();
+			desc.vecAnimations.push_back(TEXT("Moloch_Atk_Dash_Strike"));
+			CBT_Action* pDash = CMoloch_BT_Dash::Create(this, pBehaviorTree, desc, m_pController);
+
+			desc.vecAnimations.clear();
+			desc.vecAnimations.push_back(TEXT("Moloch_Full_Run_F"));
+			CBT_Action* pChase = CMoloch_BT_Chase::Create(this, pBehaviorTree, desc, m_pController);
+
+			/*desc.vecAnimations.clear();
+			desc.vecAnimations.push_back(TEXT("Moloch_Atk_Swipe_01"));
+			CBT_Action* pSwipe = CMoloch_BT_Swipe::Create(this, pBehaviorTree, desc, m_pController);*/
+
+			CBT_Composite* pChaseAttack = CBT_Composite::Create(this, pBehaviorTree, m_pController, CBT_Composite::CompositeType::SEQUENCE);
+			pChaseAttack->AddChild(pChase);
+			//pChaseAttack->AddChild(pSwipe);
+
+			CBT_Decorator* pRepeatChaseAttack = CMoloch_BT_REPEAT::Create(this, pBehaviorTree, m_pController, 2);
+			pRepeatChaseAttack->AddChild(pChaseAttack);
+
+			desc.vecAnimations.clear();
+			desc.vecAnimations.push_back(TEXT("Moloch_Idle"));
+			CBT_Action* pIdle = CMoloch_BT_Idle::Create(this, pBehaviorTree, desc, m_pController);
+
+			CBT_Composite* pPhase1 = CBT_Composite::Create(this, pBehaviorTree, m_pController, CBT_Composite::CompositeType::SEQUENCE);	//
+			pPhase1->AddChild(pDash);
+			pPhase1->AddChild(pRepeatChaseAttack);
+			pPhase1->AddChild(pIdle);
+
+			CBT_Decorator* pWhilePhase1 = CMoloch_BT_WHILE_Phase1::Create(this, pBehaviorTree, m_pController, CBT_Decorator::DecoratorType::WHILE); // Phase1
+			pWhilePhase1->AddChild(pPhase1);
+
+			//////////
+			CBT_Composite* pRoot = CBT_Composite::Create(this, pBehaviorTree, m_pController, CBT_Composite::CompositeType::SELECTOR);
+			pRoot->AddChild(pIfDead);
+			pRoot->AddChild(pWhilePhase1);
+			pBehaviorTree->SetRoot(pRoot);
+
+			// BlackBoard
+			BLACKBOARD& hashBlackBoard = pBehaviorTree->GetBlackBoard();
+			hashBlackBoard.emplace(TEXT("AttackRange"), new tagBlackBoardData<_float>(5.f));
+		}
 	}
 
 	return S_OK;

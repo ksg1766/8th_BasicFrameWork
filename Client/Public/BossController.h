@@ -34,7 +34,7 @@ public:
 public:
 	void	GetMoveMessage(const Vec3& vDir)		{ m_vNetMove += vDir; }
 	void	GetTranslateMessage(const Vec3& vDir)	{ m_vNetTrans += vDir; }
-	void	GetAttackMessage()						{ Attack(); }
+	void	GetAttackMessage(_int iSkillIndex)		{ Attack(iSkillIndex); }
 	void	GetHitMessage(_int iDamage);
 	void	GetMaxSpeedMessage()					{ m_bMax = true; }
 
@@ -44,6 +44,7 @@ public:
 	_bool	Walkable(_fvector vPoint)				{ return m_pNavMeshAgent->Walkable(vPoint); }
 
 	_bool	IsZeroHP()								{ return m_IsZeroHP; }
+	CMonsterStats*	GetStats()						{ return m_pStats; }
 	void	SetStats(CMonsterStats* pStats)			{ m_pStats = pStats; }
 
 public:
@@ -54,7 +55,7 @@ public:
 private:
 	void	Move(const _float& fTimeDelta);
 	void	Translate(const _float& fTimeDelta);
-	void	Attack();
+	void	Attack(_int iSkillIndex);
 	void	Hit(_int iDamage);
 
 	void	LimitAllAxisVelocity();

@@ -173,8 +173,22 @@ void CBossController::Translate(const _float& fTimeDelta)
 	m_vNetTrans = Vec3::Zero;
 }
 
-void CBossController::Attack()
+void CBossController::Attack(_int iSkillIndex)
 {
+	/*switch (iSkillIndex)
+	{
+	case 0:
+		break;
+	case 1:
+		break;
+	case 2:
+		break;
+	case 3:
+		break;
+	case 4:
+		break;
+	}*/
+
 	/*if (TEXT("HellHound") == m_pGameObject->GetObjectTag())
 	{
 		

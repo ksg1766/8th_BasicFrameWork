@@ -10,6 +10,7 @@
 #include "CollisionTest.h"
 #include "PlayerController.h"
 #include "MonsterController.h"
+#include "BossController.h"
 #include "MonsterStats.h"
 #include "MainCameraController.h"
 #include "StateMachine.h"
@@ -261,6 +262,11 @@ HRESULT CLoader::Loading_Scripts_For_Level_GamePlay()
 	/* For.Prototype_Component_MonsterController*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_MonsterController"),
 		CMonsterController::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_BossController*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_BossController"),
+		CBossController::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_ParticleController*/
