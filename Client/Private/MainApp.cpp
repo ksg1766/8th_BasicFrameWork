@@ -274,6 +274,22 @@ HRESULT CMainApp::Ready_Prototype_Components()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/SkyBox/Sunset.dds")))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_Texture_Lava_A_emissive */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Lava_A_emissive"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Emissive/Lava_A_emissive0.png")))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Lava_B_emissive */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Lava_B_emissive"),
+		//CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Emissive/Lava_B_erh.dds")))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Emissive/Lava_A_emissive1.png")))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Noise_Liquid */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Noise_Liquid"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Noise/Noise_Liquid.png")))))
+		return E_FAIL;
+
 	/* For.Prototype_Component_Texture_Dissolve */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Dissolve"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Dissolve/DissolvePattern%d.dds"), 5))))
@@ -302,6 +318,15 @@ HRESULT CMainApp::Ready_Prototype_Components()
 					CModel::Create(m_pDevice, m_pContext, strStaticFilePath + strFileName, desc, matPivot))))
 					return E_FAIL;
 			}
+			else if (TEXT("Moloch_Sword") == strFileName)
+			{
+				//XMStoreFloat4x4(&matPivot, XMMatrixScaling(0.007f, 0.007f, 0.007f) * XMMatrixRotationY(XMConvertToRadians(172.0f)) * XMMatrixRotationX(XMConvertToRadians(98.0f)) * XMMatrixTranslation(-0.15f, 0.f, 0.095f));
+				XMStoreFloat4x4(&matPivot, XMMatrixScaling(0.007f, 0.007f, 0.007f) * XMMatrixRotationY(XMConvertToRadians(80.f)) * XMMatrixRotationX(XMConvertToRadians(270.0f)) * XMMatrixRotationY(XMConvertToRadians(270.f)) * XMMatrixRotationZ(XMConvertToRadians(330.0f))
+					* XMMatrixTranslation(1.6f, 0.4f, -2.5f));
+				if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_" + strFileName),
+					CModel::Create(m_pDevice, m_pContext, strStaticFilePath + strFileName, desc, matPivot))))
+					return E_FAIL;
+			}
 			else
 			{
 				if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_" + strFileName),
@@ -326,6 +351,15 @@ HRESULT CMainApp::Ready_Prototype_Components()
 				desc.vecSocketBoneNames.push_back("Bone_Strife_Weapon_Dagger_L_end");
 				desc.vecSocketBoneNames.push_back("Bone_Strife_Weapon_Dagger_R_end");
 
+				if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_" + strFileName),
+					CModel::Create(m_pDevice, m_pContext, strSkeletalFilePath + strFileName, desc, matPivot))))
+					return E_FAIL;
+			}
+			else if (TEXT("Moloch") == strFileName)
+			{
+				desc.vecSocketBoneNames.push_back("Bone_Moloch_Hand_R");
+
+				XMStoreFloat4x4(&matPivot, XMMatrixScaling(0.01f, 0.01f, 0.01f));
 				if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_" + strFileName),
 					CModel::Create(m_pDevice, m_pContext, strSkeletalFilePath + strFileName, desc, matPivot))))
 					return E_FAIL;

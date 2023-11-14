@@ -26,6 +26,8 @@
 #include "DemonCaster.h"
 #include "Strife_GunL.h"
 #include "Strife_GunR.h"
+#include "Moloch.h"
+#include "Moloch_Sword.h"
 #include "Strife_Ammo_Default.h"
 #include "Strife_Ammo_Beam.h"
 #include "SkyBox.h"
@@ -33,6 +35,7 @@
 #include "ParticleController.h"
 #include "Strife_MotionTrail.h"
 #include "Shockwave.h"
+#include "Lava.h"
 
 CLoader::CLoader(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: m_pDevice(pDevice)
@@ -238,7 +241,7 @@ HRESULT CLoader::Loading_Components_For_Level_GamePlay()
 
 	/* For.Prototype_Component_NavMeshAgent */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_NavMeshAgent"),
-		CNavMeshAgent::Create(m_pDevice, m_pContext, TEXT("../Bin/LevelData/NavMesh/NavigationMesh.dat")))))
+		CNavMeshAgent::Create(m_pDevice, m_pContext, TEXT("../Bin/LevelData/NavMesh/MainStageNavMesh.dat")))))
 		return E_FAIL;
 
 	RELEASE_INSTANCE(CGameInstance);
@@ -342,6 +345,14 @@ HRESULT CLoader::Loading_GameObjects_For_Level_GamePlay()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Strife_GunR"), CStrife_GunR::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	/* For.Prototype_GameObject_Moloch */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Moloch"), CMoloch::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Moloch_Sword */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Moloch_Sword"), CMoloch_Sword::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	/* For.Prototype_GameObject_Strife_Ammo_Default */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Strife_Ammo_Default"), CStrife_Ammo_Default::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
@@ -370,13 +381,20 @@ HRESULT CLoader::Loading_GameObjects_For_Level_GamePlay()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Shockwave"), CShockwave::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	/* For.Prototype_GameObject_Lava_East_B1 */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Lava_East_B1"), CLava::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	/* For.Prototype_GameObject_Static */
 	wstring strStaticFilePath = TEXT("../Bin/Resources/Models/Static/");
 	for (const auto& entry : filesystem::directory_iterator(strStaticFilePath))
 	{
 		const wstring& strFileName = entry.path().stem();
 
-		if (strFileName == TEXT("Strife_GunL") || strFileName == TEXT("Strife_GunR"))
+		if (strFileName == TEXT("Strife_GunL") || strFileName == TEXT("Strife_GunR") ||
+			strFileName == TEXT("Lava_East_B1") || strFileName == TEXT("Moloch_Sword")
+			/* || strFileName == TEXT("LavaUpdate2") ||
+			strFileName == TEXT("LavaUpdate") || strFileName == TEXT("Lava_East_A1")*/)
 			continue;
 
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_") + strFileName, CStaticBase::Create(m_pDevice, m_pContext))))
@@ -465,7 +483,7 @@ HRESULT CLoader::Loading_GameObjects_For_Level_GameTool()
 	{
 		const wstring& strFileName = entry.path().stem();
 
-		if (strFileName == TEXT("Strife_GunL") || strFileName == TEXT("Strife_GunR"))
+		if (strFileName == TEXT("Strife_GunL") || strFileName == TEXT("Strife_GunR") || strFileName == TEXT("Moloch_Sword"))
 			continue;
 
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_") + strFileName, CStaticBase::Create(m_pDevice, m_pContext))))
@@ -476,12 +494,20 @@ HRESULT CLoader::Loading_GameObjects_For_Level_GameTool()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_P_Strife"), CP_Strife::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	/* For.Prototype_GameObject_HellHound */
+	/* For.Prototype_GameObject_Strife_GunL */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Strife_GunL"), CStrife_GunL::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	/* For.Prototype_GameObject_HellHound */
+	/* For.Prototype_GameObject_Strife_GunR */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Strife_GunR"), CStrife_GunR::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Moloch */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Moloch"), CMoloch::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Moloch_Sword */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Moloch_Sword"), CMoloch_Sword::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_HellHound */

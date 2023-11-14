@@ -16,6 +16,7 @@ vector	g_fLightRange;
 vector	g_vLightDiffuse;
 vector	g_vLightAmbient;
 vector	g_vLightSpecular;
+vector  g_vLightEmissive = vector(1.f, 1.f, 1.f, 1.f);
 
 vector  g_vMtrlAmbient = vector(0.4f, 0.4f, 0.4f, 1.f);
 vector  g_vMtrlSpecular = vector(1.f, 1.f, 1.f, 1.f);
@@ -26,6 +27,7 @@ Texture2D	g_DepthTarget;
 
 Texture2D	g_ShadeTarget;
 Texture2D	g_SpecularTarget;
+Texture2D	g_EmissiveTarget;
 
 Texture2D	g_GlowTarget;
 Texture2D	g_BlurHTarget;
@@ -62,10 +64,10 @@ struct VS_OUT_BLUR
     float2 vTexcoord7 : TEXCOORD7;
     float2 vTexcoord8 : TEXCOORD8;
     float2 vTexcoord9 : TEXCOORD9;
-    //float2 vTexcoord10 : TEXCOORD10;
-    //float2 vTexcoord11 : TEXCOORD11;
-    //float2 vTexcoord12 : TEXCOORD12;
-    //float2 vTexcoord13 : TEXCOORD13;
+    float2 vTexcoord10 : TEXCOORD10;
+    float2 vTexcoord11 : TEXCOORD11;
+    float2 vTexcoord12 : TEXCOORD12;
+    float2 vTexcoord13 : TEXCOORD13;
 };
 
 VS_OUT VS_MAIN(/* 정점 */VS_IN In)
@@ -101,19 +103,19 @@ VS_OUT_BLUR VS_MAIN_BLURH( /* 정점 */VS_IN In)
 
     texelSize = 1.0f / 1440.f;
     
-    Out.vTexcoord1 = In.vTexcoord + float2(texelSize * -4.0f, 0.0f);
-    Out.vTexcoord2 = In.vTexcoord + float2(texelSize * -3.0f, 0.0f);
-    Out.vTexcoord3 = In.vTexcoord + float2(texelSize * -2.0f, 0.0f);
-    Out.vTexcoord4 = In.vTexcoord + float2(texelSize * -1.0f, 0.0f);
-    Out.vTexcoord5 = In.vTexcoord + float2(texelSize, 0.0f);
-    Out.vTexcoord6 = In.vTexcoord + float2(texelSize * 1.0f, 0.0f);
-    Out.vTexcoord7 = In.vTexcoord + float2(texelSize * 2.0f, 0.0f);
-    Out.vTexcoord8 = In.vTexcoord + float2(texelSize * 3.0f, 0.0f);
-    Out.vTexcoord9 = In.vTexcoord + float2(texelSize * 4.0f, 0.0f);
-    //Out.vTexcoord10 = In.vTexcoord + float2(texelSize * 3.0f, 0.0f);
-    //Out.vTexcoord11 = In.vTexcoord + float2(texelSize * 4.0f, 0.0f);
-    //Out.vTexcoord12 = In.vTexcoord + float2(texelSize * 5.0f, 0.0f);
-    //Out.vTexcoord13 = In.vTexcoord + float2(texelSize * 6.0f, 0.0f);
+    Out.vTexcoord1 = In.vTexcoord + float2(texelSize * -6.0f, 0.0f);
+    Out.vTexcoord2 = In.vTexcoord + float2(texelSize * -5.0f, 0.0f);
+    Out.vTexcoord3 = In.vTexcoord + float2(texelSize * -4.0f, 0.0f);
+    Out.vTexcoord4 = In.vTexcoord + float2(texelSize * -3.0f, 0.0f);
+    Out.vTexcoord5 = In.vTexcoord + float2(texelSize * -2.0f, 0.0f);
+    Out.vTexcoord6 = In.vTexcoord + float2(texelSize * -1.0f, 0.0f);
+    Out.vTexcoord7 = In.vTexcoord;
+    Out.vTexcoord8 = In.vTexcoord + float2(texelSize * 1.0f, 0.0f);
+    Out.vTexcoord9 = In.vTexcoord + float2(texelSize * 2.0f, 0.0f);
+    Out.vTexcoord10 = In.vTexcoord + float2(texelSize * 3.0f, 0.0f);
+    Out.vTexcoord11 = In.vTexcoord + float2(texelSize * 4.0f, 0.0f);
+    Out.vTexcoord12 = In.vTexcoord + float2(texelSize * 5.0f, 0.0f);
+    Out.vTexcoord13 = In.vTexcoord + float2(texelSize * 6.0f, 0.0f);
     
     return Out;
 }
@@ -135,19 +137,19 @@ VS_OUT_BLUR VS_MAIN_BLURV( /* 정점 */VS_IN In)
 
     texelSize = 1.0f / 810.f;
     
-    Out.vTexcoord1 = In.vTexcoord + float2(0.0f, texelSize * -4.0f);
-    Out.vTexcoord2 = In.vTexcoord + float2(0.0f, texelSize * -3.0f);
-    Out.vTexcoord3 = In.vTexcoord + float2(0.0f, texelSize * -2.0f);
-    Out.vTexcoord4 = In.vTexcoord + float2(0.0f, texelSize * -1.0f);
-    Out.vTexcoord5 = In.vTexcoord + float2(0.0f, texelSize);
-    Out.vTexcoord6 = In.vTexcoord + float2(0.0f, texelSize * 1.0f);
-    Out.vTexcoord7 = In.vTexcoord + float2(0.0f, texelSize * 2.0f);
-    Out.vTexcoord8 = In.vTexcoord + float2(0.0f, texelSize * 3.0f);
-    Out.vTexcoord9 = In.vTexcoord + float2(0.0f, texelSize * 4.0f);
-    //Out.vTexcoord10 = In.vTexcoord + float2(0.0f, texelSize * 3.0f);
-    //Out.vTexcoord11 = In.vTexcoord + float2(0.0f, texelSize * 4.0f);
-    //Out.vTexcoord12 = In.vTexcoord + float2(0.0f, texelSize * 5.0f);
-    //Out.vTexcoord13 = In.vTexcoord + float2(0.0f, texelSize * 6.0f);
+    Out.vTexcoord1 = In.vTexcoord + float2(0.0f, texelSize * -6.0f);
+    Out.vTexcoord2 = In.vTexcoord + float2(0.0f, texelSize * -5.0f);
+    Out.vTexcoord3 = In.vTexcoord + float2(0.0f, texelSize * -4.0f);
+    Out.vTexcoord4 = In.vTexcoord + float2(0.0f, texelSize * -3.0f);
+    Out.vTexcoord5 = In.vTexcoord + float2(0.0f, texelSize * -2.0f);
+    Out.vTexcoord6 = In.vTexcoord + float2(0.0f, texelSize * -1.0f);
+    Out.vTexcoord7 = In.vTexcoord;
+    Out.vTexcoord8 = In.vTexcoord + float2(0.0f, texelSize * 1.0f);
+    Out.vTexcoord9 = In.vTexcoord + float2(0.0f, texelSize * 2.0f);
+    Out.vTexcoord10 = In.vTexcoord + float2(0.0f, texelSize * 3.0f);
+    Out.vTexcoord11 = In.vTexcoord + float2(0.0f, texelSize * 4.0f);
+    Out.vTexcoord12 = In.vTexcoord + float2(0.0f, texelSize * 5.0f);
+    Out.vTexcoord13 = In.vTexcoord + float2(0.0f, texelSize * 6.0f);
     
     return Out;
 }
@@ -263,9 +265,9 @@ PS_OUT PS_MAIN_DEFERRED(PS_IN In)
 	if (vDiffuse.a == 0.f)
 		discard;
 	vector		vShade = g_ShadeTarget.Sample(LinearSampler, In.vTexcoord);
-    vector		vSpecular = g_SpecularTarget.Sample(LinearSampler, In.vTexcoord);
+    //vector		vSpecular = g_SpecularTarget.Sample(LinearSampler, In.vTexcoord);
 
-    Out.vColor = vDiffuse * vShade + vSpecular;
+    Out.vColor = vDiffuse * vShade/* + vSpecular*/;
 
 	return Out;
 }
@@ -283,10 +285,10 @@ struct PS_IN_BLUR
     float2 vTexcoord7 : TEXCOORD7;
     float2 vTexcoord8 : TEXCOORD8;
     float2 vTexcoord9 : TEXCOORD9;
-    //float2 vTexcoord10 : TEXCOORD10;
-    //float2 vTexcoord11 : TEXCOORD11;
-    //float2 vTexcoord12 : TEXCOORD12;
-    //float2 vTexcoord13 : TEXCOORD13;
+    float2 vTexcoord10 : TEXCOORD10;
+    float2 vTexcoord11 : TEXCOORD11;
+    float2 vTexcoord12 : TEXCOORD12;
+    float2 vTexcoord13 : TEXCOORD13;
 };
 
 struct PS_OUT_BLURH
@@ -298,22 +300,22 @@ PS_OUT_BLURH PS_MAIN_BLURH(PS_IN_BLUR In)
 {
     PS_OUT_BLURH Out = (PS_OUT_BLURH) 0;
 
-    float weight0, weight1, weight2, weight3, weight4/*, weight5, weight6*/;
+    float weight0, weight1, weight2, weight3, weight4, weight5, weight6;
     float normalization;
     float4 color;
     
-    //weight0 = 1.0f;
-    //weight1 = 0.9231f;
-    //weight2 = 0.7261f;
-    //weight3 = 0.4868f;
-    //weight4 = 0.278f;
-    //weight5 = 0.1353f;
-    //weight6 = 0.0561f;
     weight0 = 1.0f;
-    weight1 = 0.9f;
-    weight2 = 0.55f;
-    weight3 = 0.18f;
-    weight4 = 0.1f;
+    weight1 = 0.9231f;
+    weight2 = 0.7261f;
+    weight3 = 0.4868f;
+    weight4 = 0.278f;
+    weight5 = 0.1353f;
+    weight6 = 0.0561f;
+    //weight0 = 1.0f;
+    //weight1 = 0.9f;
+    //weight2 = 0.55f;
+    //weight3 = 0.18f;
+    //weight4 = 0.1f;
     
     normalization = (weight0 + 2.0f * (weight1 + weight2 + weight3 + weight4/* + weight5 + weight6*/));
     
@@ -322,24 +324,24 @@ PS_OUT_BLURH PS_MAIN_BLURH(PS_IN_BLUR In)
     weight2 = weight2 / normalization;
     weight3 = weight3 / normalization;
     weight4 = weight4 / normalization;
-    //weight5 = weight5 / normalization;
-    //weight6 = weight6 / normalization;
+    weight5 = weight5 / normalization;
+    weight6 = weight6 / normalization;
     
     color = float4(0.0f, 0.0f, 0.0f, 0.0f);
     
-    color += g_GlowTarget.Sample(LinearSampler, In.vTexcoord1) * weight4 + g_SpecularTarget.Sample(LinearSampler, In.vTexcoord1) * weight4;
-    color += g_GlowTarget.Sample(LinearSampler, In.vTexcoord2) * weight3 + g_SpecularTarget.Sample(LinearSampler, In.vTexcoord2) * weight3;
-    color += g_GlowTarget.Sample(LinearSampler, In.vTexcoord3) * weight2 + g_SpecularTarget.Sample(LinearSampler, In.vTexcoord3) * weight2;
-    color += g_GlowTarget.Sample(LinearSampler, In.vTexcoord4) * weight1 + g_SpecularTarget.Sample(LinearSampler, In.vTexcoord4) * weight1;
-    color += g_GlowTarget.Sample(LinearSampler, In.vTexcoord5) * weight0 + g_SpecularTarget.Sample(LinearSampler, In.vTexcoord5) * weight0;
-    color += g_GlowTarget.Sample(LinearSampler, In.vTexcoord6) * weight1 + g_SpecularTarget.Sample(LinearSampler, In.vTexcoord6) * weight1;
-    color += g_GlowTarget.Sample(LinearSampler, In.vTexcoord7) * weight2 + g_SpecularTarget.Sample(LinearSampler, In.vTexcoord7) * weight2;
-    color += g_GlowTarget.Sample(LinearSampler, In.vTexcoord8) * weight3 + g_SpecularTarget.Sample(LinearSampler, In.vTexcoord8) * weight3;
-    color += g_GlowTarget.Sample(LinearSampler, In.vTexcoord9) * weight4 + g_SpecularTarget.Sample(LinearSampler, In.vTexcoord9) * weight4;
-    //color += g_GlowTarget.Sample(LinearSampler, In.vTexcoord10) * weight3;
-    //color += g_GlowTarget.Sample(LinearSampler, In.vTexcoord11) * weight4;
-    //color += g_GlowTarget.Sample(LinearSampler, In.vTexcoord12) * weight5;
-    //color += g_GlowTarget.Sample(LinearSampler, In.vTexcoord13) * weight6;
+    color += (g_GlowTarget.Sample(LinearSampler, In.vTexcoord1) + g_SpecularTarget.Sample(LinearSampler, In.vTexcoord1) + g_vLightEmissive * g_EmissiveTarget.Sample(LinearSampler, In.vTexcoord1)) * weight6;
+    color += (g_GlowTarget.Sample(LinearSampler, In.vTexcoord2) + g_SpecularTarget.Sample(LinearSampler, In.vTexcoord2) + g_vLightEmissive * g_EmissiveTarget.Sample(LinearSampler, In.vTexcoord2)) * weight5;
+    color += (g_GlowTarget.Sample(LinearSampler, In.vTexcoord3) + g_SpecularTarget.Sample(LinearSampler, In.vTexcoord3) + g_vLightEmissive * g_EmissiveTarget.Sample(LinearSampler, In.vTexcoord3)) * weight4;
+    color += (g_GlowTarget.Sample(LinearSampler, In.vTexcoord4) + g_SpecularTarget.Sample(LinearSampler, In.vTexcoord4) + g_vLightEmissive * g_EmissiveTarget.Sample(LinearSampler, In.vTexcoord4)) * weight3;
+    color += (g_GlowTarget.Sample(LinearSampler, In.vTexcoord5) + g_SpecularTarget.Sample(LinearSampler, In.vTexcoord5) + g_vLightEmissive * g_EmissiveTarget.Sample(LinearSampler, In.vTexcoord5)) * weight2;
+    color += (g_GlowTarget.Sample(LinearSampler, In.vTexcoord6) + g_SpecularTarget.Sample(LinearSampler, In.vTexcoord6) + g_vLightEmissive * g_EmissiveTarget.Sample(LinearSampler, In.vTexcoord6)) * weight1;
+    color += (g_GlowTarget.Sample(LinearSampler, In.vTexcoord7) + g_SpecularTarget.Sample(LinearSampler, In.vTexcoord7) + g_vLightEmissive * g_EmissiveTarget.Sample(LinearSampler, In.vTexcoord7)) * weight0;
+    color += (g_GlowTarget.Sample(LinearSampler, In.vTexcoord8) + g_SpecularTarget.Sample(LinearSampler, In.vTexcoord8) + g_vLightEmissive * g_EmissiveTarget.Sample(LinearSampler, In.vTexcoord8)) * weight1;
+    color += (g_GlowTarget.Sample(LinearSampler, In.vTexcoord9) + g_SpecularTarget.Sample(LinearSampler, In.vTexcoord9) + g_vLightEmissive * g_EmissiveTarget.Sample(LinearSampler, In.vTexcoord9)) * weight2;
+    color += (g_GlowTarget.Sample(LinearSampler, In.vTexcoord10) + g_SpecularTarget.Sample(LinearSampler, In.vTexcoord10) + g_vLightEmissive * g_EmissiveTarget.Sample(LinearSampler, In.vTexcoord10)) * weight3;
+    color += (g_GlowTarget.Sample(LinearSampler, In.vTexcoord11) + g_SpecularTarget.Sample(LinearSampler, In.vTexcoord11) + g_vLightEmissive * g_EmissiveTarget.Sample(LinearSampler, In.vTexcoord11)) * weight4;
+    color += (g_GlowTarget.Sample(LinearSampler, In.vTexcoord12) + g_SpecularTarget.Sample(LinearSampler, In.vTexcoord12) + g_vLightEmissive * g_EmissiveTarget.Sample(LinearSampler, In.vTexcoord12)) * weight5;
+    color += (g_GlowTarget.Sample(LinearSampler, In.vTexcoord13) + g_SpecularTarget.Sample(LinearSampler, In.vTexcoord13) + g_vLightEmissive * g_EmissiveTarget.Sample(LinearSampler, In.vTexcoord13)) * weight6;
     
     color.a = 1.0f;
     
@@ -361,44 +363,44 @@ PS_OUT_BLURV PS_MAIN_BLURV(PS_IN_BLUR In)
     float normalization;
     float4 color;
     
-    //weight0 = 1.0f;
-    //weight1 = 0.9231f;
-    //weight2 = 0.7261f;
-    //weight3 = 0.4868f;
-    //weight4 = 0.278f;
-    //weight5 = 0.1353f;
-    //weight6 = 0.0561f;
     weight0 = 1.0f;
-    weight1 = 0.9f;
-    weight2 = 0.55f;
-    weight3 = 0.18f;
-    weight4 = 0.1f;
+    weight1 = 0.9231f;
+    weight2 = 0.7261f;
+    weight3 = 0.4868f;
+    weight4 = 0.278f;
+    weight5 = 0.1353f;
+    weight6 = 0.0561f;
+    //weight0 = 1.0f;
+    //weight1 = 0.9f;
+    //weight2 = 0.55f;
+    //weight3 = 0.18f;
+    //weight4 = 0.1f;
     
-    normalization = (weight0 + 2.0f * (weight1 + weight2 + weight3 + weight4/* + weight5 + weight6*/));
+    normalization = (weight0 + 2.0f * (weight1 + weight2 + weight3 + weight4 + weight5 + weight6));
     
     weight0 = weight0 / normalization;
     weight1 = weight1 / normalization;
     weight2 = weight2 / normalization;
     weight3 = weight3 / normalization;
     weight4 = weight4 / normalization;
-    //weight5 = weight5 / normalization;
-    //weight6 = weight6 / normalization;
+    weight5 = weight5 / normalization;
+    weight6 = weight6 / normalization;
     
     color = float4(0.0f, 0.0f, 0.0f, 0.0f);
     
-    color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord1) * weight4;
-    color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord2) * weight3;
-    color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord3) * weight2;
-    color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord4) * weight1;
-    color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord5) * weight0;
+    color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord1) * weight6;
+    color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord2) * weight5;
+    color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord3) * weight4;
+    color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord4) * weight3;
+    color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord5) * weight2;
     color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord6) * weight1;
-    color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord7) * weight2;
-    color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord8) * weight3;
-    color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord9) * weight4;
-    //color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord10) * weight3;
-    //color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord11) * weight4;
-    //color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord12) * weight5;
-    //color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord13) * weight6;
+    color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord7) * weight0;
+    color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord8) * weight1;
+    color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord9) * weight2;
+    color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord10) * weight3;
+    color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord11) * weight4;
+    color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord12) * weight5;
+    color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord13) * weight6;
     
     color.a = 1.0f;
     

@@ -340,6 +340,21 @@
     <Filter Include="03.GameObjects\00.Static\SkyBox">
       <UniqueIdentifier>{f4a2fcae-ca40-4f7a-bed8-a4f0c9f40e69}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.GameObjects\00.Static\Lava">
+      <UniqueIdentifier>{1dbfd0a5-8971-4e3e-aa9e-cac0c8d92e72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\03.Boss">
+      <UniqueIdentifier>{a8664eb1-4d99-4643-812e-753640cd5621}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\03.Boss\Script">
+      <UniqueIdentifier>{ede43305-b7f1-49ab-8f14-550acbefbc0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\03.Boss\00.Moloch">
+      <UniqueIdentifier>{546e4c06-2a47-4082-a035-35feade9bb79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\03.Boss\00.Moloch\Parts">
+      <UniqueIdentifier>{e9be3400-5b9d-4b03-99bb-68e452a9e77a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -654,6 +669,18 @@
     <ClInclude Include="..\Public\SkyBox.h">
       <Filter>03.GameObjects\00.Static\SkyBox</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Lava.h">
+      <Filter>03.GameObjects\00.Static\Lava</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BossController.h">
+      <Filter>03.GameObjects\03.Boss\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Moloch.h">
+      <Filter>03.GameObjects\03.Boss\00.Moloch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Moloch_Sword.h">
+      <Filter>03.GameObjects\03.Boss\00.Moloch\Parts</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -931,6 +958,18 @@
     </ClCompile>
     <ClCompile Include="..\Private\SkyBox.cpp">
       <Filter>03.GameObjects\00.Static\SkyBox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Lava.cpp">
+      <Filter>03.GameObjects\00.Static\Lava</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BossController.cpp">
+      <Filter>03.GameObjects\03.Boss\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Moloch.cpp">
+      <Filter>03.GameObjects\03.Boss\00.Moloch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Moloch_Sword.cpp">
+      <Filter>03.GameObjects\03.Boss\00.Moloch\Parts</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

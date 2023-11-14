@@ -3,23 +3,18 @@
 
 #define MAX_INSTANCE 500
 
-//matrix g_WorldMatrix;
+Texture2D g_EmissiveTexture;
+
 matrix g_ViewMatrix, g_ProjMatrix;
 
-//vector g_vLightDir = vector(1.f, -1.f, 1.f, 0.f);
-//vector g_vLightPos = vector(0.f, 0.f, 0.f, 1.f);
-//float  g_fLightRange = 0.f;
-//vector g_vLightDiffuse = vector(1.f, 1.f, 1.f, 1.f);
-//vector g_vLightAmbient = vector(1.f, 1.f, 1.f, 1.f);
-//vector g_vLightSpecular = vector(1.f, 1.f, 1.f, 1.f);
 vector g_vLightEmissive = vector(1.f, 1.f, 1.f, 1.f);
 
-//vector g_vMtrlAmbient = vector(0.4f, 0.4f, 0.4f, 1.f);
-//vector g_vMtrlSpecular = vector(1.f, 1.f, 1.f, 1.f);
-//vector g_vMtrlEmissive = vector(1.f, 1.f, 0.f, 1.f);
 vector g_vMtrlEmissive = vector(1.f, 0.843137324f, 0.f, 1.f);
 
 vector g_vCamPosition;
+
+float2 g_UVoffset = float2(0.f, 0.f);
+Texture2D g_NoiseTexture;
 
 struct VS_IN
 {
@@ -75,6 +70,7 @@ struct PS_OUT
     float4 vDiffuse : SV_TARGET0;
     float4 vNormal : SV_TARGET1;
     float4 vDepth : SV_TARGET2;
+    float4 vEmissive : SV_TARGET3;
 };
 
 PS_OUT PS_MAIN(PS_IN In)
@@ -91,17 +87,6 @@ PS_OUT PS_MAIN(PS_IN In)
     Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);
-
-  //  vector vShade = max(dot(normalize(g_vLightDir) * -1.f, normalize(In.vNormal)), 0.f) +
-		//g_vLightAmbient * g_vMtrlAmbient;
-
-  //  vector vReflect = reflect(normalize(g_vLightDir), normalize(In.vNormal));
-  //  vector vLook = In.vWorldPos - g_vCamPosition;
-
-  //  float fSpecular = pow(max(dot(normalize(vLook) * -1.f, normalize(vReflect)), 0.f), 30.f);
-
-  //  Out.vColor = (g_vLightDiffuse * vMtrlDiffuse) * saturate(vShade) +
-		//(g_vLightSpecular * g_vMtrlSpecular) * fSpecular;
 
     return Out;
 }
@@ -120,28 +105,6 @@ PS_OUT PS_RIM_MAIN(PS_IN In)
     Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);
-
- //   vector vShade = max(dot(normalize(g_vLightDir) * -1.f, normalize(In.vNormal)), 0.f) +
-	//	g_vLightAmbient * g_vMtrlAmbient;
-
- //   vector vReflect = reflect(normalize(g_vLightDir), normalize(In.vNormal));
- //   vector vLook = In.vWorldPos - g_vCamPosition;
-
- //   float fSpecular = pow(max(dot(normalize(vLook) * -1.f, normalize(vReflect)), 0.f), 30.f);
-	
- //   // Rim Light
- //   float3 E = normalize(-vLook);
-
- //   float value = saturate(dot(E, float3(In.vNormal.xyz)));
- //   float fEmissive = 1.0f - value;
-
-	//// min, max, x
- //   fEmissive = smoothstep(0.0f, 1.0f, fEmissive);
- //   //fEmissive = pow(fEmissive, 2);
-	////
- //   Out.vColor = (g_vLightDiffuse * vMtrlDiffuse) * saturate(vShade) +
-	//	(g_vLightSpecular * g_vMtrlSpecular) * fSpecular +
-	//(g_vLightEmissive * g_vMtrlEmissive) * fEmissive;
     
      // Temp
     vector vLook = In.vWorldPos - g_vCamPosition;
@@ -153,8 +116,7 @@ PS_OUT PS_RIM_MAIN(PS_IN In)
     fEmissive = smoothstep(0.0f, 1.0f, fEmissive);
     fEmissive = pow(fEmissive, 2);
     
-    Out.vDiffuse = Out.vDiffuse +
-	(g_vLightEmissive * g_vMtrlEmissive) * fEmissive;
+    Out.vEmissive = g_vMtrlEmissive * fEmissive;
     
     return Out;
 }
@@ -174,18 +136,36 @@ PS_OUT PS_DISSOLVE_MAIN(PS_IN In)
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);
 
-  //  vector vShade = max(dot(normalize(g_vLightDir) * -1.f, normalize(In.vNormal)), 0.f) +
-		//g_vLightAmbient * g_vMtrlAmbient;
-
-  //  vector vReflect = reflect(normalize(g_vLightDir), normalize(In.vNormal));
-  //  vector vLook = In.vWorldPos - g_vCamPosition;
-
-  //  float fSpecular = pow(max(dot(normalize(vLook) * -1.f, normalize(vReflect)), 0.f), 30.f);
-
-  //  Out.vColor = (g_vLightDiffuse * vMtrlDiffuse) * saturate(vShade) +
-		//(g_vLightSpecular * g_vMtrlSpecular) * fSpecular;
-
     ComputeDissolveColor(Out.vDiffuse, In.vTexcoord);
+    
+    return Out;
+}
+
+PS_OUT PS_LAVA_MAIN(PS_IN In)
+{
+    float2 newUV = In.vTexcoord + g_UVoffset;
+    
+    vector vNoise = g_NoiseTexture.Sample(LinearSampler, In.vTexcoord + 2.f * g_UVoffset);
+    float2 noise = pow(vNoise.r, 4.f);
+    newUV += noise;
+    
+    ComputeNormalMapping(In.vNormal, In.vTangent, newUV);
+	
+    PS_OUT Out = (PS_OUT) 0;
+    
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, newUV);
+
+    //if (vMtrlDiffuse.a < 0.3f)
+    //    discard;
+	
+    vector vMtrlEmissive = g_EmissiveTexture.Sample(LinearSampler, newUV);
+    //if (vMtrlEmissive.r < 0.01f)
+    //    vMtrlEmissive = 0.f;
+    
+    Out.vDiffuse = vMtrlDiffuse;
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);    
+    Out.vEmissive = vMtrlEmissive;
     
     return Out;
 }
@@ -231,6 +211,20 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_DISSOLVE_MAIN();
+        ComputeShader = NULL;
+    }
+
+    pass Lava
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_LAVA_MAIN();
         ComputeShader = NULL;
     }
 }

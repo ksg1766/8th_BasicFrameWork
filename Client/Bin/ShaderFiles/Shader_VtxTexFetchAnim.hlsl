@@ -168,6 +168,7 @@ struct PS_OUT
     float4 vDiffuse : SV_TARGET0;
     float4 vNormal : SV_TARGET1;
     float4 vDepth : SV_TARGET2;
+    float4 vEmissive : SV_TARGET3;
 };
 
 PS_OUT PS_MAIN(PS_IN In)
@@ -184,17 +185,6 @@ PS_OUT PS_MAIN(PS_IN In)
     Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);
-    
-  //  vector vShade = max(dot(normalize(g_vLightDir) * -1.f, normalize(In.vNormal)), 0.f) +
-		//g_vLightAmbient * g_vMtrlAmbient;
-
-  //  vector vReflect = reflect(normalize(g_vLightDir), normalize(In.vNormal));
-  //  vector vLook = In.vWorldPos - g_vCamPosition;
-
-  //  float fSpecular = pow(max(dot(normalize(vLook) * -1.f, normalize(vReflect)), 0.f), 30.f);
-
-  //  Out.vColor = (g_vLightDiffuse * vMtrlDiffuse) * saturate(vShade) +
-		//(g_vLightSpecular * g_vMtrlSpecular) * fSpecular;
 
     return Out;
 }
@@ -213,29 +203,7 @@ PS_OUT PS_RIM_MAIN(PS_IN In)
     Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);
-    
- //   vector vShade = max(dot(normalize(g_vLightDir) * -1.f, normalize(In.vNormal)), 0.f) +
-	//	g_vLightAmbient * g_vMtrlAmbient;
-
- //   vector vReflect = reflect(normalize(g_vLightDir), normalize(In.vNormal));
- //   vector vLook = In.vWorldPos - g_vCamPosition;
-
- //   float fSpecular = pow(max(dot(normalize(vLook) * -1.f, normalize(vReflect)), 0.f), 30.f);
-	
- //   // Rim Light
- //   float3 E = normalize(-vLook);
-
- //   float value = saturate(dot(E, float3(In.vNormal.xyz)));
- //   float fEmissive = 1.0f - value;
-
-	//// min, max, x
- //   fEmissive = smoothstep(0.0f, 1.0f, fEmissive);
- //   fEmissive = pow(fEmissive, 2);
-	////
- //   Out.vColor = (g_vLightDiffuse * vMtrlDiffuse) * saturate(vShade) +
-	//	(g_vLightSpecular * g_vMtrlSpecular) * fSpecular +
-	//(g_vLightEmissive * g_vMtrlEmissive) * fEmissive;
-    
+        
     // Temp
     vector vLook = In.vWorldPos - g_vCamPosition;
      // Rim Light
@@ -248,8 +216,7 @@ PS_OUT PS_RIM_MAIN(PS_IN In)
     fEmissive = smoothstep(0.0f, 1.0f, fEmissive);
     //fEmissive = pow(fEmissive, 2);
 	//
-    Out.vDiffuse = Out.vDiffuse +
-	(g_vLightEmissive * g_vMtrlEmissive) * fEmissive;
+    Out.vEmissive = g_vMtrlEmissive * fEmissive;
     
     return Out;
 }
@@ -269,17 +236,6 @@ PS_OUT PS_DISSOLVE_MAIN(PS_IN In)
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);
     
-  //  vector vShade = max(dot(normalize(g_vLightDir) * -1.f, normalize(In.vNormal)), 0.f) +
-		//g_vLightAmbient * g_vMtrlAmbient;
-
-  //  vector vReflect = reflect(normalize(g_vLightDir), normalize(In.vNormal));
-  //  vector vLook = In.vWorldPos - g_vCamPosition;
-
-  //  float fSpecular = pow(max(dot(normalize(vLook) * -1.f, normalize(vReflect)), 0.f), 30.f);
-
-  //  Out.vColor = (g_vLightDiffuse * vMtrlDiffuse) * saturate(vShade) +
-		//(g_vLightSpecular * g_vMtrlSpecular) * fSpecular;
-
     ComputeDissolveColor(Out.vDiffuse, In.vTexcoord);
     
     return Out;

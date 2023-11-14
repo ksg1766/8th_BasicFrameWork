@@ -152,6 +152,7 @@ struct PS_OUT
     float4 vDiffuse : SV_TARGET0;
     float4 vNormal : SV_TARGET1;
     float4 vDepth : SV_TARGET2;
+    float4 vEmissive : SV_TARGET3;
 };
 
 PS_OUT PS_MAIN(PS_IN In)
@@ -199,8 +200,7 @@ PS_OUT PS_RIM_MAIN(PS_IN In)
     fEmissive = smoothstep(0.0f, 1.0f, fEmissive);
     //fEmissive = pow(fEmissive, 2);
 	//
-    Out.vDiffuse = Out.vDiffuse +
-	(g_vLightEmissive * g_vMtrlEmissive) * fEmissive;
+    Out.vEmissive = g_vMtrlEmissive * fEmissive;
     
     return Out;
 }

@@ -245,6 +245,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_UnitGround()
 		pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_DemonCaster"));
 		if (nullptr == pGameObject)	return E_FAIL;
 
+		pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_Moloch"));
+		if (nullptr == pGameObject)	return E_FAIL;
+
 		/*_int iRandomPosX = (rand() * i) % 16 - 8;
 		_int iRandomPosZ = (rand() * i) % 16 - 8;
 		_int iRandomAnimIndex = abs(rand()) * i;
@@ -313,7 +316,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Wall()
 HRESULT CLevel_GamePlay::LoadData_Map()
 {
 	shared_ptr<FileUtils> file = make_shared<FileUtils>();
-	file->Open(TEXT("../Bin/LevelData/MainStage_v01.dat"), Read);
+	file->Open(TEXT("../Bin/LevelData/MainStage_v02.dat"), Read);
 	//file->Open(TEXT("../Bin/LevelData/NavTest.dat"), Read);
 
 	while (true)
