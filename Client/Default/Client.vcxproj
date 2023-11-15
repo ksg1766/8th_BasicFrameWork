@@ -234,6 +234,8 @@
     <ClInclude Include="..\Public\Moloch_BT_Eruption2.h" />
     <ClInclude Include="..\Public\Moloch_BT_FullDash1.h" />
     <ClInclude Include="..\Public\Moloch_BT_FullDash2.h" />
+    <ClInclude Include="..\Public\Moloch_BT_Geyser1.h" />
+    <ClInclude Include="..\Public\Moloch_BT_Geyser2.h" />
     <ClInclude Include="..\Public\Moloch_BT_Idle.h" />
     <ClInclude Include="..\Public\Moloch_BT_IF_Dead.h" />
     <ClInclude Include="..\Public\Moloch_BT_IF_StartP2.h" />
@@ -356,6 +358,8 @@
     <ClCompile Include="..\Private\Moloch_BT_Eruption2.cpp" />
     <ClCompile Include="..\Private\Moloch_BT_FullDash1.cpp" />
     <ClCompile Include="..\Private\Moloch_BT_FullDash2.cpp" />
+    <ClCompile Include="..\Private\Moloch_BT_Geyser1.cpp" />
+    <ClCompile Include="..\Private\Moloch_BT_Geyser2.cpp" />
     <ClCompile Include="..\Private\Moloch_BT_Idle.cpp" />
     <ClCompile Include="..\Private\Moloch_BT_Dash.cpp" />
     <ClCompile Include="..\Private\Moloch_BT_Swing1.cpp" />

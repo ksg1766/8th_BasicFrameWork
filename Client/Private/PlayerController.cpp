@@ -157,6 +157,7 @@ void CPlayerController::Translate(const _float& fTimeDelta)
 void CPlayerController::Look(const Vec3& vPoint, const _float& fTimeDelta)
 {
 	Vec3 vDir = vPoint - m_pTransform->GetPosition();
+	vDir.y = 0.f;
 	vDir.Normalize();
 	const Vec3& vForward = m_pTransform->GetForward();
 
@@ -168,7 +169,7 @@ void CPlayerController::Look(const Vec3& vPoint, const _float& fTimeDelta)
 		if (vLeftRight.y < 0)
 			vRotateAmount.y = -vRotateAmount.y;
 
-		m_pTransform->RotateYAxisFixed(0.3f * vRotateAmount);
+		m_pTransform->RotateYAxisFixed(0.2f * vRotateAmount);
 	}
 }
 

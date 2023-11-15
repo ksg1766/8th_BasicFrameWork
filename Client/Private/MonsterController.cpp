@@ -222,6 +222,7 @@ void CMonsterController::Hit(_int iDamage)
 void CMonsterController::Look(const Vec3& vPoint, const _float& fTimeDelta)
 {
 	Vec3 vDir = vPoint - m_pTransform->GetPosition();
+	vDir.y = 0.f;
 	vDir.Normalize();
 	const Vec3& vForward = m_pTransform->GetForward();
 

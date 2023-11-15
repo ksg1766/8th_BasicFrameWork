@@ -18,11 +18,20 @@
 
 #include "Moloch_BT_IF_StartP2.h"
 #include "Moloch_BT_Eruption1.h"
+
 #include "Moloch_BT_Eruption2.h"
 #include "Moloch_BT_TremorPulse.h"
 #include "Moloch_BT_FullDash1.h"
 #include "Moloch_BT_Swing1.h"
 #include "Moloch_BT_Swing2.h"
+
+
+#include "Moloch_BT_IF_StartP3.h"
+#include "Moloch_BT_Swing3.h"
+
+#include "Moloch_BT_FullDash2.h"
+#include "Moloch_BT_Geyser1.h"
+#include "Moloch_BT_Geyser2.h"
 
 CMoloch::CMoloch(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: Super(pDevice, pContext)
@@ -263,13 +272,69 @@ HRESULT CMoloch::Ready_Scripts()
 			pWhilePhase2->AddChild(pStartOrRun);
 
 			// Phase3
-			
-			
+			desc.vecAnimations.clear();
+			desc.vecAnimations.push_back(TEXT("Moloch_Atk_Full_Geyser"));
+			CBT_Action* pGeyser1 = CMoloch_BT_Geyser1::Create(this, pBehaviorTree, desc, m_pController);
+
+			CBT_Decorator* pRepeatGeyser = CMoloch_BT_REPEAT::Create(this, pBehaviorTree, m_pController, 3);
+			pRepeatGeyser->AddChild(pGeyser1);
+
+			desc.vecAnimations.clear();
+			desc.vecAnimations.push_back(TEXT("Moloch_Atk_Full_Geyser_02"));
+			CBT_Action* pGeyser2 = CMoloch_BT_Geyser2::Create(this, pBehaviorTree, desc, m_pController);
+
+			CBT_Composite* pEnterPhase3 = CBT_Composite::Create(this, pBehaviorTree, m_pController, CBT_Composite::CompositeType::SEQUENCE);
+			pEnterPhase3->AddChild(pRepeatGeyser);
+			pEnterPhase3->AddChild(pGeyser2);
+
+			CBT_Decorator* pIfEnterPhase3 = CMoloch_BT_IF_StartP3::Create(this, pBehaviorTree, m_pController, CBT_Decorator::DecoratorType::IF);	// 2페 시작패턴 조건
+			pIfEnterPhase3->AddChild(pEnterPhase3);
+
+			desc.vecAnimations.clear();
+			desc.vecAnimations.push_back(TEXT("Moloch_Atk_Full_Dash_Strike_02"));
+			CBT_Action* pFullDash2 = CMoloch_BT_FullDash2::Create(this, pBehaviorTree, desc, m_pController);
+
+			desc.vecAnimations.clear();
+			desc.vecAnimations.push_back(TEXT("Moloch_Full_Run_F"));
+			CBT_Action* pChase3 = CMoloch_BT_Chase::Create(this, pBehaviorTree, desc, m_pController);
+
+			desc.vecAnimations.clear();
+			desc.vecAnimations.push_back(TEXT("Moloch_Atk_Full_Swing_01"));
+			CBT_Action* pSwing1_ = CMoloch_BT_Swing1::Create(this, pBehaviorTree, desc, m_pController);
+
+			desc.vecAnimations.clear();
+			desc.vecAnimations.push_back(TEXT("Moloch_Atk_Full_Swing_02"));
+			CBT_Action* pSwing2_ = CMoloch_BT_Swing2::Create(this, pBehaviorTree, desc, m_pController);
+
+			desc.vecAnimations.clear();
+			desc.vecAnimations.push_back(TEXT("Moloch_Atk_Full_Swing_03"));
+			CBT_Action* pSwing3_ = CMoloch_BT_Swing3::Create(this, pBehaviorTree, desc, m_pController);
+
+			CBT_Composite* pChaseFullSwing = CBT_Composite::Create(this, pBehaviorTree, m_pController, CBT_Composite::CompositeType::SEQUENCE);
+			pChaseFullSwing->AddChild(pChase3);
+			pChaseFullSwing->AddChild(pSwing1_);
+			pChaseFullSwing->AddChild(pSwing2_);
+			pChaseFullSwing->AddChild(pSwing3_);
+
+			desc.vecAnimations.clear();
+			desc.vecAnimations.push_back(TEXT("Moloch_Idle"));
+			CBT_Action* pIdle3 = CMoloch_BT_Idle::Create(this, pBehaviorTree, desc, m_pController);
+
+			CBT_Composite* pPhase3 = CBT_Composite::Create(this, pBehaviorTree, m_pController, CBT_Composite::CompositeType::SEQUENCE);	//
+			pPhase3->AddChild(pFullDash2);
+			pPhase3->AddChild(pChaseFullSwing);
+			pPhase3->AddChild(pIdle3);
+
+			CBT_Composite* pStartOrRun3 = CBT_Composite::Create(this, pBehaviorTree, m_pController, CBT_Composite::CompositeType::SELECTOR);	//
+			pStartOrRun3->AddChild(pIfEnterPhase3);
+			pStartOrRun3->AddChild(pPhase3);
+
 			//////////
 			CBT_Composite* pRoot = CBT_Composite::Create(this, pBehaviorTree, m_pController, CBT_Composite::CompositeType::SELECTOR);
 			pRoot->AddChild(pIfDead);
 			pRoot->AddChild(pWhilePhase1);
 			pRoot->AddChild(pWhilePhase2);
+			pRoot->AddChild(pStartOrRun3);
 			pBehaviorTree->SetRoot(pRoot);
 
 			// BlackBoard

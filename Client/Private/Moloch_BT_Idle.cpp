@@ -17,7 +17,6 @@ void CMoloch_BT_Idle::OnStart()
 
 CBT_Node::BT_RETURN CMoloch_BT_Idle::OnUpdate(const _float& fTimeDelta)
 {
-	// TODO: 이걸 시퀀스 단계에서 판단할 수 있도록 해야 함. // Abort 반환 결과를 받아서 정지시키도록.
 	if (IsZeroHP())
 		return BT_FAIL;
 
@@ -49,13 +48,13 @@ void CMoloch_BT_Idle::StartIdleCoolDown()
 
 	if (tIdleCoolDown == hashBlackBoard.end())
 	{
-		tagBlackBoardData<_float>* tStepBackCool = new tagBlackBoardData<_float>(2.f);
+		tagBlackBoardData<_float>* tStepBackCool = new tagBlackBoardData<_float>(1.5f);
 		hashBlackBoard.emplace(TEXT("IdleCoolDown"), tStepBackCool);
 	}
 	else
 	{
-		__debugbreak();
-		//SET_VALUE(_float, tIdleCoolDown, 2.f);
+		//__debugbreak();
+		SET_VALUE(_float, tIdleCoolDown, 1.5f);
 	}
 }
 

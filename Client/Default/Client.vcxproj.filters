@@ -762,6 +762,12 @@
     <ClInclude Include="..\Public\Moloch_BT_TremorPulse.h">
       <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Action\Phase2</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Moloch_BT_Geyser1.h">
+      <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Action\Phase3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Moloch_BT_Geyser2.h">
+      <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Action\Phase3</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1090,6 +1096,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Moloch_BT_TremorPulse.cpp">
       <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Action\Phase2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Moloch_BT_Geyser1.cpp">
+      <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Action\Phase3</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Moloch_BT_Geyser2.cpp">
+      <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Action\Phase3</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

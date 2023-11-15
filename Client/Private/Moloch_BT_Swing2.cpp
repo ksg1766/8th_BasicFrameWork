@@ -24,7 +24,7 @@ CBT_Node::BT_RETURN CMoloch_BT_Swing2::OnUpdate(const _float& fTimeDelta)
 	if (IsZeroHP())
 		return BT_FAIL;
 
-	if (m_fTimeSum > m_vecAnimIndexTime[0].second * 0.9f)
+	if (m_fTimeSum > m_vecAnimIndexTime[0].second * 0.6f)
 	{
 		return BT_SUCCESS;
 	}
