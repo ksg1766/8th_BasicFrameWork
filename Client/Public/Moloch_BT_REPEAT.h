@@ -30,12 +30,17 @@ private:
 	virtual BT_RETURN OnUpdate(const _float& fTimeDelta) override
 	{
 		if (IsRepeatEnd())
-			return BT_SUCCESS;
+		{
+			m_eReturn = BT_SUCCESS;
+			return m_eReturn;
+		}
 		else
 		{
-			--m_iCounter;
-			m_vecChildren[0]->Tick(fTimeDelta);	// 일단 임시로 상태 만들기 전까진 항상 FAIL;
-			return BT_RUNNING;
+			if(BT_SUCCESS == m_vecChildren[0]->Tick(fTimeDelta))
+				--m_iCounter;
+
+			m_eReturn = BT_RUNNING;
+			return m_eReturn;
 		}
 	}
 

@@ -19,6 +19,7 @@ void CMoloch_BT_Dash::OnStart()
 	pController->Look(vTargetPos);
 
 	static_cast<CRigidDynamic*>(m_pGameObject->GetRigidBody())->IsKinematic(false);
+	pController->GetDashMessage(true);
 }
 
 CBT_Node::BT_RETURN CMoloch_BT_Dash::OnUpdate(const _float& fTimeDelta)
@@ -41,6 +42,9 @@ CBT_Node::BT_RETURN CMoloch_BT_Dash::OnUpdate(const _float& fTimeDelta)
 
 void CMoloch_BT_Dash::OnEnd()
 {
+	CBossController* pController = static_cast<CBossController*>(m_pController);
+	pController->GetDashMessage(false);
+
 	static_cast<CRigidDynamic*>(m_pGameObject->GetRigidBody())->IsKinematic(true);
 	Super::OnEnd();
 }

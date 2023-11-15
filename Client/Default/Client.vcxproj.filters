@@ -367,6 +367,18 @@
     <Filter Include="03.GameObjects\03.Boss\00.Moloch\Behavior\Action">
       <UniqueIdentifier>{55d289a8-e71d-4bea-aef8-3b93f17cf297}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.GameObjects\03.Boss\00.Moloch\Behavior\Action\Phase1">
+      <UniqueIdentifier>{9ad8fce7-9a7c-4218-aa48-ed603d86b095}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\03.Boss\00.Moloch\Behavior\Action\Phase2">
+      <UniqueIdentifier>{3dbd03bd-b3aa-438d-aa75-af51369ab53d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\03.Boss\00.Moloch\Behavior\Action\Phase3">
+      <UniqueIdentifier>{67578574-9b07-4699-bf1a-3497558aadb3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\03.Boss\00.Moloch\Behavior\Action\Common">
+      <UniqueIdentifier>{3f7a5e60-38fe-4fe3-ab73-f061f9a702d5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -693,18 +705,6 @@
     <ClInclude Include="..\Public\Moloch_Sword.h">
       <Filter>03.GameObjects\03.Boss\00.Moloch\Parts</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Moloch_BT_Dash.h">
-      <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Action</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Moloch_BT_Dead.h">
-      <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Action</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Moloch_BT_Idle.h">
-      <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Action</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Moloch_BT_Chase.h">
-      <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Action</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Moloch_BT_WHILE_Phase1.h">
       <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Decorator</Filter>
     </ClInclude>
@@ -716,6 +716,51 @@
     </ClInclude>
     <ClInclude Include="..\Public\Moloch_BT_REPEAT.h">
       <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Decorator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Moloch_BT_Idle.h">
+      <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Action\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Moloch_BT_Dead.h">
+      <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Action\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Moloch_BT_Chase.h">
+      <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Action\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Moloch_BT_Dash.h">
+      <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Action\Phase1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Moloch_BT_FullDash2.h">
+      <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Action\Phase3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Moloch_BT_FullDash1.h">
+      <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Action\Phase2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Moloch_BT_Swing1.h">
+      <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Action\Phase2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Moloch_BT_Swing2.h">
+      <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Action\Phase2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Moloch_BT_Swipe.h">
+      <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Action\Phase1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Moloch_BT_Swing3.h">
+      <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Action\Phase3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Moloch_BT_Eruption1.h">
+      <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Action\Phase2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Moloch_BT_Eruption2.h">
+      <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Action\Phase2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Moloch_BT_IF_StartP2.h">
+      <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Decorator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Moloch_BT_IF_StartP3.h">
+      <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Decorator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Moloch_BT_TremorPulse.h">
+      <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Action\Phase2</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1007,17 +1052,44 @@
     <ClCompile Include="..\Private\Moloch_Sword.cpp">
       <Filter>03.GameObjects\03.Boss\00.Moloch\Parts</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Moloch_BT_Dead.cpp">
-      <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Action</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Moloch_BT_Idle.cpp">
-      <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Action</Filter>
+      <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Action\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Moloch_BT_Dead.cpp">
+      <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Action\Common</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Moloch_BT_Chase.cpp">
-      <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Action</Filter>
+      <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Action\Common</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Moloch_BT_Dash.cpp">
-      <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Action</Filter>
+      <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Action\Phase1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Moloch_BT_FullDash1.cpp">
+      <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Action\Phase2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Moloch_BT_FullDash2.cpp">
+      <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Action\Phase3</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Moloch_BT_Swing1.cpp">
+      <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Action\Phase2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Moloch_BT_Swing2.cpp">
+      <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Action\Phase2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Moloch_BT_Swipe.cpp">
+      <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Action\Phase1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Moloch_BT_Swing3.cpp">
+      <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Action\Phase3</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Moloch_BT_Eruption1.cpp">
+      <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Action\Phase2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Moloch_BT_Eruption2.cpp">
+      <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Action\Phase2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Moloch_BT_TremorPulse.cpp">
+      <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Action\Phase2</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

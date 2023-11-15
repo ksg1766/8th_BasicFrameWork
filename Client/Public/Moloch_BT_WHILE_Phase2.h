@@ -24,7 +24,7 @@ private:
 		if (IsPhaseEnd())
 			return BT_FAIL;
 		else
-			return m_vecChildren[0]->Tick(fTimeDelta);	// 일단 임시로 상태 만들기 전까진 항상 FAIL;
+			return m_vecChildren[0]->Tick(fTimeDelta);
 	}
 
 	virtual void OnEnd() override

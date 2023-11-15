@@ -173,6 +173,22 @@ void CBossController::Translate(const _float& fTimeDelta)
 	m_vNetTrans = Vec3::Zero;
 }
 
+void CBossController::Dash(const Vec3& vDir)
+{
+	m_pRigidBody->ClearForce(ForceMode::FORCE);
+	m_pRigidBody->ClearForce(ForceMode::IMPULSE);
+	m_pRigidBody->IsKinematic(false);
+	m_pRigidBody->UseGravity(false);
+	m_pRigidBody->AddForce(105.f * m_pTransform->GetForward(), ForceMode::IMPULSE);
+}
+
+void CBossController::DashEnd()
+{
+	m_pRigidBody->ClearForce(ForceMode::FORCE);
+	m_pRigidBody->ClearForce(ForceMode::IMPULSE);
+	m_pRigidBody->IsKinematic(true);
+}
+
 void CBossController::Attack(_int iSkillIndex)
 {
 	/*switch (iSkillIndex)
@@ -234,7 +250,7 @@ void CBossController::Look(const Vec3& vPoint, const _float& fTimeDelta)
 		if (vLeftRight.y < 0)
 			vRotateAmount.y = -vRotateAmount.y;
 
-		m_pTransform->RotateYAxisFixed(fTimeDelta * 0.3f * vRotateAmount);
+		m_pTransform->RotateYAxisFixed(fTimeDelta * vRotateAmount);
 	}
 }
 

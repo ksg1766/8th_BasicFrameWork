@@ -23,7 +23,7 @@ CBT_Node::BT_RETURN CMoloch_BT_Dead::OnUpdate(const _float& fTimeDelta)
 {
 	ConditionalAbort(fTimeDelta);
 
-	if (!m_bDissolveFlag && m_fTimeSum > m_vecAnimIndexTime[0].second * 0.8f)
+	if (!m_bDissolveFlag && m_fTimeSum > m_vecAnimIndexTime[0].second * 0.92f)
 	{
 		m_pModel->PauseAnimation(true);
 		CDissolveManager::GetInstance()->AddDissolve(m_pGameObject);

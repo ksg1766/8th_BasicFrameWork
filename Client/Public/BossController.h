@@ -34,6 +34,7 @@ public:
 public:
 	void	GetMoveMessage(const Vec3& vDir)		{ m_vNetMove += vDir; }
 	void	GetTranslateMessage(const Vec3& vDir)	{ m_vNetTrans += vDir; }
+	void	GetDashMessage(const _bool& IsDash)		{ IsDash ? Dash(m_pTransform->GetForward()) : DashEnd(); }
 	void	GetAttackMessage(_int iSkillIndex)		{ Attack(iSkillIndex); }
 	void	GetHitMessage(_int iDamage);
 	void	GetMaxSpeedMessage()					{ m_bMax = true; }
@@ -55,6 +56,8 @@ public:
 private:
 	void	Move(const _float& fTimeDelta);
 	void	Translate(const _float& fTimeDelta);
+	void	Dash(const Vec3& vDir);
+	void	DashEnd();
 	void	Attack(_int iSkillIndex);
 	void	Hit(_int iDamage);
 

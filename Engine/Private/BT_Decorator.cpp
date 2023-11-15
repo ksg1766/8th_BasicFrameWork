@@ -23,13 +23,13 @@ HRESULT CBT_Decorator::Initialize(CGameObject* pGameObject, CBehaviorTree* pBeha
 void CBT_Decorator::OnStart()
 {
 	Super::OnStart();
-	if (DecoratorType::REPEAT == m_eDecoratorType)
-		m_iCounter = m_iLimitCount;
+	/*if (DecoratorType::REPEAT == m_eDecoratorType)
+		m_iCounter = m_iLimitCount;*/
 }
 
 CBT_Node::BT_RETURN CBT_Decorator::OnUpdate(const _float& fTimeDelta)
 {
-	switch (m_eDecoratorType)
+	/*switch (m_eDecoratorType)
 	{
 	case DecoratorType::IF:
 	{
@@ -61,7 +61,10 @@ CBT_Node::BT_RETURN CBT_Decorator::OnUpdate(const _float& fTimeDelta)
 			return BT_SUCCESS;
 	}
 	break;
-	}
+	}*/
+
+	//
+	return BT_SUCCESS;
 }
 
 void CBT_Decorator::OnEnd()

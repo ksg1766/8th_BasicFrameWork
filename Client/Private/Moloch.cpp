@@ -11,9 +11,18 @@
 #include "Moloch_BT_WHILE_Phase2.h"
 
 #include "Moloch_BT_Dash.h"
+#include "Moloch_BT_Swipe.h"
 #include "Moloch_BT_Dead.h"
 #include "Moloch_BT_Idle.h"
 #include "Moloch_BT_Chase.h"
+
+#include "Moloch_BT_IF_StartP2.h"
+#include "Moloch_BT_Eruption1.h"
+#include "Moloch_BT_Eruption2.h"
+#include "Moloch_BT_TremorPulse.h"
+#include "Moloch_BT_FullDash1.h"
+#include "Moloch_BT_Swing1.h"
+#include "Moloch_BT_Swing2.h"
 
 CMoloch::CMoloch(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: Super(pDevice, pContext)
@@ -41,8 +50,8 @@ HRESULT CMoloch::Initialize(void* pArg)
 	if (FAILED(Ready_Parts()))
 		return E_FAIL;
 
-	GetRigidBody()->GetSphereCollider()->SetRadius(2.5f);
-	GetRigidBody()->GetOBBCollider()->SetExtents(Vec3(2.f, 2.5f, 2.f));
+	GetRigidBody()->GetSphereCollider()->SetRadius(3.6f);
+	GetRigidBody()->GetOBBCollider()->SetExtents(Vec3(1.8f, 2.5f, 1.8f));
 
 	return S_OK;
 }
@@ -159,7 +168,7 @@ HRESULT CMoloch::Ready_Scripts()
 			CBT_Decorator* pIfDead = CMoloch_BT_IF_Dead::Create(this, pBehaviorTree, m_pController, CBT_Decorator::DecoratorType::IF);//죽었는가
 			pIfDead->AddChild(pDead);
 
-			//
+			// Phase1
 
 			desc.vecAnimations.clear();
 			desc.vecAnimations.push_back(TEXT("Moloch_Atk_Dash_Strike"));
@@ -169,13 +178,13 @@ HRESULT CMoloch::Ready_Scripts()
 			desc.vecAnimations.push_back(TEXT("Moloch_Full_Run_F"));
 			CBT_Action* pChase = CMoloch_BT_Chase::Create(this, pBehaviorTree, desc, m_pController);
 
-			/*desc.vecAnimations.clear();
+			desc.vecAnimations.clear();
 			desc.vecAnimations.push_back(TEXT("Moloch_Atk_Swipe_01"));
-			CBT_Action* pSwipe = CMoloch_BT_Swipe::Create(this, pBehaviorTree, desc, m_pController);*/
+			CBT_Action* pSwipe = CMoloch_BT_Swipe::Create(this, pBehaviorTree, desc, m_pController);
 
 			CBT_Composite* pChaseAttack = CBT_Composite::Create(this, pBehaviorTree, m_pController, CBT_Composite::CompositeType::SEQUENCE);
 			pChaseAttack->AddChild(pChase);
-			//pChaseAttack->AddChild(pSwipe);
+			pChaseAttack->AddChild(pSwipe);
 
 			CBT_Decorator* pRepeatChaseAttack = CMoloch_BT_REPEAT::Create(this, pBehaviorTree, m_pController, 2);
 			pRepeatChaseAttack->AddChild(pChaseAttack);
@@ -192,10 +201,75 @@ HRESULT CMoloch::Ready_Scripts()
 			CBT_Decorator* pWhilePhase1 = CMoloch_BT_WHILE_Phase1::Create(this, pBehaviorTree, m_pController, CBT_Decorator::DecoratorType::WHILE); // Phase1
 			pWhilePhase1->AddChild(pPhase1);
 
+			// Phase2
+			desc.vecAnimations.clear();
+			desc.vecAnimations.push_back(TEXT("Moloch_Atk_CrystalEruption"));
+			CBT_Action* pEruption1 = CMoloch_BT_Eruption1::Create(this, pBehaviorTree, desc, m_pController);
+			
+			desc.vecAnimations.clear();
+			desc.vecAnimations.push_back(TEXT("Moloch_Atk_CrystalEruption_02"));
+			CBT_Action* pEruption2 = CMoloch_BT_Eruption2::Create(this, pBehaviorTree, desc, m_pController);
+			
+			desc.vecAnimations.clear();
+			desc.vecAnimations.push_back(TEXT("Moloch_Atk_Full_TremorPulse"));
+			CBT_Action* pPulse = CMoloch_BT_TremorPulse::Create(this, pBehaviorTree, desc, m_pController);
+
+			CBT_Composite* pEnterPhase2 = CBT_Composite::Create(this, pBehaviorTree, m_pController, CBT_Composite::CompositeType::SEQUENCE);
+			pEnterPhase2->AddChild(pEruption1);
+			pEnterPhase2->AddChild(pEruption2);
+			pEnterPhase2->AddChild(pPulse);
+
+			CBT_Decorator* pIfEnterPhase = CMoloch_BT_IF_StartP2::Create(this, pBehaviorTree, m_pController, CBT_Decorator::DecoratorType::IF);	// 2페 시작패턴 조건
+			pIfEnterPhase->AddChild(pEnterPhase2);
+
+			desc.vecAnimations.clear();
+			desc.vecAnimations.push_back(TEXT("Moloch_Atk_Full_Dash_Strike"));
+			CBT_Action* pFullDash = CMoloch_BT_FullDash1::Create(this, pBehaviorTree, desc, m_pController);
+
+			desc.vecAnimations.clear();
+			desc.vecAnimations.push_back(TEXT("Moloch_Full_Run_F"));
+			CBT_Action* pChase2 = CMoloch_BT_Chase::Create(this, pBehaviorTree, desc, m_pController);
+
+			desc.vecAnimations.clear();
+			desc.vecAnimations.push_back(TEXT("Moloch_Atk_Full_Swing_01"));
+			CBT_Action* pSwing1 = CMoloch_BT_Swing1::Create(this, pBehaviorTree, desc, m_pController);
+
+			desc.vecAnimations.clear();
+			desc.vecAnimations.push_back(TEXT("Moloch_Atk_Full_Swing_02"));
+			CBT_Action* pSwing2 = CMoloch_BT_Swing2::Create(this, pBehaviorTree, desc, m_pController);
+
+			CBT_Composite* pChaseSwing = CBT_Composite::Create(this, pBehaviorTree, m_pController, CBT_Composite::CompositeType::SEQUENCE);
+			pChaseSwing->AddChild(pChase2);
+			pChaseSwing->AddChild(pSwing1);
+			pChaseSwing->AddChild(pSwing2);
+
+			CBT_Decorator* pRepeatChaseSwing = CMoloch_BT_REPEAT::Create(this, pBehaviorTree, m_pController, 2);
+			pRepeatChaseSwing->AddChild(pChaseSwing);
+
+			desc.vecAnimations.clear();
+			desc.vecAnimations.push_back(TEXT("Moloch_Idle"));
+			CBT_Action* pIdle2 = CMoloch_BT_Idle::Create(this, pBehaviorTree, desc, m_pController);
+
+			CBT_Composite* pPhase2 = CBT_Composite::Create(this, pBehaviorTree, m_pController, CBT_Composite::CompositeType::SEQUENCE);	//
+			pPhase2->AddChild(pFullDash);
+			pPhase2->AddChild(pRepeatChaseSwing);
+			pPhase2->AddChild(pIdle2);
+
+			CBT_Composite* pStartOrRun = CBT_Composite::Create(this, pBehaviorTree, m_pController, CBT_Composite::CompositeType::SELECTOR);	//
+			pStartOrRun->AddChild(pIfEnterPhase);
+			pStartOrRun->AddChild(pPhase2);
+
+			CBT_Decorator* pWhilePhase2 = CMoloch_BT_WHILE_Phase2::Create(this, pBehaviorTree, m_pController, CBT_Decorator::DecoratorType::WHILE); // Phase1
+			pWhilePhase2->AddChild(pStartOrRun);
+
+			// Phase3
+			
+			
 			//////////
 			CBT_Composite* pRoot = CBT_Composite::Create(this, pBehaviorTree, m_pController, CBT_Composite::CompositeType::SELECTOR);
 			pRoot->AddChild(pIfDead);
 			pRoot->AddChild(pWhilePhase1);
+			pRoot->AddChild(pWhilePhase2);
 			pBehaviorTree->SetRoot(pRoot);
 
 			// BlackBoard
