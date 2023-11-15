@@ -248,6 +248,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_UnitGround()
 		pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_Moloch"));
 		if (nullptr == pGameObject)	return E_FAIL;
 
+		pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_Dagon"));
+		if (nullptr == pGameObject)	return E_FAIL;
+
 		/*_int iRandomPosX = (rand() * i) % 16 - 8;
 		_int iRandomPosZ = (rand() * i) % 16 - 8;
 		_int iRandomAnimIndex = abs(rand()) * i;

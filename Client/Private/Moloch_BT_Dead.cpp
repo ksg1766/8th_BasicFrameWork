@@ -4,8 +4,6 @@
 #include "GameObject.h"
 #include "MonoBehaviour.h"
 #include "DissolveManager.h"
-//Temp
-#include "Moloch.h"
 
 CMoloch_BT_Dead::CMoloch_BT_Dead()
 {

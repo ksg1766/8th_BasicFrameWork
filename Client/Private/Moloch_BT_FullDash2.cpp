@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "Moloch_BT_FullDash2.h"
 #include "GameInstance.h"
-#include "Layer.h"
 #include "GameObject.h"
 #include "BossController.h"
 

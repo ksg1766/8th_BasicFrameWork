@@ -29,6 +29,7 @@
 #include "Strife_GunR.h"
 #include "Moloch.h"
 #include "Moloch_Sword.h"
+#include "Dagon.h"
 #include "Strife_Ammo_Default.h"
 #include "Strife_Ammo_Beam.h"
 #include "SkyBox.h"
@@ -279,7 +280,6 @@ HRESULT CLoader::Loading_Scripts_For_Level_GamePlay()
 		CMonsterStats::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-
 	/* For.Prototype_Component_MainCameraController*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_MainCameraController"),
 		CMainCameraController::Create(m_pDevice, m_pContext))))
@@ -357,6 +357,10 @@ HRESULT CLoader::Loading_GameObjects_For_Level_GamePlay()
 
 	/* For.Prototype_GameObject_Moloch_Sword */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Moloch_Sword"), CMoloch_Sword::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Dagon */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Dagon"), CDagon::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_Strife_Ammo_Default */
@@ -510,6 +514,10 @@ HRESULT CLoader::Loading_GameObjects_For_Level_GameTool()
 
 	/* For.Prototype_GameObject_Moloch */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Moloch"), CMoloch::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Dagon */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Dagon"), CDagon::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_Moloch_Sword */

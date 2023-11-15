@@ -364,6 +364,13 @@ HRESULT CMainApp::Ready_Prototype_Components()
 					CModel::Create(m_pDevice, m_pContext, strSkeletalFilePath + strFileName, desc, matPivot))))
 					return E_FAIL;
 			}
+			else if (TEXT("Dagon") == strFileName)
+			{
+				XMStoreFloat4x4(&matPivot, XMMatrixScaling(0.01f, 0.01f, 0.01f));
+				if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_" + strFileName),
+					CModel::Create(m_pDevice, m_pContext, strSkeletalFilePath + strFileName, desc, matPivot))))
+					return E_FAIL;
+			}
 			else if (TEXT("HellHound") == strFileName)
 			{
 				XMStoreFloat4x4(&matPivot, XMMatrixScaling(0.01f, 0.01f, 0.01f));

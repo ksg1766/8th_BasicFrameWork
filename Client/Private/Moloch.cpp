@@ -199,7 +199,7 @@ HRESULT CMoloch::Ready_Scripts()
 			pRepeatChaseAttack->AddChild(pChaseAttack);
 
 			desc.vecAnimations.clear();
-			desc.vecAnimations.push_back(TEXT("Moloch_Idle"));
+			desc.vecAnimations.push_back(TEXT("Moloch_Full_Idle"));
 			CBT_Action* pIdle = CMoloch_BT_Idle::Create(this, pBehaviorTree, desc, m_pController);
 
 			CBT_Composite* pPhase1 = CBT_Composite::Create(this, pBehaviorTree, m_pController, CBT_Composite::CompositeType::SEQUENCE);	//
@@ -256,7 +256,7 @@ HRESULT CMoloch::Ready_Scripts()
 			pRepeatChaseSwing->AddChild(pChaseSwing);
 
 			desc.vecAnimations.clear();
-			desc.vecAnimations.push_back(TEXT("Moloch_Idle"));
+			desc.vecAnimations.push_back(TEXT("Moloch_Full_Idle"));
 			CBT_Action* pIdle2 = CMoloch_BT_Idle::Create(this, pBehaviorTree, desc, m_pController);
 
 			CBT_Composite* pPhase2 = CBT_Composite::Create(this, pBehaviorTree, m_pController, CBT_Composite::CompositeType::SEQUENCE);	//
@@ -317,7 +317,7 @@ HRESULT CMoloch::Ready_Scripts()
 			pChaseFullSwing->AddChild(pSwing3_);
 
 			desc.vecAnimations.clear();
-			desc.vecAnimations.push_back(TEXT("Moloch_Idle"));
+			desc.vecAnimations.push_back(TEXT("Moloch_Full_Idle"));
 			CBT_Action* pIdle3 = CMoloch_BT_Idle::Create(this, pBehaviorTree, desc, m_pController);
 
 			CBT_Composite* pPhase3 = CBT_Composite::Create(this, pBehaviorTree, m_pController, CBT_Composite::CompositeType::SEQUENCE);	//

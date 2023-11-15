@@ -5,13 +5,13 @@
 
 BEGIN(Client)
 
-class CMoloch_BT_IF_Dead : public CBT_Decorator
+class CDagon_BT_IF_Dead : public CBT_Decorator
 {
 	using Super = CBT_Decorator;
 private:
-	CMoloch_BT_IF_Dead() = default;
-	CMoloch_BT_IF_Dead(const CMoloch_BT_IF_Dead& rhs) = delete;
-	virtual ~CMoloch_BT_IF_Dead() = default;
+	CDagon_BT_IF_Dead() = default;
+	CDagon_BT_IF_Dead(const CDagon_BT_IF_Dead& rhs) = delete;
+	virtual ~CDagon_BT_IF_Dead() = default;
 
 	virtual void OnStart() override
 	{
@@ -41,13 +41,13 @@ private:
 	}
 
 public:
-	static	CMoloch_BT_IF_Dead* Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, CMonoBehaviour* pController, DecoratorType eDecoratorType)
+	static	CDagon_BT_IF_Dead* Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, CMonoBehaviour* pController, DecoratorType eDecoratorType)
 	{
-		CMoloch_BT_IF_Dead* pInstance = new CMoloch_BT_IF_Dead;
+		CDagon_BT_IF_Dead* pInstance = new CDagon_BT_IF_Dead;
 
 		if (FAILED(pInstance->Initialize(pGameObject, pBehaviorTree, pController, eDecoratorType)))
 		{
-			MSG_BOX("Failed to Created : CMoloch_BT_IF_Dead");
+			MSG_BOX("Failed to Created : CDagon_BT_IF_Dead");
 			Safe_Release(pInstance);
 		}
 

@@ -15,7 +15,6 @@
 #include "HellBrute_BT_IF_Dead.h"
 #include "HellBrute_BT_IF_InSight.h"
 
-
 CHellBrute::CHellBrute(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: Super(pDevice, pContext)
 {

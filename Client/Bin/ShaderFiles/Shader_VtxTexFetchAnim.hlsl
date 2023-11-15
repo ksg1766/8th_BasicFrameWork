@@ -13,7 +13,8 @@ vector g_vLightEmissive = vector(1.f, 1.f, 1.f, 1.f);
 
 vector g_vMtrlAmbient = vector(0.4f, 0.4f, 0.4f, 1.f);
 vector g_vMtrlSpecular = vector(1.f, 1.f, 1.f, 1.f);
-vector g_vMtrlEmissive = vector(1.f, 0.f, 0.f, 1.f);
+//vector g_vMtrlEmissive = vector(1.f, 0.f, 0.f, 1.f);
+vector g_vMtrlEmissive = vector(1.f, 0.843137324f, 0.f, 1.f);
 
 vector g_vCamPosition;
 
@@ -214,7 +215,7 @@ PS_OUT PS_RIM_MAIN(PS_IN In)
 
 	// min, max, x
     fEmissive = smoothstep(0.0f, 1.0f, fEmissive);
-    //fEmissive = pow(fEmissive, 2);
+    fEmissive = pow(fEmissive, 2);
 	//
     Out.vEmissive = g_vMtrlEmissive * fEmissive;
     

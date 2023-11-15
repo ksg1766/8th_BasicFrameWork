@@ -379,6 +379,21 @@
     <Filter Include="03.GameObjects\03.Boss\00.Moloch\Behavior\Action\Common">
       <UniqueIdentifier>{3f7a5e60-38fe-4fe3-ab73-f061f9a702d5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.GameObjects\03.Boss\01.Dagon">
+      <UniqueIdentifier>{fa0d3f1f-9886-4dd5-adc5-ad8fb7ca846c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\03.Boss\01.Dagon\Behavior">
+      <UniqueIdentifier>{cdf30a19-befa-4c8c-affd-ed8d900e2aaa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\03.Boss\01.Dagon\Behavior\Action">
+      <UniqueIdentifier>{beb350f7-e2d2-46d6-912b-0aa43c82a248}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\03.Boss\01.Dagon\Behavior\Composite">
+      <UniqueIdentifier>{8284363e-4eac-4b5e-9356-5915a591b1e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\03.Boss\01.Dagon\Behavior\Decorator">
+      <UniqueIdentifier>{28e9cd9c-8bb9-45e9-972e-ec9ab6626a0a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -768,6 +783,21 @@
     <ClInclude Include="..\Public\Moloch_BT_Geyser2.h">
       <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Action\Phase3</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Dagon.h">
+      <Filter>03.GameObjects\03.Boss\01.Dagon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Dagon_BT_Idle.h">
+      <Filter>03.GameObjects\03.Boss\01.Dagon\Behavior\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Dagon_BT_IF_Dead.h">
+      <Filter>03.GameObjects\03.Boss\01.Dagon\Behavior\Decorator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Dagon_BT_Dead.h">
+      <Filter>03.GameObjects\03.Boss\01.Dagon\Behavior\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Dagon_BT_Lightning.h">
+      <Filter>03.GameObjects\03.Boss\01.Dagon\Behavior\Action</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1102,6 +1132,18 @@
     </ClCompile>
     <ClCompile Include="..\Private\Moloch_BT_Geyser2.cpp">
       <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Action\Phase3</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dagon.cpp">
+      <Filter>03.GameObjects\03.Boss\01.Dagon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dagon_BT_Idle.cpp">
+      <Filter>03.GameObjects\03.Boss\01.Dagon\Behavior\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dagon_BT_Dead.cpp">
+      <Filter>03.GameObjects\03.Boss\01.Dagon\Behavior\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dagon_BT_Lightning.cpp">
+      <Filter>03.GameObjects\03.Boss\01.Dagon\Behavior\Action</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

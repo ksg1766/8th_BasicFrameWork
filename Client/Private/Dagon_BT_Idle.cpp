@@ -1,21 +1,21 @@
 #include "stdafx.h"
-#include "Moloch_BT_Idle.h"
+#include "Dagon_BT_Idle.h"
 #include "GameInstance.h"
 #include "Layer.h"
 #include "GameObject.h"
 #include "BossController.h"
 
-CMoloch_BT_Idle::CMoloch_BT_Idle()
+CDagon_BT_Idle::CDagon_BT_Idle()
 {
 }
 
-void CMoloch_BT_Idle::OnStart()
+void CDagon_BT_Idle::OnStart()
 {
 	Super::OnStart(0);
 	StartIdleCoolDown();
 }
 
-CBT_Node::BT_RETURN CMoloch_BT_Idle::OnUpdate(const _float& fTimeDelta)
+CBT_Node::BT_RETURN CDagon_BT_Idle::OnUpdate(const _float& fTimeDelta)
 {
 	if (IsZeroHP())
 		return BT_FAIL;
@@ -31,17 +31,17 @@ CBT_Node::BT_RETURN CMoloch_BT_Idle::OnUpdate(const _float& fTimeDelta)
 	return BT_RUNNING;
 }
 
-void CMoloch_BT_Idle::OnEnd()
+void CDagon_BT_Idle::OnEnd()
 {
 	//AbortIdleCoolDown();
 	Super::OnEnd();
 }
 
-void CMoloch_BT_Idle::ConditionalAbort(const _float& fTimeDelta)
+void CDagon_BT_Idle::ConditionalAbort(const _float& fTimeDelta)
 {
 }
 
-void CMoloch_BT_Idle::StartIdleCoolDown()
+void CDagon_BT_Idle::StartIdleCoolDown()
 {
 	BLACKBOARD& hashBlackBoard = m_pBehaviorTree->GetBlackBoard();
 	const auto& tIdleCoolDown = hashBlackBoard.find(TEXT("IdleCoolDown"));
@@ -58,7 +58,7 @@ void CMoloch_BT_Idle::StartIdleCoolDown()
 	}
 }
 
-void CMoloch_BT_Idle::AbortIdleCoolDown()
+void CDagon_BT_Idle::AbortIdleCoolDown()
 {
 	BLACKBOARD& hashBlackBoard = m_pBehaviorTree->GetBlackBoard();
 	const auto& tIdleCoolDown = hashBlackBoard.find(TEXT("IdleCoolDown"));
@@ -69,7 +69,7 @@ void CMoloch_BT_Idle::AbortIdleCoolDown()
 	}
 }
 
-void CMoloch_BT_Idle::RunIdleCoolDown(const _float& fTimeDelta)
+void CDagon_BT_Idle::RunIdleCoolDown(const _float& fTimeDelta)
 {
 	BLACKBOARD& hashBlackBoard = m_pBehaviorTree->GetBlackBoard();
 	const auto& tIdleCoolDown = hashBlackBoard.find(TEXT("IdleCoolDown"));
@@ -84,7 +84,7 @@ void CMoloch_BT_Idle::RunIdleCoolDown(const _float& fTimeDelta)
 	}
 }
 
-_bool CMoloch_BT_Idle::IsZeroHP()
+_bool CDagon_BT_Idle::IsZeroHP()
 {
 	if (static_cast<CBossController*>(m_pController)->IsZeroHP())
 		return true;
@@ -92,20 +92,20 @@ _bool CMoloch_BT_Idle::IsZeroHP()
 	return false;
 }
 
-CMoloch_BT_Idle* CMoloch_BT_Idle::Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController)
+CDagon_BT_Idle* CDagon_BT_Idle::Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController)
 {
-	CMoloch_BT_Idle* pInstance = new CMoloch_BT_Idle;
+	CDagon_BT_Idle* pInstance = new CDagon_BT_Idle;
 
 	if (FAILED(pInstance->Initialize(pGameObject, pBehaviorTree, tBehaveAnim, pController)))
 	{
-		MSG_BOX("Failed to Created : CMoloch_BT_Idle");
+		MSG_BOX("Failed to Created : CDagon_BT_Idle");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CMoloch_BT_Idle::Free()
+void CDagon_BT_Idle::Free()
 {
 	Super::Free();
 }

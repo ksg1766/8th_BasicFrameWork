@@ -8,7 +8,7 @@ BEGIN(Engine)
 
 // Bone
 #define MAX_BONES 172
-#define MAX_KEYFRAMES 300
+#define MAX_KEYFRAMES 441
 
 struct AnimTransform
 {

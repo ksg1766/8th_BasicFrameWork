@@ -4,8 +4,6 @@
 #include "GameObject.h"
 #include "MonoBehaviour.h"
 #include "DissolveManager.h"
-//Temp
-#include "HellHound.h"
 
 CGoblin_BT_Dead::CGoblin_BT_Dead()
 {
