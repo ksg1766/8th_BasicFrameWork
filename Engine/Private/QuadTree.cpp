@@ -116,17 +116,14 @@ void CQuadTree::Update_Frustum(BoundingFrustum& tFrustum)
     BoundingFrustum::CreateFromMatrix(tFrustum, m_pPipeLine->Get_Transform_Matrix(CPipeLine::D3DTS_PROJ));
     tFrustum.Transform(tFrustum, m_pPipeLine->Get_Transform_Matrix_Inverse(CPipeLine::D3DTS_VIEW));
 #elif _DEBUG
-    BoundingFrustum::CreateFromMatrix(m_tBoundingFrustum, m_pPipeLine->Get_Transform_Matrix(CPipeLine::D3DTS_PROJ));
-    //XMStoreFloat3(&m_tBoundingFrustum.Origin, XMVectorScale(XMLoadFloat3(&m_tBoundingFrustum.Origin), g_fFrustum_Scale));
-    //m_tBoundingFrustum.Near *= g_fFrustum_Scale;
-    //m_tBoundingFrustum.Far *= g_fFrustum_Scale;
-
     static _bool bUpdateFrustum = true;
     if (KEY_PRESSING_EX(KEY::CTRL) && KEY_DOWN_EX(KEY::F7))
         bUpdateFrustum = !bUpdateFrustum;
 
     if (!bUpdateFrustum)
         return;
+
+    BoundingFrustum::CreateFromMatrix(m_tBoundingFrustum, m_pPipeLine->Get_Transform_Matrix(CPipeLine::D3DTS_PROJ));
     m_tBoundingFrustum.Transform(m_tBoundingFrustum, m_pPipeLine->Get_Transform_Matrix_Inverse(CPipeLine::D3DTS_VIEW));
 #endif
 }
@@ -154,7 +151,7 @@ void CQuadTree::Render_QuadTree()
 
     m_pBatch->Begin();
 
-    DX::Draw(m_pBatch, m_tBoundingFrustum, Colors::DimGray);
+    DX::Draw(m_pBatch, m_tBoundingFrustum, Colors::FloralWhite);
 
     m_pBatch->End();
 #endif // DEBUG

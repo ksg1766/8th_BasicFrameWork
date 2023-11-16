@@ -24,7 +24,7 @@ public:
     CQuadTreeNode*  GetCurrentNodeByPos(Vec3 vPos, CQuadTreeNode* const pNode);
 
 private:
-    CQuadTreeNode*  BuildQuadTree(Vec3 vCenter, Vec3 vHalfWidth, _int iDepthLimit = 4);
+    CQuadTreeNode*  BuildQuadTree(Vec3 vCenter, Vec3 vHalfWidth, _int iDepthLimit = 5);
     void            AddObjectInNode(CTransform* pTransform, CQuadTreeNode* const pNode);
 
     void            Update_Frustum(BoundingFrustum& tFrustum);
@@ -34,7 +34,7 @@ private:
 
     class CPipeLine* m_pPipeLine;
 
-    const _int      m_iDepthLimit = 4;
+    const _int      m_iDepthLimit = 5;
     const _float    m_fLooseFactor = 2.f;
 
     Vec3            m_vRootExtents = Vec3(1280.f, -1.f, 1280.f);

@@ -186,6 +186,11 @@
     <ClInclude Include="..\Public\Dagon_BT_Idle.h" />
     <ClInclude Include="..\Public\Dagon_BT_IF_Dead.h" />
     <ClInclude Include="..\Public\Dagon_BT_Lightning.h" />
+    <ClInclude Include="..\Public\Dagon_BT_Orb.h" />
+    <ClInclude Include="..\Public\Dagon_BT_Tentacle.h" />
+    <ClInclude Include="..\Public\Dagon_BT_Wave.h" />
+    <ClInclude Include="..\Public\Dagon_BT_WaveLoop.h" />
+    <ClInclude Include="..\Public\Dagon_BT_WhirlPool.h" />
     <ClInclude Include="..\Public\DebugDraw.h" />
     <ClInclude Include="..\Public\DemonCaster.h" />
     <ClInclude Include="..\Public\DemonCaster_BT_Dead.h" />
@@ -254,6 +259,7 @@
     <ClInclude Include="..\Public\Moloch_BT_WHILE_Phase1.h" />
     <ClInclude Include="..\Public\Moloch_BT_WHILE_Phase2.h" />
     <ClInclude Include="..\Public\Moloch_BT_Chase.h" />
+    <ClInclude Include="..\Public\Moloch_MotionTrail.h" />
     <ClInclude Include="..\Public\Moloch_Sword.h" />
     <ClInclude Include="..\Public\MonsterController.h" />
     <ClInclude Include="..\Public\MonsterStats.h" />
@@ -322,6 +328,11 @@
     <ClCompile Include="..\Private\Dagon_BT_Dead.cpp" />
     <ClCompile Include="..\Private\Dagon_BT_Idle.cpp" />
     <ClCompile Include="..\Private\Dagon_BT_Lightning.cpp" />
+    <ClCompile Include="..\Private\Dagon_BT_Orb.cpp" />
+    <ClCompile Include="..\Private\Dagon_BT_Tentacle.cpp" />
+    <ClCompile Include="..\Private\Dagon_BT_Wave.cpp" />
+    <ClCompile Include="..\Private\Dagon_BT_WaveLoop.cpp" />
+    <ClCompile Include="..\Private\Dagon_BT_WhirlPool.cpp" />
     <ClCompile Include="..\Private\DebugDraw.cpp" />
     <ClCompile Include="..\Private\DemonCaster.cpp" />
     <ClCompile Include="..\Private\DemonCaster_BT_Dead.cpp" />
@@ -376,6 +387,7 @@
     <ClCompile Include="..\Private\Moloch_BT_Swing3.cpp" />
     <ClCompile Include="..\Private\Moloch_BT_Swipe.cpp" />
     <ClCompile Include="..\Private\Moloch_BT_TremorPulse.cpp" />
+    <ClCompile Include="..\Private\Moloch_MotionTrail.cpp" />
     <ClCompile Include="..\Private\Moloch_Sword.cpp" />
     <ClCompile Include="..\Private\MonsterController.cpp" />
     <ClCompile Include="..\Private\MonsterStats.cpp" />

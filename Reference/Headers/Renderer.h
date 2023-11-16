@@ -13,7 +13,7 @@ class ENGINE_DLL CRenderer final : public CComponent
 public:
 	/* RG_NONBLEND : 이후 그려지는 Blend오브젝트들의 섞는 연산을 위해 반드시 불투명한 애들을 먼저 그려야한다. */
 	/* RG_BLEND : 반투명하게 그려지는 객체들도 반드시 멀리있는 놈부터 그린다. */
-	enum RENDERGROUP { RG_PRIORITY, RG_NONLIGHT, RG_NONBLEND, RG_NONBLEND_INSTANCE, RG_PARTICLE_INSTANCE, RG_DISTORTION, RG_BLEND, RG_BLEND_INSTANCE, RG_UI, RG_END };
+	enum RENDERGROUP { RG_PRIORITY, RG_NONLIGHT, RG_NONBLEND_INSTANCE, RG_NONBLEND, RG_PARTICLE_INSTANCE, RG_DISTORTION, RG_BLEND, RG_BLEND_INSTANCE, RG_UI, RG_END };
 private:
 	CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);	
 	CRenderer(const CRenderer& rhs) = delete;

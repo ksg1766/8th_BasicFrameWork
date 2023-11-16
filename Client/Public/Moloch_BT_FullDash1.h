@@ -22,6 +22,8 @@ private:
 	_bool				IsZeroHP();
 	CGameObject*		GetTarget();
 
+	Vec3				m_vTargetPos;
+	_int				m_iFrameCounter = 0;
 
 public:
 	static	CMoloch_BT_FullDash1* Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController);

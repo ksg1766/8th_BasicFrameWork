@@ -394,6 +394,9 @@
     <Filter Include="03.GameObjects\03.Boss\01.Dagon\Behavior\Decorator">
       <UniqueIdentifier>{28e9cd9c-8bb9-45e9-972e-ec9ab6626a0a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.GameObjects\03.Boss\00.Moloch\MotionTrail">
+      <UniqueIdentifier>{b44ce67c-8910-483d-8a9e-a31ab6162f95}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -798,6 +801,24 @@
     <ClInclude Include="..\Public\Dagon_BT_Lightning.h">
       <Filter>03.GameObjects\03.Boss\01.Dagon\Behavior\Action</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Dagon_BT_Orb.h">
+      <Filter>03.GameObjects\03.Boss\01.Dagon\Behavior\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Dagon_BT_Tentacle.h">
+      <Filter>03.GameObjects\03.Boss\01.Dagon\Behavior\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Dagon_BT_Wave.h">
+      <Filter>03.GameObjects\03.Boss\01.Dagon\Behavior\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Dagon_BT_WhirlPool.h">
+      <Filter>03.GameObjects\03.Boss\01.Dagon\Behavior\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Dagon_BT_WaveLoop.h">
+      <Filter>03.GameObjects\03.Boss\01.Dagon\Behavior\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Moloch_MotionTrail.h">
+      <Filter>03.GameObjects\03.Boss\00.Moloch\MotionTrail</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1144,6 +1165,24 @@
     </ClCompile>
     <ClCompile Include="..\Private\Dagon_BT_Lightning.cpp">
       <Filter>03.GameObjects\03.Boss\01.Dagon\Behavior\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dagon_BT_Orb.cpp">
+      <Filter>03.GameObjects\03.Boss\01.Dagon\Behavior\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dagon_BT_Tentacle.cpp">
+      <Filter>03.GameObjects\03.Boss\01.Dagon\Behavior\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dagon_BT_Wave.cpp">
+      <Filter>03.GameObjects\03.Boss\01.Dagon\Behavior\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dagon_BT_WhirlPool.cpp">
+      <Filter>03.GameObjects\03.Boss\01.Dagon\Behavior\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Dagon_BT_WaveLoop.cpp">
+      <Filter>03.GameObjects\03.Boss\01.Dagon\Behavior\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Moloch_MotionTrail.cpp">
+      <Filter>03.GameObjects\03.Boss\00.Moloch\MotionTrail</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -36,6 +36,7 @@
 #include "Particle.h"
 #include "ParticleController.h"
 #include "Strife_MotionTrail.h"
+#include "Moloch_MotionTrail.h"
 #include "Shockwave.h"
 #include "Lava.h"
 
@@ -385,6 +386,10 @@ HRESULT CLoader::Loading_GameObjects_For_Level_GamePlay()
 
 	/* For.Prototype_GameObject_Strife_MotionTrail */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Strife_MotionTrail"), CStrife_MotionTrail::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Moloch_MotionTrail */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Moloch_MotionTrail"), CMoloch_MotionTrail::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_Shockwave */

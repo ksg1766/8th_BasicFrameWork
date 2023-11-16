@@ -18,6 +18,10 @@ vector g_vMtrlEmissive = vector(1.f, 0.843137324f, 0.f, 1.f);
 
 vector g_vCamPosition;
 
+vector g_ColorOffset;
+
+Texture2D g_DepthTarget;
+
 struct tagKeyframeDesc
 {
     int animIndex;
@@ -172,6 +176,14 @@ struct PS_OUT
     float4 vEmissive : SV_TARGET3;
 };
 
+struct PS_OUT_BLUE
+{
+    float4 vDiffuse : SV_TARGET0;
+    float4 vNormal : SV_TARGET1;
+    float4 vEmissive : SV_TARGET3;
+    float4 vBlue : SV_TARGET4;
+};
+
 PS_OUT PS_MAIN(PS_IN In)
 {
     ComputeNormalMapping(In.vNormal, In.vTangent, In.vTexcoord);
@@ -251,13 +263,44 @@ PS_OUT PS_ALPHA_MAIN(PS_IN In)
     if (vMtrlDiffuse.a < 0.3f)
         discard;
 	
-    vector vShade = max(dot(normalize(g_vLightDir) * -1.f, normalize(In.vNormal)), 0.f) +
-		g_vLightAmbient * g_vMtrlAmbient;
+    // 뭐야 이게 왜 있어
+    //vector vShade = max(dot(normalize(g_vLightDir) * -1.f, normalize(In.vNormal)), 0.f) +
+	//	g_vLightAmbient * g_vMtrlAmbient;
 
-    Out.vDiffuse = (g_vLightDiffuse * vMtrlDiffuse) * saturate(vShade);
+    Out.vDiffuse = g_vLightDiffuse * vMtrlDiffuse;
     
-    Out.vDiffuse.b += 0.18f;
+    Out.vDiffuse += g_ColorOffset;
     Out.vDiffuse.a = 0.45f;
+    
+    return Out;
+}
+
+PS_OUT_BLUE PS_BLUE_MAIN(PS_IN In)
+{
+    PS_OUT_BLUE Out = (PS_OUT_BLUE) 0;
+	
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
+    
+    if (vMtrlDiffuse.a < 0.3f)
+        discard;
+
+    //float2 vProjPos = In.vProjPos.xy / In.vProjPos.w;
+    //float2 vTexUV;
+    
+    //vTexUV.x = vProjPos.x * 0.5f + 0.5f;
+    //vTexUV.y = vProjPos.y * -0.5f + 0.5f;
+    
+    //vector vDepth = g_DepthTarget.Sample(LinearSampler, vTexUV);
+    //float fOldZ = vDepth.y * 2000.f;
+    
+    //if (fOldZ >= In.vProjPos.w)
+    //    Out.vBlue = vector(0.f, 1.f, 1.f, 1.f);
+    //else
+    //    Out.vDiffuse = vMtrlDiffuse;
+    
+    Out.vDiffuse = vMtrlDiffuse;
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+    Out.vBlue = vector(0.f, In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f);
     
     return Out;
 }
@@ -318,4 +361,19 @@ technique11 DefaultTechnique
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_ALPHA_MAIN();
     }
+
+    pass BlueMesh
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_BLUE_MAIN();
+        ComputeShader = NULL;
+    }
+
 }

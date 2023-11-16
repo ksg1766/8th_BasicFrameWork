@@ -5,33 +5,16 @@
 #include "MonsterStats.h"
 
 #include "BT_Composite.h"
-//#include "Dagon_BT_IF_Dead.h"
-//#include "Dagon_BT_REPEAT.h"
-//#include "Dagon_BT_WHILE_Phase1.h"
-//#include "Dagon_BT_WHILE_Phase2.h"
-//
-//#include "Dagon_BT_Dash.h"
-//#include "Dagon_BT_Swipe.h"
-//#include "Dagon_BT_Dead.h"
-//#include "Dagon_BT_Idle.h"
-//#include "Dagon_BT_Chase.h"
-//
-//#include "Dagon_BT_IF_StartP2.h"
-//#include "Dagon_BT_Eruption1.h"
-//
-//#include "Dagon_BT_Eruption2.h"
-//#include "Dagon_BT_TremorPulse.h"
-//#include "Dagon_BT_FullDash1.h"
-//#include "Dagon_BT_Swing1.h"
-//#include "Dagon_BT_Swing2.h"
-//
-//
-//#include "Dagon_BT_IF_StartP3.h"
-//#include "Dagon_BT_Swing3.h"
-//
-//#include "Dagon_BT_FullDash2.h"
-//#include "Dagon_BT_Geyser1.h"
-//#include "Dagon_BT_Geyser2.h"
+#include "Dagon_BT_IF_Dead.h"
+
+#include "Dagon_BT_Dead.h"
+#include "Dagon_BT_Idle.h"
+#include "Dagon_BT_Lightning.h"
+#include "Dagon_BT_Orb.h"
+#include "Dagon_BT_Tentacle.h"
+#include "Dagon_BT_Wave.h"
+#include "Dagon_BT_WaveLoop.h"
+#include "Dagon_BT_WhirlPool.h"
 
 CDagon::CDagon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: Super(pDevice, pContext)
@@ -58,6 +41,9 @@ HRESULT CDagon::Initialize(void* pArg)
 
 	GetRigidBody()->GetSphereCollider()->SetRadius(7.f);
 	GetRigidBody()->GetOBBCollider()->SetExtents(Vec3(4.f, 4.f, 4.f));
+
+	GetTransform()->RotateYAxisFixed(Vec3(0.f, 180.f, 0.f));
+	GetTransform()->Translate(Vec3(-147.f, 28.f, 237.f));
 
 	return S_OK;
 }
@@ -121,12 +107,6 @@ HRESULT CDagon::Ready_FixedComponents()
 
 	if (LEVEL_GAMEPLAY == m_pGameInstance->GetCurrentLevelIndex())
 	{
-		/* Com_NavMeshAgent */
-		CNavMeshAgent::NAVIGATION_DESC pNaviDesc;
-		pNaviDesc.iCurrentIndex = 10;
-
-		if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::NavMeshAgent, TEXT("Prototype_Component_NavMeshAgent"), &pNaviDesc)))
-			return E_FAIL;
 	}
 
 	return S_OK;
@@ -153,181 +133,66 @@ HRESULT CDagon::Ready_Scripts()
 		if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::Script, TEXT("Prototype_Component_BehaviorTree"))))
 			return E_FAIL;
 
-		//CBehaviorTree* pBehaviorTree = dynamic_cast<CBehaviorTree*>(m_vecScripts[2]);
-		//{
-		//	CBT_Action::BEHAVEANIMS desc;
+		CBehaviorTree* pBehaviorTree = dynamic_cast<CBehaviorTree*>(m_vecScripts[2]);
+		{
+			CBT_Action::BEHAVEANIMS desc;
 
-		//	desc.vecAnimations.clear();
-		//	desc.vecAnimations.push_back(TEXT("Dagon_Full_Impact_Stun"));
-		//	CBT_Action* pDead = CDagon_BT_Dead::Create(this, pBehaviorTree, desc, m_pController);
+			desc.vecAnimations.clear();
+			desc.vecAnimations.push_back(TEXT("WaterBoss_Impact_Stun"));
+			CBT_Action* pDead = CDagon_BT_Dead::Create(this, pBehaviorTree, desc, m_pController);
 
-		//	CBT_Decorator* pIfDead = CDagon_BT_IF_Dead::Create(this, pBehaviorTree, m_pController, CBT_Decorator::DecoratorType::IF);//죽었는가
-		//	pIfDead->AddChild(pDead);
+			CBT_Decorator* pIfDead = CDagon_BT_IF_Dead::Create(this, pBehaviorTree, m_pController, CBT_Decorator::DecoratorType::IF);
+			pIfDead->AddChild(pDead);
 
-		//	// Phase1
+			desc.vecAnimations.clear();
+			desc.vecAnimations.push_back(TEXT("WaterBoss_Idle"));
+			CBT_Action* pIdle = CDagon_BT_Idle::Create(this, pBehaviorTree, desc, m_pController);
 
-		//	desc.vecAnimations.clear();
-		//	desc.vecAnimations.push_back(TEXT("Dagon_Atk_Dash_Strike"));
-		//	CBT_Action* pDash = CDagon_BT_Dash::Create(this, pBehaviorTree, desc, m_pController);
+			//
+			desc.vecAnimations.clear();
+			desc.vecAnimations.push_back(TEXT("WaterBoss_Atk_CallLightning"));
+			CBT_Action* pLightning = CDagon_BT_Lightning::Create(this, pBehaviorTree, desc, m_pController);
 
-		//	desc.vecAnimations.clear();
-		//	desc.vecAnimations.push_back(TEXT("Dagon_Full_Run_F"));
-		//	CBT_Action* pChase = CDagon_BT_Chase::Create(this, pBehaviorTree, desc, m_pController);
+			desc.vecAnimations.clear();
+			desc.vecAnimations.push_back(TEXT("WaterBoss_Atk_SummonOrb_L"));
+			CBT_Action* pOrb = CDagon_BT_Orb::Create(this, pBehaviorTree, desc, m_pController);
 
-		//	desc.vecAnimations.clear();
-		//	desc.vecAnimations.push_back(TEXT("Dagon_Atk_Swipe_01"));
-		//	CBT_Action* pSwipe = CDagon_BT_Swipe::Create(this, pBehaviorTree, desc, m_pController);
+			desc.vecAnimations.clear();
+			desc.vecAnimations.push_back(TEXT("WaterBoss_Atk_WhirlPool"));
+			CBT_Action* pPool = CDagon_BT_WhirlPool::Create(this, pBehaviorTree, desc, m_pController);
 
-		//	CBT_Composite* pChaseAttack = CBT_Composite::Create(this, pBehaviorTree, m_pController, CBT_Composite::CompositeType::SEQUENCE);
-		//	pChaseAttack->AddChild(pChase);
-		//	pChaseAttack->AddChild(pSwipe);
+			desc.vecAnimations.clear();
+			desc.vecAnimations.push_back(TEXT("WaterBoss_TidalWave_Loop"));
+			CBT_Action* pWaveLoop = CDagon_BT_WaveLoop::Create(this, pBehaviorTree, desc, m_pController);
 
-		//	CBT_Decorator* pRepeatChaseAttack = CDagon_BT_REPEAT::Create(this, pBehaviorTree, m_pController, 2);
-		//	pRepeatChaseAttack->AddChild(pChaseAttack);
+			desc.vecAnimations.clear();
+			desc.vecAnimations.push_back(TEXT("WaterBoss_TidalWave"));
+			CBT_Action* pWave = CDagon_BT_Wave::Create(this, pBehaviorTree, desc, m_pController);
 
-		//	desc.vecAnimations.clear();
-		//	desc.vecAnimations.push_back(TEXT("Dagon_Idle"));
-		//	CBT_Action* pIdle = CDagon_BT_Idle::Create(this, pBehaviorTree, desc, m_pController);
+			CBT_Composite* pWaveSequence = CBT_Composite::Create(this, pBehaviorTree, m_pController, CBT_Composite::CompositeType::SEQUENCE);
+			pWaveSequence->AddChild(pWaveLoop);
+			pWaveSequence->AddChild(pWave);
 
-		//	CBT_Composite* pPhase1 = CBT_Composite::Create(this, pBehaviorTree, m_pController, CBT_Composite::CompositeType::SEQUENCE);	//
-		//	pPhase1->AddChild(pDash);
-		//	pPhase1->AddChild(pRepeatChaseAttack);
-		//	pPhase1->AddChild(pIdle);
+			desc.vecAnimations.clear();
+			desc.vecAnimations.push_back(TEXT("WaterBoss_Atk_Tentacle_Pummel"));
+			CBT_Action* pTentacle = CDagon_BT_Tentacle::Create(this, pBehaviorTree, desc, m_pController);
 
-		//	CBT_Decorator* pWhilePhase1 = CDagon_BT_WHILE_Phase1::Create(this, pBehaviorTree, m_pController, CBT_Decorator::DecoratorType::WHILE); // Phase1
-		//	pWhilePhase1->AddChild(pPhase1);
+			CBT_Composite* pAttack = CBT_Composite::Create(this, pBehaviorTree, m_pController, CBT_Composite::CompositeType::SELECTOR);
+			pAttack->AddChild(pLightning);
+			pAttack->AddChild(pOrb);
+			pAttack->AddChild(pPool);
+			pAttack->AddChild(pWaveSequence);
+			pAttack->AddChild(pTentacle);
 
-		//	// Phase2
-		//	desc.vecAnimations.clear();
-		//	desc.vecAnimations.push_back(TEXT("Dagon_Atk_CrystalEruption"));
-		//	CBT_Action* pEruption1 = CDagon_BT_Eruption1::Create(this, pBehaviorTree, desc, m_pController);
-		//	
-		//	desc.vecAnimations.clear();
-		//	desc.vecAnimations.push_back(TEXT("Dagon_Atk_CrystalEruption_02"));
-		//	CBT_Action* pEruption2 = CDagon_BT_Eruption2::Create(this, pBehaviorTree, desc, m_pController);
-		//	
-		//	desc.vecAnimations.clear();
-		//	desc.vecAnimations.push_back(TEXT("Dagon_Atk_Full_TremorPulse"));
-		//	CBT_Action* pPulse = CDagon_BT_TremorPulse::Create(this, pBehaviorTree, desc, m_pController);
+			CBT_Composite* pRun = CBT_Composite::Create(this, pBehaviorTree, m_pController, CBT_Composite::CompositeType::SEQUENCE);
+			pRun->AddChild(pIdle);
+			pRun->AddChild(pAttack);
 
-		//	CBT_Composite* pEnterPhase2 = CBT_Composite::Create(this, pBehaviorTree, m_pController, CBT_Composite::CompositeType::SEQUENCE);
-		//	pEnterPhase2->AddChild(pEruption1);
-		//	pEnterPhase2->AddChild(pEruption2);
-		//	pEnterPhase2->AddChild(pPulse);
-
-		//	CBT_Decorator* pIfEnterPhase = CDagon_BT_IF_StartP2::Create(this, pBehaviorTree, m_pController, CBT_Decorator::DecoratorType::IF);	// 2페 시작패턴 조건
-		//	pIfEnterPhase->AddChild(pEnterPhase2);
-
-		//	desc.vecAnimations.clear();
-		//	desc.vecAnimations.push_back(TEXT("Dagon_Atk_Full_Dash_Strike"));
-		//	CBT_Action* pFullDash = CDagon_BT_FullDash1::Create(this, pBehaviorTree, desc, m_pController);
-
-		//	desc.vecAnimations.clear();
-		//	desc.vecAnimations.push_back(TEXT("Dagon_Full_Run_F"));
-		//	CBT_Action* pChase2 = CDagon_BT_Chase::Create(this, pBehaviorTree, desc, m_pController);
-
-		//	desc.vecAnimations.clear();
-		//	desc.vecAnimations.push_back(TEXT("Dagon_Atk_Full_Swing_01"));
-		//	CBT_Action* pSwing1 = CDagon_BT_Swing1::Create(this, pBehaviorTree, desc, m_pController);
-
-		//	desc.vecAnimations.clear();
-		//	desc.vecAnimations.push_back(TEXT("Dagon_Atk_Full_Swing_02"));
-		//	CBT_Action* pSwing2 = CDagon_BT_Swing2::Create(this, pBehaviorTree, desc, m_pController);
-
-		//	CBT_Composite* pChaseSwing = CBT_Composite::Create(this, pBehaviorTree, m_pController, CBT_Composite::CompositeType::SEQUENCE);
-		//	pChaseSwing->AddChild(pChase2);
-		//	pChaseSwing->AddChild(pSwing1);
-		//	pChaseSwing->AddChild(pSwing2);
-
-		//	CBT_Decorator* pRepeatChaseSwing = CDagon_BT_REPEAT::Create(this, pBehaviorTree, m_pController, 2);
-		//	pRepeatChaseSwing->AddChild(pChaseSwing);
-
-		//	desc.vecAnimations.clear();
-		//	desc.vecAnimations.push_back(TEXT("Dagon_Idle"));
-		//	CBT_Action* pIdle2 = CDagon_BT_Idle::Create(this, pBehaviorTree, desc, m_pController);
-
-		//	CBT_Composite* pPhase2 = CBT_Composite::Create(this, pBehaviorTree, m_pController, CBT_Composite::CompositeType::SEQUENCE);	//
-		//	pPhase2->AddChild(pFullDash);
-		//	pPhase2->AddChild(pRepeatChaseSwing);
-		//	pPhase2->AddChild(pIdle2);
-
-		//	CBT_Composite* pStartOrRun = CBT_Composite::Create(this, pBehaviorTree, m_pController, CBT_Composite::CompositeType::SELECTOR);	//
-		//	pStartOrRun->AddChild(pIfEnterPhase);
-		//	pStartOrRun->AddChild(pPhase2);
-
-		//	CBT_Decorator* pWhilePhase2 = CDagon_BT_WHILE_Phase2::Create(this, pBehaviorTree, m_pController, CBT_Decorator::DecoratorType::WHILE); // Phase1
-		//	pWhilePhase2->AddChild(pStartOrRun);
-
-		//	// Phase3
-		//	desc.vecAnimations.clear();
-		//	desc.vecAnimations.push_back(TEXT("Dagon_Atk_Full_Geyser"));
-		//	CBT_Action* pGeyser1 = CDagon_BT_Geyser1::Create(this, pBehaviorTree, desc, m_pController);
-
-		//	CBT_Decorator* pRepeatGeyser = CDagon_BT_REPEAT::Create(this, pBehaviorTree, m_pController, 3);
-		//	pRepeatGeyser->AddChild(pGeyser1);
-
-		//	desc.vecAnimations.clear();
-		//	desc.vecAnimations.push_back(TEXT("Dagon_Atk_Full_Geyser_02"));
-		//	CBT_Action* pGeyser2 = CDagon_BT_Geyser2::Create(this, pBehaviorTree, desc, m_pController);
-
-		//	CBT_Composite* pEnterPhase3 = CBT_Composite::Create(this, pBehaviorTree, m_pController, CBT_Composite::CompositeType::SEQUENCE);
-		//	pEnterPhase3->AddChild(pRepeatGeyser);
-		//	pEnterPhase3->AddChild(pGeyser2);
-
-		//	CBT_Decorator* pIfEnterPhase3 = CDagon_BT_IF_StartP3::Create(this, pBehaviorTree, m_pController, CBT_Decorator::DecoratorType::IF);	// 2페 시작패턴 조건
-		//	pIfEnterPhase3->AddChild(pEnterPhase3);
-
-		//	desc.vecAnimations.clear();
-		//	desc.vecAnimations.push_back(TEXT("Dagon_Atk_Full_Dash_Strike_02"));
-		//	CBT_Action* pFullDash2 = CDagon_BT_FullDash2::Create(this, pBehaviorTree, desc, m_pController);
-
-		//	desc.vecAnimations.clear();
-		//	desc.vecAnimations.push_back(TEXT("Dagon_Full_Run_F"));
-		//	CBT_Action* pChase3 = CDagon_BT_Chase::Create(this, pBehaviorTree, desc, m_pController);
-
-		//	desc.vecAnimations.clear();
-		//	desc.vecAnimations.push_back(TEXT("Dagon_Atk_Full_Swing_01"));
-		//	CBT_Action* pSwing1_ = CDagon_BT_Swing1::Create(this, pBehaviorTree, desc, m_pController);
-
-		//	desc.vecAnimations.clear();
-		//	desc.vecAnimations.push_back(TEXT("Dagon_Atk_Full_Swing_02"));
-		//	CBT_Action* pSwing2_ = CDagon_BT_Swing2::Create(this, pBehaviorTree, desc, m_pController);
-
-		//	desc.vecAnimations.clear();
-		//	desc.vecAnimations.push_back(TEXT("Dagon_Atk_Full_Swing_03"));
-		//	CBT_Action* pSwing3_ = CDagon_BT_Swing3::Create(this, pBehaviorTree, desc, m_pController);
-
-		//	CBT_Composite* pChaseFullSwing = CBT_Composite::Create(this, pBehaviorTree, m_pController, CBT_Composite::CompositeType::SEQUENCE);
-		//	pChaseFullSwing->AddChild(pChase3);
-		//	pChaseFullSwing->AddChild(pSwing1_);
-		//	pChaseFullSwing->AddChild(pSwing2_);
-		//	pChaseFullSwing->AddChild(pSwing3_);
-
-		//	desc.vecAnimations.clear();
-		//	desc.vecAnimations.push_back(TEXT("Dagon_Idle"));
-		//	CBT_Action* pIdle3 = CDagon_BT_Idle::Create(this, pBehaviorTree, desc, m_pController);
-
-		//	CBT_Composite* pPhase3 = CBT_Composite::Create(this, pBehaviorTree, m_pController, CBT_Composite::CompositeType::SEQUENCE);	//
-		//	pPhase3->AddChild(pFullDash2);
-		//	pPhase3->AddChild(pChaseFullSwing);
-		//	pPhase3->AddChild(pIdle3);
-
-		//	CBT_Composite* pStartOrRun3 = CBT_Composite::Create(this, pBehaviorTree, m_pController, CBT_Composite::CompositeType::SELECTOR);	//
-		//	pStartOrRun3->AddChild(pIfEnterPhase3);
-		//	pStartOrRun3->AddChild(pPhase3);
-
-		//	//////////
-		//	CBT_Composite* pRoot = CBT_Composite::Create(this, pBehaviorTree, m_pController, CBT_Composite::CompositeType::SELECTOR);
-		//	pRoot->AddChild(pIfDead);
-		//	pRoot->AddChild(pWhilePhase1);
-		//	pRoot->AddChild(pWhilePhase2);
-		//	pRoot->AddChild(pStartOrRun3);
-		//	pBehaviorTree->SetRoot(pRoot);
-
-		//	// BlackBoard
-		//	BLACKBOARD& hashBlackBoard = pBehaviorTree->GetBlackBoard();
-		//	hashBlackBoard.emplace(TEXT("AttackRange"), new tagBlackBoardData<_float>(5.f));
-		//}
+			CBT_Composite* pRoot = CBT_Composite::Create(this, pBehaviorTree, m_pController, CBT_Composite::CompositeType::SELECTOR);
+			pRoot->AddChild(pIfDead);
+			pRoot->AddChild(pRun);
+			pBehaviorTree->SetRoot(pRoot);
+		}
 	}
 
 	return S_OK;

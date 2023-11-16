@@ -11,8 +11,8 @@ constexpr auto EPSILON = 0.001f;
 
 CBossController::CBossController(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:Super(pDevice, pContext)
-	, m_vLinearSpeed(Vec3(3.f, 3.f, 3.f))
-	, m_vMaxLinearSpeed(Vec3(5.f, 5.f, 5.f))
+	, m_vLinearSpeed(Vec3(5.f, 5.f, 5.f))
+	, m_vMaxLinearSpeed(Vec3(20.f, 20.f, 20.f))
 	, m_vAngularSpeed(Vec3(0.f, 360.f, 0.f))
 	, m_vMaxAngularSpeed(Vec3(0.f, 540.f, 0.f))
 {
@@ -94,6 +94,9 @@ void CBossController::Tick(const _float& fTimeDelta)
 	else if (m_vNetTrans.Length() > EPSILON)
 		Translate(fTimeDelta);
 
+	if (!m_pNavMeshAgent)
+		return;
+
 	if (!m_pNavMeshAgent->Walkable(m_pTransform->GetPosition()))
 	{
 		m_pTransform->SetPosition(m_vPrePos);
@@ -102,6 +105,9 @@ void CBossController::Tick(const _float& fTimeDelta)
 
 void CBossController::LateTick(const _float& fTimeDelta)
 {
+	if (!m_pNavMeshAgent)
+		return;
+
 	m_vPrePos = m_pTransform->GetPosition();
 }
 
@@ -143,7 +149,7 @@ void CBossController::Move(const _float& fTimeDelta)
 
 	Vec3 vSpeed = fTimeDelta * (m_bMax * m_vMaxLinearSpeed + (1 - m_bMax) * m_vLinearSpeed) * m_vNetMove;
 	m_pTransform->Translate(vSpeed);
-	if (m_bMax) m_bMax = false;
+	m_bMax = false;
 
 	const Vec3& vForward = m_pTransform->GetForward();
 	_float fRadian = acos(vForward.Dot(m_vNetMove));
@@ -168,7 +174,7 @@ void CBossController::Translate(const _float& fTimeDelta)
 
 	Vec3 vSpeed = fTimeDelta * (m_bMax * m_vMaxLinearSpeed + (1 - m_bMax) * m_vLinearSpeed) * m_vNetTrans;
 	m_pTransform->Translate(vSpeed);
-	if (m_bMax) m_bMax = false;
+	m_bMax = false;
 
 	m_vNetTrans = Vec3::Zero;
 }

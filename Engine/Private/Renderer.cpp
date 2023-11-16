@@ -59,6 +59,11 @@ HRESULT CRenderer::Initialize_Prototype()
 		ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
 		return E_FAIL;
 
+	///* For.Target_DepthBlue */
+	if (FAILED(m_pTargetManager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_DepthBlue"),
+		ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.f, 0.f, 0.f, 0.f))))
+		return E_FAIL;
+
 	/* For.Target_Glow */
 	if (FAILED(m_pTargetManager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Glow"),
 		ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
@@ -103,7 +108,9 @@ HRESULT CRenderer::Initialize_Prototype()
 		return E_FAIL;*/
 	if (FAILED(m_pTargetManager->Ready_Debug(TEXT("Target_BlurHV"), 144.f, 405.f, 288.f, 162.f)))
 		return E_FAIL;
-	if (FAILED(m_pTargetManager->Ready_Debug(TEXT("Target_Distortion"), 144.f, 567.f, 288.f, 162.f)))
+	/*if (FAILED(m_pTargetManager->Ready_Debug(TEXT("Target_Distortion"), 144.f, 567.f, 288.f, 162.f)))
+		return E_FAIL;*/
+	if (FAILED(m_pTargetManager->Ready_Debug(TEXT("Target_DepthBlue"), 432.f, 405.f, 288.f, 162.f)))
 		return E_FAIL;
 #endif
 
@@ -117,6 +124,9 @@ HRESULT CRenderer::Initialize_Prototype()
 		return E_FAIL;
 	if (FAILED(m_pTargetManager->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_Emissive"))))
 		return E_FAIL;
+	if (FAILED(m_pTargetManager->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_DepthBlue"))))
+		return E_FAIL;
+
 
 	/* 이 렌더타겟들은 게임내에 존재하는 빛으로부터 연산한 결과를 저장받는다. */
 	/* For.MRT_Lights */
@@ -187,6 +197,7 @@ HRESULT CRenderer::Draw_RenderObjects()
 		return S_OK;
 	if (FAILED(Render_NonBlend_Instance()))
 		return S_OK;
+
 	if (FAILED(Render_Particle_Instance()))
 		return S_OK;
 	if (FAILED(Render_LightAcc()))
@@ -468,6 +479,12 @@ HRESULT CRenderer::Render_Deferred()
 		return E_FAIL;
 
 	if (FAILED(m_pTargetManager->Bind_SRV(m_pShader, TEXT("Target_Shade"), "g_ShadeTarget")))
+		return E_FAIL;
+
+	if (FAILED(m_pTargetManager->Bind_SRV(m_pShader, TEXT("Target_DepthBlue"), "g_BlueTarget")))
+		return E_FAIL;
+
+	if (FAILED(m_pTargetManager->Bind_SRV(m_pShader, TEXT("Target_Depth"), "g_DepthTarget")))
 		return E_FAIL;
 
 	/*if (FAILED(m_pTargetManager->Bind_SRV(m_pShader, TEXT("Target_Specular"), "g_SpecularTarget")))

@@ -83,6 +83,7 @@ HRESULT CP_Strife::Ready_FixedComponents()
 	/* Com_Shader */
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Shader, TEXT("Prototype_Component_Shader_VtxTexFetchAnim"))))
 		return E_FAIL;
+	GetShader()->SetPassIndex(4);
 
 	/* Com_Model */
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Model, TEXT("Prototype_Component_Model_") + GetObjectTag())))

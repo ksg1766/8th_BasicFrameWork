@@ -4,13 +4,13 @@
 
 BEGIN(Client)
 
-class CDagon_BT_Lightning : public CBT_Action
+class CDagon_BT_Orb : public CBT_Action
 {
 	using Super = CBT_Action;
 private:
-	CDagon_BT_Lightning();
-	CDagon_BT_Lightning(const CDagon_BT_Lightning& rhs) = delete;
-	virtual ~CDagon_BT_Lightning() = default;
+	CDagon_BT_Orb();
+	CDagon_BT_Orb(const CDagon_BT_Orb& rhs) = delete;
+	virtual ~CDagon_BT_Orb() = default;
 
 	virtual void		OnStart()							override;
 	virtual BT_RETURN	OnUpdate(const _float& fTimeDelta)	override;
@@ -24,7 +24,7 @@ private:
 	_bool				m_bHitOrMiss;
 
 public:
-	static	CDagon_BT_Lightning* Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController);
+	static	CDagon_BT_Orb* Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController);
 	virtual void Free() override;
 };
 

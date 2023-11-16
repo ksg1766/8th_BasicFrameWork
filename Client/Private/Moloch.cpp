@@ -178,7 +178,6 @@ HRESULT CMoloch::Ready_Scripts()
 			pIfDead->AddChild(pDead);
 
 			// Phase1
-
 			desc.vecAnimations.clear();
 			desc.vecAnimations.push_back(TEXT("Moloch_Atk_Dash_Strike"));
 			CBT_Action* pDash = CMoloch_BT_Dash::Create(this, pBehaviorTree, desc, m_pController);

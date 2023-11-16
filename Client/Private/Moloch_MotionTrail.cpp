@@ -1,23 +1,23 @@
 #include "stdafx.h"
-#include "..\Public\Strife_MotionTrail.h"
+#include "..\Public\Moloch_MotionTrail.h"
 #include "GameInstance.h"
 
-CStrife_MotionTrail::CStrife_MotionTrail(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CMoloch_MotionTrail::CMoloch_MotionTrail(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: Super(pDevice, pContext)
 {
 }
 
-CStrife_MotionTrail::CStrife_MotionTrail(const CStrife_MotionTrail& rhs)
+CMoloch_MotionTrail::CMoloch_MotionTrail(const CMoloch_MotionTrail& rhs)
 	: Super(rhs)
 {
 }
 
-HRESULT CStrife_MotionTrail::Initialize_Prototype()
+HRESULT CMoloch_MotionTrail::Initialize_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CStrife_MotionTrail::Initialize(void* pArg)
+HRESULT CMoloch_MotionTrail::Initialize(void* pArg)
 {
 	if (FAILED(Ready_FixedComponents()))
 		return E_FAIL;
@@ -34,7 +34,7 @@ HRESULT CStrife_MotionTrail::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CStrife_MotionTrail::Tick(const _float& fTimeDelta)
+void CMoloch_MotionTrail::Tick(const _float& fTimeDelta)
 {
 	m_fLifeTime -= fTimeDelta;
 
@@ -47,19 +47,19 @@ void CStrife_MotionTrail::Tick(const _float& fTimeDelta)
 	Super::Tick(fTimeDelta);
 }
 
-void CStrife_MotionTrail::LateTick(const _float& fTimeDelta)
+void CMoloch_MotionTrail::LateTick(const _float& fTimeDelta)
 {
 	Super::LateTick(fTimeDelta);
 
 	GetRenderer()->Add_RenderGroup(CRenderer::RG_BLEND, this);
 }
 
-void CStrife_MotionTrail::DebugRender()
+void CMoloch_MotionTrail::DebugRender()
 {
 	Super::DebugRender();
 }
 
-HRESULT CStrife_MotionTrail::Render()
+HRESULT CMoloch_MotionTrail::Render()
 {
 	if (nullptr == GetShader())
 		return E_FAIL;
@@ -93,7 +93,7 @@ HRESULT CStrife_MotionTrail::Render()
 	return S_OK;
 }
 
-HRESULT CStrife_MotionTrail::Ready_FixedComponents()
+HRESULT CMoloch_MotionTrail::Ready_FixedComponents()
 {
 	/* Com_Transform */
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Transform, TEXT("Prototype_Component_Transform"))))
@@ -116,7 +116,7 @@ HRESULT CStrife_MotionTrail::Ready_FixedComponents()
 	return S_OK;
 }
 
-HRESULT CStrife_MotionTrail::Ready_Scripts()
+HRESULT CMoloch_MotionTrail::Ready_Scripts()
 {
 	if (LEVEL_GAMEPLAY == m_pGameInstance->GetCurrentLevelIndex())
 	{
@@ -126,7 +126,7 @@ HRESULT CStrife_MotionTrail::Ready_Scripts()
 	return S_OK;
 }
 
-HRESULT CStrife_MotionTrail::Bind_ShaderResources()
+HRESULT CMoloch_MotionTrail::Bind_ShaderResources()
 {
 	/* 셰이더 전역변수로 던져야 할 값들을 던지자. */
 	if (FAILED(GetTransform()->Bind_ShaderResources(GetShader(), "g_WorldMatrix")) ||
@@ -136,39 +136,39 @@ HRESULT CStrife_MotionTrail::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
-	Color vColorOffset = Color(0.0f, 0.f, 0.24f, 0.f);
+	Color vColorOffset = Color(0.2f, 0.f, 0.f, 0.f);
 	GetShader()->Bind_RawValue("g_ColorOffset", &vColorOffset, sizeof(Color));
 
 	return S_OK;
 }
 
-CStrife_MotionTrail* CStrife_MotionTrail::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CMoloch_MotionTrail* CMoloch_MotionTrail::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CStrife_MotionTrail* pInstance = new CStrife_MotionTrail(pDevice, pContext);
+	CMoloch_MotionTrail* pInstance = new CMoloch_MotionTrail(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CStrife_MotionTrail");
+		MSG_BOX("Failed to Created : CMoloch_MotionTrail");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CStrife_MotionTrail::Clone(void* pArg)
+CGameObject* CMoloch_MotionTrail::Clone(void* pArg)
 {
-	CStrife_MotionTrail* pInstance = new CStrife_MotionTrail(*this);
+	CMoloch_MotionTrail* pInstance = new CMoloch_MotionTrail(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CStrife_MotionTrail");
+		MSG_BOX("Failed to Cloned : CMoloch_MotionTrail");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CStrife_MotionTrail::Free()
+void CMoloch_MotionTrail::Free()
 {
 	Super::Free();
 }

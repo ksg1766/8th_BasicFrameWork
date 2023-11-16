@@ -145,7 +145,7 @@ PS_OUT PS_LAVA_MAIN(PS_IN In)
 {
     float2 newUV = In.vTexcoord + g_UVoffset;
     
-    vector vNoise = g_NoiseTexture.Sample(LinearSampler, In.vTexcoord + 2.f * g_UVoffset);
+    vector vNoise = g_NoiseTexture.Sample(LinearSampler, In.vTexcoord + 4.f * g_UVoffset);
     float2 noise = pow(vNoise.r, 4.f);
     newUV += noise;
     

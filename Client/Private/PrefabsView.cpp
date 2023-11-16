@@ -140,6 +140,23 @@ void CPrefabsView::TapGroups()
 			
 			ImGui::EndTabItem();
 		}
+		if (ImGui::BeginTabItem("IgnoreCollision"))
+		{
+			const _char* items[] = 
+			{
+				"TremorCrystal_A", "TremorCrystal_B", "TremorCrystal_C", "TremorCrystal_D", "TremorCrystal_E", "TremorCrystal_F", "TremorCrystal_G",
+				"TremorCrystal_H", "TremorCrystal_I", "TremorCrystal_J", "TremorCrystal_L", "TremorCrystal_M"
+			};
+
+			if (m_Item_Current >= IM_ARRAYSIZE(items))
+				m_Item_Current = IM_ARRAYSIZE(items) - 1;
+
+			ImGui::ListBox("Else Objects", &m_Item_Current, items, IM_ARRAYSIZE(items), 10);
+			m_ePickedLayerTag = LAYERTAG::IGNORECOLLISION;
+			m_strPickedObject = Utils::ToWString(items[m_Item_Current]);
+			
+			ImGui::EndTabItem();
+		}
 		ImGui::EndTabBar();
 	}
 }

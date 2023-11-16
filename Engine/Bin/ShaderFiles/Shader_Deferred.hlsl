@@ -24,6 +24,7 @@ vector  g_vMtrlSpecular = vector(1.f, 1.f, 1.f, 1.f);
 Texture2D	g_NormalTarget;
 Texture2D	g_DiffuseTarget;
 Texture2D	g_DepthTarget;
+Texture2D	g_BlueTarget;
 
 Texture2D	g_ShadeTarget;
 Texture2D	g_SpecularTarget;
@@ -266,8 +267,14 @@ PS_OUT PS_MAIN_DEFERRED(PS_IN In)
 		discard;
 	vector		vShade = g_ShadeTarget.Sample(LinearSampler, In.vTexcoord);
     //vector		vSpecular = g_SpecularTarget.Sample(LinearSampler, In.vTexcoord);
-
-    Out.vColor = vDiffuse * vShade/* + vSpecular*/;
+    
+    vector vBlue = g_BlueTarget.Sample(LinearSampler, In.vTexcoord);
+    vector vDepth = g_DepthTarget.Sample(LinearSampler, In.vTexcoord);
+    
+    if (vBlue.b > vDepth.y)
+        Out.vColor = vector(0.f, 1.f, 1.f, 1.f);
+    else
+        Out.vColor = vDiffuse * vShade/* + vSpecular*/;
 
 	return Out;
 }

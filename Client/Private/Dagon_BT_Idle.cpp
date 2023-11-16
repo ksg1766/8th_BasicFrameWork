@@ -48,13 +48,13 @@ void CDagon_BT_Idle::StartIdleCoolDown()
 
 	if (tIdleCoolDown == hashBlackBoard.end())
 	{
-		tagBlackBoardData<_float>* tStepBackCool = new tagBlackBoardData<_float>(1.5f);
+		tagBlackBoardData<_float>* tStepBackCool = new tagBlackBoardData<_float>(2.5f);
 		hashBlackBoard.emplace(TEXT("IdleCoolDown"), tStepBackCool);
 	}
 	else
 	{
 		//__debugbreak();
-		SET_VALUE(_float, tIdleCoolDown, 1.5f);
+		SET_VALUE(_float, tIdleCoolDown, 2.5f);
 	}
 }
 

@@ -1,20 +1,20 @@
 #include "stdafx.h"
-#include "Dagon_BT_Lightning.h"
+#include "Dagon_BT_Orb.h"
 #include "GameInstance.h"
 #include "GameObject.h"
 #include "BossController.h"
 
-CDagon_BT_Lightning::CDagon_BT_Lightning()
+CDagon_BT_Orb::CDagon_BT_Orb()
 {
 }
 
-void CDagon_BT_Lightning::OnStart()
+void CDagon_BT_Orb::OnStart()
 {
 	Super::OnStart(0);
 	HitOrMiss();
 }
 
-CBT_Node::BT_RETURN CDagon_BT_Lightning::OnUpdate(const _float& fTimeDelta)
+CBT_Node::BT_RETURN CDagon_BT_Orb::OnUpdate(const _float& fTimeDelta)
 {
 	if (IsZeroHP())
 		return BT_FAIL;
@@ -32,16 +32,16 @@ CBT_Node::BT_RETURN CDagon_BT_Lightning::OnUpdate(const _float& fTimeDelta)
 	return BT_RUNNING;
 }
 
-void CDagon_BT_Lightning::OnEnd()
+void CDagon_BT_Orb::OnEnd()
 {
 	Super::OnEnd();
 }
 
-void CDagon_BT_Lightning::ConditionalAbort(const _float& fTimeDelta)
+void CDagon_BT_Orb::ConditionalAbort(const _float& fTimeDelta)
 {
 }
 
-_bool CDagon_BT_Lightning::IsZeroHP()
+_bool CDagon_BT_Orb::IsZeroHP()
 {
 	if (static_cast<CBossController*>(m_pController)->IsZeroHP())
 		return true;
@@ -49,7 +49,7 @@ _bool CDagon_BT_Lightning::IsZeroHP()
 	return false;
 }
 
-void CDagon_BT_Lightning::HitOrMiss()
+void CDagon_BT_Orb::HitOrMiss()
 {
 	random_device		RandomDevice;
 
@@ -62,20 +62,20 @@ void CDagon_BT_Lightning::HitOrMiss()
 		m_bHitOrMiss = false;
 }
 
-CDagon_BT_Lightning* CDagon_BT_Lightning::Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController)
+CDagon_BT_Orb* CDagon_BT_Orb::Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController)
 {
-	CDagon_BT_Lightning* pInstance = new CDagon_BT_Lightning;
+	CDagon_BT_Orb* pInstance = new CDagon_BT_Orb;
 
 	if (FAILED(pInstance->Initialize(pGameObject, pBehaviorTree, tBehaveAnim, pController)))
 	{
-		MSG_BOX("Failed to Created : CDagon_BT_Lightning");
+		MSG_BOX("Failed to Created : CDagon_BT_Orb");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CDagon_BT_Lightning::Free()
+void CDagon_BT_Orb::Free()
 {
 	Super::Free();
 }
