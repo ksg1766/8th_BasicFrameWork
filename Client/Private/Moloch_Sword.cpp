@@ -36,7 +36,7 @@ HRESULT CMoloch_Sword::Initialize(void* pArg)
 void CMoloch_Sword::Tick(const _float& fTimeDelta)
 {
 	for (auto& iter : m_vecFires)
-		iter->GetTransform()->SetPosition(GetTransform()->GetPosition());
+		iter->GetTransform()->SetPosition(GetTransform()->GetPosition() + Vec3::UnitY * 10.f);
 
 	Super::Tick(fTimeDelta);
 }

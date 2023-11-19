@@ -334,6 +334,11 @@ HRESULT CMainApp::Ready_Prototype_Components()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Mask/TriangleMask.png")))))
 		return E_FAIL;
 	
+	/* For.Prototype_Component_Texture_EggMask*/
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_EggMask"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Mask/EggMask.png")))))
+		return E_FAIL;
+	
 	/* For.Prototype_Component_Texture_Smoke_Tiled*/
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Smoke_Tiled"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Fire/Smoke_Tiled.png")))))

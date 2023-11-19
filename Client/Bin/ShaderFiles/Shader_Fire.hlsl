@@ -48,6 +48,8 @@ VS_OUT VS_MAIN(VS_IN In)
     matWV = mul(g_WorldMatrix, g_ViewMatrix);
     matWVP = mul(matWV, g_ProjMatrix);
     
+    Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
+    
     Out.vTexcoord = In.vTexcoord;
     
     Out.vNoiseUV1 = (In.vTexcoord * g_vScales.x);
@@ -138,7 +140,7 @@ technique11 DefaultTechnique
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
-		
+
         VertexShader = compile vs_5_0 VS_MAIN();
 		GeometryShader = NULL;
 		HullShader = NULL;

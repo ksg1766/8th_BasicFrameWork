@@ -26,8 +26,8 @@ HRESULT CFire::Initialize(void* pArg)
 	if (FAILED(Ready_Scripts(pArg)))
 		return E_FAIL;
 	
-	GetTransform()->SetScale(Vec3(10.f, 10.f, 10.f));
-	GetTransform()->Rotate(Vec3(90.f, 0.0f, 0.f));
+	//GetTransform()->SetScale(Vec3(10.f, 10.f, 10.f));
+	//GetTransform()->Rotate(Vec3(90.f, 0.0f, 0.f));
 
 	return S_OK;
 }
@@ -100,7 +100,8 @@ HRESULT CFire::Ready_FixedComponents()
 		return E_FAIL;
 
 	m_pNoiseTexture = static_cast<CTexture*>(m_pGameInstance->Clone_Component(this, LEVEL_STATIC, TEXT("Prototype_Component_Texture_Smoke_Tiled"), nullptr));
-	m_pAlphaTexture = static_cast<CTexture*>(m_pGameInstance->Clone_Component(this, LEVEL_STATIC, TEXT("Prototype_Component_Texture_TriangleMask"), nullptr));
+	m_pAlphaTexture = static_cast<CTexture*>(m_pGameInstance->Clone_Component(this, LEVEL_STATIC, TEXT("Prototype_Component_Texture_EggMask"), nullptr));
+	//m_pAlphaTexture = static_cast<CTexture*>(m_pGameInstance->Clone_Component(this, LEVEL_STATIC, TEXT("Prototype_Component_Texture_TriangleMask"), nullptr));
 	if (!m_pNoiseTexture || !m_pAlphaTexture)
 		return E_FAIL;
 
