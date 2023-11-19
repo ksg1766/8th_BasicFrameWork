@@ -145,7 +145,7 @@ void CPrefabsView::TapGroups()
 			const _char* items[] = 
 			{
 				"TremorCrystal_A", "TremorCrystal_B", "TremorCrystal_C", "TremorCrystal_D", "TremorCrystal_E", "TremorCrystal_F", "TremorCrystal_G",
-				"TremorCrystal_H", "TremorCrystal_I", "TremorCrystal_J", "TremorCrystal_L", "TremorCrystal_M"
+				"TremorCrystal_H", "TremorCrystal_I", "TremorCrystal_J", "TremorCrystal_L", "TremorCrystal_M", "Moloch_Sword_Slash"
 			};
 
 			if (m_Item_Current >= IM_ARRAYSIZE(items))

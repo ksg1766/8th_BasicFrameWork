@@ -16,6 +16,9 @@ vector g_vCamPosition;
 float2 g_UVoffset = float2(0.f, 0.f);
 Texture2D g_NoiseTexture;
 
+// For Water
+float4 g_vClipPlane;
+
 struct VS_IN
 {
     float3 vPosition : POSITION;
@@ -34,6 +37,19 @@ struct VS_OUT
     float4 vWorldPos : TEXCOORD1;
     float3 vTangent : TANGENT;
     float4 vProjPos : TEXCOORD2;
+};
+
+struct VS_REFRACT_OUT
+{
+	/* float4 : w값을 반드시 남겨야하는 이유는 w에 뷰스페이스 상의 깊이(z)를 보관하기 위해서다. */
+    float4 vPosition : SV_POSITION;
+    float4 vNormal : NORMAL;
+    float2 vTexcoord : TEXCOORD0;
+    float4 vWorldPos : TEXCOORD1;
+    float3 vTangent : TANGENT;
+    float4 vProjPos : TEXCOORD2;
+    
+    float fClip : SV_ClipDistance0;
 };
 
 VS_OUT VS_MAIN(VS_IN In)
@@ -55,6 +71,69 @@ VS_OUT VS_MAIN(VS_IN In)
     return Out;
 }
 
+VS_REFRACT_OUT VS_REFRACT_MAIN(VS_IN In)
+{
+    VS_REFRACT_OUT Out = (VS_REFRACT_OUT) 0;
+
+    matrix matWV, matWVP;
+
+    matWV = mul(In.matWorld, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
+
+    Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
+    Out.vNormal = normalize(mul(float4(In.vNormal, 0.f), In.matWorld));
+    Out.vTexcoord = In.vTexcoord;
+    Out.vWorldPos = mul(float4(In.vPosition, 1.f), In.matWorld);
+    Out.vTangent = normalize(mul(float4(In.vTangent, 0.f), In.matWorld)).xyz;
+    Out.vProjPos = Out.vPosition;
+    
+    Out.fClip = dot(mul(float4(In.vPosition, 1.f), In.matWorld), g_vClipPlane);
+    
+    return Out;
+}
+
+//struct VS_WATER_OUT
+//{
+//    float4 vPosition : SV_POSITION;
+//    float4 vNormal : NORMAL;
+//    float2 vTexcoord : TEXCOORD0;
+//    float4 vWorldPos : TEXCOORD1;
+//    float3 vTangent : TANGENT;
+//    float4 vProjPos : TEXCOORD2;
+    
+    
+//    float4 vReflectionPos : TEXCOORD3;
+//    float4 vRefractionPos : TEXCOORD4;
+//};
+
+//VS_WATER_OUT VS_WATER_MAIN(VS_IN In)
+//{
+//    VS_WATER_OUT Out = (VS_WATER_OUT) 0;
+    
+//    matrix reflectProjectWorld;
+//    matrix viewProjectWorld;
+    
+//    matrix matWV, matWVP;
+
+//    matWV = mul(In.matWorld, g_ViewMatrix);
+//    matWVP = mul(matWV, g_ProjMatrix);
+
+//    Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
+//    Out.vNormal = normalize(mul(float4(In.vNormal, 0.f), In.matWorld));
+//    Out.vTexcoord = In.vTexcoord;
+//    Out.vWorldPos = mul(float4(In.vPosition, 1.f), In.matWorld);
+//    Out.vTangent = normalize(mul(float4(In.vTangent, 0.f), In.matWorld)).xyz;
+//    Out.vProjPos = Out.vPosition;
+    
+//    reflectProjectWorld = mul(g_ReflectionMatrix, g_ProjMatrix);
+//    reflectProjectWorld = mul(In.matWorld, reflectProjectWorld);
+    
+//    Out.vReflectionPos = mul(In.vPosition, reflectProjectWorld);
+//    Out.vRefractionPos = mul(In.vPosition, matWVP);
+    
+//    return Out;
+//}
+
 struct PS_IN
 {
     float4 vPosition : SV_POSITION;
@@ -63,6 +142,19 @@ struct PS_IN
     float4 vWorldPos : TEXCOORD1;
     float3 vTangent : TANGENT;
     float4 vProjPos : TEXCOORD2;
+};
+
+struct PS_REFRACT_IN
+{
+	/* Viewport */
+    float4 vPosition : SV_POSITION;
+    float4 vNormal : NORMAL;
+    float2 vTexcoord : TEXCOORD0;
+    float4 vWorldPos : TEXCOORD1;
+    float3 vTangent : TANGENT;
+    float4 vProjPos : TEXCOORD2;
+    
+    float fClip : SV_ClipDistance0;
 };
 
 struct PS_OUT
@@ -74,6 +166,24 @@ struct PS_OUT
 };
 
 PS_OUT PS_MAIN(PS_IN In)
+{
+    ComputeNormalMapping(In.vNormal, In.vTangent, In.vTexcoord);
+	
+    PS_OUT Out = (PS_OUT) 0;
+	
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+
+    if (vMtrlDiffuse.a < 0.3f)
+        discard;
+	
+    Out.vDiffuse = vMtrlDiffuse;
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);
+
+    return Out;
+}
+
+PS_OUT PS_REFRACT_MAIN(PS_REFRACT_IN In)
 {
     ComputeNormalMapping(In.vNormal, In.vTangent, In.vTexcoord);
 	
@@ -170,6 +280,65 @@ PS_OUT PS_LAVA_MAIN(PS_IN In)
     return Out;
 }
 
+struct PS_WATER_IN
+{
+    float4 vPosition : SV_POSITION;
+    float4 vNormal : NORMAL;
+    float2 vTexcoord : TEXCOORD0;
+    float4 vWorldPos : TEXCOORD1;
+    float3 vTangent : TANGENT;
+    float4 vProjPos : TEXCOORD2;
+    
+    float4 vReflectionPos : TEXCOORD3;
+    float4 vRefractionPos : TEXCOORD4;
+};
+
+// 여기선 반사굴절타겟에 기록만 하고 섞는건 deffered쪽에서 해야 할 듯.
+//PS_OUT PS_WATER_MAIN(PS_WATER_IN In)
+//{
+    
+    
+//    /*
+//    float2 vReflectTexCoord;
+//    float2 vRefractTexCoord;
+//    float4 vNormalMap;
+//    float3 vNormal;
+//    float4 vReflectionColor;
+//    float4 vRefractionColor;
+//    float4 vColor;
+    
+//    float2 newUV = In.vTexcoord + g_UVoffset;
+    
+//    // Calculate the projected reflection texture coordinates.
+//    vReflectTexCoord.x = In.vReflectionPos.x / In.vReflectionPos.w / 2.0f + 0.5f;
+//    vReflectTexCoord.y = -In.vReflectionPos.y / In.vReflectionPos.w / 2.0f + 0.5f;
+    
+//    // Calculate the projected refraction texture coordinates.
+//    vRefractTexCoord.x = In.vRefractionPos.x / In.vRefractionPos.w / 2.0f + 0.5f;
+//    vRefractTexCoord.y = -In.vRefractionPos.y / In.vRefractionPos.w / 2.0f + 0.5f;
+    
+//    ComputeNormalMapping(In.vNormal, In.vTangent, newUV);
+	
+//    vReflectTexCoord = vReflectTexCoord + (In.vNormal.xy * g_fReflectRefractScale);
+//    vRefractTexCoord = vRefractTexCoord + (In.vNormal.xy * g_fReflectRefractScale);
+    
+//    vReflectionColor = g_ReflectionTexture.Sample(LinearSampler, vReflectTexCoord);
+//    vRefractionColor = g_RefractionTexture.Sample(LinearSampler, vRefractTexCoord);
+    
+//    vColor = lerp(vReflectionColor, vRefractionColor, 0.6f);
+    
+//    PS_OUT Out = (PS_OUT) 0;
+    
+//    //vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, newUV);
+//    //Out.vDiffuse = vMtrlDiffuse;
+//    Out.vDiffuse = vColor;
+//    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+//    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);
+    
+//    return Out;
+//*/
+//}
+
 technique11 DefaultTechnique
 {
     pass Mesh
@@ -225,6 +394,20 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_LAVA_MAIN();
+        ComputeShader = NULL;
+    }
+
+    pass Refract
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_REFRACT_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_REFRACT_MAIN();
         ComputeShader = NULL;
     }
 }

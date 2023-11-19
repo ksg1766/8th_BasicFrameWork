@@ -124,6 +124,14 @@ HRESULT CNavMeshView::DebugRender()
 			DX::DrawTriangle(m_pBatch, XMLoadFloat3(&vP0), XMLoadFloat3(&vP1), XMLoadFloat3(&vP2), Colors::Cyan);
 			m_pBatch->End();
 		}
+
+		_float3 vP0 = m_vecCells[m_Item_Current]->vPoints[0] + Vec3(0.f, 0.2f, 0.f);
+		_float3 vP1 = m_vecCells[m_Item_Current]->vPoints[1] + Vec3(0.f, 0.2f, 0.f);
+		_float3 vP2 = m_vecCells[m_Item_Current]->vPoints[2] + Vec3(0.f, 0.2f, 0.f);
+
+		m_pBatch->Begin();
+		DX::DrawTriangle(m_pBatch, XMLoadFloat3(&vP0), XMLoadFloat3(&vP1), XMLoadFloat3(&vP2), Colors::Coral);
+		m_pBatch->End();
 	}
 
 	if (!m_vecSphere.empty())

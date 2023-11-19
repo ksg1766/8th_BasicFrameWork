@@ -10,6 +10,8 @@ vector g_vMtrlEmissive = vector(1.f, 0.f, 0.f, 1.f);
 
 vector g_vCamPosition;
 
+Texture2D g_EmissiveTexture;
+
 struct tagKeyframeDesc
 {
     int animIndex;
@@ -169,7 +171,11 @@ PS_OUT PS_MAIN(PS_IN In)
     Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);
-
+    
+    float4 vMtrlEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
+    if (any(vMtrlEmissive) > 0.001f)
+        Out.vEmissive = vMtrlEmissive;
+    
     return Out;
 }
 

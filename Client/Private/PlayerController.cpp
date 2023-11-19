@@ -57,6 +57,14 @@ void CPlayerController::Tick(const _float& fTimeDelta)
 	else if (m_vNetTrans.Length() > EPSILON)
 		Translate(fTimeDelta);
 
+	//////////
+	if (KEY_PRESSING(KEY::CTRL) && KEY_DOWN(KEY::N))
+	{
+		m_pTransform->SetPosition(Vec3(82.f, 6.5f, 41.f));
+		m_pGameObject->GetNavMeshAgent()->SetCurrentIndex(573);
+	}
+	//////////
+
 	if (!m_pNavMeshAgent->Walkable(m_pTransform->GetPosition()))
 	{
 		m_pTransform->SetPosition(m_vPrePos);

@@ -20,6 +20,13 @@ private:
 	virtual void		ConditionalAbort(const _float& fTimeDelta);
 
 	_bool				IsZeroHP();
+	CGameObject*		GetTarget();
+
+	Vec3				m_vTargetPos;
+
+	_bool				m_bAttack;
+	_bool				m_bCrystalUp;
+	vector<CGameObject*>m_vecCrystal;
 
 public:
 	static	CMoloch_BT_Eruption1* Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController);

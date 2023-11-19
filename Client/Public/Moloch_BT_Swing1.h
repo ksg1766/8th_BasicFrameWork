@@ -22,6 +22,7 @@ private:
 	_bool				IsZeroHP();
 	CGameObject*		GetTarget();
 
+	_bool				m_bAttack;
 
 public:
 	static	CMoloch_BT_Swing1* Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController);

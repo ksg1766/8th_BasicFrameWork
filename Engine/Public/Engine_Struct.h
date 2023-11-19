@@ -141,6 +141,9 @@ namespace Engine
 		XMFLOAT3		vNormal;
 		XMFLOAT2		vTexcoord;
 
+
+		//XMFLOAT3		vTangent;
+
 		static const _uint				iNumElements = 3;
 		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
 

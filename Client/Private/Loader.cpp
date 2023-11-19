@@ -29,16 +29,20 @@
 #include "Strife_GunR.h"
 #include "Moloch.h"
 #include "Moloch_Sword.h"
+#include "TremorCrystal.h"
 #include "Dagon.h"
 #include "Strife_Ammo_Default.h"
 #include "Strife_Ammo_Beam.h"
 #include "SkyBox.h"
+#include "SkyPlane.h"
 #include "Particle.h"
 #include "ParticleController.h"
 #include "Strife_MotionTrail.h"
 #include "Moloch_MotionTrail.h"
+#include "Moloch_SwordSlash.h"
 #include "Shockwave.h"
 #include "Lava.h"
+#include "Water.h"
 
 CLoader::CLoader(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: m_pDevice(pDevice)
@@ -227,6 +231,21 @@ HRESULT CLoader::Loading_Components_For_Level_GamePlay()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Particles/FlameMask_%d.png"), 4))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_Texture_Water_Normal*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Water_Normal"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Noise/Water_normal%d.png"), 3))))
+		return E_FAIL;
+
+	///* For.Prototype_Component_Texture_Mask_Swipe*/
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Mask_Swipe"),
+	//	CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Mask/Mask_Swipe.png")))))
+	//	return E_FAIL;
+
+	///* For.Prototype_Component_Texture_Noise_RGB*/
+	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Noise_RGB"),
+	//	CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Noise/Noise_RGB.png")))))
+	//	return E_FAIL;
+
 	/* For.Prototype_Component_Texture_Shockwave*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Shockwave"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/ScreenSpace/Shockwave.png")))))
@@ -384,6 +403,10 @@ HRESULT CLoader::Loading_GameObjects_For_Level_GamePlay()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_SkyBox"), CSkyBox::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	/* For.Prototype_GameObject_SkyBoxBig */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_SkyPlane"), CSkyPlane::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	/* For.Prototype_GameObject_Strife_MotionTrail */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Strife_MotionTrail"), CStrife_MotionTrail::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
@@ -400,6 +423,22 @@ HRESULT CLoader::Loading_GameObjects_For_Level_GamePlay()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Lava_East_B1"), CLava::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	/* For.Prototype_GameObject_Water */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Water"), CWater::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_TremorCrystal_A */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_TremorCrystal_A"), CTremorCrystal::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_TremorCrystal_B */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_TremorCrystal_B"), CTremorCrystal::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Moloch_SwordSlash */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Moloch_Sword_Slash"), CMoloch_SwordSlash::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	/* For.Prototype_GameObject_Static */
 	wstring strStaticFilePath = TEXT("../Bin/Resources/Models/Static/");
 	for (const auto& entry : filesystem::directory_iterator(strStaticFilePath))
@@ -407,7 +446,9 @@ HRESULT CLoader::Loading_GameObjects_For_Level_GamePlay()
 		const wstring& strFileName = entry.path().stem();
 
 		if (strFileName == TEXT("Strife_GunL") || strFileName == TEXT("Strife_GunR") ||
-			strFileName == TEXT("Lava_East_B1") || strFileName == TEXT("Moloch_Sword")
+			strFileName == TEXT("Lava_East_B1") || strFileName == TEXT("Water_Pond") ||
+			strFileName == TEXT("Moloch_Sword") || strFileName == TEXT("TremorCrystal_A") ||
+			strFileName == TEXT("TremorCrystal_B") || strFileName == TEXT("Moloch_Sword_Slash")
 			/* || strFileName == TEXT("LavaUpdate2") ||
 			strFileName == TEXT("LavaUpdate") || strFileName == TEXT("Lava_East_A1")*/)
 			continue;
@@ -491,6 +532,10 @@ HRESULT CLoader::Loading_GameObjects_For_Level_GameTool()
 	/* For.Prototype_GameObject_FlyingCamera */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_StaticTest"), CStaticTest::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+	
+	/* For.Prototype_GameObject_FlyingCamera */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Moloch_Sword_Slash"), CMoloch_SwordSlash::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
 	/* For.Prototype_GameObject_Static */
 	wstring strStaticFilePath = TEXT("../Bin/Resources/Models/Static/");
@@ -498,7 +543,7 @@ HRESULT CLoader::Loading_GameObjects_For_Level_GameTool()
 	{
 		const wstring& strFileName = entry.path().stem();
 
-		if (strFileName == TEXT("Strife_GunL") || strFileName == TEXT("Strife_GunR") || strFileName == TEXT("Moloch_Sword"))
+		if (strFileName == TEXT("Strife_GunL") || strFileName == TEXT("Strife_GunR") || strFileName == TEXT("Moloch_Sword") || strFileName == TEXT("Moloch_Sword_Slash"))
 			continue;
 
 		if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_") + strFileName, CStaticBase::Create(m_pDevice, m_pContext))))

@@ -180,6 +180,7 @@ struct PS_OUT_BLUE
 {
     float4 vDiffuse : SV_TARGET0;
     float4 vNormal : SV_TARGET1;
+    float4 vDepth : SV_TARGET2;
     float4 vEmissive : SV_TARGET3;
     float4 vBlue : SV_TARGET4;
 };
@@ -300,6 +301,7 @@ PS_OUT_BLUE PS_BLUE_MAIN(PS_IN In)
     
     Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);
     Out.vBlue = vector(0.f, In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f);
     
     return Out;

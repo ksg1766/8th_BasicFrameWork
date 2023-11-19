@@ -19,7 +19,6 @@
 #include "Moloch_BT_IF_StartP2.h"
 #include "Moloch_BT_Eruption1.h"
 
-#include "Moloch_BT_Eruption2.h"
 #include "Moloch_BT_TremorPulse.h"
 #include "Moloch_BT_FullDash1.h"
 #include "Moloch_BT_Swing1.h"
@@ -136,7 +135,7 @@ HRESULT CMoloch::Ready_FixedComponents()
 	{
 		/* Com_NavMeshAgent */
 		CNavMeshAgent::NAVIGATION_DESC pNaviDesc;
-		pNaviDesc.iCurrentIndex = 10;
+		pNaviDesc.iCurrentIndex = 654;
 
 		if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::NavMeshAgent, TEXT("Prototype_Component_NavMeshAgent"), &pNaviDesc)))
 			return E_FAIL;
@@ -214,9 +213,9 @@ HRESULT CMoloch::Ready_Scripts()
 			desc.vecAnimations.push_back(TEXT("Moloch_Atk_CrystalEruption"));
 			CBT_Action* pEruption1 = CMoloch_BT_Eruption1::Create(this, pBehaviorTree, desc, m_pController);
 			
-			desc.vecAnimations.clear();
+			/*desc.vecAnimations.clear();
 			desc.vecAnimations.push_back(TEXT("Moloch_Atk_CrystalEruption_02"));
-			CBT_Action* pEruption2 = CMoloch_BT_Eruption2::Create(this, pBehaviorTree, desc, m_pController);
+			CBT_Action* pEruption2 = CMoloch_BT_Eruption2::Create(this, pBehaviorTree, desc, m_pController);*/
 			
 			desc.vecAnimations.clear();
 			desc.vecAnimations.push_back(TEXT("Moloch_Atk_Full_TremorPulse"));
@@ -224,7 +223,7 @@ HRESULT CMoloch::Ready_Scripts()
 
 			CBT_Composite* pEnterPhase2 = CBT_Composite::Create(this, pBehaviorTree, m_pController, CBT_Composite::CompositeType::SEQUENCE);
 			pEnterPhase2->AddChild(pEruption1);
-			pEnterPhase2->AddChild(pEruption2);
+			//pEnterPhase2->AddChild(pEruption2);
 			pEnterPhase2->AddChild(pPulse);
 
 			CBT_Decorator* pIfEnterPhase = CMoloch_BT_IF_StartP2::Create(this, pBehaviorTree, m_pController, CBT_Decorator::DecoratorType::IF);	// 2페 시작패턴 조건
@@ -339,6 +338,7 @@ HRESULT CMoloch::Ready_Scripts()
 			// BlackBoard
 			BLACKBOARD& hashBlackBoard = pBehaviorTree->GetBlackBoard();
 			hashBlackBoard.emplace(TEXT("AttackRange"), new tagBlackBoardData<_float>(5.f));
+			hashBlackBoard.emplace(TEXT("Sight"), new tagBlackBoardData<_float>(30.f));
 		}
 	}
 

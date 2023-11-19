@@ -162,6 +162,118 @@ HRESULT CTerrain::InitializeJustGrid(const _uint& iSizeX, const _uint& iSizeZ, c
 	return S_OK;
 }
 
+HRESULT CTerrain::InitializeNorTex(const _uint& iSizeX, const _uint& iSizeZ, const _uint iCX, const _uint iCZ)
+{
+	m_iStride = sizeof(VTXPOSTEX); /* 정점하나의 크기 .*/
+
+	m_iNumVerticesX = iSizeX / iCX + 1;
+	m_iNumVerticesZ = iSizeZ / iCZ + 1;
+
+	m_iNumVertices = m_iNumVerticesX * m_iNumVerticesZ;
+
+	m_iNumVBs = 1;
+
+#pragma region VERTEX_BUFFER
+
+	m_pVerticesPos = new _float3[m_iNumVertices];
+	VTXPOSTEX* pVertices = new VTXPOSTEX[m_iNumVertices];
+	ZeroMemory(pVertices, sizeof(VTXPOSTEX) * m_iNumVertices);
+
+	for (size_t i = 0; i < m_iNumVerticesZ; i++)
+	{
+		for (size_t j = 0; j < m_iNumVerticesX; j++)
+		{
+			_uint		iIndex = i * m_iNumVerticesX + j;
+
+			pVertices[iIndex].vPosition = m_pVerticesPos[iIndex] = _float3(iCX * (j - (m_iNumVerticesX - 1) / 2.f), 0.f, iCZ * (i - (m_iNumVerticesZ - 1) / 2.f));
+			//pVertices[iIndex].vNormal = _float3(0.f, 1.f, 0.f);
+			pVertices[iIndex].vTexcoord = _float2(j / (m_iNumVerticesX - 1.f), i / (m_iNumVerticesZ - 1.f));
+			//pVertices[iIndex].vTangent = _float3(0.f, 0.f, 0.f);
+			//m_vecVerticesCache.push_back(m_pVerticesPos[iIndex]);
+		}
+	}
+
+#pragma endregion
+
+#pragma region INDEX_BUFFER
+	m_iNumPrimitives = (m_iNumVerticesX - 1) * (m_iNumVerticesZ - 1) * 2;
+	m_iIndexSizeofPrimitive = sizeof(FACEINDICES32);
+	m_iNumIndicesofPrimitive = 3;
+	m_eIndexFormat = DXGI_FORMAT_R32_UINT;
+	m_eTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+
+	FACEINDICES32* pIndices = new FACEINDICES32[m_iNumPrimitives];
+	ZeroMemory(pIndices, sizeof(FACEINDICES32) * m_iNumPrimitives);
+
+	m_pFaceIndices = new FACEINDICES32[m_iNumPrimitives];
+	ZeroMemory(m_pFaceIndices, sizeof(FACEINDICES32) * m_iNumPrimitives);
+
+	_uint		iNumFaces = 0;
+
+	for (size_t i = 0; i < m_iNumVerticesZ - 1; i++)
+	{
+		for (size_t j = 0; j < m_iNumVerticesX - 1; j++)
+		{
+			_uint		iIndex = i * m_iNumVerticesX + j;
+
+			_uint		iIndices[4] = {
+				iIndex + m_iNumVerticesX,		//2
+				iIndex + m_iNumVerticesX + 1,	//3
+				iIndex + 1,						//1
+				iIndex							//0
+			};
+
+			pIndices[iNumFaces]._0 = iIndices[0];//2
+			pIndices[iNumFaces]._1 = iIndices[1];//3
+			pIndices[iNumFaces]._2 = iIndices[2];//1
+
+			++iNumFaces;
+
+			pIndices[iNumFaces]._0 = iIndices[0];//2
+			pIndices[iNumFaces]._1 = iIndices[2];//1
+			pIndices[iNumFaces]._2 = iIndices[3];//0
+
+			++iNumFaces;
+		}
+	}
+#pragma endregion
+
+	/* 정점버퍼와 인덱스 버퍼를 만든다. */
+	ZeroMemory(&m_BufferDesc, sizeof m_BufferDesc);
+	m_BufferDesc.ByteWidth = m_iStride * m_iNumVertices;
+	m_BufferDesc.Usage = D3D11_USAGE_DEFAULT; /* 정적버퍼로 할당한다. (Lock, unLock 호출 불가)*/
+	m_BufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	m_BufferDesc.CPUAccessFlags = 0;
+	m_BufferDesc.MiscFlags = 0;
+	m_BufferDesc.StructureByteStride = m_iStride;
+
+	::ZeroMemory(&m_SubResourceData, sizeof m_SubResourceData);
+	m_SubResourceData.pSysMem = pVertices;
+
+	if (FAILED(Super::Create_Buffer(&m_pVB)))
+		return E_FAIL;
+
+	/* 정점버퍼와 인덱스 버퍼를 만든다. */
+	ZeroMemory(&m_BufferDesc, sizeof m_BufferDesc);
+	m_BufferDesc.ByteWidth = m_iNumPrimitives * m_iIndexSizeofPrimitive;
+	m_BufferDesc.Usage = D3D11_USAGE_DEFAULT; /* 정적버퍼로 할당한다. (Lock, unLock 호출 불가)*/
+	m_BufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	m_BufferDesc.CPUAccessFlags = 0;
+	m_BufferDesc.MiscFlags = 0;
+	m_BufferDesc.StructureByteStride = 0;
+
+	ZeroMemory(&m_SubResourceData, sizeof m_SubResourceData);
+	m_SubResourceData.pSysMem = pIndices;
+
+	if (FAILED(Super::Create_Buffer(&m_pIB)))
+		return E_FAIL;
+
+	Safe_Delete_Array(pVertices);
+	Safe_Delete_Array(pIndices);
+
+	return S_OK;
+}
+
 HRESULT CTerrain::InitializeWithHeightMap(const wstring& strHeightMapPath)
 {
 	FileUtils* file = new FileUtils;
@@ -209,6 +321,7 @@ HRESULT CTerrain::InitializeWithHeightMap(const wstring& strHeightMapPath)
 			pVertices[iIndex].vPosition = m_pVerticesPos[iIndex] = _float3(j - m_iNumVerticesX / 2.f, (pPixel[iIndex] & 0x000000ff) / 10.f, i - m_iNumVerticesZ / 2.f);
 			pVertices[iIndex].vNormal = _float3(0.f, 0.f, 0.f);
 			pVertices[iIndex].vTexcoord = _float2(j / (m_iNumVerticesX - 1.f), i / (m_iNumVerticesZ - 1.f));
+			//pVertices[iIndex].vTangent = _float3(0.f, 0.f, 0.f);
 		}
 	}
 

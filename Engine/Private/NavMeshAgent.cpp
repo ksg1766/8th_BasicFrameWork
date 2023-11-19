@@ -6,6 +6,8 @@
 #include "Shader.h"
 #include "FileUtils.h"
 #include "Cell.h"
+#include "GameObject.h"
+#include "LevelManager.h"
 #include "DebugDraw.h"
 
 #ifdef _DEBUG
@@ -108,31 +110,36 @@ void CNavMeshAgent::Tick(const _float& fTimeDelta)
 void CNavMeshAgent::DebugRender()
 {
 #ifdef _DEBUG
-	if (m_IsRendered)
-		return;
-
-	m_pEffect->SetWorld(XMMatrixIdentity());
-
-	CPipeLine* pPipeLine = GET_INSTANCE(CPipeLine);
-
-	m_pEffect->SetView(pPipeLine->Get_Transform_Matrix(CPipeLine::D3DTS_VIEW));
-	m_pEffect->SetProjection(pPipeLine->Get_Transform_Matrix(CPipeLine::D3DTS_PROJ));
-
-	RELEASE_INSTANCE(CPipeLine);
-
-	m_pEffect->Apply(m_pContext);
-	m_pContext->IASetInputLayout(m_pInputLayout);
-
-	m_Cells[m_iCurrentIndex]->DebugRender(m_pBatch, Colors::YellowGreen);
-	for (_int i = 0; i < m_Cells.size(); ++i)
+	CLevelManager* pInstance = GET_INSTANCE(CLevelManager);
+	if (2 == pInstance->GetCurrentLevelIndex())
 	{
-		if (m_Cells[i])
-		{
-			m_Cells[i]->DebugRender(m_pBatch, Colors::Cyan);
-		}
-	}
+		if (m_IsRendered)
+			return;
 
-	m_IsRendered = true;
+		m_pEffect->SetWorld(XMMatrixIdentity());
+
+		CPipeLine* pPipeLine = GET_INSTANCE(CPipeLine);
+
+		m_pEffect->SetView(pPipeLine->Get_Transform_Matrix(CPipeLine::D3DTS_VIEW));
+		m_pEffect->SetProjection(pPipeLine->Get_Transform_Matrix(CPipeLine::D3DTS_PROJ));
+
+		RELEASE_INSTANCE(CPipeLine);
+
+		m_pEffect->Apply(m_pContext);
+		m_pContext->IASetInputLayout(m_pInputLayout);
+
+		m_Cells[m_iCurrentIndex]->DebugRender(m_pBatch, Colors::YellowGreen);
+		for (_int i = 0; i < m_Cells.size(); ++i)
+		{
+			if (m_Cells[i])
+			{
+				m_Cells[i]->DebugRender(m_pBatch, Colors::Cyan);
+			}
+		}
+
+		m_IsRendered = true;
+	}
+	RELEASE_INSTANCE(CLevelManager)
 #endif
 }
 
@@ -209,6 +216,15 @@ _float3 CNavMeshAgent::GetPassedEdgeNormal(_fvector vPos)
 	}
 	else
 		return  _float3(0.f, 0.f, 0.f);
+}
+
+void CNavMeshAgent::SetCurrentIndex(_int iCurrentIndex)
+{
+	const _float3* vPoints = m_Cells[iCurrentIndex]->Get_Points();
+	_float3 vCenter = (vPoints[0] + vPoints[1] + vPoints[2]) / 3.f;
+
+	m_pGameObject->GetTransform()->SetPosition(vCenter);
+	m_iCurrentIndex = iCurrentIndex;
 }
 
 HRESULT CNavMeshAgent::SetUp_Neighbors()

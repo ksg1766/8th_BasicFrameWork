@@ -394,8 +394,17 @@
     <Filter Include="03.GameObjects\03.Boss\01.Dagon\Behavior\Decorator">
       <UniqueIdentifier>{28e9cd9c-8bb9-45e9-972e-ec9ab6626a0a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03.GameObjects\03.Boss\00.Moloch\MotionTrail">
+    <Filter Include="03.GameObjects\03.Boss\00.Moloch\TremorCrystal">
+      <UniqueIdentifier>{beb98f89-2329-47a2-9135-ec8a5d77e5e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\03.Boss\00.Moloch\Effect">
+      <UniqueIdentifier>{62999c5a-2429-4300-b4ce-de6b6dc5650d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\03.Boss\00.Moloch\Effect\MotionTrail">
       <UniqueIdentifier>{b44ce67c-8910-483d-8a9e-a31ab6162f95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\00.Static\Water">
+      <UniqueIdentifier>{51312512-0744-4eab-89c9-743be1ce8211}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -768,9 +777,6 @@
     <ClInclude Include="..\Public\Moloch_BT_Eruption1.h">
       <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Action\Phase2</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Moloch_BT_Eruption2.h">
-      <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Action\Phase2</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Moloch_BT_IF_StartP2.h">
       <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Decorator</Filter>
     </ClInclude>
@@ -817,7 +823,19 @@
       <Filter>03.GameObjects\03.Boss\01.Dagon\Behavior\Action</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Moloch_MotionTrail.h">
-      <Filter>03.GameObjects\03.Boss\00.Moloch\MotionTrail</Filter>
+      <Filter>03.GameObjects\03.Boss\00.Moloch\Effect\MotionTrail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TremorCrystal.h">
+      <Filter>03.GameObjects\03.Boss\00.Moloch\TremorCrystal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Moloch_SwordSlash.h">
+      <Filter>03.GameObjects\03.Boss\00.Moloch\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Water.h">
+      <Filter>03.GameObjects\00.Static\Water</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SkyPlane.h">
+      <Filter>03.GameObjects\00.Static\SkyBox</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1142,9 +1160,6 @@
     <ClCompile Include="..\Private\Moloch_BT_Eruption1.cpp">
       <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Action\Phase2</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Moloch_BT_Eruption2.cpp">
-      <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Action\Phase2</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Moloch_BT_TremorPulse.cpp">
       <Filter>03.GameObjects\03.Boss\00.Moloch\Behavior\Action\Phase2</Filter>
     </ClCompile>
@@ -1182,7 +1197,19 @@
       <Filter>03.GameObjects\03.Boss\01.Dagon\Behavior\Action</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Moloch_MotionTrail.cpp">
-      <Filter>03.GameObjects\03.Boss\00.Moloch\MotionTrail</Filter>
+      <Filter>03.GameObjects\03.Boss\00.Moloch\Effect\MotionTrail</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TremorCrystal.cpp">
+      <Filter>03.GameObjects\03.Boss\00.Moloch\TremorCrystal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Moloch_SwordSlash.cpp">
+      <Filter>03.GameObjects\03.Boss\00.Moloch\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Water.cpp">
+      <Filter>03.GameObjects\00.Static\Water</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SkyPlane.cpp">
+      <Filter>03.GameObjects\00.Static\SkyBox</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

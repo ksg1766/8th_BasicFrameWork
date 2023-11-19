@@ -232,7 +232,7 @@ HRESULT CMainApp::Ready_Prototype_Components()
 		CVIBuffer_Point::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	/* For.Prototype_Component_VIBuffer_Rect */
+	/* For.Prototype_Component_Terrain */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Terrain"),
 		CTerrain::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
@@ -270,8 +270,12 @@ HRESULT CMainApp::Ready_Prototype_Components()
 	
 	/* For.Prototype_Component_Texture_SkyBox */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_SkyBox"),
-		//CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/SkyBox/Hell.dds")))))
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/SkyBox/Sunset.dds")))))
+		return E_FAIL;
+	
+	/* For.Prototype_Component_Texture_SkyPlane */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_SkyPlane"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/SkyBox/SkyPlane.png")))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_Lava_A_emissive */
@@ -290,9 +294,34 @@ HRESULT CMainApp::Ready_Prototype_Components()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Noise/Noise_Liquid.png")))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_Texture_TremorCrystal_A_emissive */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_TremorCrystal_A_emissive"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Emissive/TremorCrystal_A_emissive.png")))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_TremorCrystal_B_emissive */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_TremorCrystal_B_emissive"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Emissive/TremorCrystal_B_emissive.png")))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Moloch_Sword_emissive */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Moloch_Sword_emissive"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Emissive/Moloch_Sword_emissive.png")))))
+		return E_FAIL;
+
 	/* For.Prototype_Component_Texture_Dissolve */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Dissolve"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Dissolve/DissolvePattern%d.dds"), 5))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Mask_Swipe*/
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Mask_Swipe"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Mask/Mask_Swipe.png")))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Noise_RGB*/
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Noise_RGB"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Noise/Noise_RGB.png")))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Model_Static */

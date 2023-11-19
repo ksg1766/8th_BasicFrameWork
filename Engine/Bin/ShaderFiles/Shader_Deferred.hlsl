@@ -38,7 +38,15 @@ Texture2D	g_DistortionTarget;
 
 Texture2D	g_SceneTarget;
 
+// Water
+Texture2D   g_ReflectionTarget;
+Texture2D   g_RefractionTarget;
+
+Texture2D   g_WaterTarget;
+Texture2D   g_WaterDepthTarget;
+
 Texture2D	g_Texture;
+
 
 struct VS_IN
 {
@@ -165,6 +173,16 @@ struct PS_OUT
 {
 	float4	vColor : SV_TARGET0;
 };
+    
+struct PS_REFRACTION_OUT
+{
+    float4 vColor : SV_TARGET0;
+};
+
+struct PS_REFLECTION_OUT
+{
+    float4 vColor : SV_TARGET0;
+};
 
 PS_OUT PS_MAIN_DEBUG(PS_IN In)
 {
@@ -275,8 +293,40 @@ PS_OUT PS_MAIN_DEFERRED(PS_IN In)
         Out.vColor = vector(0.f, 1.f, 1.f, 1.f);
     else
         Out.vColor = vDiffuse * vShade/* + vSpecular*/;
-
+    
 	return Out;
+}
+
+PS_REFRACTION_OUT PS_MAIN_REFRACTION(PS_IN In)
+{
+    PS_REFRACTION_OUT Out = (PS_REFRACTION_OUT) 0;
+
+    vector vDiffuse = g_DiffuseTarget.Sample(PointSampler, In.vTexcoord);
+    if (vDiffuse.a == 0.f)
+        discard;
+    vector vShade = g_ShadeTarget.Sample(LinearSampler, In.vTexcoord);
+    //
+    vector		vSpecular = g_SpecularTarget.Sample(LinearSampler, In.vTexcoord);
+    
+    Out.vColor = vDiffuse * vShade + vSpecular;
+
+    return Out;
+}
+
+PS_REFLECTION_OUT PS_MAIN_REFLECTION(PS_IN In)
+{
+    PS_REFLECTION_OUT Out = (PS_REFLECTION_OUT) 0;
+
+    vector vDiffuse = g_DiffuseTarget.Sample(PointSampler, In.vTexcoord);
+    if (vDiffuse.a == 0.f)
+        discard;
+    vector vShade = g_ShadeTarget.Sample(LinearSampler, In.vTexcoord);
+    //
+    vector		vSpecular = g_SpecularTarget.Sample(LinearSampler, In.vTexcoord);
+    
+    Out.vColor = vDiffuse * vShade + vSpecular;
+
+    return Out;
 }
 
 struct PS_IN_BLUR
@@ -610,6 +660,34 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_SCENE();
+        ComputeShader = NULL;
+    }
+
+    pass Refraction // 8
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_REFRACTION();
+        ComputeShader = NULL;
+    }
+
+    pass Reflection // 9
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_REFLECTION();
         ComputeShader = NULL;
     }
 }

@@ -43,7 +43,7 @@ public:
 	void	GetDashMessage(const _bool& IsDash)						{ IsDash ? Dash(m_pTransform->GetForward()) : DashEnd(); }
 	void	GetFireMessage(const CStrife_Ammo::AmmoType eAmmoType)	{ Fire(eAmmoType); }
 
-	void	ForceHeight()				{ m_pTransform->Translate(Vec3(0.f, m_pNavMeshAgent->GetHeightOffset(), 0.f)); }
+	void	ForceHeight()				{ m_pTransform->Translate(Vec3(0.f, m_pNavMeshAgent->GetHeightOffset() + 0.3f, 0.f)); }
 	_float	GetHeightOffset()			{ return m_pNavMeshAgent->GetHeightOffset(); }
 	_bool	Walkable(_fvector vPoint)	{ return m_pNavMeshAgent->Walkable(vPoint); }
 

@@ -4,6 +4,7 @@
 #include "Layer.h"
 #include "GameObject.h"
 #include "BossController.h"
+#include "Moloch_SwordSlash.h"
 
 CMoloch_BT_Swing1::CMoloch_BT_Swing1()
 {
@@ -12,6 +13,8 @@ CMoloch_BT_Swing1::CMoloch_BT_Swing1()
 void CMoloch_BT_Swing1::OnStart()
 {
 	Super::OnStart(0);
+
+	m_bAttack = false;
 
 	const Vec3& vTargetPos = GetTarget()->GetTransform()->GetPosition();
 
@@ -23,6 +26,29 @@ CBT_Node::BT_RETURN CMoloch_BT_Swing1::OnUpdate(const _float& fTimeDelta)
 {
 	if (IsZeroHP())
 		return BT_FAIL;
+
+	if (!m_bAttack)
+	{
+		if (m_fTimeSum > m_vecAnimIndexTime[0].second * 0.2f)
+		{
+			/*CMoloch_SwordSlash::EFFECT_DESC desc;
+			CGameObject* pEffect = m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Moloch_Sword_Slash"), LAYERTAG::IGNORECOLLISION, &desc);
+			
+			Vec3 vFront = m_pGameObject->GetTransform()->GetForward();
+			pEffect->GetTransform()->SetForward(vFront);
+			Vec3 vRight = Vec3::UnitY.Cross(vFront);
+			pEffect->GetTransform()->SetRight(vRight);
+			Vec3 vUp = vFront.Cross(vRight);
+			pEffect->GetTransform()->SetUp(vUp);
+			
+			pEffect->GetTransform()->SetScale(Vec3(30.f, 30.f, 30.f));
+
+			Vec3 vPos = m_pGameObject->GetTransform()->GetPosition() + 2.f * m_pGameObject->GetTransform()->GetForward() + 1.5f * Vec3::UnitY;
+			pEffect->GetTransform()->Translate(vPos);*/
+
+			m_bAttack = true;
+		}
+	}
 
 	if (m_fTimeSum > m_vecAnimIndexTime[0].second * 0.5f)
 	{

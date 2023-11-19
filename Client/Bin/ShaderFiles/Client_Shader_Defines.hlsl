@@ -12,6 +12,16 @@ RasterizerState RS_Skybox
 	FrontCounterClockwise = false;
 };
 
+RasterizerState RS_SkyboxBig
+{
+    FillMode = Solid;
+
+	/* 앞면을 컬링하겠다. == 후면을 보여주겠다. */
+    CullMode = None;
+
+	/* 앞면을 시계방향으로 쓰겠다. */
+    FrontCounterClockwise = true;
+};
 
 RasterizerState RS_Default
 {

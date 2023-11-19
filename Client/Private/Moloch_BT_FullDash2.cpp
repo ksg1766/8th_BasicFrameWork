@@ -24,8 +24,15 @@ CBT_Node::BT_RETURN CMoloch_BT_FullDash2::OnUpdate(const _float& fTimeDelta)
 	if (IsZeroHP())
 		return BT_FAIL;
 
-	_float fDistance = Vec3::DistanceSquared(m_vTargetPos, m_pGameObject->GetTransform()->GetPosition());
+	if (m_fTimeSum > m_vecAnimIndexTime[0].second * 0.9f)
+	{
+		//CBossController* pController = static_cast<CBossController*>(m_pController);
+		//pController->GetAttackMessage(0);
 
+		return BT_SUCCESS;
+	}
+
+	_float fDistance = Vec3::DistanceSquared(m_vTargetPos, m_pGameObject->GetTransform()->GetPosition());
 	if (m_fTimeSum < m_vecAnimIndexTime[0].second * 0.4f)
 	{
 		if (fDistance > 4.f)
@@ -41,14 +48,6 @@ CBT_Node::BT_RETURN CMoloch_BT_FullDash2::OnUpdate(const _float& fTimeDelta)
 			m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Moloch_MotionTrail"), LAYERTAG::IGNORECOLLISION, &desc);
 			m_iFrameCounter = 0;
 		}
-	}
-
-	if (m_fTimeSum > m_vecAnimIndexTime[0].second * 0.9f)
-	{
-		//CBossController* pController = static_cast<CBossController*>(m_pController);
-		//pController->GetAttackMessage(0);
-
-		return BT_SUCCESS;
 	}
 
 	m_fTimeSum += fTimeDelta;

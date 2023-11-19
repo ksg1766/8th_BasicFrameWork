@@ -66,5 +66,4 @@ void ComputeDissolveColor(inout float4 color, float2 texcoord)
     color = (color + emissive) * deffuseCol;
 };
 
-
 #endif

@@ -23,6 +23,8 @@ private:
 	void				RunIdleCoolDown(const _float& fTimeDelta);
 
 	_bool				IsZeroHP();
+	_bool				IsInSight();
+	CGameObject*		GetTarget();
 
 public:
 	static	CMoloch_BT_Idle* Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController);

@@ -20,6 +20,9 @@ CBT_Node::BT_RETURN CMoloch_BT_Idle::OnUpdate(const _float& fTimeDelta)
 	if (IsZeroHP())
 		return BT_FAIL;
 
+	if (!IsInSight())
+		return BT_RUNNING;
+
 	BLACKBOARD& hashBlackBoard = m_pBehaviorTree->GetBlackBoard();
 	const auto& tIdleCoolDown = hashBlackBoard.find(TEXT("IdleCoolDown"));
 
@@ -90,6 +93,28 @@ _bool CMoloch_BT_Idle::IsZeroHP()
 		return true;
 
 	return false;
+}
+
+_bool CMoloch_BT_Idle::IsInSight()
+{
+	BLACKBOARD& hashBlackBoard = m_pBehaviorTree->GetBlackBoard();
+	const auto& tSight = hashBlackBoard.find(TEXT("Sight"));
+
+	const Vec3& vTargetPos = GetTarget()->GetTransform()->GetPosition();
+
+	if(Vec3::Distance(vTargetPos, m_pGameObject->GetTransform()->GetPosition()) > *GET_VALUE(_float, tSight))
+		return false;
+
+	return true;
+}
+
+CGameObject* CMoloch_BT_Idle::GetTarget()
+{
+	BLACKBOARD& hashBlackBoard = m_pBehaviorTree->GetBlackBoard();
+	const auto& target = hashBlackBoard.find(TEXT("Target"));
+	CGameObject* pPlayer = GET_VALUE(CGameObject, target);
+
+	return pPlayer;
 }
 
 CMoloch_BT_Idle* CMoloch_BT_Idle::Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController)

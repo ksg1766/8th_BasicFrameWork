@@ -25,6 +25,8 @@ private:
 	Vec3				m_vTargetPos;
 	_int				m_iFrameCounter = 0;
 
+	_bool				m_bAttack;
+
 public:
 	static	CMoloch_BT_FullDash1* Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController);
 	virtual void Free() override;

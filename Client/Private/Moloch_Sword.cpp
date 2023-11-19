@@ -73,6 +73,10 @@ HRESULT CMoloch_Sword::Ready_FixedComponents()
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Model, TEXT("Prototype_Component_Model_") + GetObjectTag())))
 		return E_FAIL;
 
+	/* Com_Model */
+	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Texture, TEXT("Prototype_Component_Texture_Moloch_Sword_emissive"))))
+		return E_FAIL;
+
 	/* Com_Transform */
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Transform, TEXT("Prototype_Component_Transform"))))
 		return E_FAIL;
@@ -100,6 +104,9 @@ HRESULT CMoloch_Sword::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
+
+	if (FAILED(GetTexture()->Bind_ShaderResource(GetShader(), "g_EmissiveTexture", 0)))
+		return E_FAIL;
 
 	return S_OK;
 }
