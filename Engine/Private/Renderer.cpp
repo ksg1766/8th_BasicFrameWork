@@ -321,11 +321,14 @@ HRESULT CRenderer::Draw_RenderObjects()
 			return S_OK;
 
 		//
+		for (auto& pGameObject : m_RenderObjects[RG_PRIORITY])
+			Safe_Release(pGameObject);
 		for (auto& pGameObject : m_RenderObjects[RG_NONBLEND])
 			Safe_Release(pGameObject);
 		for (auto& pGameObject : m_RenderObjects[RG_NONBLEND_INSTANCE])
 			Safe_Release(pGameObject);
 
+		m_RenderObjects[RG_PRIORITY].clear();
 		m_RenderObjects[RG_NONBLEND].clear();
 		m_RenderObjects[RG_NONBLEND_INSTANCE].clear();
 
@@ -369,9 +372,9 @@ HRESULT CRenderer::Render_Priority()
 		if (nullptr != pGameObject)
 			pGameObject->Render();
 
-		Safe_Release(pGameObject);
+		//Safe_Release(pGameObject);
 	}
-	m_RenderObjects[RG_PRIORITY].clear();
+	//m_RenderObjects[RG_PRIORITY].clear();
 
 	return S_OK;
 }
@@ -605,6 +608,12 @@ HRESULT CRenderer::Render_Water()
 		{
 			if (nullptr != pGameObject)
 			{
+				for (auto& pGameObject : m_RenderObjects[RG_PRIORITY])
+				{
+					if (nullptr != pGameObject)
+						pGameObject->Render();
+				}
+
 				for (auto& pNonBlendObject : m_RenderObjects[RG_NONBLEND])
 				{
 					if (nullptr != pNonBlendObject)
@@ -712,6 +721,12 @@ HRESULT CRenderer::Render_Water()
 				_matrix matReflectionView = pCameraManager->GetReflectionMatrix();
 				_matrix matOriginalView = pPipeLine->Get_Transform_Matrix(CPipeLine::D3DTS_VIEW);
 				pPipeLine->Set_Transform(CPipeLine::D3DTS_VIEW, matReflectionView);
+				pPipeLine->Tick();
+				for (auto& pGameObject : m_RenderObjects[RG_PRIORITY])
+				{
+					if (nullptr != pGameObject)
+						pGameObject->Render();
+				}
 
 				if (FAILED(Render_NonBlend()))
 					return S_OK;
@@ -719,7 +734,7 @@ HRESULT CRenderer::Render_Water()
 					return S_OK;
 
 				pPipeLine->Set_Transform(CPipeLine::D3DTS_VIEW, matOriginalView);
-
+				pPipeLine->Tick();
 				//pGameObject->Render();
 				RELEASE_INSTANCE(CCameraManager);
 				RELEASE_INSTANCE(CPipeLine);

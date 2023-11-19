@@ -239,7 +239,7 @@ PS_WATER_OUT PS_WATER_MAIN(PS_WATER_IN In)
     
     In.vTexcoord.y += g_fWaterTranslation;
     
-    vNormalMap = g_NormalTexture.Sample(LinearSampler, In.vTexcoord * 8.f);
+    vNormalMap = g_NormalTexture.Sample(LinearSampler, In.vTexcoord * 4.f);
     vNormal = (vNormalMap.xyz * 2.0f) - 1.0f;
     
     vReflectTexCoord.x = In.vReflectionPos.x / In.vReflectionPos.w / 2.0f + 0.5f;
@@ -262,7 +262,7 @@ PS_WATER_OUT PS_WATER_MAIN(PS_WATER_IN In)
     //float4 vCombinedColor = vRefractionColor * (1 - fFresnelTerm) * vRefractionColor.a * vReflectionColor.a + vReflectionColor * fFresnelTerm * vReflectionColor.a * vRefractionColor.a;
     //Out.vColor = vCombinedColor * float4(0.95f, 1.00f, 1.05f, 1.0f);
     //Out.vColor = lerp(vReflectionColor, vRefractionColor, 0.6f) * float4(0.95f, 1.00f, 1.05f, 1.0f);
-    Out.vColor = lerp(vReflectionColor, vRefractionColor, 0.6f) * float4(0.95f, 1.00f, 1.05f, 1.0f) + float4(0.2f, 0.2f, 0.2f, 1.0f);
+    Out.vColor = lerp(vReflectionColor, vRefractionColor, 0.3f) * float4(0.90f, 1.00f, 1.10f, 1.0f) + float4(0.15f, 0.15f, 0.15f, 0.0f); //
     Out.vNormal = float4(vNormal, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);
 

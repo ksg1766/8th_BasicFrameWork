@@ -134,7 +134,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Terrain()
 	CGameObject* pGameObject = nullptr;
 	LAYERTAG	eLayerTag = LAYERTAG::TERRAIN;
 
-	CWater::WATER_DESC tWaterDesc = tWaterDesc = { Vec3(70.f, -5.f, 225.f), Vec2(800.f, 450.f) };
+	CWater::WATER_DESC tWaterDesc = tWaterDesc = { Vec3(00.f, -5.f, 250.f), Vec2(1280.f, 500.f) };
 	pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_Water"), &tWaterDesc);
 	if (nullptr == pGameObject)	return E_FAIL;
 

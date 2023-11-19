@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\Public\Moloch_Sword.h"
 #include "GameInstance.h"
+#include "Fire.h"
 
 CMoloch_Sword::CMoloch_Sword(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: Super(pDevice, pContext)
@@ -25,12 +26,18 @@ HRESULT CMoloch_Sword::Initialize(void* pArg)
 	if (FAILED(Ready_Scripts()))
 		return E_FAIL;
 
+	CFire* pFire = static_cast<CFire*>(m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Fire"), LAYERTAG::IGNORECOLLISION));
+
+	m_vecFires.push_back(pFire);
+
 	return S_OK;
 }
 
 void CMoloch_Sword::Tick(const _float& fTimeDelta)
 {
-	
+	for (auto& iter : m_vecFires)
+		iter->GetTransform()->SetPosition(GetTransform()->GetPosition());
+
 	Super::Tick(fTimeDelta);
 }
 

@@ -406,6 +406,9 @@
     <Filter Include="03.GameObjects\00.Static\Water">
       <UniqueIdentifier>{51312512-0744-4eab-89c9-743be1ce8211}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.GameObjects\05.Particle\Fire">
+      <UniqueIdentifier>{b1103f29-f8f6-4936-b279-fa90986234b4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -837,6 +840,9 @@
     <ClInclude Include="..\Public\SkyPlane.h">
       <Filter>03.GameObjects\00.Static\SkyBox</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Fire.h">
+      <Filter>03.GameObjects\05.Particle\Fire</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1211,6 +1217,9 @@
     <ClCompile Include="..\Private\SkyPlane.cpp">
       <Filter>03.GameObjects\00.Static\SkyBox</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Fire.cpp">
+      <Filter>03.GameObjects\05.Particle\Fire</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1275,6 +1284,9 @@
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Shockwave.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Fire.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

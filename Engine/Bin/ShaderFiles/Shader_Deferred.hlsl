@@ -306,9 +306,9 @@ PS_REFRACTION_OUT PS_MAIN_REFRACTION(PS_IN In)
         discard;
     vector vShade = g_ShadeTarget.Sample(LinearSampler, In.vTexcoord);
     //
-    vector		vSpecular = g_SpecularTarget.Sample(LinearSampler, In.vTexcoord);
+    //vector		vSpecular = g_SpecularTarget.Sample(LinearSampler, In.vTexcoord);
     
-    Out.vColor = vDiffuse * vShade + vSpecular;
+    Out.vColor = vDiffuse * vShade/* + vSpecular*/;
 
     return Out;
 }
@@ -322,9 +322,9 @@ PS_REFLECTION_OUT PS_MAIN_REFLECTION(PS_IN In)
         discard;
     vector vShade = g_ShadeTarget.Sample(LinearSampler, In.vTexcoord);
     //
-    vector		vSpecular = g_SpecularTarget.Sample(LinearSampler, In.vTexcoord);
+    //vector		vSpecular = g_SpecularTarget.Sample(LinearSampler, In.vTexcoord);
     
-    Out.vColor = vDiffuse * vShade + vSpecular;
+    Out.vColor = vDiffuse * vShade/* + vSpecular*/;
 
     return Out;
 }

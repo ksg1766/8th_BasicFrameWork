@@ -1,24 +1,24 @@
 #include "stdafx.h"
-#include "..\Public\Shockwave.h"
+#include "..\Public\Fire.h"
 #include "GameInstance.h"
 #include "Layer.h"
 
-CShockwave::CShockwave(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CFire::CFire(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: Super(pDevice, pContext)
 {
 }
 
-CShockwave::CShockwave(const CShockwave& rhs)
+CFire::CFire(const CFire& rhs)
 	: Super(rhs)
 {
 }
 
-HRESULT CShockwave::Initialize_Prototype()
+HRESULT CFire::Initialize_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CShockwave::Initialize(void* pArg)
+HRESULT CFire::Initialize(void* pArg)
 {
 	if (FAILED(Ready_FixedComponents()))
 		return E_FAIL;
@@ -32,31 +32,30 @@ HRESULT CShockwave::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CShockwave::Tick(const _float& fTimeDelta)
+void CFire::Tick(const _float& fTimeDelta)
 {
 	Super::Tick(fTimeDelta);
 
-	map<LAYERTAG, CLayer*>& mapLayers = m_pGameInstance->GetCurrentLevelLayers();
-	map<LAYERTAG, CLayer*>::iterator iter = mapLayers.find(LAYERTAG::PLAYER);
-	
-	CLayer* pLayer = iter->second;
-	CGameObject*& pObject = pLayer->GetGameObjects().front();
-	GetTransform()->SetPosition(pObject->GetTransform()->GetPosition());
+	m_fFrameTime += fTimeDelta;
+	if (m_fFrameTime > 1000.0f)
+	{
+		m_fFrameTime = 0.f;
+	}
 }
 
-void CShockwave::LateTick(const _float& fTimeDelta)
+void CFire::LateTick(const _float& fTimeDelta)
 {
 	Super::LateTick(fTimeDelta);
 
-	GetRenderer()->Add_RenderGroup(CRenderer::RG_DISTORTION, this);
+	GetRenderer()->Add_RenderGroup(CRenderer::RG_BLEND, this);
 }
 
-void CShockwave::DebugRender()
+void CFire::DebugRender()
 {
 	Super::DebugRender();
 }
 
-HRESULT CShockwave::Render()
+HRESULT CFire::Render()
 {
 	if (nullptr == GetBuffer() || nullptr == GetShader())
 		return E_FAIL;
@@ -70,6 +69,7 @@ HRESULT CShockwave::Render()
 	if(FAILED(GetBuffer()->Render()))
 		return E_FAIL;
 
+
 #ifdef _DEBUG
 	DebugRender();
 #endif
@@ -77,10 +77,10 @@ HRESULT CShockwave::Render()
 	return S_OK;
 }
 
-HRESULT CShockwave::Ready_FixedComponents()
+HRESULT CFire::Ready_FixedComponents()
 {
 	/* Com_Shader */
-	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Shader, TEXT("Prototype_Component_Shader_Shockwave"))))
+	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Shader, TEXT("Prototype_Component_Shader_Fire"))))
 		return E_FAIL;
 
 	/* Com_VIBuffer */
@@ -94,15 +94,20 @@ HRESULT CShockwave::Ready_FixedComponents()
 	/* Com_Renderer */
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Renderer, TEXT("Prototype_Component_Renderer"))))
 		return E_FAIL;
-
+	
 	/* Com_Texture */
-	if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::Texture, TEXT("Prototype_Component_Texture_Shockwave"))))
+	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Texture, TEXT("Prototype_Component_Texture_Fire_Tiled"))))
+		return E_FAIL;
+
+	m_pNoiseTexture = static_cast<CTexture*>(m_pGameInstance->Clone_Component(this, LEVEL_STATIC, TEXT("Prototype_Component_Texture_Smoke_Tiled"), nullptr));
+	m_pAlphaTexture = static_cast<CTexture*>(m_pGameInstance->Clone_Component(this, LEVEL_STATIC, TEXT("Prototype_Component_Texture_TriangleMask"), nullptr));
+	if (!m_pNoiseTexture || !m_pAlphaTexture)
 		return E_FAIL;
 
 	return S_OK;
 }
 
-HRESULT CShockwave::Ready_Scripts(void* pArg)
+HRESULT CFire::Ready_Scripts(void* pArg)
 {
 	if (LEVEL_GAMEPLAY == m_pGameInstance->GetCurrentLevelIndex())
 	{
@@ -111,7 +116,7 @@ HRESULT CShockwave::Ready_Scripts(void* pArg)
 	return S_OK;
 }
 
-HRESULT CShockwave::Bind_ShaderResources()
+HRESULT CFire::Bind_ShaderResources()
 {
 	_float4x4		WorldMatrix;
 	XMStoreFloat4x4(&WorldMatrix, XMMatrixIdentity());
@@ -124,39 +129,48 @@ HRESULT CShockwave::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
-	if (FAILED(GetTexture()->Bind_ShaderResource(GetShader(), "g_DistortionTexture", 0)))
+	if (FAILED(GetTexture()->Bind_ShaderResource(GetShader(), "g_FireTexture", 0)))
 		return E_FAIL;
+	if (FAILED(m_pNoiseTexture->Bind_ShaderResource(GetShader(), "g_NoiseTexture", 0)))
+		return E_FAIL;
+	if (FAILED(m_pAlphaTexture->Bind_ShaderResource(GetShader(), "g_AlphaTexture", 0)))
+		return E_FAIL;
+	
+	if (FAILED(GetShader()->Bind_RawValue("g_fFrameTime", &m_fFrameTime, sizeof(_float))))
+		return E_FAIL;
+
+
 
 	return S_OK;
 }
 
-CShockwave* CShockwave::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CFire* CFire::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CShockwave* pInstance = new CShockwave(pDevice, pContext);
+	CFire* pInstance = new CFire(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CShockwave");
+		MSG_BOX("Failed to Created : CFire");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CShockwave::Clone(void* pArg)
+CGameObject* CFire::Clone(void* pArg)
 {
-	CShockwave* pInstance = new CShockwave(*this);
+	CFire* pInstance = new CFire(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CShockwave");
+		MSG_BOX("Failed to Cloned : CFire");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CShockwave::Free()
+void CFire::Free()
 {
 	Super::Free();
 }

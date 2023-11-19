@@ -39,7 +39,7 @@ private:
 	_float			m_fReflectRefractScale = 0.1f;
 
 	_int			m_iCurrentNormalMap = 0;
-	_float			m_fWaterTranslationSpeed = 0.005f;
+	_float			m_fWaterTranslationSpeed = 0.015f;
 
 public:
 	static	CWater* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
