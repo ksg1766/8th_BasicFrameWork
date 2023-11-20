@@ -236,6 +236,7 @@
     <ClInclude Include="..\Public\HellHound_BT_Wait.h" />
     <ClInclude Include="..\Public\LavaTerrain.h" />
     <ClInclude Include="..\Public\Lava.h" />
+    <ClInclude Include="..\Public\Lightning.h" />
     <ClInclude Include="..\Public\MainCamera.h" />
     <ClInclude Include="..\Public\MainCameraController.h" />
     <ClInclude Include="..\Public\Moloch.h" />
@@ -374,6 +375,7 @@
     <ClCompile Include="..\Private\HellHound_BT_Wait.cpp" />
     <ClCompile Include="..\Private\LavaTerrain.cpp" />
     <ClCompile Include="..\Private\Lava.cpp" />
+    <ClCompile Include="..\Private\Lightning.cpp" />
     <ClCompile Include="..\Private\MainCamera.cpp" />
     <ClCompile Include="..\Private\MainCameraController.cpp" />
     <ClCompile Include="..\Private\Moloch.cpp" />
@@ -518,6 +520,7 @@
     <FxCompile Include="..\Bin\ShaderFiles\Matrix.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_ComputeParticles.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Fire.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Lightning.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Shockwave.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Lighting_Functions.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>

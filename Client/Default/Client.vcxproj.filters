@@ -409,6 +409,9 @@
     <Filter Include="03.GameObjects\05.Particle\Fire">
       <UniqueIdentifier>{b1103f29-f8f6-4936-b279-fa90986234b4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.GameObjects\05.Particle\Lightning">
+      <UniqueIdentifier>{a235c40b-71a1-4bdf-b21b-e3d218e3b552}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -843,6 +846,9 @@
     <ClInclude Include="..\Public\Fire.h">
       <Filter>03.GameObjects\05.Particle\Fire</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Lightning.h">
+      <Filter>03.GameObjects\05.Particle\Lightning</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1220,6 +1226,9 @@
     <ClCompile Include="..\Private\Fire.cpp">
       <Filter>03.GameObjects\05.Particle\Fire</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Lightning.cpp">
+      <Filter>03.GameObjects\05.Particle\Lightning</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1287,6 +1296,9 @@
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Fire.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Lightning.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

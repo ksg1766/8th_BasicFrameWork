@@ -117,6 +117,8 @@ struct VS_IN
 {
     float3 vPosition : POSITION;
     float2 vPSize : PSIZE;
+    
+    //row_major matrix matWorld : INST;
 };
 
 struct VS_OUT
@@ -133,6 +135,8 @@ VS_OUT VS_MAIN(VS_IN In)
 
     vector vRight = g_WorldMatrix._11_12_13_14;
     vector vUp = g_WorldMatrix._21_22_23_24;
+    //vector vRight = In.matWorld._11_12_13_14;
+    //vector vUp = In.matWorld._21_22_23_24;
 
     In.vPosition = mul(vector(In.vPosition, 1.f), m);
     Out.vPosition = mul(float4(In.vPosition, 1.f), g_WorldMatrix);
