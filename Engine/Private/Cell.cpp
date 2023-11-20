@@ -41,9 +41,9 @@ HRESULT CCell::Initialize(const _float3* pPoints, _uint iIndex)
 void CCell::DebugRender(PrimitiveBatch<VertexPositionColor>*& pBatch , XMVECTORF32 vColor)
 {
 #ifdef _DEBUG
-	pBatch->Begin();
+	/*pBatch->Begin();
 	DX::DrawTriangle(pBatch, XMLoadFloat3(&m_vPoints[POINT_A]), XMLoadFloat3(&m_vPoints[POINT_B]), XMLoadFloat3(&m_vPoints[POINT_C]), vColor);
-	pBatch->End();
+	pBatch->End();*/
 #endif
 }
 

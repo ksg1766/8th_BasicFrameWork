@@ -17,6 +17,8 @@ float2 g_vDistortion3 = float2(0.1f, 0.1f);
 float g_fDistortionScale = 0.8f;
 float g_fDistortionBias = 0.5f;
 
+vector g_vCamPosition;
+
 sampler Sampler = sampler_state
 {
     Filter = MIN_MAG_MIP_LINEAR;
@@ -24,14 +26,146 @@ sampler Sampler = sampler_state
     AddressV = clamp;
 };
 
+// For.SocketFire
+struct tagKeyframeDesc
+{
+    int animIndex;
+    uint currFrame;
+    uint nextFrame;
+    float ratio;
+    float sumTime;
+    float speed;
+    float2 padding;
+};
+
+struct tagTweenFrameDesc
+{
+    float tweenDuration;
+    float tweenRatio;
+    float tweenSumTime;
+    float padding;
+    tagKeyframeDesc curr;
+    tagKeyframeDesc next;
+};
+
+tagTweenFrameDesc g_Tweenframes;
+
+Texture2DArray g_TransformMap;
+matrix g_matOffset;
+
+int g_iSocketBoneIndex;
+
+matrix GetSocketMatrix()
+{
+    int animIndex[2];
+    int currFrame[2];
+    int nextFrame[2];
+    float ratio[2];
+    
+    animIndex[0] = g_Tweenframes.curr.animIndex;
+    currFrame[0] = g_Tweenframes.curr.currFrame;
+    nextFrame[0] = g_Tweenframes.curr.nextFrame;
+    ratio[0] = g_Tweenframes.curr.ratio;
+    
+    animIndex[1] = g_Tweenframes.next.animIndex;
+    currFrame[1] = g_Tweenframes.next.currFrame;
+    nextFrame[1] = g_Tweenframes.next.nextFrame;
+    ratio[1] = g_Tweenframes.next.ratio;
+    
+    float4 c0, c1, c2, c3;
+    float4 n0, n1, n2, n3;
+    
+    matrix curr = 0;
+    matrix next = 0;
+
+    c0 = g_TransformMap.Load(int4(g_iSocketBoneIndex * 4 + 0, currFrame[0], animIndex[0], 0)); // indices[i] 위치에 SocketBoneNumber를 던지자
+    c1 = g_TransformMap.Load(int4(g_iSocketBoneIndex * 4 + 1, currFrame[0], animIndex[0], 0)); // for문 순회 필요는 없다. 정점과 달리 소켓은 한뼈에만 영향을 받는다.
+    c2 = g_TransformMap.Load(int4(g_iSocketBoneIndex * 4 + 2, currFrame[0], animIndex[0], 0));
+    c3 = g_TransformMap.Load(int4(g_iSocketBoneIndex * 4 + 3, currFrame[0], animIndex[0], 0));
+    curr = matrix(c0, c1, c2, c3);
+    
+    n0 = g_TransformMap.Load(int4(g_iSocketBoneIndex * 4 + 0, nextFrame[0], animIndex[0], 0));
+    n1 = g_TransformMap.Load(int4(g_iSocketBoneIndex * 4 + 1, nextFrame[0], animIndex[0], 0));
+    n2 = g_TransformMap.Load(int4(g_iSocketBoneIndex * 4 + 2, nextFrame[0], animIndex[0], 0));
+    n3 = g_TransformMap.Load(int4(g_iSocketBoneIndex * 4 + 3, nextFrame[0], animIndex[0], 0));
+    next = matrix(n0, n1, n2, n3);
+    
+    matrix result = lerp(curr, next, ratio[0]);
+    
+    if (g_Tweenframes.next.animIndex >= 0)
+    {
+        c0 = g_TransformMap.Load(int4(g_iSocketBoneIndex * 4 + 0, currFrame[1], animIndex[1], 0));
+        c1 = g_TransformMap.Load(int4(g_iSocketBoneIndex * 4 + 1, currFrame[1], animIndex[1], 0));
+        c2 = g_TransformMap.Load(int4(g_iSocketBoneIndex * 4 + 2, currFrame[1], animIndex[1], 0));
+        c3 = g_TransformMap.Load(int4(g_iSocketBoneIndex * 4 + 3, currFrame[1], animIndex[1], 0));
+        curr = matrix(c0, c1, c2, c3);
+
+        n0 = g_TransformMap.Load(int4(g_iSocketBoneIndex * 4 + 0, nextFrame[1], animIndex[1], 0));
+        n1 = g_TransformMap.Load(int4(g_iSocketBoneIndex * 4 + 1, nextFrame[1], animIndex[1], 0));
+        n2 = g_TransformMap.Load(int4(g_iSocketBoneIndex * 4 + 2, nextFrame[1], animIndex[1], 0));
+        n3 = g_TransformMap.Load(int4(g_iSocketBoneIndex * 4 + 3, nextFrame[1], animIndex[1], 0));
+        next = matrix(n0, n1, n2, n3);
+
+        matrix nextResult = lerp(curr, next, ratio[1]);
+        result = lerp(result, nextResult, g_Tweenframes.tweenRatio);
+    }
+
+    return result;
+}
+
 struct VS_IN
 {
-	float3		vPosition : POSITION;
-	float2		vTexcoord : TEXCOORD0;
+    float3 vPosition : POSITION;
+    float2 vPSize : PSIZE;
 };
 
 struct VS_OUT
 {	
+    float4 vPosition : POSITION;
+    float2 vPSize : PSIZE;
+};
+
+VS_OUT VS_MAIN(VS_IN In)
+{
+    VS_OUT Out = (VS_OUT) 0;
+    
+    Matrix m = GetSocketMatrix();
+
+    vector vRight = g_WorldMatrix._11_12_13_14;
+    vector vUp = g_WorldMatrix._21_22_23_24;
+
+    In.vPosition = mul(vector(In.vPosition, 1.f), m);
+    Out.vPosition = mul(float4(In.vPosition, 1.f), g_WorldMatrix);
+    Out.vPSize = float2(In.vPSize.x * length(vRight), In.vPSize.y * length(vUp));
+    
+    return Out;
+}
+
+VS_OUT VS_SOCKET_MAIN(VS_IN In)
+{
+    VS_OUT Out = (VS_OUT) 0;
+    
+    Matrix m = GetSocketMatrix();
+    m = mul(g_matOffset, m);
+
+    vector vRight = g_WorldMatrix._11_12_13_14;
+    vector vUp = g_WorldMatrix._21_22_23_24;
+
+    In.vPosition = mul(vector(In.vPosition, 1.f), m);
+    Out.vPosition = mul(float4(In.vPosition, 1.f), g_WorldMatrix);
+    Out.vPSize = (2.5f - 0.5f * g_matOffset._42) * float2(In.vPSize.x * length(vRight), In.vPSize.y * length(vUp));
+    
+    return Out;
+}
+
+struct GS_IN
+{
+    float4 vPosition : POSITION;
+    float2 vPSize : PSIZE;
+};
+
+struct GS_OUT
+{
     float4 vPosition : SV_POSITION;
     float2 vTexcoord : TEXCOORD0;
     float2 vNoiseUV1 : TEXCOORD1;
@@ -39,29 +173,57 @@ struct VS_OUT
     float2 vNoiseUV3 : TEXCOORD3;
 };
 
-VS_OUT VS_MAIN(VS_IN In)
+[maxvertexcount(20)]
+void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> OutStream)
 {
-    VS_OUT Out = (VS_OUT) 0;
+    GS_OUT Out[4];
+
+    vector vLook = g_vCamPosition - In[0].vPosition;
+
+    float3 vRight = normalize(cross(float3(0.f, 1.f, 0.f), vLook.xyz)) * In[0].vPSize.x * 0.5f;
+    float3 vUp = normalize(cross(vLook.xyz, vRight.xyz)) * In[0].vPSize.y * 0.5f;
+
+    matrix matVP;
+
+    matVP = mul(g_ViewMatrix, g_ProjMatrix);
+
+    Out[0].vPosition = vector(In[0].vPosition.xyz + vRight + vUp, 1.f);
+    Out[0].vPosition = mul(Out[0].vPosition, matVP);
+    Out[0].vTexcoord = float2(0.0f, 0.f);
+
+    Out[1].vPosition = vector(In[0].vPosition.xyz - vRight + vUp, 1.f);
+    Out[1].vPosition = mul(Out[1].vPosition, matVP);
+    Out[1].vTexcoord = float2(1.0f, 0.f);
     
-    matrix matWV, matWVP;
+    Out[2].vPosition = vector(In[0].vPosition.xyz - vRight - vUp, 1.f);
+    Out[2].vPosition = mul(Out[2].vPosition, matVP);
+    Out[2].vTexcoord = float2(1.0f, 1.0f);
     
-    matWV = mul(g_WorldMatrix, g_ViewMatrix);
-    matWVP = mul(matWV, g_ProjMatrix);
+    Out[3].vPosition = vector(In[0].vPosition.xyz + vRight - vUp, 1.f);
+    Out[3].vPosition = mul(Out[3].vPosition, matVP);
+    Out[3].vTexcoord = float2(0.0f, 1.0f);
     
-    Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
+    for (int i = 0; i < 4; ++i)
+    {
+        Out[i].vNoiseUV1 = (Out[i].vTexcoord * g_vScales.x);
+        Out[i].vNoiseUV1.y = Out[i].vNoiseUV1.y + (g_fFrameTime * g_vScrollSpeeds.x * (1.f + g_matOffset._42 / 10.f));
     
-    Out.vTexcoord = In.vTexcoord;
+        Out[i].vNoiseUV2 = (Out[i].vTexcoord * g_vScales.y);
+        Out[i].vNoiseUV2.y = Out[i].vNoiseUV2.y + (g_fFrameTime * g_vScrollSpeeds.y * (1.f + g_matOffset._42 / 10.f));
     
-    Out.vNoiseUV1 = (In.vTexcoord * g_vScales.x);
-    Out.vNoiseUV1.y = Out.vNoiseUV1.y + (g_fFrameTime * g_vScrollSpeeds.x);
+        Out[i].vNoiseUV3 = (Out[i].vTexcoord * g_vScales.z);
+        Out[i].vNoiseUV3.y = Out[i].vNoiseUV3.y + (g_fFrameTime * g_vScrollSpeeds.z * (1.f + g_matOffset._42 / 10.f));
+    }
     
-    Out.vNoiseUV2 = (In.vTexcoord * g_vScales.y);
-    Out.vNoiseUV2.y = Out.vNoiseUV2.y + (g_fFrameTime * g_vScrollSpeeds.y);
-    
-    Out.vNoiseUV3 = (In.vTexcoord * g_vScales.z);
-    Out.vNoiseUV3.y = Out.vNoiseUV3.y + (g_fFrameTime * g_vScrollSpeeds.z);
-    
-    return Out;
+    OutStream.Append(Out[0]);
+    OutStream.Append(Out[1]);
+    OutStream.Append(Out[2]);
+    OutStream.RestartStrip();
+
+    OutStream.Append(Out[0]);
+    OutStream.Append(Out[2]);
+    OutStream.Append(Out[3]);
+    OutStream.RestartStrip();
 }
 
 struct PS_IN
@@ -124,8 +286,11 @@ PS_OUT PS_MAIN(PS_IN In)
     // 불꽃의 투명도를 지정하는 데 사용될 것입니다.
     // wrap를 사용하는 스테이트 대신 clamp를 사용하는 스테이트를 사용하여 불꽃 텍스쳐가 래핑되는 것을 방지합니다.
     vAlphaColor = g_AlphaTexture.Sample(Sampler, vNoiseCoords.xy);
+    if (vAlphaColor.r == 0.f)
+        discard;
     
     // 왜곡 및 교란된 알파 텍스쳐 값을 알파블렌딩에 사용합니다.
+        
     vFireColor.a = vAlphaColor;
     
     Out.vColor = vFireColor;
@@ -142,7 +307,21 @@ technique11 DefaultTechnique
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
         VertexShader = compile vs_5_0 VS_MAIN();
-		GeometryShader = NULL;
+        GeometryShader = compile gs_5_0 GS_MAIN();
+		HullShader = NULL;
+		DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN();
+        ComputeShader = NULL;
+    }
+
+    pass SocketFire
+	{
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_OneBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_SOCKET_MAIN();
+        GeometryShader = compile gs_5_0 GS_MAIN();
 		HullShader = NULL;
 		DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN();

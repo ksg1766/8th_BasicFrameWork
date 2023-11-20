@@ -209,7 +209,7 @@ HRESULT CMainApp::Ready_Prototype_Components()
 
 	/* For.Prototype_Component_Shader_Fire*/
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_Fire"),
-		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Fire.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements))))
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Fire.hlsl"), VTXPOINT::Elements, VTXPOINT::iNumElements))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Shader_ComputeParticles*/

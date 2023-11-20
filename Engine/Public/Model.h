@@ -113,6 +113,8 @@ public:
 	_bool			IsAnimModel()							{ return m_eModelType; }
 	TweenDesc&		GetTweenDesc()							{ return m_TweenDesc; }
 	const _int&		GetInstanceID() const					{ return m_iInstanceID; }
+	const _float4x4&GetPivotMatrix() const					{ return m_matPivot; }
+	const _int&		GetSocketBoneIndex() const				{ return m_iSocketBoneIndex; }
 
 	// Tool : NavMeshView
 	vector<Vec3>&	GetSurfaceVtx()							{ return m_vecSurfaceVtx; }

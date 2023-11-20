@@ -31,7 +31,7 @@ CBT_Node::BT_RETURN CMoloch_BT_Chase::OnUpdate(const _float& fTimeDelta)
 	vChaseDir.Normalize();
 
 	CBossController* pController = static_cast<CBossController*>(m_pController);
-	pController->GetMoveMessage(vChaseDir);
+	////pController->GetMoveMessage(vChaseDir);
 
 	return BT_RUNNING;
 }

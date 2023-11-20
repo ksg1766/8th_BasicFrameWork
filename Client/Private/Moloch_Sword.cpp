@@ -26,19 +26,52 @@ HRESULT CMoloch_Sword::Initialize(void* pArg)
 	if (FAILED(Ready_Scripts()))
 		return E_FAIL;
 
-	CFire* pFire = static_cast<CFire*>(m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Fire"), LAYERTAG::IGNORECOLLISION));
+	Matrix matOffset[10];
+	for (_int i = 0; i < 10; ++i)
+	{
+		CFire* pFire = static_cast<CFire*>(m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Fire"), LAYERTAG::IGNORECOLLISION));
+		pFire->GetShader()->SetPassIndex(1);
+		XMStoreFloat4x4(&matOffset[i], XMMatrixTranslation(-0.6f -0.24f * i, 0.5f + 0.15f * i, -0.4f));
+		const Matrix& matPivot = GetModel()->GetPivotMatrix();
+		matOffset[i] = matPivot * matOffset[i];
+		pFire->SetPivotMatrix(matOffset[i]);
 
-	m_vecFires.push_back(pFire);
+		m_vecFires.push_back(pFire);
+	}
 
 	return S_OK;
 }
 
 void CMoloch_Sword::Tick(const _float& fTimeDelta)
 {
-	for (auto& iter : m_vecFires)
-		iter->GetTransform()->SetPosition(GetTransform()->GetPosition() + Vec3::UnitY * 10.f);
-
 	Super::Tick(fTimeDelta);
+
+	/*const Matrix& matPivot = GetModel()->GetPivotMatrix();
+	Matrix matOffset(Matrix::Identity);
+	if (KEY_PRESSING(KEY::CTRL) && KEY_DOWN(KEY::R))
+	{
+		m_vecTemp[0] += Vec3(0.f, 0.1f, 0.f);
+	}
+	else if (KEY_PRESSING(KEY::CTRL) && KEY_DOWN(KEY::Y))
+	{
+		m_vecTemp[0] += Vec3(0.f, -0.1f, 0.f);
+	}
+	else if (KEY_PRESSING(KEY::CTRL) && KEY_DOWN(KEY::T))
+	{
+		m_vecTemp[0] += Vec3(0.f, 0.f, 0.1f);
+	}
+	else if (KEY_PRESSING(KEY::CTRL) && KEY_DOWN(KEY::G))
+	{
+		m_vecTemp[0] += Vec3(0.f, 0.f, -0.1f);
+	}
+	else if (KEY_PRESSING(KEY::CTRL) && KEY_DOWN(KEY::F))
+	{
+		m_vecTemp[0] += Vec3(0.1f, 0.f, 0.f);
+	}
+	else if (KEY_PRESSING(KEY::CTRL) && KEY_DOWN(KEY::H))
+	{
+		m_vecTemp[0] += Vec3(-0.1f, 0.f, 0.f);
+	}*/
 }
 
 void CMoloch_Sword::LateTick(const _float& fTimeDelta)
@@ -61,7 +94,11 @@ HRESULT CMoloch_Sword::Render()
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
-	GetModel()->Render();
+	if (FAILED(GetModel()->Render()))
+		return E_FAIL;
+
+	if (FAILED(Bind_FireResources()))
+		return E_FAIL;
 
 #ifdef _DEBUG
 	DebugRender();
@@ -86,6 +123,11 @@ HRESULT CMoloch_Sword::Ready_FixedComponents()
 
 	/* Com_Transform */
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Transform, TEXT("Prototype_Component_Transform"))))
+		return E_FAIL;
+
+	/* Com_RigidBody */
+	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::RigidBody, TEXT("Prototype_Component_RigidDynamic")))
+		|| FAILED(GetRigidBody()->InitializeCollider()))
 		return E_FAIL;
 
 	/* Com_Renderer */
@@ -114,6 +156,25 @@ HRESULT CMoloch_Sword::Bind_ShaderResources()
 
 	if (FAILED(GetTexture()->Bind_ShaderResource(GetShader(), "g_EmissiveTexture", 0)))
 		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CMoloch_Sword::Bind_FireResources()
+{
+	if (FAILED(m_vecFires[0]->GetShader()->Bind_Texture("g_TransformMap", GetModel()->GetSRV())))
+		return E_FAIL;
+
+	if (FAILED(m_vecFires[0]->GetShader()->Bind_RawValue("g_Tweenframes", &GetModel()->GetTweenDesc(), sizeof(TWEENDESC))))
+		return E_FAIL;
+
+	if (FAILED(m_vecFires[0]->GetShader()->Bind_RawValue("g_iSocketBoneIndex", &GetModel()->GetSocketBoneIndex(), sizeof(_int))))
+		return E_FAIL;
+
+	for (_int i = 0; i < m_vecFires.size(); ++i)
+	{
+		m_vecFires[i]->GetTransform()->Set_WorldMatrix(GetTransform()->WorldMatrix());
+	}
 
 	return S_OK;
 }
@@ -147,4 +208,9 @@ CGameObject* CMoloch_Sword::Clone(void* pArg)
 void CMoloch_Sword::Free()
 {
 	Super::Free();
+
+	for (auto& iter : m_vecFires)
+		Safe_Release(iter);
+
+	m_vecFires.clear();
 }

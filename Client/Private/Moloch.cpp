@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "BossController.h"
 #include "MonsterStats.h"
+#include "Moloch_Sword.h"
 
 #include "BT_Composite.h"
 #include "Moloch_BT_IF_Dead.h"
@@ -23,7 +24,6 @@
 #include "Moloch_BT_FullDash1.h"
 #include "Moloch_BT_Swing1.h"
 #include "Moloch_BT_Swing2.h"
-
 
 #include "Moloch_BT_IF_StartP3.h"
 #include "Moloch_BT_Swing3.h"
@@ -403,4 +403,8 @@ CGameObject* CMoloch::Clone(void* pArg)
 void CMoloch::Free()
 {
 	Super::Free();
+	for (auto& iter : m_vecParts)
+		Safe_Release(iter);
+
+	m_vecParts.clear();
 }

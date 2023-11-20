@@ -70,7 +70,7 @@ void CQuadTreeNode::Render_QuadTreeNode()
 					_iter->LateTick(0.0167f);
 				}
 #ifdef _DEBUG
-				DebugRender();
+				//DebugRender();
 #endif // _DEBUG
 			}
 		}

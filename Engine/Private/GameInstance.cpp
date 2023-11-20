@@ -113,8 +113,8 @@ void CGameInstance::DebugRender()
 	// m_pObjectManager->DebugRender();
 	m_pLevelManager->DebugRender();
 #ifdef _DEBUG
-	//if (2 == m_pLevelManager->GetCurrentLevelIndex())
-	//	m_pQuadTree->Render_QuadTree();
+	if (2 == m_pLevelManager->GetCurrentLevelIndex())
+		m_pQuadTree->Render_QuadTree();
 #endif // DEBUG
 
 }

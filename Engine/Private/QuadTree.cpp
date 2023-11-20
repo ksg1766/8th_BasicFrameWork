@@ -91,7 +91,7 @@ HRESULT CQuadTree::Build_QuadTree(_uint iNumLevels)
     RELEASE_INSTANCE(CObjectManager)
 
 #ifdef _DEBUG
-        InitDebugFrustum();
+        //InitDebugFrustum();
 #endif // DEBUG
 
 
@@ -100,32 +100,32 @@ HRESULT CQuadTree::Build_QuadTree(_uint iNumLevels)
 
 void CQuadTree::Update_QuadTree()
 {
-#ifdef NDEBUG
+//#ifdef NDEBUG
     BoundingFrustum tFrustum;
     Update_Frustum(tFrustum);
     FrustumCull(tFrustum, m_pQuadTreeRoot);
-#elif _DEBUG
-    Update_Frustum(m_tBoundingFrustum);
-    FrustumCull(m_tBoundingFrustum, m_pQuadTreeRoot);
-#endif
+//#elif _DEBUG
+    //Update_Frustum(m_tBoundingFrustum);
+    //FrustumCull(m_tBoundingFrustum, m_pQuadTreeRoot);
+//#endif
 }
 
 void CQuadTree::Update_Frustum(BoundingFrustum& tFrustum)
 {
-#ifdef NDEBUG
+//#ifdef NDEBUG
     BoundingFrustum::CreateFromMatrix(tFrustum, m_pPipeLine->Get_Transform_Matrix(CPipeLine::D3DTS_PROJ));
     tFrustum.Transform(tFrustum, m_pPipeLine->Get_Transform_Matrix_Inverse(CPipeLine::D3DTS_VIEW));
-#elif _DEBUG
-    static _bool bUpdateFrustum = true;
-    if (KEY_PRESSING_EX(KEY::CTRL) && KEY_DOWN_EX(KEY::F7))
-        bUpdateFrustum = !bUpdateFrustum;
-
-    if (!bUpdateFrustum)
-        return;
-
-    BoundingFrustum::CreateFromMatrix(m_tBoundingFrustum, m_pPipeLine->Get_Transform_Matrix(CPipeLine::D3DTS_PROJ));
-    m_tBoundingFrustum.Transform(m_tBoundingFrustum, m_pPipeLine->Get_Transform_Matrix_Inverse(CPipeLine::D3DTS_VIEW));
-#endif
+//#elif _DEBUG
+//    static _bool bUpdateFrustum = true;
+//    if (KEY_PRESSING_EX(KEY::CTRL) && KEY_DOWN_EX(KEY::F7))
+//        bUpdateFrustum = !bUpdateFrustum;
+//
+//    if (!bUpdateFrustum)
+//        return;
+//
+//    BoundingFrustum::CreateFromMatrix(m_tBoundingFrustum, m_pPipeLine->Get_Transform_Matrix(CPipeLine::D3DTS_PROJ));
+//    m_tBoundingFrustum.Transform(m_tBoundingFrustum, m_pPipeLine->Get_Transform_Matrix_Inverse(CPipeLine::D3DTS_VIEW));
+//#endif
 }
 
 void CQuadTree::Render_QuadTree()
@@ -133,27 +133,27 @@ void CQuadTree::Render_QuadTree()
     m_pQuadTreeRoot->Render_QuadTreeNode();
 
 #ifdef _DEBUG
-    m_pEffect->SetWorld(XMMatrixIdentity());
+    //m_pEffect->SetWorld(XMMatrixIdentity());
 
-    CGraphicDevice* pGrahicDevice = GET_INSTANCE(CGraphicDevice);
-    CPipeLine* pPipeLine = GET_INSTANCE(CPipeLine);
+    //CGraphicDevice* pGrahicDevice = GET_INSTANCE(CGraphicDevice);
+    //CPipeLine* pPipeLine = GET_INSTANCE(CPipeLine);
 
-    m_pEffect->SetView(pPipeLine->Get_Transform_Matrix(CPipeLine::D3DTS_VIEW));
-    m_pEffect->SetProjection(pPipeLine->Get_Transform_Matrix(CPipeLine::D3DTS_PROJ));
+    //m_pEffect->SetView(pPipeLine->Get_Transform_Matrix(CPipeLine::D3DTS_VIEW));
+    //m_pEffect->SetProjection(pPipeLine->Get_Transform_Matrix(CPipeLine::D3DTS_PROJ));
 
-    RELEASE_INSTANCE(CPipeLine);
+    //RELEASE_INSTANCE(CPipeLine);
 
-    m_pEffect->Apply(pGrahicDevice->GetContext());
+    //m_pEffect->Apply(pGrahicDevice->GetContext());
 
-    pGrahicDevice->GetContext()->IASetInputLayout(m_pInputLayout);
+    //pGrahicDevice->GetContext()->IASetInputLayout(m_pInputLayout);
 
-    RELEASE_INSTANCE(CGraphicDevice);
+    //RELEASE_INSTANCE(CGraphicDevice);
 
-    m_pBatch->Begin();
+    //m_pBatch->Begin();
 
-    DX::Draw(m_pBatch, m_tBoundingFrustum, Colors::FloralWhite);
+    //DX::Draw(m_pBatch, m_tBoundingFrustum, Colors::FloralWhite);
 
-    m_pBatch->End();
+    //m_pBatch->End();
 #endif // DEBUG
 }
 

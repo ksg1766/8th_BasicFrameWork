@@ -255,4 +255,9 @@ CGameObject* CP_Strife::Clone(void* pArg)
 void CP_Strife::Free()
 {
 	Super::Free();
+
+	for (auto& iter : m_vecParts)
+		Safe_Release(iter);
+
+	m_vecParts.clear();
 }

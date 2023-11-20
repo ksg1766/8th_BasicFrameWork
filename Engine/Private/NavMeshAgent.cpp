@@ -110,7 +110,7 @@ void CNavMeshAgent::Tick(const _float& fTimeDelta)
 void CNavMeshAgent::DebugRender()
 {
 #ifdef _DEBUG
-	CLevelManager* pInstance = GET_INSTANCE(CLevelManager);
+	/*CLevelManager* pInstance = GET_INSTANCE(CLevelManager);
 	if (2 == pInstance->GetCurrentLevelIndex())
 	{
 		if (m_IsRendered)
@@ -139,7 +139,7 @@ void CNavMeshAgent::DebugRender()
 
 		m_IsRendered = true;
 	}
-	RELEASE_INSTANCE(CLevelManager)
+	RELEASE_INSTANCE(CLevelManager)*/
 #endif
 }
 

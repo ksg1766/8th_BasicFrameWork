@@ -29,6 +29,9 @@ public:
 	virtual void	DebugRender()						override;
 	virtual HRESULT Render()							override;
 
+public:
+	void			SetPivotMatrix(Matrix& matPivot) { m_matPivot = matPivot; }
+
 private:
 	HRESULT			Bind_ShaderResources(); /* 셰이더 전역변수에 값 던진다. */
 	HRESULT			Ready_FixedComponents();
@@ -39,6 +42,8 @@ private:
 	CTexture*	m_pAlphaTexture = nullptr;
 
 	_float		m_fFrameTime = 0.f;
+
+	Matrix		m_matPivot = Matrix::Identity;
 
 public:
 	static	CFire* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

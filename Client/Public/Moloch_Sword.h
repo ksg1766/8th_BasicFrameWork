@@ -29,6 +29,7 @@ private:
 	HRESULT			Ready_FixedComponents();
 	HRESULT			Ready_Scripts();
 	HRESULT			Bind_ShaderResources(); /* 셰이더 전역변수에 값 던진다. */
+	HRESULT			Bind_FireResources(); /* 셰이더 전역변수에 값 던진다. */
 
 	vector<CFire*>	m_vecFires;
 

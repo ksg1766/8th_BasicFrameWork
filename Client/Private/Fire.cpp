@@ -84,7 +84,7 @@ HRESULT CFire::Ready_FixedComponents()
 		return E_FAIL;
 
 	/* Com_VIBuffer */
-	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Buffer, TEXT("Prototype_Component_VIBuffer_Rect"))))
+	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Buffer, TEXT("Prototype_Component_VIBuffer_Point"))))
 		return E_FAIL;
 	
 	/* Com_Transform */
@@ -101,7 +101,6 @@ HRESULT CFire::Ready_FixedComponents()
 
 	m_pNoiseTexture = static_cast<CTexture*>(m_pGameInstance->Clone_Component(this, LEVEL_STATIC, TEXT("Prototype_Component_Texture_Smoke_Tiled"), nullptr));
 	m_pAlphaTexture = static_cast<CTexture*>(m_pGameInstance->Clone_Component(this, LEVEL_STATIC, TEXT("Prototype_Component_Texture_EggMask"), nullptr));
-	//m_pAlphaTexture = static_cast<CTexture*>(m_pGameInstance->Clone_Component(this, LEVEL_STATIC, TEXT("Prototype_Component_Texture_TriangleMask"), nullptr));
 	if (!m_pNoiseTexture || !m_pAlphaTexture)
 		return E_FAIL;
 
@@ -125,22 +124,16 @@ HRESULT CFire::Bind_ShaderResources()
 	/* 셰이더 전역변수로 던져야 할 값들을 던지자. */
 	if (FAILED(GetTransform()->Bind_ShaderResources(GetShader(), "g_WorldMatrix")) ||
 		FAILED(m_pGameInstance->Bind_TransformToShader(GetShader(), "g_ViewMatrix", CPipeLine::D3DTS_VIEW)) ||
-		FAILED(m_pGameInstance->Bind_TransformToShader(GetShader(), "g_ProjMatrix", CPipeLine::D3DTS_PROJ)))
+		FAILED(m_pGameInstance->Bind_TransformToShader(GetShader(), "g_ProjMatrix", CPipeLine::D3DTS_PROJ)) ||
+		FAILED(GetShader()->Bind_RawValue("g_vCamPosition", &static_cast<const _float4&>(m_pGameInstance->Get_CamPosition_Float4()), sizeof(_float4))) ||
+		FAILED(GetTexture()->Bind_ShaderResource(GetShader(), "g_FireTexture", 0)) ||
+		FAILED(m_pNoiseTexture->Bind_ShaderResource(GetShader(), "g_NoiseTexture", 0)) ||
+		FAILED(m_pAlphaTexture->Bind_ShaderResource(GetShader(), "g_AlphaTexture", 0)) ||
+		FAILED(GetShader()->Bind_RawValue("g_fFrameTime", &m_fFrameTime, sizeof(_float))) ||
+		FAILED(GetShader()->Bind_Matrix("g_matOffset", &m_matPivot)))
 	{
 		return E_FAIL;
 	}
-
-	if (FAILED(GetTexture()->Bind_ShaderResource(GetShader(), "g_FireTexture", 0)))
-		return E_FAIL;
-	if (FAILED(m_pNoiseTexture->Bind_ShaderResource(GetShader(), "g_NoiseTexture", 0)))
-		return E_FAIL;
-	if (FAILED(m_pAlphaTexture->Bind_ShaderResource(GetShader(), "g_AlphaTexture", 0)))
-		return E_FAIL;
-	
-	if (FAILED(GetShader()->Bind_RawValue("g_fFrameTime", &m_fFrameTime, sizeof(_float))))
-		return E_FAIL;
-
-
 
 	return S_OK;
 }

@@ -16,6 +16,7 @@ CParticle::CParticle(const CParticle& rhs)
 
 HRESULT CParticle::Initialize_Prototype()
 {
+	srand(time(NULL));
 	return S_OK;
 }
 
@@ -130,7 +131,6 @@ HRESULT CParticle::Bind_ShaderResources()
 		return E_FAIL;
 	}
 
-	srand(time(NULL));
 	if (FAILED(GetTexture()->Bind_ShaderResource(GetShader(), "g_Texture", rand() % 4)))
 		return E_FAIL;
 
