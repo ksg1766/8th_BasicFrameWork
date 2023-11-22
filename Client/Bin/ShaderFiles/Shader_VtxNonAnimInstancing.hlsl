@@ -5,6 +5,7 @@
 
 Texture2D g_EmissiveTexture;
 
+matrix g_WorldMatrix;
 matrix g_ViewMatrix, g_ProjMatrix;
 
 vector g_vLightEmissive = vector(1.f, 1.f, 1.f, 1.f);
@@ -66,6 +67,25 @@ VS_OUT VS_MAIN(VS_IN In)
     Out.vTexcoord = In.vTexcoord;
     Out.vWorldPos = mul(float4(In.vPosition, 1.f), In.matWorld);
     Out.vTangent = normalize(mul(float4(In.vTangent, 0.f), In.matWorld)).xyz;
+    Out.vProjPos = Out.vPosition;
+    
+    return Out;
+}
+
+VS_OUT VS_SHADOW_MAIN(VS_IN In)
+{
+    VS_OUT Out = (VS_OUT) 0;
+
+    matrix matWV, matWVP;
+
+    matWV = mul(g_WorldMatrix, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
+
+    Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
+    Out.vNormal = normalize(mul(float4(In.vNormal, 0.f), g_WorldMatrix));
+    Out.vTexcoord = In.vTexcoord;
+    Out.vWorldPos = mul(float4(In.vPosition, 1.f), g_WorldMatrix);
+    Out.vTangent = normalize(mul(float4(In.vTangent, 0.f), g_WorldMatrix)).xyz;
     Out.vProjPos = Out.vPosition;
     
     return Out;
@@ -280,6 +300,25 @@ PS_OUT PS_LAVA_MAIN(PS_IN In)
     return Out;
 }
 
+struct PS_OUT_SHADOW
+{
+    float4 vDepth : SV_TARGET0;
+};
+
+PS_OUT_SHADOW PS_SHADOW_MAIN(PS_IN In)
+{
+    PS_OUT_SHADOW Out = (PS_OUT_SHADOW) 0;
+	
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
+    
+    if (vMtrlDiffuse.a < 0.3f)
+        discard;
+    
+    Out.vDepth = vector(In.vProjPos.w / 2000.0f, In.vProjPos.w / 2000.0f, In.vProjPos.w / 2000.0f, 1.f);
+    
+    return Out;
+}
+
 struct PS_WATER_IN
 {
     float4 vPosition : SV_POSITION;
@@ -408,6 +447,20 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_REFRACT_MAIN();
+        ComputeShader = NULL;
+    }
+
+    pass Shadow // 5
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_SHADOW_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_SHADOW_MAIN();
         ComputeShader = NULL;
     }
 }

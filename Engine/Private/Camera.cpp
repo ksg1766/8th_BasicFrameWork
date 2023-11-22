@@ -109,7 +109,7 @@ void CCamera::LateTick(const _float& fTimeDelta)
 		m_pPipeLine->Set_Transform(CPipeLine::D3DTS_PROJ, XMMatrixPerspectiveFovLH(m_fFovy, m_fAspect, m_fNear, m_fFar));
 		break;
 	case PROJECTION_MODE::ORTHOGRAPHIC:
-		m_pPipeLine->Set_Transform(CPipeLine::D3DTS_PROJ, XMMatrixOrthographicLH(m_fFovy, m_fAspect, m_fNear, m_fFar));
+		m_pPipeLine->Set_Transform(CPipeLine::D3DTS_PROJ, XMMatrixOrthographicLH(1440.f, 810.f, m_fNear, m_fFar));
 		break;
 	}
 }

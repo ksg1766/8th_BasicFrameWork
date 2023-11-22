@@ -98,7 +98,6 @@ HRESULT CLightning::Ready_FixedComponents()
 	/* Com_Texture */
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Texture, TEXT("Prototype_Component_Texture_Lightning"))))
 		return E_FAIL;
-		return E_FAIL;
 
 	return S_OK;
 }

@@ -21,6 +21,9 @@ public:
 	HRESULT Add_Light(const LIGHT_DESC& LightDesc);
 	HRESULT Render(CShader* pShader, CVIBuffer_Rect* pVIBuffer);
 
+	HRESULT GetLightViewMatrix(_uint iLightIndex = 0);
+	HRESULT GetLightProjMatrix(_uint iLightIndex = 0);
+
 private:
 	vector<CLight*>				m_vecLights;
 

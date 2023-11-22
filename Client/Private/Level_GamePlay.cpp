@@ -88,7 +88,7 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 	/* ¹æÇâ¼º ±¤¿øÀ» Ãß°¡ÇÏ³®. */
 	ZeroMemory(&LightDesc, sizeof LightDesc);
 	LightDesc.eLightType = LIGHT_DESC::LIGHT_DIRECTIONAL;
-	LightDesc.vLightDir = _float4(1.f, -1.f, 1.f, 0.f);
+	LightDesc.vLightDir = _float4(1.f, -1.5f, 1.f, 0.f);
 
 	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
 	LightDesc.vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
@@ -134,7 +134,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Terrain()
 	CGameObject* pGameObject = nullptr;
 	LAYERTAG	eLayerTag = LAYERTAG::TERRAIN;
 
-	CWater::WATER_DESC tWaterDesc = tWaterDesc = { Vec3(00.f, -5.f, 250.f), Vec2(1280.f, 500.f) };
+	CWater::WATER_DESC tWaterDesc = tWaterDesc = { Vec3(00.f, -5.f, 256.f), Vec2(1280.f, 500.f) };
 	pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_Water"), &tWaterDesc);
 	if (nullptr == pGameObject)	return E_FAIL;
 
@@ -181,8 +181,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_IgnoreCollision()
 	CGameObject* pGameObject = nullptr;
 	LAYERTAG	eLayerTag = LAYERTAG::IGNORECOLLISION;
 
-	pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_Shockwave"));
-	if (nullptr == pGameObject)	return E_FAIL;
+	/*pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_Shockwave"));
+	if (nullptr == pGameObject)	return E_FAIL;*/
 
 	return S_OK;
 }

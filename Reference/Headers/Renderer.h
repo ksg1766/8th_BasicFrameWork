@@ -13,7 +13,7 @@ class ENGINE_DLL CRenderer final : public CComponent
 public:
 	/* RG_NONBLEND : 이후 그려지는 Blend오브젝트들의 섞는 연산을 위해 반드시 불투명한 애들을 먼저 그려야한다. */
 	/* RG_BLEND : 반투명하게 그려지는 객체들도 반드시 멀리있는 놈부터 그린다. */
-	enum RENDERGROUP { RG_PRIORITY, RG_NONLIGHT, RG_NONBLEND_INSTANCE, RG_NONBLEND, RG_PARTICLE_INSTANCE, RG_WATER, RG_DISTORTION, RG_BLEND, RG_BLEND_INSTANCE, RG_UI, RG_END };
+	enum RENDERGROUP { RG_PRIORITY, RG_NONLIGHT, RG_SHADOW, RG_NONBLEND_INSTANCE, RG_NONBLEND, RG_PARTICLE_INSTANCE, RG_WATER, RG_DISTORTION, RG_BLEND, RG_BLEND_INSTANCE, RG_UI, RG_END };
 private:
 	CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);	
 	CRenderer(const CRenderer& rhs) = delete;
@@ -43,14 +43,18 @@ private:
 
 	class CTargetManager*						m_pTargetManager = { nullptr };
 	class CLightManager*						m_pLightManager = { nullptr };
+	class CGraphicDevice*						m_pGraphicDevice = nullptr;
 
 private:
 	class CVIBuffer_Rect*						m_pVIBuffer = { nullptr };
 	class CShader*								m_pShader = { nullptr };
+	ID3D11DepthStencilView*						m_pShadowDSV = nullptr;
 
 	_float4x4									m_WorldMatrix, m_ViewMatrix, m_ProjMatrix;
 	_int										m_iWaterCaptureCount = 1;
 	_int										m_iMaxWaterCaptureCount = 3;
+
+	_float4x4									m_LightView, m_LightProj;
 
 #ifdef _DEBUG
 private:

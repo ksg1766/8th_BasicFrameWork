@@ -125,11 +125,6 @@ HRESULT CMoloch_Sword::Ready_FixedComponents()
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Transform, TEXT("Prototype_Component_Transform"))))
 		return E_FAIL;
 
-	/* Com_RigidBody */
-	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::RigidBody, TEXT("Prototype_Component_RigidDynamic")))
-		|| FAILED(GetRigidBody()->InitializeCollider()))
-		return E_FAIL;
-
 	/* Com_Renderer */
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Renderer, TEXT("Prototype_Component_Renderer"))))
 		return E_FAIL;

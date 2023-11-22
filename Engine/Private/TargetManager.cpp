@@ -53,7 +53,7 @@ HRESULT CTargetManager::Bind_SRV(CShader* pShader, const wstring& strTargetTag, 
 	return pRenderTarget->Bind_SRV(pShader, pConstantName);
 }
 
-HRESULT CTargetManager::Begin_MRT(ID3D11DeviceContext* pContext, const wstring& strMRTTag)
+HRESULT CTargetManager::Begin_MRT(ID3D11DeviceContext* pContext, const wstring& strMRTTag, ID3D11DepthStencilView* pDSV)
 {
 	vector<CRenderTarget*>* pMRTList = Find_MRT(strMRTTag);
 
@@ -72,17 +72,24 @@ HRESULT CTargetManager::Begin_MRT(ID3D11DeviceContext* pContext, const wstring& 
 		pRenderTarget->Clear();
 	}
 
-	pContext->OMSetRenderTargets(iNumRTVs, pRenderTargets, m_pDSV);
+	if (!pDSV)
+		pContext->OMSetRenderTargets(iNumRTVs, pRenderTargets, m_pDSV);
+	else
+		pContext->OMSetRenderTargets(iNumRTVs, pRenderTargets, pDSV);
 
 	return	S_OK;
 }
 
-HRESULT CTargetManager::End_MRT(ID3D11DeviceContext* pContext)
+HRESULT CTargetManager::End_MRT(ID3D11DeviceContext* pContext, ID3D11DepthStencilView* pDSV)
 {
 	pContext->OMSetRenderTargets(1, &m_pBackBufferRTV, m_pDSV);
 
+	if(!pDSV)
+		Safe_Release(pDSV);
+	else
+		Safe_Release(m_pDSV);
+
 	Safe_Release(m_pBackBufferRTV);
-	Safe_Release(m_pDSV);
 
 	return	S_OK;
 }

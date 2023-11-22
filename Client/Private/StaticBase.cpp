@@ -49,6 +49,7 @@ void CStaticBase::LateTick(const _float& fTimeDelta)
 
 	Super::LateTick(fTimeDelta);
 
+	GetRenderer()->Add_RenderGroup(CRenderer::RG_SHADOW, this);
 	GetRenderer()->Add_RenderGroup(CRenderer::RG_NONBLEND_INSTANCE, this);
 	m_bRendered = true;
 }
@@ -90,6 +91,27 @@ HRESULT CStaticBase::RenderInstance()
 #ifdef _DEBUG
 	DebugRender();
 #endif
+
+	return S_OK;
+}
+
+HRESULT CStaticBase::RenderShadow(const Matrix& matLightView, const Matrix& matLightProj)
+{
+	if (FAILED(GetTransform()->Bind_ShaderResources(GetShader(), "g_WorldMatrix")))
+		return E_FAIL;
+
+	if (FAILED(GetShader()->Bind_Matrix("g_ViewMatrix", &matLightView)))
+		return E_FAIL;
+
+	if (FAILED(GetShader()->Bind_Matrix("g_ProjMatrix", &matLightProj)))
+		return E_FAIL;
+
+	GetShader()->SetPassIndex(5);
+
+	if (FAILED(GetModel()->Render()))
+		return E_FAIL;
+
+	GetShader()->SetPassIndex(0);
 
 	return S_OK;
 }

@@ -6,7 +6,9 @@ matrix	g_ViewMatrixInv;
 
 // Shadow Map
 matrix  g_LightViewMatrix;
-matrix  g_LightProjectionMatrix;
+matrix  g_LightProjMatrix;
+Texture2D g_ShadowDepthTarget;
+float g_fBias;
 
 vector	g_vCamPosition;
 vector	g_vLightDir;
@@ -197,12 +199,15 @@ struct PS_OUT_LIGHT
 {
 	float4	vShade : SV_TARGET0;
     float4 vSpecular : SV_TARGET1;
+    //float4 vLightProj : SV_TARGET2;
 };
 
 PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 {
 	PS_OUT_LIGHT		Out = (PS_OUT_LIGHT)0;
 
+    //Out.vLightProj.xy = In.vTexcoord.xy;
+    
 	vector		vNormalDesc = g_NormalTarget.Sample(PointSampler, In.vTexcoord);
     vector		vDepthDesc = g_DepthTarget.Sample(PointSampler, In.vTexcoord);
     float		fViewZ = vDepthDesc.y * 2000.f;
@@ -214,13 +219,23 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 	vector vReflect = reflect(normalize(g_vLightDir), vNormal);
     
 	vector vWorldPos;
-	
+    
 	/* 투영스페이스 상의 위치를 구한다. */
     vWorldPos.x = In.vTexcoord.x * 2.f - 1.f;
     vWorldPos.y = In.vTexcoord.y * -2.f + 1.f;
     vWorldPos.z = vDepthDesc.x;
     vWorldPos.w = 1.f;
 
+    ////////////////
+    
+    //if ((saturate(In.vTexcoord.x) == In.vTexcoord.x) && (saturate(In.vTexcoord.y) == In.vTexcoord))
+    //{
+    //    vDepthDesc
+
+    //}
+    
+    ////////////////
+        
 	/* 뷰스페이스 상의 위치를 구한다. */
     vWorldPos = vWorldPos * fViewZ;
     vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
@@ -276,27 +291,88 @@ PS_OUT_LIGHT PS_MAIN_POINT(PS_IN In)
     return Out;
 }
 
-PS_OUT PS_MAIN_DEFERRED(PS_IN In)
+sampler PointClampSampler = sampler_state
 {
-	PS_OUT		Out = (PS_OUT)0;
+    Filter = MIN_MAG_MIP_LINEAR;
+    AddressU = clamp;
+    AddressV = clamp;
+};
 
-	vector		vDiffuse = g_DiffuseTarget.Sample(PointSampler, In.vTexcoord);
-	if (vDiffuse.a == 0.f)
-		discard;
-	vector		vShade = g_ShadeTarget.Sample(LinearSampler, In.vTexcoord);
-    //vector		vSpecular = g_SpecularTarget.Sample(LinearSampler, In.vTexcoord);
+float PCF_ShadowCalculation(float4 fragPosLightSpace/*, float3 lightDir*/)
+{
+	// perform perspective divide
+    float3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+	// Transform to [0,1] range
+    projCoords.x = projCoords.x * 0.5f + 0.5f;
+    projCoords.y = projCoords.y * -0.5f + 0.5f;
+    float currentDepth = projCoords.z;
+    if (currentDepth > 1.0)
+        return 1.0;
     
-    vector vBlue = g_BlueTarget.Sample(LinearSampler, In.vTexcoord);
-    vector vDepth = g_DepthTarget.Sample(LinearSampler, In.vTexcoord);
+	// PCF
+    float shadow = 0.0;
+    float2 texelSize = float2(1.f / 1440.f, 1.f / 810.f);
+    texelSize /= 8.f;
     
-    if (vBlue.b > vDepth.y)
-        Out.vColor = vector(0.f, 1.f, 1.f, 1.f);
-    else
-        Out.vColor = vDiffuse * vShade/* + vSpecular*/;
-    
-	return Out;
+    for (int x = -1; x <= 1; ++x)
+    {
+        for (int y = -1; y <= 1; ++y)
+        {
+            float pcfDepth = g_ShadowDepthTarget.Sample(PointSampler, projCoords.xy + float2(x, y) * texelSize).r;
+            shadow += fragPosLightSpace.w > pcfDepth * 2000.f ? 0.5f : 1.0f;
+        }
+    }
+    shadow /= 9.0;
+    return shadow;
 }
 
+PS_OUT PS_MAIN_DEFERRED(PS_IN In)
+{
+    float fBias = 0.0001f;
+    PS_OUT Out = (PS_OUT) 0;
+
+    vector vDiffuse = g_DiffuseTarget.Sample(PointSampler, In.vTexcoord);
+    if (vDiffuse.a == 0.f)
+        discard;
+    vector vShade = g_ShadeTarget.Sample(LinearSampler, In.vTexcoord);
+    //vector		vSpecular = g_SpecularTarget.Sample(LinearSampler, In.vTexcoord);
+    
+    vector vBlue = g_BlueTarget.Sample(PointSampler, In.vTexcoord);
+    vector vDepth = g_DepthTarget.Sample(PointSampler, In.vTexcoord);
+    
+    if (vBlue.b > vDepth.y)
+    {
+        Out.vColor = vector(0.f, 1.f, 1.f, 1.f);
+        return Out;
+    }
+    
+    vector vWorldPos;
+    
+    /* 투영스페이스 상의 위치를 구한다. */        //vShadowDepth = input.lightViewPosition.w / 2000.f
+    vWorldPos.x = In.vTexcoord.x * 2.f - 1.f; // In.vTexcoord.x = vWorldPos.x / 2.f + 0.5f; // vWorldPos.x = vPosition.x / vPosition.w
+    vWorldPos.y = In.vTexcoord.y * -2.f + 1.f;
+    vWorldPos.z = vDepth.x;
+    vWorldPos.w = 1.f;
+
+	/* 뷰스페이스 상의 위치를 구한다. */
+    float fViewZ = (vDepth.y - fBias) * 2000.f;
+    vWorldPos = vWorldPos * fViewZ;
+    vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
+
+	/* 월드까지 가자. */
+    vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
+
+	/* 광원기준의 뷰랑 투영행렬을 곱한다. */
+    vector vPosition = mul(vWorldPos, g_LightViewMatrix);
+    vPosition = mul(vPosition, g_LightProjMatrix);
+    //
+    float shadow = PCF_ShadowCalculation(vPosition);
+    
+    Out.vColor = (vDiffuse * vShade) * float4(shadow, shadow, shadow, 1.f) /* + vSpecular*/;
+    
+    return Out;
+}
+ 
 PS_REFRACTION_OUT PS_MAIN_REFRACTION(PS_IN In)
 {
     PS_REFRACTION_OUT Out = (PS_REFRACTION_OUT) 0;
@@ -538,7 +614,7 @@ VS_OUT_SHADOW VS_MAIN_SHADOW(VS_IN_SHADOW In)
     // 노말 벡터를 정규화합니다.
     Out.vNormal = normalize(Out.vNormal);
     
-    vWorldPos = mul(In.vPosition, g_WorldMatrix);
+    vWorldPos = mul(float4(In.vPosition, 1.f), g_WorldMatrix);
 
     // 조명의 위치에서의 정점의 위치를 조명의 위치와 정점의 월드 위치를 이용하여 계산합니다.
     Out.vLightPos = g_vLightPos.xyz - vWorldPos.xyz;
