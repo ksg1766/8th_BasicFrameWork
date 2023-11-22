@@ -83,6 +83,27 @@ HRESULT CCameraManager::ChangeCamera(const wstring& strName)
 	return S_OK;
 }
 
+void CCameraManager::UpdateReflectionMatrix(_float fWaterLevel)
+{
+	CTransform* pCamTransform = m_pCurrentCamera->GetTransform();
+	const Vec3& vCamPosition = pCamTransform->GetPosition();
+	const Vec3& vCamForward = pCamTransform->GetForward();
+	const Vec3& vCamRight = pCamTransform->GetRight();
+
+	Vec3 vTargetPos = vCamPosition + vCamForward;
+
+	_float fReflectionCamYCoord = -vCamPosition.y + 2 * fWaterLevel;
+	Vec3 vReflectionCamPos(vCamPosition.x, fReflectionCamYCoord, vCamPosition.z);
+
+	_float fReflectionTargetYCoord = -vTargetPos.y + 2 * fWaterLevel;
+	Vec3 vReflectionCamTarget(vTargetPos.x, fReflectionTargetYCoord, vTargetPos.z);
+
+	Vec3 vForward = vReflectionCamTarget - vReflectionCamPos;
+	Vec3 vReflectionCamUp = vCamRight.Cross(vForward);
+
+	m_matReflect = XMMatrixLookAtLH(vReflectionCamPos, vReflectionCamTarget, vReflectionCamUp);
+}
+
 void CCameraManager::Free()
 {
 	Safe_Release(m_pCurrentCamera);

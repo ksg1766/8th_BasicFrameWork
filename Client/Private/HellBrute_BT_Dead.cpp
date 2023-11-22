@@ -4,8 +4,6 @@
 #include "GameObject.h"
 #include "MonoBehaviour.h"
 #include "DissolveManager.h"
-//Temp
-#include "HellHound.h"
 
 CHellBrute_BT_Dead::CHellBrute_BT_Dead()
 {

@@ -1,5 +1,6 @@
 #pragma once
 #include "Base.h"
+#include "Hasher.h"
 
 BEGIN(Engine)
 
@@ -21,10 +22,10 @@ public:
 	HRESULT Bind_SRV(CShader* pShader, const wstring& strTargetTag, const _char* pConstantName);
 
 	/* strMRTTag에 해당하는 list에 담겨있는 타겟들을 장치에 바인딩한다. */
-	HRESULT Begin_MRT(ID3D11DeviceContext* pContext, const wstring& strMRTTag);
+	HRESULT Begin_MRT(ID3D11DeviceContext* pContext, const wstring& strMRTTag, ID3D11DepthStencilView* pDSV = nullptr);
 
 	/* 다시 원래 상태로 복구한다. */
-	HRESULT End_MRT(ID3D11DeviceContext* pContext);
+	HRESULT End_MRT(ID3D11DeviceContext* pContext, ID3D11DepthStencilView* pDSV = nullptr);
 
 #ifdef _DEBUG
 public:
@@ -36,10 +37,10 @@ private:
 	vector<CRenderTarget*>* Find_MRT(const wstring& strMRTTag);
 
 private:
-	map<const wstring, CRenderTarget*>			m_RenderTargets;
+	unordered_map<const wstring, CRenderTarget*, djb2Hasher>			m_RenderTargets;
 
 	/* 장치에 동시에 바인딩되어야하는 타겟들을 미리 묶어두겠다. */
-	map<const wstring, vector<CRenderTarget*>>	m_MRTs;
+	unordered_map<const wstring, vector<CRenderTarget*>, djb2Hasher>	m_MRTs;
 
 private:
 	ID3D11RenderTargetView* m_pBackBufferRTV = { nullptr };

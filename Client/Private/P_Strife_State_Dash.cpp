@@ -29,11 +29,11 @@ void CP_Strife_State_Dash::Tick(const _float& fTimeDelta)
 {
 	CPlayerController* pController = static_cast<CPlayerController*>(m_pController);
 
-	if (3 == m_iFrameCOunter++)
+	if (5 == m_iFrameCounter++)
 	{
 		CStrife_MotionTrail::MOTIONTRAIL_DESC desc{ m_pModel, &m_pModel->GetTweenDesc(), m_pGameObject->GetTransform()->WorldMatrix(), 0.18f };
 		m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Strife_MotionTrail"), LAYERTAG::IGNORECOLLISION, &desc);
-		m_iFrameCOunter = 0;
+		m_iFrameCounter = 0;
 	}
 
 	m_fTimeSum += fTimeDelta;

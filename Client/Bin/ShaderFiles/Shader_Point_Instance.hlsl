@@ -8,16 +8,8 @@ matrix			g_ViewMatrix, g_ProjMatrix;
 Texture2D		g_Texture;
 
 vector g_vLightDir = vector(1.f, -1.f, 1.f, 0.f);
-//vector g_vLightPos = vector(0.f, 0.f, 0.f, 1.f);
-//float g_fLightRange = 0.f;
-//vector g_vLightDiffuse = vector(1.f, 1.f, 1.f, 1.f);
-//vector g_vLightAmbient = vector(1.f, 1.f, 1.f, 1.f);
-//vector g_vLightSpecular = vector(1.f, 1.f, 1.f, 1.f);
 vector g_vLightEmissive = vector(1.f, 1.f, 1.f, 1.f);
 
-//vector g_vMtrlAmbient = vector(0.4f, 0.4f, 0.4f, 1.f);
-//vector g_vMtrlSpecular = vector(1.f, 1.f, 1.f, 1.f);
-//vector g_vMtrlEmissive = vector(1.f, 1.f, 0.f, 1.f);
 vector g_vMtrlEmissive = vector(1.f, 1.f, 0.1f, 1.f);
 
 vector g_vCamPosition;
@@ -149,7 +141,7 @@ struct PS_OUT
 };
 
 /* 전달받은 픽셀의 정보를 이용하여 픽셀의 최종적인 색을 결정하자. */
-PS_OUT PS_MAIN(PS_IN In) 
+PS_OUT PS_YELLOW_MAIN(PS_IN In) 
 {
 	PS_OUT Out = (PS_OUT)0;
 
@@ -158,17 +150,46 @@ PS_OUT PS_MAIN(PS_IN In)
     if (vDiffuse.r < 0.01f)
         discard;
 	
-    Out.vGlow = g_vMtrlEmissive;
-	//Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
-    //Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);
+    vector vYellow = (1.f, 1.f, 0.1f, 1.f);
+    Out.vGlow = vYellow;
 
 	return Out;
+}
+
+PS_OUT PS_RED_MAIN(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    vector vDiffuse = g_Texture.Sample(PointSampler, In.vTexcoord);
+   
+    if (vDiffuse.r < 0.01f)
+        discard;
+	
+    vector vRed = (1.f, 0.05f, 0.0f, 1.f);
+    Out.vGlow = vRed;
+
+    return Out;
+}
+
+PS_OUT PS_BLUE_MAIN(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    vector vDiffuse = g_Texture.Sample(PointSampler, In.vTexcoord);
+   
+    if (vDiffuse.r < 0.01f)
+        discard;
+	
+    vector vBlue = (0.0f, 0.05f, 1.f, 1.f);
+    Out.vGlow = vBlue;
+
+    return Out;
 }
 
 technique11 DefaultTechnique
 {
 	/* */
-	pass Particle
+	pass ParticleYellow
 	{
 		SetRasterizerState(RS_Default);
 		SetDepthStencilState(DSS_Default, 0);
@@ -179,7 +200,38 @@ technique11 DefaultTechnique
 		GeometryShader = compile gs_5_0 GS_MAIN();
 		HullShader = NULL;
 		DomainShader = NULL;
-		PixelShader = compile ps_5_0 PS_MAIN();
+        PixelShader = compile ps_5_0 PS_YELLOW_MAIN();
+        ComputeShader = NULL;
+    }
+
+    pass ParticleRed
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+
+		/* 여러 셰이더에 대해서 각각 어떤 버젼으로 빌드하고 어떤 함수를 호출하여 해당 셰이더가 구동되는지를 설정한다. */
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = compile gs_5_0 GS_MAIN();
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_RED_MAIN();
+        ComputeShader = NULL;
+
+    }
+
+    pass ParticleBlue
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+
+		/* 여러 셰이더에 대해서 각각 어떤 버젼으로 빌드하고 어떤 함수를 호출하여 해당 셰이더가 구동되는지를 설정한다. */
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = compile gs_5_0 GS_MAIN();
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_BLUE_MAIN();
         ComputeShader = NULL;
 
     }

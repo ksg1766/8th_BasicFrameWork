@@ -46,7 +46,7 @@ private:
 	CShader*			m_pShader = nullptr;
 
 	_int				m_Item_Current = 0;
-	wstring				m_strFilePath = TEXT("NavigationMesh");
+	wstring				m_strFilePath = TEXT("MainStageNavMesh");
 
 	vector<CellData*>	m_vecCells;
 	vector<_char*>		m_strCells;

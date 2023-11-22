@@ -51,7 +51,7 @@ HRESULT CParticleController::Initialize(void* pArg)
 	m_fLifeTIme = RandomLifeTime(RandomDevice);
 
 	m_pTransform->SetScale(Vec3(fScale));
-	m_pTransform->SetPosition(Vec3(m_tProps.vCenter.x + RandomX(RandomNumber), 1.f + m_tProps.vCenter.y + RandomY(RandomNumber), m_tProps.vCenter.z + RandomZ(RandomNumber)));
+	m_pTransform->SetPosition(Vec3(m_tProps.vCenter.x + RandomX(RandomNumber), 2.f + m_tProps.vCenter.y + RandomY(RandomNumber), m_tProps.vCenter.z + RandomZ(RandomNumber)));
 
 	//m_pTransform->WorldMatrix().Backward(m_vSpeed);
 
@@ -63,22 +63,32 @@ HRESULT CParticleController::Initialize(void* pArg)
 
 void CParticleController::Tick(const _float& fTimeDelta)
 {
-	switch (m_tProps.eType)
+	m_fLifeTIme -= fTimeDelta;
+	
+	if (m_fLifeTIme > 0.f)
 	{
-	case ParticleType::FLY:
-		RandomFly(fTimeDelta);
-		break;
-	case ParticleType::FLOAT:
-		RandomFloat(fTimeDelta);
-		break;
-	case ParticleType::EXPLODE:
-		RandomExplode(fTimeDelta);
-		break;
+		switch (m_tProps.eType)
+		{
+		case ParticleType::FLY:
+			RandomFly(fTimeDelta);
+			break;
+		case ParticleType::FLOAT:
+			RandomFloat(fTimeDelta);
+			break;
+		case ParticleType::EXPLODE:
+			RandomExplode(fTimeDelta);
+			break;
+		}
+	}
+	else
+	{
+		m_pGameInstance->DeleteObject(m_pGameObject);
 	}
 }
 
 void CParticleController::LateTick(const _float& fTimeDelta)
 {
+	//m_pGameObject->GetShader()->Bind_RawValue("g_vMtrlEmissive", &m_tProps.vColor, sizeof(Color));
 }
 
 void CParticleController::DebugRender()
@@ -87,25 +97,27 @@ void CParticleController::DebugRender()
 
 void CParticleController::RandomFly(const _float& fTimeDelta)
 {
-	m_fLifeTIme -= fTimeDelta;
+	const Vec3& vSpeed = m_tProps.vSpeedMin;
 
-	if (m_fLifeTIme > 0.f)
-	{
-		m_vSpeed.y -= 0.07f;
-		m_pTransform->Translate(m_vSpeed * fTimeDelta);
-	}
-	else
-	{
-		m_pGameInstance->DeleteObject(m_pGameObject);
-	}
+	m_vSpeed.x -= vSpeed.x * fTimeDelta;
+	m_vSpeed.y -= vSpeed.y * fTimeDelta;
+	m_vSpeed.z -= vSpeed.z * fTimeDelta;
+	m_pTransform->Translate(m_vSpeed * fTimeDelta);
 }
 
 void CParticleController::RandomFloat(const _float& fTimeDelta)
 {
+	m_vSpeed.x *= (1.f - fTimeDelta);
+	m_vSpeed.y *= (1.f - fTimeDelta);
+	m_vSpeed.y += 2.f * fTimeDelta;
+	m_vSpeed.z *= (1.f - fTimeDelta);
+	m_pTransform->Translate(m_vSpeed * fTimeDelta);
 }
 
 void CParticleController::RandomExplode(const _float& fTimeDelta)
 {
+	m_vSpeed.y -= 0.07f;
+	m_pTransform->Translate(m_vSpeed * fTimeDelta);
 }
 
 CParticleController* CParticleController::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

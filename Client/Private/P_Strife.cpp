@@ -47,12 +47,20 @@ HRESULT CP_Strife::Initialize(void* pArg)
 void CP_Strife::Tick(const _float& fTimeDelta)
 {
 	Super::Tick(fTimeDelta);
+
+	if (KEY_PRESSING(KEY::CTRL) && KEY_DOWN(KEY::L))
+	{
+		CGameObject* pGameObject = m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Lightning"), LAYERTAG::IGNORECOLLISION);
+		pGameObject->GetTransform()->SetScale(Vec3(2.4f, 1.2f, 2.4f));
+		pGameObject->GetTransform()->Translate(GetTransform()->GetPosition() + 2.f * Vec3::UnitY);
+	}
 }
 
 void CP_Strife::LateTick(const _float& fTimeDelta)
 {
 	Super::LateTick(fTimeDelta);
 
+	GetRenderer()->Add_RenderGroup(CRenderer::RG_SHADOW, this);
 	GetRenderer()->Add_RenderGroup(CRenderer::RG_NONBLEND, this);
 }
 
@@ -72,8 +80,27 @@ HRESULT CP_Strife::Render()
 	GetModel()->Render();
 
 #ifdef _DEBUG
-	DebugRender();
+	//DebugRender();
 #endif
+
+	return S_OK;
+}
+
+HRESULT CP_Strife::RenderShadow(const Matrix& matLightView, const Matrix& matLightProj)
+{
+	if (FAILED(GetTransform()->Bind_ShaderResources(GetShader(), "g_WorldMatrix")))
+		return E_FAIL;
+
+	if (FAILED(GetShader()->Bind_Matrix("g_ViewMatrix", &matLightView)))
+		return E_FAIL;
+
+	if (FAILED(GetShader()->Bind_Matrix("g_ProjMatrix", &matLightProj)))
+		return E_FAIL;
+
+	GetShader()->SetPassIndex(5);
+
+	if (FAILED(GetModel()->Render()))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -83,6 +110,7 @@ HRESULT CP_Strife::Ready_FixedComponents()
 	/* Com_Shader */
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Shader, TEXT("Prototype_Component_Shader_VtxTexFetchAnim"))))
 		return E_FAIL;
+	GetShader()->SetPassIndex(4);
 
 	/* Com_Model */
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Model, TEXT("Prototype_Component_Model_") + GetObjectTag())))
@@ -206,6 +234,8 @@ HRESULT CP_Strife::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
+	
+	GetShader()->SetPassIndex(4);
 
 	return S_OK;
 }
@@ -254,4 +284,9 @@ CGameObject* CP_Strife::Clone(void* pArg)
 void CP_Strife::Free()
 {
 	Super::Free();
+
+	for (auto& iter : m_vecParts)
+		Safe_Release(iter);
+
+	m_vecParts.clear();
 }

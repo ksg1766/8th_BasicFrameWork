@@ -203,9 +203,10 @@ void CMonsterController::Hit(_int iDamage)
 	m_pStats->Damaged(iDamage);
 
 	CParticleController::PARTICLE_DESC tParticleDesc;
-	tParticleDesc.eType = CParticleController::ParticleType::FLY;
+	tParticleDesc.eType = CParticleController::ParticleType::FLOAT;
 	tParticleDesc.vCenter = m_pTransform->GetPosition();
-	for (_int i = 0; i < 25; ++i)
+	tParticleDesc.iPass = 0;
+	for (_int i = 0; i < 15; ++i)
 		m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Particle"), LAYERTAG::IGNORECOLLISION, &tParticleDesc);
 
 	if (m_pStats->GetHP() <= 0)
@@ -222,6 +223,7 @@ void CMonsterController::Hit(_int iDamage)
 void CMonsterController::Look(const Vec3& vPoint, const _float& fTimeDelta)
 {
 	Vec3 vDir = vPoint - m_pTransform->GetPosition();
+	vDir.y = 0.f;
 	vDir.Normalize();
 	const Vec3& vForward = m_pTransform->GetForward();
 

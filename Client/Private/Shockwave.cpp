@@ -64,6 +64,9 @@ HRESULT CShockwave::Render()
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
+	if (FAILED(GetShader()->Begin()))
+		return E_FAIL;
+
 	if(FAILED(GetBuffer()->Render()))
 		return E_FAIL;
 

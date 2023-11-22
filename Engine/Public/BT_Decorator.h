@@ -25,16 +25,8 @@ public:
 
 	virtual BT_NODETYPE	NodeType()	override							{ return BT_NODETYPE::DECORATOR; }
 
-	void				SetFunctionPtr(function<_bool()> ftCondition)	{ m_ftCondition = ftCondition; }
-	void				SetLimitCount(_int iLimitCount)					{ m_iLimitCount = iLimitCount; }
-
 protected:
 	DecoratorType		m_eDecoratorType = DecoratorType::TYPE_END;
-
-	_int				m_iLimitCount = 0;
-	_int				m_iCounter = 0;
-
-	function<_bool()>	m_ftCondition;
 
 public:
 	static	CBT_Decorator* Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, CMonoBehaviour* pController, DecoratorType eDecoratorType);

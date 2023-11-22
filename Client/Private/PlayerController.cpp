@@ -57,6 +57,14 @@ void CPlayerController::Tick(const _float& fTimeDelta)
 	else if (m_vNetTrans.Length() > EPSILON)
 		Translate(fTimeDelta);
 
+	//////////
+	if (KEY_PRESSING(KEY::CTRL) && KEY_DOWN(KEY::N))
+	{
+		m_pTransform->SetPosition(Vec3(82.f, 6.5f, 41.f));
+		m_pGameObject->GetNavMeshAgent()->SetCurrentIndex(573);
+	}
+	//////////
+
 	if (!m_pNavMeshAgent->Walkable(m_pTransform->GetPosition()))
 	{
 		m_pTransform->SetPosition(m_vPrePos);
@@ -157,6 +165,7 @@ void CPlayerController::Translate(const _float& fTimeDelta)
 void CPlayerController::Look(const Vec3& vPoint, const _float& fTimeDelta)
 {
 	Vec3 vDir = vPoint - m_pTransform->GetPosition();
+	vDir.y = 0.f;
 	vDir.Normalize();
 	const Vec3& vForward = m_pTransform->GetForward();
 
@@ -168,7 +177,7 @@ void CPlayerController::Look(const Vec3& vPoint, const _float& fTimeDelta)
 		if (vLeftRight.y < 0)
 			vRotateAmount.y = -vRotateAmount.y;
 
-		m_pTransform->RotateYAxisFixed(0.3f * vRotateAmount);
+		m_pTransform->RotateYAxisFixed(0.2f * vRotateAmount);
 	}
 }
 

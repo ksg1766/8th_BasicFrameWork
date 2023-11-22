@@ -207,6 +207,16 @@ HRESULT CMainApp::Ready_Prototype_Components()
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Shockwave.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_Shader_Fire*/
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_Fire"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Fire.hlsl"), VTXPOINT::Elements, VTXPOINT::iNumElements))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Shader_Lightning*/
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_Lightning"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Lightning.hlsl"), VTXPOINT::Elements, VTXPOINT::iNumElements))))
+		return E_FAIL;
+
 	/* For.Prototype_Component_Shader_ComputeParticles*/
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_ComputeParticles"),
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_ComputeParticles.hlsl"), nullptr, 0))))
@@ -232,7 +242,7 @@ HRESULT CMainApp::Ready_Prototype_Components()
 		CVIBuffer_Point::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	/* For.Prototype_Component_VIBuffer_Rect */
+	/* For.Prototype_Component_Terrain */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Terrain"),
 		CTerrain::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
@@ -270,13 +280,93 @@ HRESULT CMainApp::Ready_Prototype_Components()
 	
 	/* For.Prototype_Component_Texture_SkyBox */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_SkyBox"),
-		//CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/SkyBox/Hell.dds")))))
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/SkyBox/Sunset.dds")))))
+		return E_FAIL;
+	
+	/* For.Prototype_Component_Texture_SkyPlane */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_SkyPlane"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/SkyBox/SkyPlane.png")))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Lava_A_emissive */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Lava_A_emissive"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Emissive/Lava_A_emissive0.png")))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Lava_B_emissive */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Lava_B_emissive"),
+		//CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Emissive/Lava_B_erh.dds")))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Emissive/Lava_A_emissive1.png")))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Noise_Liquid */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Noise_Liquid"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Noise/Noise_Liquid.png")))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_TremorCrystal_A_emissive */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_TremorCrystal_A_emissive"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Emissive/TremorCrystal_A_emissive.png")))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_TremorCrystal_B_emissive */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_TremorCrystal_B_emissive"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Emissive/TremorCrystal_B_emissive.png")))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Moloch_Sword_emissive */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Moloch_Sword_emissive"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Emissive/Moloch_Sword_emissive.png")))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_Dissolve */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Dissolve"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Dissolve/DissolvePattern%d.dds"), 5))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Mask_Swipe*/
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Mask_Swipe"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Mask/Mask_Swipe.png")))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Noise_RGB*/
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Noise_RGB"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Noise/Noise_RGB.png")))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_TriangleMask*/
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_TriangleMask"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Mask/TriangleMask.png")))))
+		return E_FAIL;
+	
+	/* For.Prototype_Component_Texture_EggMask*/
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_EggMask"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Mask/EggMask.png")))))
+		return E_FAIL;
+	
+	/* For.Prototype_Component_Texture_Smoke_Tiled*/
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Smoke_Tiled"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Fire/Smoke_Tiled.png")))))
+		return E_FAIL;
+	
+	/* For.Prototype_Component_Texture_Fire_Tiled*/
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Fire_Tiled"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Fire/Fire_Tiled.png")))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Lightning_Bolts*/
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Lightning_Bolts"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Lightning/Lightning_Bolts%d.png"), 4))))
+		return E_FAIL;
+	
+	/* For.Prototype_Component_Texture_Lightning_Spearhead*/
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Lightning_Spearhead"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Lightning/Lightning_Spearhead%d.png"), 4))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Lightning_Spark*/
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Lightning_Spark"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Lightning/Lightning_Spark%d.png"), 4))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Model_Static */
@@ -298,6 +388,15 @@ HRESULT CMainApp::Ready_Prototype_Components()
 			else if (TEXT("Strife_GunR") == strFileName)
 			{
 				XMStoreFloat4x4(&matPivot, XMMatrixScaling(0.007f, 0.007f, 0.007f) * XMMatrixRotationY(XMConvertToRadians(172.0f)) * XMMatrixRotationX(XMConvertToRadians(98.0f)) * XMMatrixTranslation(-0.15f, 0.f, 0.095f));
+				if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_" + strFileName),
+					CModel::Create(m_pDevice, m_pContext, strStaticFilePath + strFileName, desc, matPivot))))
+					return E_FAIL;
+			}
+			else if (TEXT("Moloch_Sword") == strFileName)
+			{
+				//XMStoreFloat4x4(&matPivot, XMMatrixScaling(0.007f, 0.007f, 0.007f) * XMMatrixRotationY(XMConvertToRadians(172.0f)) * XMMatrixRotationX(XMConvertToRadians(98.0f)) * XMMatrixTranslation(-0.15f, 0.f, 0.095f));
+				XMStoreFloat4x4(&matPivot, XMMatrixScaling(0.007f, 0.007f, 0.007f) * XMMatrixRotationY(XMConvertToRadians(80.f)) * XMMatrixRotationX(XMConvertToRadians(270.0f)) * XMMatrixRotationY(XMConvertToRadians(270.f)) * XMMatrixRotationZ(XMConvertToRadians(330.0f))
+					* XMMatrixTranslation(1.6f, 0.4f, -2.5f));
 				if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_" + strFileName),
 					CModel::Create(m_pDevice, m_pContext, strStaticFilePath + strFileName, desc, matPivot))))
 					return E_FAIL;
@@ -326,6 +425,22 @@ HRESULT CMainApp::Ready_Prototype_Components()
 				desc.vecSocketBoneNames.push_back("Bone_Strife_Weapon_Dagger_L_end");
 				desc.vecSocketBoneNames.push_back("Bone_Strife_Weapon_Dagger_R_end");
 
+				if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_" + strFileName),
+					CModel::Create(m_pDevice, m_pContext, strSkeletalFilePath + strFileName, desc, matPivot))))
+					return E_FAIL;
+			}
+			else if (TEXT("Moloch") == strFileName)
+			{
+				desc.vecSocketBoneNames.push_back("Bone_Moloch_Hand_R");
+
+				XMStoreFloat4x4(&matPivot, XMMatrixScaling(0.01f, 0.01f, 0.01f));
+				if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_" + strFileName),
+					CModel::Create(m_pDevice, m_pContext, strSkeletalFilePath + strFileName, desc, matPivot))))
+					return E_FAIL;
+			}
+			else if (TEXT("Dagon") == strFileName)
+			{
+				XMStoreFloat4x4(&matPivot, XMMatrixScaling(0.01f, 0.01f, 0.01f));
 				if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_" + strFileName),
 					CModel::Create(m_pDevice, m_pContext, strSkeletalFilePath + strFileName, desc, matPivot))))
 					return E_FAIL;

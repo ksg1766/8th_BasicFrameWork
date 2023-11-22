@@ -16,6 +16,7 @@ public:
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg) override;
 	HRESULT			InitializeJustGrid(const _uint& iSizeX, const _uint& iSizeZ, const _uint iCX = 64, const _uint iCZ = 64);
+	HRESULT			InitializeNorTex(const _uint& iSizeX, const _uint& iSizeZ, const _uint iCX = 64, const _uint iCZ = 64);
 	HRESULT			InitializeWithHeightMap(const wstring& strHeightMapPath);
 	void			DebugRender()	override;
 

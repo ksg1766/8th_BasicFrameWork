@@ -13,9 +13,14 @@ vector g_vLightEmissive = vector(1.f, 1.f, 1.f, 1.f);
 
 vector g_vMtrlAmbient = vector(0.4f, 0.4f, 0.4f, 1.f);
 vector g_vMtrlSpecular = vector(1.f, 1.f, 1.f, 1.f);
-vector g_vMtrlEmissive = vector(1.f, 0.f, 0.f, 1.f);
+//vector g_vMtrlEmissive = vector(1.f, 0.f, 0.f, 1.f);
+vector g_vMtrlEmissive = vector(1.f, 0.843137324f, 0.f, 1.f);
 
 vector g_vCamPosition;
+
+vector g_ColorOffset;
+
+Texture2D g_DepthTarget;
 
 struct tagKeyframeDesc
 {
@@ -168,6 +173,21 @@ struct PS_OUT
     float4 vDiffuse : SV_TARGET0;
     float4 vNormal : SV_TARGET1;
     float4 vDepth : SV_TARGET2;
+    float4 vEmissive : SV_TARGET3;
+};
+
+struct PS_OUT_BLUE
+{
+    float4 vDiffuse : SV_TARGET0;
+    float4 vNormal : SV_TARGET1;
+    float4 vDepth : SV_TARGET2;
+    float4 vEmissive : SV_TARGET3;
+    float4 vBlue : SV_TARGET4;
+};
+    
+struct PS_OUT_SHADOW
+{
+    float4 vDepth : SV_TARGET0;
 };
 
 PS_OUT PS_MAIN(PS_IN In)
@@ -184,17 +204,6 @@ PS_OUT PS_MAIN(PS_IN In)
     Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);
-    
-  //  vector vShade = max(dot(normalize(g_vLightDir) * -1.f, normalize(In.vNormal)), 0.f) +
-		//g_vLightAmbient * g_vMtrlAmbient;
-
-  //  vector vReflect = reflect(normalize(g_vLightDir), normalize(In.vNormal));
-  //  vector vLook = In.vWorldPos - g_vCamPosition;
-
-  //  float fSpecular = pow(max(dot(normalize(vLook) * -1.f, normalize(vReflect)), 0.f), 30.f);
-
-  //  Out.vColor = (g_vLightDiffuse * vMtrlDiffuse) * saturate(vShade) +
-		//(g_vLightSpecular * g_vMtrlSpecular) * fSpecular;
 
     return Out;
 }
@@ -213,29 +222,7 @@ PS_OUT PS_RIM_MAIN(PS_IN In)
     Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);
-    
- //   vector vShade = max(dot(normalize(g_vLightDir) * -1.f, normalize(In.vNormal)), 0.f) +
-	//	g_vLightAmbient * g_vMtrlAmbient;
-
- //   vector vReflect = reflect(normalize(g_vLightDir), normalize(In.vNormal));
- //   vector vLook = In.vWorldPos - g_vCamPosition;
-
- //   float fSpecular = pow(max(dot(normalize(vLook) * -1.f, normalize(vReflect)), 0.f), 30.f);
-	
- //   // Rim Light
- //   float3 E = normalize(-vLook);
-
- //   float value = saturate(dot(E, float3(In.vNormal.xyz)));
- //   float fEmissive = 1.0f - value;
-
-	//// min, max, x
- //   fEmissive = smoothstep(0.0f, 1.0f, fEmissive);
- //   fEmissive = pow(fEmissive, 2);
-	////
- //   Out.vColor = (g_vLightDiffuse * vMtrlDiffuse) * saturate(vShade) +
-	//	(g_vLightSpecular * g_vMtrlSpecular) * fSpecular +
-	//(g_vLightEmissive * g_vMtrlEmissive) * fEmissive;
-    
+        
     // Temp
     vector vLook = In.vWorldPos - g_vCamPosition;
      // Rim Light
@@ -246,10 +233,9 @@ PS_OUT PS_RIM_MAIN(PS_IN In)
 
 	// min, max, x
     fEmissive = smoothstep(0.0f, 1.0f, fEmissive);
-    //fEmissive = pow(fEmissive, 2);
+    fEmissive = pow(fEmissive, 2);
 	//
-    Out.vDiffuse = Out.vDiffuse +
-	(g_vLightEmissive * g_vMtrlEmissive) * fEmissive;
+    Out.vEmissive = g_vMtrlEmissive * fEmissive;
     
     return Out;
 }
@@ -269,17 +255,6 @@ PS_OUT PS_DISSOLVE_MAIN(PS_IN In)
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);
     
-  //  vector vShade = max(dot(normalize(g_vLightDir) * -1.f, normalize(In.vNormal)), 0.f) +
-		//g_vLightAmbient * g_vMtrlAmbient;
-
-  //  vector vReflect = reflect(normalize(g_vLightDir), normalize(In.vNormal));
-  //  vector vLook = In.vWorldPos - g_vCamPosition;
-
-  //  float fSpecular = pow(max(dot(normalize(vLook) * -1.f, normalize(vReflect)), 0.f), 30.f);
-
-  //  Out.vColor = (g_vLightDiffuse * vMtrlDiffuse) * saturate(vShade) +
-		//(g_vLightSpecular * g_vMtrlSpecular) * fSpecular;
-
     ComputeDissolveColor(Out.vDiffuse, In.vTexcoord);
     
     return Out;
@@ -294,13 +269,45 @@ PS_OUT PS_ALPHA_MAIN(PS_IN In)
     if (vMtrlDiffuse.a < 0.3f)
         discard;
 	
-    vector vShade = max(dot(normalize(g_vLightDir) * -1.f, normalize(In.vNormal)), 0.f) +
-		g_vLightAmbient * g_vMtrlAmbient;
+    // 뭐야 이게 왜 있어
+    //vector vShade = max(dot(normalize(g_vLightDir) * -1.f, normalize(In.vNormal)), 0.f) +
+	//	g_vLightAmbient * g_vMtrlAmbient;
 
-    Out.vDiffuse = (g_vLightDiffuse * vMtrlDiffuse) * saturate(vShade);
+    Out.vDiffuse = g_vLightDiffuse * vMtrlDiffuse;
     
-    Out.vDiffuse.b += 0.18f;
+    Out.vDiffuse += g_ColorOffset;
     Out.vDiffuse.a = 0.45f;
+    
+    return Out;
+}
+
+PS_OUT_BLUE PS_BLUE_MAIN(PS_IN In)
+{
+    PS_OUT_BLUE Out = (PS_OUT_BLUE) 0;
+	
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
+    
+    if (vMtrlDiffuse.a < 0.3f)
+        discard;
+    
+    Out.vDiffuse = vMtrlDiffuse;
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);
+    Out.vBlue = vector(0.f, In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f);
+    
+    return Out;
+}
+
+PS_OUT_SHADOW PS_SHADOW_MAIN(PS_IN In)
+{
+    PS_OUT_SHADOW Out = (PS_OUT_SHADOW) 0;
+	
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
+    
+    if (vMtrlDiffuse.a < 0.3f)
+        discard;
+    
+    Out.vDepth = vector(In.vProjPos.w / 2000.0f, In.vProjPos.w / 2000.0f, In.vProjPos.w / 2000.0f, 1.f);
     
     return Out;
 }
@@ -360,5 +367,33 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_ALPHA_MAIN();
+    }
+
+    pass BlueMesh
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_BLUE_MAIN();
+        ComputeShader = NULL;
+    }
+
+    pass ShadowMesh // 5
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_SHADOW_MAIN();
+        ComputeShader = NULL;
     }
 }

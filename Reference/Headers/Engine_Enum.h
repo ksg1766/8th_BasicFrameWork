@@ -13,11 +13,11 @@ namespace Engine
 		DEFAULT_LAYER_END,
 
 		// DYNAMIC_LAYER
+		IGNORECOLLISION,	// 이게 플레이어보다 앞에 있는게 맞는가.
 		PLAYER,
 		UNIT_AIR,
 		UNIT_GROUND,
 		EQUIPMENT,	// DYNAMIC이 맞을까 잘 모르겠다.
-		IGNORECOLLISION,
 		DYNAMIC_LAYER_END,
 
 		// STATIC_LAYER
@@ -48,11 +48,11 @@ namespace Engine
 		"UI",
 		"DEFAULT_LAYER_END",
 
+		"IGNORECOLLISION",
 		"PLAYER",
 		"UNIT_AIR",
 		"UNIT_GROUND",
 		"EQUIPMENT",
-		"IGNORECOLLISION",
 		"DYNAMIC_LAYER_END",
 
 		"TERRAIN",

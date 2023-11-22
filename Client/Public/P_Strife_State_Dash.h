@@ -37,7 +37,7 @@ private:
 	void	Input(const _float& fTimeDelta);
 
 private:
-	_int	m_iFrameCOunter = 0;
+	_int	m_iFrameCounter = 0;
 
 public:
 	static	CP_Strife_State_Dash* Create(CGameObject* pGameObject, const STATEANIMS& tStateAnim, CMonoBehaviour* pController);

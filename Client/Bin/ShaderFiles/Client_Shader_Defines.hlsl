@@ -12,7 +12,6 @@ RasterizerState RS_Skybox
 	FrontCounterClockwise = false;
 };
 
-
 RasterizerState RS_Default
 {
     FillMode = Solid;
@@ -28,6 +27,12 @@ DepthStencilState DSS_Default
 	DepthEnable = true;
 	DepthWriteMask = all;
 	DepthFunc = less_equal;
+};
+
+DepthStencilState DSS_None
+{
+    DepthEnable = false;
+    DepthWriteMask = zero;
 };
 
 DepthStencilState DSS_Skybox
@@ -59,7 +64,6 @@ BlendState BS_OneBlend
     SrcBlend = One;
     DestBlend = One;
     BlendOp = Add;
-
 };
 
 #endif

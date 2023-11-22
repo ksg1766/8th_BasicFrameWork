@@ -29,7 +29,6 @@ struct VS_OUT
     float3		vTexcoord : TEXCOORD0;
 };
 
-
 VS_OUT VS_MAIN(VS_IN In)
 {
 	VS_OUT		Out = (VS_OUT)0;
@@ -97,7 +96,7 @@ technique11 DefaultTechnique
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
 
-        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
 	/*	SetBlendState(DefaultBlendState);
 		SetRasterizerState();
 		*/

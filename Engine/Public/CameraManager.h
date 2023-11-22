@@ -24,11 +24,14 @@ public:
 	HRESULT AddCamera(const wstring& strName, CGameObject* pCamera);
 	HRESULT DeleteCamera(const wstring& strName);
 	HRESULT ChangeCamera(const wstring& strName);
+	void	UpdateReflectionMatrix(_float fWaterLevel);
+	_matrix GetReflectionMatrix() { return m_matReflect; }
 
 private:
 	using CameraHash = unordered_map<const wstring, CGameObject*, djb2Hasher>;
 	CameraHash		m_hashCamera;
 	CGameObject*	m_pCurrentCamera = nullptr;
+	_matrix			m_matReflect;
 
 public:
 	virtual void Free() override;

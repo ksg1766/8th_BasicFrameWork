@@ -124,9 +124,6 @@
     <Filter Include="01.Utiltiy\04.Component\11.Model\00.Bone">
       <UniqueIdentifier>{8e7de421-9933-411e-944f-e4f2db0b4482}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utiltiy\04.Component\11.Model\01.Mesh">
-      <UniqueIdentifier>{ca11ab3f-e0c9-44a0-9e86-9f5eafa4d113}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Utiltiy\04.Component\11.Model\02.Animation">
       <UniqueIdentifier>{1b419f23-da88-4885-af05-f5f653656b54}</UniqueIdentifier>
     </Filter>
@@ -222,6 +219,9 @@
     </Filter>
     <Filter Include="01.Utiltiy\04.Component\06.Shader\ShaderFiles">
       <UniqueIdentifier>{138519d8-a1c4-4005-b2b0-7879c16c1854}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utiltiy\04.Component\11.Model\01.Mesh">
+      <UniqueIdentifier>{ca11ab3f-e0c9-44a0-9e86-9f5eafa4d113}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

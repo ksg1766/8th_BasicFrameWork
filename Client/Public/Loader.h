@@ -39,8 +39,6 @@ private:
 	HANDLE					m_hThread = { 0 };
 	CRITICAL_SECTION		m_Critical_Section;
 
-
-
 private:
 	HRESULT Loading_For_Level_Logo();
 	HRESULT Loading_Components_For_Level_Logo();

@@ -5,11 +5,11 @@
 
 BEGIN(Client)
 
-class CStaticBase final : public CGameObject
+class CStaticBase : public CGameObject
 {
 	using Super = CGameObject;
 
-private:
+protected:
 	/* 원형을 생성할 때 */
 	CStaticBase(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	/* 사본을 생성할 때 */
@@ -24,8 +24,9 @@ public:
 	virtual void	DebugRender()						override;
 	virtual HRESULT Render()							override;
 	virtual HRESULT RenderInstance()					override;
+	virtual HRESULT RenderShadow(const Matrix& matLightView, const Matrix& matLightProj)	override;
 
-private:
+protected:
 	HRESULT			Ready_FixedComponents();
 	HRESULT			Ready_Scripts();
 	HRESULT			Bind_ShaderResources(); /* 셰이더 전역변수에 값 던진다. */
