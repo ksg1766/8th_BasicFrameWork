@@ -44,6 +44,7 @@
 #include "Lava.h"
 #include "Water.h"
 #include "Fire.h"
+#include "Lightning.h"
 
 CLoader::CLoader(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: m_pDevice(pDevice)
@@ -211,11 +212,6 @@ HRESULT CLoader::Loading_Components_For_Level_GamePlay()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Strife_Ammo_Default"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Ammo/Strife_Ammo_Default_%d.png"), 4))))
 		return E_FAIL;
-
-	/* For.Prototype_Component_Texture_Strife_Ammo_Static*/
-	/*if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Strife_Ammo_Static"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Ammo/Strife_Ammo_Static_%d.png"), 9))))
-		return E_FAIL;*/
 	
 	/* For.Prototype_Component_Texture_Strife_Ammo_Static*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Strife_Ammo_Beam"),
@@ -257,7 +253,7 @@ HRESULT CLoader::Loading_Components_For_Level_GamePlay()
 		CStateMachine::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	/* For.Prototype_Component_StateMachine */
+	/* For.Prototype_Component_BehaviorTree */
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_BehaviorTree"),
 		CBehaviorTree::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
@@ -398,6 +394,10 @@ HRESULT CLoader::Loading_GameObjects_For_Level_GamePlay()
 
 	/* For.Prototype_GameObject_Fire*/
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Fire"), CFire::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Lightning */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Lightning"), CLightning::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_Particle */

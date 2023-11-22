@@ -52,7 +52,7 @@ private:
 
 	_float4x4									m_WorldMatrix, m_ViewMatrix, m_ProjMatrix;
 	_int										m_iWaterCaptureCount = 1;
-	_int										m_iMaxWaterCaptureCount = 3;
+	_int										m_iMaxWaterCaptureCount = 10;
 
 	_float4x4									m_LightView, m_LightProj;
 

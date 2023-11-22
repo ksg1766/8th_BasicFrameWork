@@ -52,12 +52,12 @@ CBT_Node::BT_RETURN CMoloch_BT_Eruption1::OnUpdate(const _float& fTimeDelta)
 			Vec3 vCreatePosition[9] = {
 				m_vTargetPos - 2.5f * Vec3::UnitY,
 				m_vTargetPos + 9.f * (pTargetTransform->GetForward() + 0.75f * pTargetTransform->GetRight()) - 3.1f * Vec3::UnitY,
-				m_vTargetPos + 9.f * (pTargetTransform->GetForward() - 0.75f * pTargetTransform->GetRight()) - 3.1f * Vec3::UnitY,
-				m_vTargetPos - 9.f * (pTargetTransform->GetForward() + 0.75f * pTargetTransform->GetRight()) - 3.1f * Vec3::UnitY,
+				m_vTargetPos + 9.f * (pTargetTransform->GetForward() - 0.7f * pTargetTransform->GetRight()) - 3.1f * Vec3::UnitY,
+				m_vTargetPos - 9.f * (pTargetTransform->GetForward() + 0.7f * pTargetTransform->GetRight()) - 3.1f * Vec3::UnitY,
 				m_vTargetPos - 9.f * (pTargetTransform->GetForward() - 0.75f * pTargetTransform->GetRight()) - 3.1f * Vec3::UnitY,
 				m_vTargetPos + 9.f * (2.f * pTargetTransform->GetForward()) - 3.1f * Vec3::UnitY,
-				m_vTargetPos - 9.f * (2.f * pTargetTransform->GetForward()) - 3.1f * Vec3::UnitY,
-				m_vTargetPos + 9.f * (1.5f * pTargetTransform->GetRight()) - 3.1f * Vec3::UnitY,
+				m_vTargetPos - 9.f * (2.f * pTargetTransform->GetForward()) - 3.f * Vec3::UnitY,
+				m_vTargetPos + 9.f * (1.5f * pTargetTransform->GetRight()) - 3.f * Vec3::UnitY,
 				m_vTargetPos - 9.f * (1.5f * pTargetTransform->GetRight()) - 3.1f * Vec3::UnitY,
 			};
 
@@ -77,7 +77,8 @@ CBT_Node::BT_RETURN CMoloch_BT_Eruption1::OnUpdate(const _float& fTimeDelta)
 			tParticleDesc.eType = CParticleController::ParticleType::EXPLODE;
 			tParticleDesc.vSpeedMax = _float3(5.f, 10.f, 5.f);
 			tParticleDesc.vSpeedMin = _float3(-5.f, 7.f, -5.f);
-			tParticleDesc.vColor = Color(1.f, 0.f, 0.05f, 1.f);
+			tParticleDesc.iPass = 1;
+			//tParticleDesc.vColor = Color(1.f, 0.f, 0.05f, 1.f);
 
 			for (_int i = 0; i < 9; ++i)
 			{

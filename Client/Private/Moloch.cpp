@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "..\Public\Moloch.h"
 #include "GameInstance.h"
-#include "BossController.h"
+#include "MonsterController.h"
 #include "MonsterStats.h"
 #include "Moloch_Sword.h"
 
@@ -149,10 +149,11 @@ HRESULT CMoloch::Ready_Scripts()
 	if (LEVEL_GAMEPLAY == m_pGameInstance->GetCurrentLevelIndex())
 	{
 		/* Com_BossController */
-		if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::Script, TEXT("Prototype_Component_BossController"))))
+		//if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::Script, TEXT("Prototype_Component_BossController"))))
+		if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::Script, TEXT("Prototype_Component_MonsterController"))))
 			return E_FAIL;
 
-		m_pController = dynamic_cast<CBossController*>(m_vecScripts[0]);
+		m_pController = dynamic_cast<CMonsterController*>(m_vecScripts[0]);
 
 		/* Com_MonsterStats */
 		CMonsterStats::MONSTERSTAT stats = { 3000, 20 };

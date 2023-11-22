@@ -166,5 +166,7 @@ CGameObject* CFire::Clone(void* pArg)
 
 void CFire::Free()
 {
+	Safe_Release(m_pNoiseTexture);
+	Safe_Release(m_pAlphaTexture);
 	Super::Free();
 }

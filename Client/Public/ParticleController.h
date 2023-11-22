@@ -27,7 +27,8 @@ public:
 		_float3			vSpeedMin = _float3(-3.2f, 2.5f, -3.2f), vSpeedMax = _float3(3.2f, 3.5f, 3.2f);
 		_float			fScaleMin = 0.1f, fScaleMax = 0.2f;
 		_float			fLifeTimeMin = 1.f, fLifeTimeMax = 2.f;
-		Color			vColor = Color(1.f, 1.f, 0.1f, 1.f);
+		//Color			vColor = Color(1.f, 1.f, 0.1f, 1.f);
+		_int			iPass = 0;
 	}PARTICLE_DESC;
 
 private:

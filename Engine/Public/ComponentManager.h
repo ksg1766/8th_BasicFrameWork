@@ -23,7 +23,6 @@
 #include "VIBuffer_Grid.h"
 #include "VIBuffer_Instance.h"
 
-
 /* 컴포넌트들의 원형을 보관한다. */
 /* 사본은? 실제 컴포넌트를 사용하고자하는 객체들이 각각 보관한다. */
 
@@ -45,8 +44,8 @@ public:
 private:
 	_uint											m_iNumLevels = { 0 };
 	/* 원형객체들을 레벨별로 보관할까?! */
-	map<const wstring, class CComponent*>*			m_pPrototypes = { nullptr };
-	typedef map<const wstring, class CComponent*>	PROTOTYPES;
+	unordered_map<const wstring, class CComponent*, djb2Hasher>*	m_pPrototypes = { nullptr };
+	typedef unordered_map<const wstring, class CComponent*, djb2Hasher>	PROTOTYPES;
 
 private:
 	class CComponent* Find_Prototype(_uint iLevelIndex, const wstring& strPrototypeTag);

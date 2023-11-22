@@ -354,6 +354,21 @@ HRESULT CMainApp::Ready_Prototype_Components()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Fire/Fire_Tiled.png")))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_Texture_Lightning_Bolts*/
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Lightning_Bolts"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Lightning/Lightning_Bolts%d.png"), 4))))
+		return E_FAIL;
+	
+	/* For.Prototype_Component_Texture_Lightning_Spearhead*/
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Lightning_Spearhead"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Lightning/Lightning_Spearhead%d.png"), 4))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Lightning_Spark*/
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Lightning_Spark"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Lightning/Lightning_Spark%d.png"), 4))))
+		return E_FAIL;
+
 	/* For.Prototype_Component_Model_Static */
 	{
 		wstring strStaticFilePath = TEXT("../Bin/Resources/Models/Static/");

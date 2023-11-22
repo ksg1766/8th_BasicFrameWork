@@ -47,10 +47,10 @@ CBT_Node::BT_RETURN CMoloch_BT_FullDash1::OnUpdate(const _float& fTimeDelta)
 			const Vec3& vPos = pTransform->GetPosition();
 
 			Vec3 vCreatePosition[4] = {
-				vPos + 3.f * (pTransform->GetForward() + 0.75f * pTransform->GetRight()),
-				vPos + 3.f * (pTransform->GetForward() - 0.75f * pTransform->GetRight()),
-				vPos + 2.f * (pTransform->GetForward() + 1.1f * pTransform->GetRight()),
-				vPos + 2.f * (pTransform->GetForward() - 1.1f * pTransform->GetRight())
+				vPos + 3.f * (pTransform->GetForward() + 0.6f * pTransform->GetRight()),
+				vPos + 3.f * (pTransform->GetForward() - 0.6f * pTransform->GetRight()),
+				vPos + 2.f * (pTransform->GetForward() + 1.5f * pTransform->GetRight()),
+				vPos + 2.f * (pTransform->GetForward() - 1.5f * pTransform->GetRight())
 			};
 
 			CTremorCrystal::EFFECT_DESC desc;
@@ -70,14 +70,16 @@ CBT_Node::BT_RETURN CMoloch_BT_FullDash1::OnUpdate(const _float& fTimeDelta)
 
 			CParticleController::PARTICLE_DESC tParticleDesc;
 			tParticleDesc.eType = CParticleController::ParticleType::EXPLODE;
+			tParticleDesc.fScaleMax = 0.4f;
+			tParticleDesc.fScaleMin = 0.2f;
 			tParticleDesc.vSpeedMax = _float3(5.f, 10.f, 5.f);
 			tParticleDesc.vSpeedMin = _float3(-5.f, 7.f, -5.f);
-			tParticleDesc.vColor = Color(1.f, 0.f, 0.1f, 1.f);
+			tParticleDesc.iPass = 1;
 
 			for (_int i = 0; i < 4; ++i)
 			{
 				tParticleDesc.vCenter = pCrystal[i]->GetTransform()->GetPosition();
-				for (_int i = 0; i < 15; ++i)
+				for (_int i = 0; i < 20; ++i)
 					m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Particle"), LAYERTAG::IGNORECOLLISION, &tParticleDesc);
 			}
 

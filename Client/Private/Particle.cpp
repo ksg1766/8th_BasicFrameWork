@@ -22,6 +22,8 @@ HRESULT CParticle::Initialize_Prototype()
 
 HRESULT CParticle::Initialize(void* pArg)
 {
+	m_iPass = reinterpret_cast<CParticleController::PARTICLE_DESC*>(pArg)->iPass;
+
 	if (FAILED(Ready_FixedComponents()))
 		return E_FAIL;
 
@@ -40,6 +42,7 @@ void CParticle::LateTick(const _float& fTimeDelta)
 {
 	Super::LateTick(fTimeDelta);
 
+	GetShader()->SetPassIndex(m_iPass);
 	GetRenderer()->Add_RenderGroup(CRenderer::RG_PARTICLE_INSTANCE, this);
 }
 
@@ -74,7 +77,7 @@ HRESULT CParticle::RenderInstance()
 #ifdef _DEBUG
 	DebugRender();
 #endif
-
+	GetShader()->SetPassIndex(m_iPass);
 	GetShader()->Begin();
 
 	return S_OK;

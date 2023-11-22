@@ -682,7 +682,7 @@ HRESULT CRenderer::Render_Shadow()
 
 	const Vec3& vPos = pPlayer->GetTransform()->GetPosition();
 	_vector vPosition = XMVectorSet(vPos.x, vPos.y, vPos.z, 1.f);
-	_vector vEyePosition = XMVectorSet(vPos.x - 60.f, vPos.y + 90.f, vPos.z - 60.f, 1.f);
+	_vector vEyePosition = XMVectorSet(vPos.x - 66.f, vPos.y + 99.f, vPos.z - 66.f, 1.f);
 
 	D3D11_VIEWPORT		ViewportDesc;
 
@@ -1097,15 +1097,6 @@ HRESULT CRenderer::Render_Deferred()
 	if (FAILED(m_pShader->Bind_Matrix("g_LightProjMatrix", &m_LightProj)))
 		return E_FAIL;
 		
-	static _float fBias = 0.000f;
-	if (KEY_DOWN(KEY::G))
-		fBias -= 0.0001f;
-	else if (KEY_DOWN(KEY::H))
-		fBias += 0.0001f;
-
-	if (FAILED(m_pShader->Bind_RawValue("g_fBias", &fBias, sizeof(_float))))
-		return E_FAIL;
-
 	m_pShader->SetPassIndex(3);
 	if (FAILED(m_pShader->Begin()))
 		return E_FAIL;

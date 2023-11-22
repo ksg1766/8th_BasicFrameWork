@@ -49,7 +49,7 @@ void CTremorCrystal::Tick(const _float& fTimeDelta)
 		tParticleDesc.vSpeedMax = _float3(5.f, 10.f, 5.f);
 		tParticleDesc.vSpeedMin = _float3(-5.f, 7.f, -5.f);
 		tParticleDesc.vCenter = GetTransform()->GetPosition();
-		tParticleDesc.vColor = Color(1.f, 0.f, 0.1f, 1.f);
+		tParticleDesc.iPass = 1;
 		for (_int i = 0; i < 25; ++i)
 			m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Particle"), LAYERTAG::IGNORECOLLISION, &tParticleDesc);
 

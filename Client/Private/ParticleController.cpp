@@ -88,7 +88,7 @@ void CParticleController::Tick(const _float& fTimeDelta)
 
 void CParticleController::LateTick(const _float& fTimeDelta)
 {
-	m_pGameObject->GetShader()->Bind_RawValue("g_vMtrlEmissive", &m_tProps.vColor, sizeof(Color));
+	//m_pGameObject->GetShader()->Bind_RawValue("g_vMtrlEmissive", &m_tProps.vColor, sizeof(Color));
 }
 
 void CParticleController::DebugRender()
@@ -109,7 +109,7 @@ void CParticleController::RandomFloat(const _float& fTimeDelta)
 {
 	m_vSpeed.x *= (1.f - fTimeDelta);
 	m_vSpeed.y *= (1.f - fTimeDelta);
-	m_vSpeed.y += fTimeDelta;
+	m_vSpeed.y += 2.f * fTimeDelta;
 	m_vSpeed.z *= (1.f - fTimeDelta);
 	m_pTransform->Translate(m_vSpeed * fTimeDelta);
 }

@@ -228,6 +228,7 @@ void CBossController::Hit(_int iDamage)
 	CParticleController::PARTICLE_DESC tParticleDesc;
 	tParticleDesc.eType = CParticleController::ParticleType::FLY;
 	tParticleDesc.vCenter = m_pTransform->GetPosition();
+	tParticleDesc.iPass = 1;
 	for (_int i = 0; i < 25; ++i)
 		m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Particle"), LAYERTAG::IGNORECOLLISION, &tParticleDesc);
 
