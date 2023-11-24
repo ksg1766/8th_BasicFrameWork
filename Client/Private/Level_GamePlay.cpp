@@ -73,8 +73,8 @@ HRESULT CLevel_GamePlay::LateTick(const _float& fTimeDelta)
 	// TODO: 꼭 여기 말고 더 좋은 위치를 찾도록 하자....
 	m_pGameInstance->LateTick_Collision(fTimeDelta);
 
+	m_pGameInstance->Render_QuadTree(fTimeDelta);
 #ifdef _DEBUG
-	m_pGameInstance->Render_QuadTree();
 #endif // !DEBUG
 
 
@@ -88,7 +88,7 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 	/* 방향성 광원을 추가하낟. */
 	ZeroMemory(&LightDesc, sizeof LightDesc);
 	LightDesc.eLightType = LIGHT_DESC::LIGHT_DIRECTIONAL;
-	LightDesc.vLightDir = _float4(1.f, -1.2f, 1.f, 0.f);
+	LightDesc.vLightDir = _float4(1.f, -1.5f, 1.f, 0.f);
 
 	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
 	LightDesc.vAmbient = _float4(1.f, 1.f, 1.f, 1.f);

@@ -34,7 +34,7 @@ public: /* For.GraphicDevice */
 public: /* For.QuadTRee */
 	HRESULT			Build_QuadTree(_uint iNumLevels);
 	void			Update_QuadTree();
-	void			Render_QuadTree();
+	void			Render_QuadTree(const _float& fTimeDelta);
 
 public: /* For.LevelManager */
 	HRESULT			Open_Level(_uint iLevelIndex, class CLevel* pNewLevel);

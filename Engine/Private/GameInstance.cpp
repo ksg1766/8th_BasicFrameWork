@@ -113,8 +113,8 @@ void CGameInstance::DebugRender()
 	// m_pObjectManager->DebugRender();
 	m_pLevelManager->DebugRender();
 #ifdef _DEBUG
-	if (2 == m_pLevelManager->GetCurrentLevelIndex())
-		m_pQuadTree->Render_QuadTree();
+	//if (2 == m_pLevelManager->GetCurrentLevelIndex())
+	//	m_pQuadTree->Render_QuadTree(fTimeDelta);
 #endif // DEBUG
 
 }
@@ -183,9 +183,9 @@ void CGameInstance::Update_QuadTree()
 	m_pQuadTree->Update_QuadTree();
 }
 
-void CGameInstance::Render_QuadTree()
+void CGameInstance::Render_QuadTree(const _float& fTimeDelta)
 {
-	m_pQuadTree->Render_QuadTree();
+	m_pQuadTree->Render_QuadTree(fTimeDelta);
 }
 
 HRESULT CGameInstance::Open_Level(_uint iLevelIndex, CLevel * pNewLevel)

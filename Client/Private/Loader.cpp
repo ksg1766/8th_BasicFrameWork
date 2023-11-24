@@ -20,6 +20,7 @@
 #include "MainCamera.h"
 #include "StaticTest.h"
 #include "StaticBase.h"
+#include "Arena.h"
 #include "P_Strife.h"
 #include "HellHound.h"
 #include "HellBrute.h"
@@ -34,7 +35,6 @@
 #include "Strife_Ammo_Default.h"
 #include "Strife_Ammo_Beam.h"
 #include "SkyBox.h"
-#include "SkyPlane.h"
 #include "Particle.h"
 #include "ParticleController.h"
 #include "Strife_MotionTrail.h"
@@ -45,6 +45,9 @@
 #include "Water.h"
 #include "Fire.h"
 #include "Lightning.h"
+#include "Bubble.h"
+#include "Wave_Ring.h"
+#include "GeyserCrack.h"
 
 CLoader::CLoader(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: m_pDevice(pDevice)
@@ -408,10 +411,6 @@ HRESULT CLoader::Loading_GameObjects_For_Level_GamePlay()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_SkyBox"), CSkyBox::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	/* For.Prototype_GameObject_SkyBoxBig */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_SkyPlane"), CSkyPlane::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-
 	/* For.Prototype_GameObject_Strife_MotionTrail */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Strife_MotionTrail"), CStrife_MotionTrail::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
@@ -440,8 +439,24 @@ HRESULT CLoader::Loading_GameObjects_For_Level_GamePlay()
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_TremorCrystal_B"), CTremorCrystal::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	/* For.Prototype_GameObject_Bubble */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Bubble"), CBubble::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	
+	/* For.Prototype_GameObject_Wave_Ring */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Wave_Ring"), CWave_Ring::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	/* For.Prototype_GameObject_Moloch_SwordSlash */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Moloch_Sword_Slash"), CMoloch_SwordSlash::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Arena */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Arena"), CArena::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	
+	/* For.Prototype_GameObject_GeyserCrack */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_GeyserCrack"), CGeyserCrack::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_Static */
@@ -453,7 +468,9 @@ HRESULT CLoader::Loading_GameObjects_For_Level_GamePlay()
 		if (strFileName == TEXT("Strife_GunL") || strFileName == TEXT("Strife_GunR") ||
 			strFileName == TEXT("Lava_East_B1") || strFileName == TEXT("Water_Pond") ||
 			strFileName == TEXT("Moloch_Sword") || strFileName == TEXT("TremorCrystal_A") ||
-			strFileName == TEXT("TremorCrystal_B") || strFileName == TEXT("Moloch_Sword_Slash")
+			strFileName == TEXT("TremorCrystal_B") || strFileName == TEXT("Moloch_Sword_Slash") ||
+			strFileName == TEXT("Arena") || strFileName == TEXT("Bubble") ||
+			strFileName == TEXT("Wave_Ring")
 			/* || strFileName == TEXT("LavaUpdate2") ||
 			strFileName == TEXT("LavaUpdate") || strFileName == TEXT("Lava_East_A1")*/)
 			continue;

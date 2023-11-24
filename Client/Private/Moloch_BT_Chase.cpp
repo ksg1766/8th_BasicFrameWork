@@ -3,7 +3,7 @@
 #include "GameInstance.h"
 #include "Layer.h"
 #include "GameObject.h"
-#include "BossController.h"
+#include "MonsterController.h"
 
 CMoloch_BT_Chase::CMoloch_BT_Chase()
 {
@@ -30,7 +30,8 @@ CBT_Node::BT_RETURN CMoloch_BT_Chase::OnUpdate(const _float& fTimeDelta)
 	Vec3 vChaseDir = vTargetPos - vCurrentPos;
 	vChaseDir.Normalize();
 
-	CBossController* pController = static_cast<CBossController*>(m_pController);
+	CMonsterController* pController = static_cast<CMonsterController*>(m_pController);
+	pController->GetMaxSpeedMessage();
 	////pController->GetMoveMessage(vChaseDir);
 
 	return BT_RUNNING;

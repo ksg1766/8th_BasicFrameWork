@@ -3,7 +3,7 @@
 #include "GameInstance.h"
 #include "Layer.h"
 #include "GameObject.h"
-#include "BossController.h"
+#include "MonsterController.h"
 #include "Moloch_MotionTrail.h"
 #include "TremorCrystal.h"
 #include "Particle.h"
@@ -20,7 +20,7 @@ void CMoloch_BT_FullDash1::OnStart()
 	m_bAttack = false;
 	m_vTargetPos = GetTarget()->GetTransform()->GetPosition();
 
-	CBossController* pController = static_cast<CBossController*>(m_pController);
+	CMonsterController* pController = static_cast<CMonsterController*>(m_pController);
 	pController->Look(m_vTargetPos);
 }
 
@@ -33,7 +33,7 @@ CBT_Node::BT_RETURN CMoloch_BT_FullDash1::OnUpdate(const _float& fTimeDelta)
 	{
 
 
-		//CBossController* pController = static_cast<CBossController*>(m_pController);
+		//CMonsterController* pController = static_cast<CMonsterController*>(m_pController);
 		//pController->GetAttackMessage(0);
 
 		return BT_SUCCESS;
@@ -47,14 +47,14 @@ CBT_Node::BT_RETURN CMoloch_BT_FullDash1::OnUpdate(const _float& fTimeDelta)
 			const Vec3& vPos = pTransform->GetPosition();
 
 			Vec3 vCreatePosition[4] = {
-				vPos + 3.f * (pTransform->GetForward() + 0.6f * pTransform->GetRight()),
-				vPos + 3.f * (pTransform->GetForward() - 0.6f * pTransform->GetRight()),
-				vPos + 2.f * (pTransform->GetForward() + 1.5f * pTransform->GetRight()),
-				vPos + 2.f * (pTransform->GetForward() - 1.5f * pTransform->GetRight())
+				vPos + 4.f * (1.5f * pTransform->GetForward() + 0.4f * pTransform->GetRight()) - 0.4f * Vec3::UnitY,
+				vPos + 4.f * (1.5f * pTransform->GetForward() - 0.4f * pTransform->GetRight()) - 0.4f * Vec3::UnitY,
+				vPos + 3.f * (pTransform->GetForward() + 1.7f * pTransform->GetRight()) - 0.4f * Vec3::UnitY,
+				vPos + 3.f * (pTransform->GetForward() - 1.7f * pTransform->GetRight()) - 0.4f * Vec3::UnitY
 			};
 
 			CTremorCrystal::EFFECT_DESC desc;
-			desc.fLifeTime = 10.f;
+			desc.fLifeTime = 7.f;
 
 			CGameObject* pCrystal[4] = {
 				m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_TremorCrystal_A"), LAYERTAG::IGNORECOLLISION, &desc),
@@ -92,8 +92,8 @@ CBT_Node::BT_RETURN CMoloch_BT_FullDash1::OnUpdate(const _float& fTimeDelta)
 	{
 		if (fDistance > 4.f)
 		{
-			CBossController* pController = static_cast<CBossController*>(m_pController);
-			pController->GetMaxSpeedMessage();
+			CMonsterController* pController = static_cast<CMonsterController*>(m_pController);
+			pController->GetDashSpeedMessage();
 			pController->GetTranslateMessage(m_pGameObject->GetTransform()->GetForward());
 		}
 
@@ -112,10 +112,6 @@ CBT_Node::BT_RETURN CMoloch_BT_FullDash1::OnUpdate(const _float& fTimeDelta)
 
 void CMoloch_BT_FullDash1::OnEnd()
 {
-	CBossController* pController = static_cast<CBossController*>(m_pController);
-	pController->GetDashMessage(false);
-
-	static_cast<CRigidDynamic*>(m_pGameObject->GetRigidBody())->IsKinematic(true);
 	Super::OnEnd();
 }
 
@@ -125,7 +121,7 @@ void CMoloch_BT_FullDash1::ConditionalAbort(const _float& fTimeDelta)
 
 _bool CMoloch_BT_FullDash1::IsZeroHP()
 {
-	if (static_cast<CBossController*>(m_pController)->IsZeroHP())
+	if (static_cast<CMonsterController*>(m_pController)->IsZeroHP())
 		return true;
 
 	return false;

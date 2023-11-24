@@ -13,6 +13,7 @@ CMonsterController::CMonsterController(ID3D11Device* pDevice, ID3D11DeviceContex
 	:Super(pDevice, pContext)
 	, m_vLinearSpeed(Vec3(3.f, 3.f, 3.f))
 	, m_vMaxLinearSpeed(Vec3(5.f, 5.f, 5.f))
+	, m_vDashLinearSpeed(Vec3(20.f, 20.f, 20.f))
 	, m_vAngularSpeed(Vec3(0.f, 360.f, 0.f))
 	, m_vMaxAngularSpeed(Vec3(0.f, 540.f, 0.f))
 {
@@ -151,12 +152,21 @@ void CMonsterController::Move(const _float& fTimeDelta)
 {
 	m_vNetMove.Normalize();
 
-	/*Vec3 vSpeed = (m_bMax ? m_vMaxLinearSpeed : m_vLinearSpeed) * fTimeDelta * m_vNetMove;
-	m_pTransform->Translate(vSpeed);*/ //TODO: 테스트 해볼 것
+	Vec3 vSpeed;
+	if (!m_bMax && !m_bDash)
+		vSpeed = fTimeDelta * m_vLinearSpeed * m_vNetMove;
+	else if (m_bMax)
+	{
+		vSpeed = fTimeDelta * m_vMaxLinearSpeed * m_vNetMove;
+		m_bMax = false;
+	}
+	else if (m_bDash)
+	{
+		vSpeed = fTimeDelta * m_vDashLinearSpeed * m_vNetMove;
+		m_bDash = false;
+	}
 
-	Vec3 vSpeed = fTimeDelta * (m_bMax * m_vMaxLinearSpeed + (1 - m_bMax) * m_vLinearSpeed) * m_vNetMove;
 	m_pTransform->Translate(vSpeed);
-	if (m_bMax) m_bMax = false;
 
 	const Vec3& vForward = m_pTransform->GetForward();
 	_float fRadian = acos(vForward.Dot(m_vNetMove));
@@ -179,14 +189,33 @@ void CMonsterController::Translate(const _float& fTimeDelta)
 {
 	m_vNetTrans.Normalize();
 
-	Vec3 vSpeed = fTimeDelta * (m_bMax * m_vMaxLinearSpeed + (1 - m_bMax) * m_vLinearSpeed) * m_vNetTrans;
+	Vec3 vSpeed;
+	if (!m_bMax && !m_bDash)
+		vSpeed = fTimeDelta * m_vLinearSpeed * m_vNetTrans;
+	else if (m_bMax)
+	{
+		vSpeed = fTimeDelta * m_vMaxLinearSpeed * m_vNetTrans;
+		m_bMax = false;
+	}
+	else if (m_bDash)
+	{
+		vSpeed = fTimeDelta * m_vDashLinearSpeed * m_vNetTrans;
+		m_bDash = false;
+	}
 	m_pTransform->Translate(vSpeed);
-	if (m_bMax) m_bMax = false;
 
 	m_vNetTrans = Vec3::Zero;
 }
 
-void CMonsterController::Attack()
+void CMonsterController::Dash(const Vec3& vDir)
+{
+}
+
+void CMonsterController::DashEnd()
+{
+}
+
+void CMonsterController::Attack(_int iSkillIndex)
 {
 	/*if (TEXT("HellHound") == m_pGameObject->GetObjectTag())
 	{

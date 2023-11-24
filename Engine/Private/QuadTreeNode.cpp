@@ -52,7 +52,7 @@ void CQuadTreeNode::AddChildNode(CQuadTreeNode* pChild)
     }
 }
 
-void CQuadTreeNode::Render_QuadTreeNode()
+void CQuadTreeNode::Render_QuadTreeNode(const _float& fTimeDelta)
 {
 	if (!m_vecChildren.empty())
 	{
@@ -61,13 +61,14 @@ void CQuadTreeNode::Render_QuadTreeNode()
 			if (DISJOINT == pNode->IsCulled())
 				continue;
 			else if (INTERSECTS == pNode->IsCulled())
-				pNode->Render_QuadTreeNode();
+				pNode->Render_QuadTreeNode(fTimeDelta);
 			else // CONTAINS
 			{
 				for (auto& _iter : pNode->GetObjectList())
 				{
-					_iter->Tick(0.0167f);
-					_iter->LateTick(0.0167f);
+					_iter->Tick(fTimeDelta);
+					_iter->LateTick(fTimeDelta);
+					//pNode->CullNode(DISJOINT);
 				}
 #ifdef _DEBUG
 				//DebugRender();
@@ -79,8 +80,9 @@ void CQuadTreeNode::Render_QuadTreeNode()
 	{
 		for (auto& _iter : m_vecObjects)
 		{
-			_iter->Tick(0.0167f);
-			_iter->LateTick(0.0167f);
+			_iter->Tick(fTimeDelta);
+			_iter->LateTick(fTimeDelta);
+			//m_iCulled = DISJOINT;
 		}
 	}
 }

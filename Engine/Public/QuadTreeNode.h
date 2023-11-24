@@ -30,7 +30,7 @@ public:
 
     void                    SetParent(CQuadTreeNode* const _pParent) { m_pParent = _pParent; }
 
-    void                    Render_QuadTreeNode();
+    void                    Render_QuadTreeNode(const _float& fTimeDelta);
 #ifdef _DEBUG
     void                    DebugRender();
 #endif

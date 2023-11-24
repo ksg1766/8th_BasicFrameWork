@@ -34,9 +34,11 @@ public:
 public:
 	void	GetMoveMessage(const Vec3& vDir)		{ m_vNetMove += vDir; }
 	void	GetTranslateMessage(const Vec3& vDir)	{ m_vNetTrans += vDir; }
-	void	GetAttackMessage()						{ Attack(); }
+	void	GetDashMessage(const _bool& IsDash)		{ IsDash ? Dash(m_pTransform->GetForward()) : DashEnd(); }
+	void	GetAttackMessage(_int iSkillIndex = 0)	{ Attack(iSkillIndex); }
 	void	GetHitMessage(_int iDamage);
 	void	GetMaxSpeedMessage()					{ m_bMax = true; }
+	void	GetDashSpeedMessage()					{ m_bDash = true; }
 
 	void	Look(const Vec3& vPoint, const _float& fTimeDelta = 1.f);
 	void	ForceHeight()							{ m_pTransform->Translate(Vec3(0.f, m_pNavMeshAgent->GetHeightOffset(), 0.f)); }
@@ -44,8 +46,8 @@ public:
 	_bool	Walkable(_fvector vPoint)				{ return m_pNavMeshAgent->Walkable(vPoint); }
 
 	_bool	IsZeroHP()								{ return m_IsZeroHP; }
+	CMonsterStats* GetStats()						{ return m_pStats; }
 	void	SetStats(CMonsterStats* pStats)			{ m_pStats = pStats; }
-
 public:
 	void	OnCollisionEnter(CGameObject* pOther);
 	void	OnCollisionStay(CGameObject* pOther);
@@ -54,7 +56,9 @@ public:
 private:
 	void	Move(const _float& fTimeDelta);
 	void	Translate(const _float& fTimeDelta);
-	void	Attack();
+	void	Dash(const Vec3& vDir);
+	void	DashEnd();
+	void	Attack(_int iSkillIndex);
 	void	Hit(_int iDamage);
 
 	void	LimitAllAxisVelocity();
@@ -68,9 +72,11 @@ private:
 	Vec3			m_vNetMove;
 	Vec3			m_vNetTrans;
 
+	Vec3			m_vDashLinearSpeed;
 	Vec3			m_vMaxLinearSpeed;
 	Vec3			m_vLinearSpeed;
 	_bool			m_bMax			= false;
+	_bool			m_bDash			= false;
 
 	Vec3			m_vMaxAngularSpeed;
 	Vec3			m_vAngularSpeed;

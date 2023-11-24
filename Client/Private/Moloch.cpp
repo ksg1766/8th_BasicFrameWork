@@ -275,7 +275,7 @@ HRESULT CMoloch::Ready_Scripts()
 			desc.vecAnimations.push_back(TEXT("Moloch_Atk_Full_Geyser"));
 			CBT_Action* pGeyser1 = CMoloch_BT_Geyser1::Create(this, pBehaviorTree, desc, m_pController);
 
-			CBT_Decorator* pRepeatGeyser = CMoloch_BT_REPEAT::Create(this, pBehaviorTree, m_pController, 3);
+			CBT_Decorator* pRepeatGeyser = CMoloch_BT_REPEAT::Create(this, pBehaviorTree, m_pController, 2);
 			pRepeatGeyser->AddChild(pGeyser1);
 
 			desc.vecAnimations.clear();
@@ -286,7 +286,7 @@ HRESULT CMoloch::Ready_Scripts()
 			pEnterPhase3->AddChild(pRepeatGeyser);
 			pEnterPhase3->AddChild(pGeyser2);
 
-			CBT_Decorator* pIfEnterPhase3 = CMoloch_BT_IF_StartP3::Create(this, pBehaviorTree, m_pController, CBT_Decorator::DecoratorType::IF);	// 2페 시작패턴 조건
+			CBT_Decorator* pIfEnterPhase3 = CMoloch_BT_IF_StartP3::Create(this, pBehaviorTree, m_pController, CBT_Decorator::DecoratorType::IF);	// 3페 시작패턴 조건
 			pIfEnterPhase3->AddChild(pEnterPhase3);
 
 			desc.vecAnimations.clear();

@@ -3,7 +3,7 @@
 #include "GameInstance.h"
 #include "Layer.h"
 #include "GameObject.h"
-#include "BossController.h"
+#include "MonsterController.h"
 #include "Moloch_MotionTrail.h"
 #include "Moloch_SwordSlash.h"
 
@@ -18,7 +18,7 @@ void CMoloch_BT_Dash::OnStart()
 	m_bAttack = false;
 	m_vTargetPos = GetOrAddTarget()->GetTransform()->GetPosition();
 
-	CBossController* pController = static_cast<CBossController*>(m_pController);
+	CMonsterController* pController = static_cast<CMonsterController*>(m_pController);
 	pController->Look(m_vTargetPos);
 }
 
@@ -63,7 +63,7 @@ CBT_Node::BT_RETURN CMoloch_BT_Dash::OnUpdate(const _float& fTimeDelta)
 	{
 		if (fDistance > 4.f)
 		{
-			CBossController* pController = static_cast<CBossController*>(m_pController);
+			CMonsterController* pController = static_cast<CMonsterController*>(m_pController);
 			pController->GetMaxSpeedMessage();
 			pController->GetTranslateMessage(m_pGameObject->GetTransform()->GetForward());
 		}
@@ -92,7 +92,7 @@ void CMoloch_BT_Dash::ConditionalAbort(const _float& fTimeDelta)
 
 _bool CMoloch_BT_Dash::IsZeroHP()
 {
-	if (static_cast<CBossController*>(m_pController)->IsZeroHP())
+	if (static_cast<CMonsterController*>(m_pController)->IsZeroHP())
 		return true;
 
 	return false;

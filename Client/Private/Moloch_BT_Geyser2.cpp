@@ -3,7 +3,10 @@
 #include "GameInstance.h"
 #include "Layer.h"
 #include "GameObject.h"
-#include "BossController.h"
+#include "MonsterController.h"
+#include "TremorCrystal.h"
+#include "Particle.h"
+#include "ParticleController.h"
 
 CMoloch_BT_Geyser2::CMoloch_BT_Geyser2()
 {
@@ -40,10 +43,19 @@ void CMoloch_BT_Geyser2::ConditionalAbort(const _float& fTimeDelta)
 
 _bool CMoloch_BT_Geyser2::IsZeroHP()
 {
-	if (static_cast<CBossController*>(m_pController)->IsZeroHP())
+	if (static_cast<CMonsterController*>(m_pController)->IsZeroHP())
 		return true;
 
 	return false;
+}
+
+CGameObject* CMoloch_BT_Geyser2::GetTarget()
+{
+	BLACKBOARD& hashBlackBoard = m_pBehaviorTree->GetBlackBoard();
+	const auto& target = hashBlackBoard.find(TEXT("Target"));
+	CGameObject* pPlayer = GET_VALUE(CGameObject, target);
+
+	return pPlayer;
 }
 
 CMoloch_BT_Geyser2* CMoloch_BT_Geyser2::Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController)

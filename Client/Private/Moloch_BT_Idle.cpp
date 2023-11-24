@@ -3,7 +3,7 @@
 #include "GameInstance.h"
 #include "Layer.h"
 #include "GameObject.h"
-#include "BossController.h"
+#include "MonsterController.h"
 
 CMoloch_BT_Idle::CMoloch_BT_Idle()
 {
@@ -89,7 +89,7 @@ void CMoloch_BT_Idle::RunIdleCoolDown(const _float& fTimeDelta)
 
 _bool CMoloch_BT_Idle::IsZeroHP()
 {
-	if (static_cast<CBossController*>(m_pController)->IsZeroHP())
+	if (static_cast<CMonsterController*>(m_pController)->IsZeroHP())
 		return true;
 
 	return false;

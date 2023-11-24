@@ -93,8 +93,8 @@ HRESULT CMainApp::Render()
 	m_pGameInstance->Clear_BackBuffer_View(_float4(0.9f, 0.9f, 0.9f, 1.f));
 	m_pGameInstance->Clear_DepthStencil_View();
 #ifdef _DEBUG
-	if(LEVEL_GAMEPLAY == m_pGameInstance->GetCurrentLevelIndex())
-		m_pGameInstance->Render_QuadTree();
+	//if(LEVEL_GAMEPLAY == m_pGameInstance->GetCurrentLevelIndex())
+	//	m_pGameInstance->Render_QuadTree();
 #endif
 	m_pRenderer->Draw_RenderObjects();
 
@@ -215,6 +215,11 @@ HRESULT CMainApp::Ready_Prototype_Components()
 	/* For.Prototype_Component_Shader_Lightning*/
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_Lightning"),
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Lightning.hlsl"), VTXPOINT::Elements, VTXPOINT::iNumElements))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Shader_Sphere*/
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_Sphere"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Sphere.hlsl"), VTXMESH::Elements, VTXMESH::iNumElements))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Shader_ComputeParticles*/
@@ -352,6 +357,11 @@ HRESULT CMainApp::Ready_Prototype_Components()
 	/* For.Prototype_Component_Texture_Fire_Tiled*/
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Fire_Tiled"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Fire/Fire_Tiled.png")))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_GeyserCrack*/
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_GeyserCrack"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Decal/GeyserCrack%d.png"), 2))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_Lightning_Bolts*/

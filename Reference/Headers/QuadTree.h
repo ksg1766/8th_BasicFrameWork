@@ -18,7 +18,7 @@ private:
 public:
     HRESULT			Build_QuadTree(_uint iNumLevels);
     void            Update_QuadTree();
-    void            Render_QuadTree();
+    void            Render_QuadTree(const _float& fTimeDelta);
 
     CQuadTreeNode*  GetCQuadTreeRoot() { return m_pQuadTreeRoot; }
     CQuadTreeNode*  GetCurrentNodeByPos(Vec3 vPos, CQuadTreeNode* const pNode);
@@ -34,8 +34,8 @@ private:
 
     class CPipeLine* m_pPipeLine;
 
-    const _int      m_iDepthLimit = 5;
-    const _float    m_fLooseFactor = 2.f;
+    const _int      m_iDepthLimit = 4;
+    const _float    m_fLooseFactor = 1.5f;
 
     Vec3            m_vRootExtents = Vec3(1280.f, -1.f, 1280.f);
     CQuadTreeNode*  m_pQuadTreeRoot = nullptr;

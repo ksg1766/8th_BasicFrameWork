@@ -262,6 +262,29 @@ HRESULT CModel::Render()
 	return S_OK;
 }
 
+HRESULT CModel::RenderShadowInstancing(CVIBuffer_Instance*& pInstanceBuffer)
+{
+	if (m_pSRV)
+	{
+		if (FAILED(m_pShader->Bind_Texture("g_TransformMap", m_pSRV)))
+			return E_FAIL;
+	}
+
+	for (_uint i = 0; i < m_iNumMeshes; i++)
+	{
+		/*if (FAILED(BindMaterialTexture(m_pShader, "g_DiffuseTexture", i, aiTextureType_DIFFUSE)))
+			return E_FAIL;*/
+
+		if (FAILED(m_pShader->Begin()))
+			return E_FAIL;
+
+		if (FAILED(pInstanceBuffer->Render(m_Meshes[i])))
+			return E_FAIL;
+	}
+
+	return S_OK;
+}
+
 HRESULT CModel::RenderInstancing(CVIBuffer_Instance*& pInstanceBuffer)
 {
 	if (m_pSRV)

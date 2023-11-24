@@ -3,7 +3,7 @@
 #include "GameInstance.h"
 #include "Layer.h"
 #include "GameObject.h"
-#include "BossController.h"
+#include "MonsterController.h"
 #include "TremorCrystal.h"
 #include "Particle.h"
 #include "ParticleController.h"
@@ -37,7 +37,7 @@ CBT_Node::BT_RETURN CMoloch_BT_Eruption1::OnUpdate(const _float& fTimeDelta)
 		if (m_bAttack)
 		{
 			for (_int i = 0; i < 9; ++i)
-				m_vecCrystal[i]->GetTransform()->Translate(2.4f * Vec3::UnitY);
+				m_vecCrystal[i]->GetTransform()->Translate(2.9f * Vec3::UnitY);
 
 			m_bCrystalUp = true;
 		}
@@ -50,15 +50,15 @@ CBT_Node::BT_RETURN CMoloch_BT_Eruption1::OnUpdate(const _float& fTimeDelta)
 			CTransform* pTargetTransform = GetTarget()->GetTransform();
 
 			Vec3 vCreatePosition[9] = {
-				m_vTargetPos - 2.5f * Vec3::UnitY,
-				m_vTargetPos + 9.f * (pTargetTransform->GetForward() + 0.75f * pTargetTransform->GetRight()) - 3.1f * Vec3::UnitY,
-				m_vTargetPos + 9.f * (pTargetTransform->GetForward() - 0.7f * pTargetTransform->GetRight()) - 3.1f * Vec3::UnitY,
-				m_vTargetPos - 9.f * (pTargetTransform->GetForward() + 0.7f * pTargetTransform->GetRight()) - 3.1f * Vec3::UnitY,
-				m_vTargetPos - 9.f * (pTargetTransform->GetForward() - 0.75f * pTargetTransform->GetRight()) - 3.1f * Vec3::UnitY,
-				m_vTargetPos + 9.f * (2.f * pTargetTransform->GetForward()) - 3.1f * Vec3::UnitY,
-				m_vTargetPos - 9.f * (2.f * pTargetTransform->GetForward()) - 3.f * Vec3::UnitY,
-				m_vTargetPos + 9.f * (1.5f * pTargetTransform->GetRight()) - 3.f * Vec3::UnitY,
-				m_vTargetPos - 9.f * (1.5f * pTargetTransform->GetRight()) - 3.1f * Vec3::UnitY,
+				m_vTargetPos - 3.3f * Vec3::UnitY,
+				m_vTargetPos + 8.f * (pTargetTransform->GetForward() + 0.75f * pTargetTransform->GetRight()) - 3.3f * Vec3::UnitY,
+				m_vTargetPos + 8.f * (pTargetTransform->GetForward() - 0.7f * pTargetTransform->GetRight()) - 3.3f * Vec3::UnitY,
+				m_vTargetPos - 8.f * (pTargetTransform->GetForward() + 0.7f * pTargetTransform->GetRight()) - 3.3f * Vec3::UnitY,
+				m_vTargetPos - 8.f * (pTargetTransform->GetForward() - 0.75f * pTargetTransform->GetRight()) - 3.3f * Vec3::UnitY,
+				m_vTargetPos + 6.f * (2.f * pTargetTransform->GetForward()) - 3.3f * Vec3::UnitY,
+				m_vTargetPos - 6.f * (2.f * pTargetTransform->GetForward()) - 3.3f * Vec3::UnitY,
+				m_vTargetPos + 6.f * (1.5f * pTargetTransform->GetRight()) - 3.3f * Vec3::UnitY,
+				m_vTargetPos - 6.f * (1.5f * pTargetTransform->GetRight()) - 3.3f * Vec3::UnitY,
 			};
 
 			CTremorCrystal::EFFECT_DESC desc;
@@ -66,7 +66,7 @@ CBT_Node::BT_RETURN CMoloch_BT_Eruption1::OnUpdate(const _float& fTimeDelta)
 
 			for (_int i = 0; i < 9; ++i)
 			{
-				desc.fLifeTime - 0.1f * i;
+				desc.fLifeTime += 0.02f;
 				m_vecCrystal[i] = m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_TremorCrystal_A"), LAYERTAG::IGNORECOLLISION, &desc);
 			}
 
@@ -75,8 +75,8 @@ CBT_Node::BT_RETURN CMoloch_BT_Eruption1::OnUpdate(const _float& fTimeDelta)
 
 			CParticleController::PARTICLE_DESC tParticleDesc;
 			tParticleDesc.eType = CParticleController::ParticleType::EXPLODE;
-			tParticleDesc.vSpeedMax = _float3(5.f, 10.f, 5.f);
-			tParticleDesc.vSpeedMin = _float3(-5.f, 7.f, -5.f);
+			tParticleDesc.vSpeedMax = _float3(4.f, 10.f, 4.f);
+			tParticleDesc.vSpeedMin = _float3(-4.f, 7.f, -4.f);
 			tParticleDesc.iPass = 1;
 			//tParticleDesc.vColor = Color(1.f, 0.f, 0.05f, 1.f);
 
@@ -107,7 +107,7 @@ void CMoloch_BT_Eruption1::ConditionalAbort(const _float& fTimeDelta)
 
 _bool CMoloch_BT_Eruption1::IsZeroHP()
 {
-	if (static_cast<CBossController*>(m_pController)->IsZeroHP())
+	if (static_cast<CMonsterController*>(m_pController)->IsZeroHP())
 		return true;
 
 	return false;

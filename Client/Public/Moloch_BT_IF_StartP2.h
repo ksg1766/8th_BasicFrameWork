@@ -1,7 +1,7 @@
 #pragma once
 #include "Client_Defines.h"
 #include "BT_Decorator.h"
-#include "BossController.h"
+#include "MonsterController.h"
 
 BEGIN(Client)
 

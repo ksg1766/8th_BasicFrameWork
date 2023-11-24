@@ -46,6 +46,9 @@ struct GS_OUT
 {
     float4 vPosition : SV_POSITION;
     float2 vTexcoord : TEXCOORD0;
+    
+    float4 vNormal : NORMAL;
+    float4 vProjPos : TEXCOORD1;
 };
 
 [maxvertexcount(20)]
@@ -66,18 +69,26 @@ void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> OutStream)
     Out[0].vPosition = vector(In[0].vPosition.xyz + vRight + 20.f * vUp, 1.f);
     Out[0].vPosition = mul(Out[0].vPosition, matVP);
     Out[0].vTexcoord = float2(0.0f, 0.f);
-
+    Out[0].vNormal = vLook;
+    Out[0].vProjPos = Out[0].vPosition;
+    
     Out[1].vPosition = vector(In[0].vPosition.xyz - vRight + 20.f * vUp, 1.f);
     Out[1].vPosition = mul(Out[1].vPosition, matVP);
     Out[1].vTexcoord = float2(1.0f, 0.f);
+    Out[1].vNormal = vLook;
+    Out[1].vProjPos = Out[1].vPosition;
     
     Out[2].vPosition = vector(In[0].vPosition.xyz - vRight - vUp, 1.f);
     Out[2].vPosition = mul(Out[2].vPosition, matVP);
     Out[2].vTexcoord = float2(1.0f, 1.0f);
+    Out[2].vNormal = vLook;
+    Out[2].vProjPos = Out[2].vPosition;
     
     Out[3].vPosition = vector(In[0].vPosition.xyz + vRight - vUp, 1.f);
     Out[3].vPosition = mul(Out[3].vPosition, matVP);
     Out[3].vTexcoord = float2(0.0f, 1.0f);
+    Out[3].vNormal = vLook;
+    Out[3].vProjPos = Out[3].vPosition;
     
     OutStream.Append(Out[0]);
     OutStream.Append(Out[1]);
@@ -101,28 +112,35 @@ void GS_SAPRK_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> OutStream)
     float3 vRight = normalize(cross(float3(0.f, 1.f, 0.f), vLook.xyz)) * In[0].vPSize.x * 0.5f;
     float3 vUp = normalize(cross(vLook.xyz, vRight.xyz)) * In[0].vPSize.y * 0.5f;
 
-    vRight *= 2.f;
-    vUp *= 4.f;
+    vRight *= 1.9f;
     
     matrix matVP;
 
     matVP = mul(g_ViewMatrix, g_ProjMatrix);
 
-    Out[0].vPosition = vector(In[0].vPosition.xyz + vRight + vUp, 1.f);
+    Out[0].vPosition = vector(In[0].vPosition.xyz + 1.2f * vRight + 3.7f * vUp, 1.f);
     Out[0].vPosition = mul(Out[0].vPosition, matVP);
     Out[0].vTexcoord = float2(0.0f, 0.f);
-
-    Out[1].vPosition = vector(In[0].vPosition.xyz - vRight + vUp, 1.f);
+    Out[0].vNormal = vLook;
+    Out[0].vProjPos = Out[0].vPosition;
+    
+    Out[1].vPosition = vector(In[0].vPosition.xyz - 1.2f * vRight + 3.7f * vUp, 1.f);
     Out[1].vPosition = mul(Out[1].vPosition, matVP);
     Out[1].vTexcoord = float2(1.0f, 0.f);
+    Out[1].vNormal = vLook;
+    Out[1].vProjPos = Out[1].vPosition;
     
-    Out[2].vPosition = vector(In[0].vPosition.xyz - vRight - vUp, 1.f);
+    Out[2].vPosition = vector(In[0].vPosition.xyz - 1.2f * vRight - vUp, 1.f);
     Out[2].vPosition = mul(Out[2].vPosition, matVP);
     Out[2].vTexcoord = float2(1.0f, 1.0f);
+    Out[2].vNormal = vLook;
+    Out[2].vProjPos = Out[2].vPosition;
     
-    Out[3].vPosition = vector(In[0].vPosition.xyz + vRight - vUp, 1.f);
+    Out[3].vPosition = vector(In[0].vPosition.xyz + 1.2f * vRight - vUp, 1.f);
     Out[3].vPosition = mul(Out[3].vPosition, matVP);
     Out[3].vTexcoord = float2(0.0f, 1.0f);
+    Out[3].vNormal = vLook;
+    Out[3].vProjPos = Out[3].vPosition;
     
     OutStream.Append(Out[0]);
     OutStream.Append(Out[1]);
@@ -139,12 +157,18 @@ struct PS_IN
 {
     float4 vPosition : SV_POSITION;
     float2 vTexcoord : TEXCOORD0;
+    
+    float4 vNormal : NORMAL;
+    float4 vProjPos : TEXCOORD1;
 };
 
 struct PS_OUT
 {
     float4 vDiffuse : SV_TARGET0;
     float4 vEmissive : SV_TARGET3;
+    
+    float4 vNormal : SV_TARGET1;
+    float4 vDepth : SV_TARGET2;
 };
 
 PS_OUT PS_MAIN(PS_IN In)
@@ -154,7 +178,7 @@ PS_OUT PS_MAIN(PS_IN In)
     float2 vNewUV = In.vTexcoord + g_fFrameTime;
     float3 vColor = g_LightningTexture.Sample(LinearSampler, vNewUV);
     
-    if(vColor.r < 0.05f)
+    if(vColor.r < 0.5f)
         discard;
     
     vColor = 1.f - vColor;
@@ -162,8 +186,11 @@ PS_OUT PS_MAIN(PS_IN In)
     vColor.r = 1.f;
     vColor.b *= 1.2f;
     
-    Out.vDiffuse = float4(vColor, 1.f);
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);
+    
     Out.vEmissive = float4(vColor, 1.f);
+    Out.vDiffuse = float4(vColor, 0.7f);
     
     return Out;
 }
@@ -174,13 +201,17 @@ PS_OUT PS_SPARK_MAIN(PS_IN In)
    
     float3 vColor = g_LightningTexture.Sample(LinearSampler, In.vTexcoord);
     
-    if (vColor.r < 0.05f)
+    if (vColor.r < 0.4f)
         discard;
     
     vColor = 1.f - vColor;
     vColor.bg = 1.f - (0.8f * vColor.r);
     vColor.r = 1.f;
-    vColor.b *= 1.2f;
+    vColor.g = 0.8f;
+    vColor.b = 0.8f;
+    
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);
     
     Out.vDiffuse = float4(vColor, 1.f);
     Out.vEmissive = float4(vColor, 1.f);
@@ -194,7 +225,7 @@ technique11 DefaultTechnique
 	{
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
-        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+        SetBlendState(BS_OneBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = compile gs_5_0 GS_MAIN();
@@ -208,7 +239,7 @@ technique11 DefaultTechnique
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
-        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+        SetBlendState(BS_OneBlend, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
 
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = compile gs_5_0 GS_SAPRK_MAIN();

@@ -3,7 +3,7 @@
 #include "GameInstance.h"
 #include "Layer.h"
 #include "GameObject.h"
-#include "BossController.h"
+#include "MonsterController.h"
 #include "Moloch_SwordSlash.h"
 
 CMoloch_BT_Swing1::CMoloch_BT_Swing1()
@@ -18,7 +18,7 @@ void CMoloch_BT_Swing1::OnStart()
 
 	const Vec3& vTargetPos = GetTarget()->GetTransform()->GetPosition();
 
-	CBossController* pController = static_cast<CBossController*>(m_pController);
+	CMonsterController* pController = static_cast<CMonsterController*>(m_pController);
 	pController->Look(vTargetPos);
 }
 
@@ -72,7 +72,7 @@ void CMoloch_BT_Swing1::ConditionalAbort(const _float& fTimeDelta)
 
 _bool CMoloch_BT_Swing1::IsZeroHP()
 {
-	if (static_cast<CBossController*>(m_pController)->IsZeroHP())
+	if (static_cast<CMonsterController*>(m_pController)->IsZeroHP())
 		return true;
 
 	return false;

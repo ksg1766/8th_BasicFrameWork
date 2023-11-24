@@ -72,9 +72,6 @@ HRESULT CLava::Render()
 	if (nullptr == GetModel() || nullptr == GetShader())
 		return E_FAIL;
 
-	if (FAILED(GetTransform()->Bind_ShaderResources(GetShader(), "g_WorldMatrix")))
-		return E_FAIL;
-
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
@@ -126,7 +123,8 @@ HRESULT CLava::Ready_Scripts()
 HRESULT CLava::Bind_ShaderResources()
 {
 	/* 셰이더 전역변수로 던져야 할 값들을 던지자. */
-	if (FAILED(m_pGameInstance->Bind_TransformToShader(GetShader(), "g_ViewMatrix", CPipeLine::D3DTS_VIEW)) ||
+	if (FAILED(GetTransform()->Bind_ShaderResources(GetShader(), "g_WorldMatrix"))||
+		FAILED(m_pGameInstance->Bind_TransformToShader(GetShader(), "g_ViewMatrix", CPipeLine::D3DTS_VIEW)) ||
 		FAILED(m_pGameInstance->Bind_TransformToShader(GetShader(), "g_ProjMatrix", CPipeLine::D3DTS_PROJ)))
 	{
 		return E_FAIL;

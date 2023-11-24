@@ -91,7 +91,7 @@ HRESULT CQuadTree::Build_QuadTree(_uint iNumLevels)
     RELEASE_INSTANCE(CObjectManager)
 
 #ifdef _DEBUG
-        //InitDebugFrustum();
+        InitDebugFrustum();
 #endif // DEBUG
 
 
@@ -100,37 +100,37 @@ HRESULT CQuadTree::Build_QuadTree(_uint iNumLevels)
 
 void CQuadTree::Update_QuadTree()
 {
-//#ifdef NDEBUG
-    BoundingFrustum tFrustum;
-    Update_Frustum(tFrustum);
-    FrustumCull(tFrustum, m_pQuadTreeRoot);
-//#elif _DEBUG
-    //Update_Frustum(m_tBoundingFrustum);
-    //FrustumCull(m_tBoundingFrustum, m_pQuadTreeRoot);
-//#endif
+#ifdef NDEBUG
+  BoundingFrustum tFrustum;
+  Update_Frustum(tFrustum);
+  FrustumCull(tFrustum, m_pQuadTreeRoot);
+#elif _DEBUG
+  Update_Frustum(m_tBoundingFrustum);
+  FrustumCull(m_tBoundingFrustum, m_pQuadTreeRoot);
+#endif
 }
 
 void CQuadTree::Update_Frustum(BoundingFrustum& tFrustum)
 {
-//#ifdef NDEBUG
+#ifdef NDEBUG
     BoundingFrustum::CreateFromMatrix(tFrustum, m_pPipeLine->Get_Transform_Matrix(CPipeLine::D3DTS_PROJ));
     tFrustum.Transform(tFrustum, m_pPipeLine->Get_Transform_Matrix_Inverse(CPipeLine::D3DTS_VIEW));
-//#elif _DEBUG
-//    static _bool bUpdateFrustum = true;
-//    if (KEY_PRESSING_EX(KEY::CTRL) && KEY_DOWN_EX(KEY::F7))
-//        bUpdateFrustum = !bUpdateFrustum;
-//
-//    if (!bUpdateFrustum)
-//        return;
-//
-//    BoundingFrustum::CreateFromMatrix(m_tBoundingFrustum, m_pPipeLine->Get_Transform_Matrix(CPipeLine::D3DTS_PROJ));
-//    m_tBoundingFrustum.Transform(m_tBoundingFrustum, m_pPipeLine->Get_Transform_Matrix_Inverse(CPipeLine::D3DTS_VIEW));
-//#endif
+#elif _DEBUG
+    static _bool bUpdateFrustum = true;
+    if (KEY_PRESSING_EX(KEY::CTRL) && KEY_DOWN_EX(KEY::F7))
+        bUpdateFrustum = !bUpdateFrustum;
+
+    if (!bUpdateFrustum)
+        return;
+
+    BoundingFrustum::CreateFromMatrix(m_tBoundingFrustum, m_pPipeLine->Get_Transform_Matrix(CPipeLine::D3DTS_PROJ));
+    m_tBoundingFrustum.Transform(m_tBoundingFrustum, m_pPipeLine->Get_Transform_Matrix_Inverse(CPipeLine::D3DTS_VIEW));
+#endif
 }
 
-void CQuadTree::Render_QuadTree()
+void CQuadTree::Render_QuadTree(const _float& fTimeDelta)
 {
-    m_pQuadTreeRoot->Render_QuadTreeNode();
+    m_pQuadTreeRoot->Render_QuadTreeNode(fTimeDelta);
 
 #ifdef _DEBUG
     //m_pEffect->SetWorld(XMMatrixIdentity());
@@ -272,7 +272,10 @@ void CQuadTree::AddObjectInNode(CTransform* pTransform, CQuadTreeNode* const pNo
     Vec3 vNodeCenter = pNode->GetBoundingBox()->Center;
 
     Vec3 vExtents = pNode->GetBoundingBox()->Extents;
-    vExtents *= m_fLooseFactor;
+    if (TEXT("Lava_East_B1") == pTransform->GetGameObject()->GetObjectTag())
+        vExtents *= 1.7f;
+    else
+        vExtents *= m_fLooseFactor;
     
     if (vTransformCenter.x < vNodeCenter.x - vExtents.x || vTransformCenter.x > vNodeCenter.x + vExtents.x
         || vTransformCenter.z < vNodeCenter.z - vExtents.z || vTransformCenter.z > vNodeCenter.z + vExtents.z)

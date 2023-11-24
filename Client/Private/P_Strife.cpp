@@ -50,9 +50,8 @@ void CP_Strife::Tick(const _float& fTimeDelta)
 
 	if (KEY_PRESSING(KEY::CTRL) && KEY_DOWN(KEY::L))
 	{
-		CGameObject* pGameObject = m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Lightning"), LAYERTAG::IGNORECOLLISION);
-		pGameObject->GetTransform()->SetScale(Vec3(2.4f, 1.2f, 2.4f));
-		pGameObject->GetTransform()->Translate(GetTransform()->GetPosition() + 2.f * Vec3::UnitY);
+		CGameObject* pGameObject = m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_GeyserCrack"), LAYERTAG::IGNORECOLLISION);
+		pGameObject->GetTransform()->Translate(GetTransform()->GetPosition());
 	}
 }
 

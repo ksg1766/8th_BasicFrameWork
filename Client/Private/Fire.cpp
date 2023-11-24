@@ -118,9 +118,6 @@ HRESULT CFire::Ready_Scripts(void* pArg)
 
 HRESULT CFire::Bind_ShaderResources()
 {
-	_float4x4		WorldMatrix;
-	XMStoreFloat4x4(&WorldMatrix, XMMatrixIdentity());
-
 	/* 셰이더 전역변수로 던져야 할 값들을 던지자. */
 	if (FAILED(GetTransform()->Bind_ShaderResources(GetShader(), "g_WorldMatrix")) ||
 		FAILED(m_pGameInstance->Bind_TransformToShader(GetShader(), "g_ViewMatrix", CPipeLine::D3DTS_VIEW)) ||

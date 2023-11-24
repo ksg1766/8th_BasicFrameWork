@@ -72,24 +72,24 @@ VS_OUT VS_MAIN(VS_IN In)
     return Out;
 }
 
-VS_OUT VS_SHADOW_MAIN(VS_IN In)
-{
-    VS_OUT Out = (VS_OUT) 0;
+//VS_OUT VS_SHADOW_MAIN(VS_IN In)
+//{
+//    VS_OUT Out = (VS_OUT) 0;
 
-    matrix matWV, matWVP;
+//    matrix matWV, matWVP;
 
-    matWV = mul(g_WorldMatrix, g_ViewMatrix);
-    matWVP = mul(matWV, g_ProjMatrix);
+//    matWV = mul(g_WorldMatrix, g_ViewMatrix);
+//    matWVP = mul(matWV, g_ProjMatrix);
 
-    Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
-    Out.vNormal = normalize(mul(float4(In.vNormal, 0.f), g_WorldMatrix));
-    Out.vTexcoord = In.vTexcoord;
-    Out.vWorldPos = mul(float4(In.vPosition, 1.f), g_WorldMatrix);
-    Out.vTangent = normalize(mul(float4(In.vTangent, 0.f), g_WorldMatrix)).xyz;
-    Out.vProjPos = Out.vPosition;
+//    Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
+//    Out.vNormal = normalize(mul(float4(In.vNormal, 0.f), g_WorldMatrix));
+//    Out.vTexcoord = In.vTexcoord;
+//    Out.vWorldPos = mul(float4(In.vPosition, 1.f), g_WorldMatrix);
+//    Out.vTangent = normalize(mul(float4(In.vTangent, 0.f), g_WorldMatrix)).xyz;
+//    Out.vProjPos = Out.vPosition;
     
-    return Out;
-}
+//    return Out;
+//}
 
 VS_REFRACT_OUT VS_REFRACT_MAIN(VS_IN In)
 {
@@ -309,10 +309,10 @@ PS_OUT_SHADOW PS_SHADOW_MAIN(PS_IN In)
 {
     PS_OUT_SHADOW Out = (PS_OUT_SHADOW) 0;
 	
-    vector vMtrlDiffuse = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
+    //vector vMtrlDiffuse = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
     
-    if (vMtrlDiffuse.a < 0.3f)
-        discard;
+    //if (vMtrlDiffuse.a < 0.3f)
+    //    discard;
     
     Out.vDepth = vector(In.vProjPos.w / 2000.0f, In.vProjPos.w / 2000.0f, In.vProjPos.w / 2000.0f, 1.f);
     
@@ -456,7 +456,7 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
 
-        VertexShader = compile vs_5_0 VS_SHADOW_MAIN();
+        VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         HullShader = NULL;
         DomainShader = NULL;

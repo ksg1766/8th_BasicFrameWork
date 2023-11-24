@@ -1,7 +1,7 @@
 #pragma once
 #include "Client_Defines.h"
 #include "BT_Decorator.h"
-#include "BossController.h"
+#include "MonsterController.h"
 
 BEGIN(Client)
 
@@ -34,7 +34,7 @@ private:
 private:
 	_bool	IsZeroHP()
 	{
-		if (static_cast<CBossController*>(m_pController)->IsZeroHP())
+		if (static_cast<CMonsterController*>(m_pController)->IsZeroHP())
 			return true;
 
 		return false;

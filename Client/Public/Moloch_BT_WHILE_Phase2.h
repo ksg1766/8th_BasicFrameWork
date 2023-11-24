@@ -1,7 +1,7 @@
 #pragma once
 #include "Client_Defines.h"
 #include "BT_Decorator.h"
-#include "BossController.h"
+#include "MonsterController.h"
 #include "MonsterStats.h"
 
 BEGIN(Client)
@@ -35,7 +35,7 @@ private:
 private:
 	_bool	IsPhaseEnd()
 	{
-		if (static_cast<CBossController*>(m_pController)->GetStats()->GetHP() < 1000)
+		if (static_cast<CMonsterController*>(m_pController)->GetStats()->GetHP() < 1000)
 			return true;
 
 		return false;

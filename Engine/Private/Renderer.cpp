@@ -164,7 +164,7 @@ HRESULT CRenderer::Initialize_Prototype()
 
 	/* For.Target_DepthShadow */
 	if (FAILED(m_pTargetManager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_ShadowDepth"),
-		8.f * ViewportDesc.Width, 8.f * ViewportDesc.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.0f, 1.0f, 1.0f, 1.f))))
+		m_fShadowTargetSizeRatio * ViewportDesc.Width, m_fShadowTargetSizeRatio * ViewportDesc.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.0f, 1.0f, 1.0f, 1.f))))
 		return E_FAIL;
 
 	if (nullptr == m_pDevice)
@@ -177,8 +177,8 @@ HRESULT CRenderer::Initialize_Prototype()
 	D3D11_TEXTURE2D_DESC	TextureDesc;
 	ZeroMemory(&TextureDesc, sizeof(D3D11_TEXTURE2D_DESC));
 
-	TextureDesc.Width = 8.f * ViewportDesc.Width;
-	TextureDesc.Height = 8.f * ViewportDesc.Height;
+	TextureDesc.Width = m_fShadowTargetSizeRatio * ViewportDesc.Width;
+	TextureDesc.Height = m_fShadowTargetSizeRatio * ViewportDesc.Height;
 	TextureDesc.MipLevels = 1;
 	TextureDesc.ArraySize = 1;
 	TextureDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -223,10 +223,12 @@ HRESULT CRenderer::Initialize_Prototype()
 		return E_FAIL;
 	if (FAILED(m_pTargetManager->Ready_Debug(TEXT("Target_Specular"), 5.f * fTargetX, fTargetY, 288.f, 162.f)))
 		return E_FAIL;
-	/*if (FAILED(m_pTargetManager->Ready_Debug(TEXT("Target_Glow"), 144.f, 405.f, 288.f, 162.f)))
+	//
+	if (FAILED(m_pTargetManager->Ready_Debug(TEXT("Target_Glow"), fTargetX, 9.f * fTargetY, 288.f, 162.f)))
 		return E_FAIL;
-	if (FAILED(m_pTargetManager->Ready_Debug(TEXT("Target_BlurH"), 432.f, 405.f, 288.f, 162.f)))
-		return E_FAIL;*/
+	if (FAILED(m_pTargetManager->Ready_Debug(TEXT("Target_BlurH"), 3.f * fTargetX, 9.f * fTargetY, 288.f, 162.f)))
+		return E_FAIL;
+	//
 	if (FAILED(m_pTargetManager->Ready_Debug(TEXT("Target_BlurHV"), fTargetX, 5.f * fTargetY, 288.f, 162.f)))
 		return E_FAIL;
 	/*if (FAILED(m_pTargetManager->Ready_Debug(TEXT("Target_Distortion"), 144.f, 567.f, 288.f, 162.f)))
@@ -337,7 +339,7 @@ HRESULT CRenderer::Initialize_Prototype()
 
 	XMStoreFloat4x4(&m_LightView, XMMatrixIdentity());
 	//Matrix m;
-	//XMStoreFloat4x4(&m_LightProj, XMMatrixOrthographicLH((_float)ViewportDesc.Width * 0.15f, (_float)ViewportDesc.Height * 0.15f, 1.f, 300.f));
+	//XMStoreFloat4x4(&m_LightProj, XMMatrixOrthographicLH((_float)ViewportDesc.Width * 0.15f, (_float)ViewportDesc.Height * 0.15f, 1.f, 2000.f));
 	XMStoreFloat4x4(&m_LightProj, XMMatrixPerspectiveLH(XMConvertToRadians(45.f), (_float)ViewportDesc.Width / (_float)ViewportDesc.Height, 1.f, 2000.f));
 	//m_LightProj._44 = 0.f;
 
@@ -552,7 +554,9 @@ HRESULT CRenderer::Render_Particle_Instance()
 		const _int iPassIndex = pGameObject->GetShader()->GetPassIndex();
 		const _int instanceId = static_cast<CVIBuffer_Point*>(pGameObject->GetBuffer())->GetInstanceID();
 		InstanceID ID(iPassIndex, instanceId);
-		cache[ID].push_back(pGameObject);
+
+		if (cache[ID].size() < 500)
+			cache[ID].push_back(pGameObject);
 
 		Safe_Release(pGameObject);
 	}
@@ -688,8 +692,12 @@ HRESULT CRenderer::Render_Shadow()
 
 	_uint				iNumViewports = 1;
 	m_pContext->RSGetViewports(&iNumViewports, &ViewportDesc);
-	ViewportDesc.Width *= 8.f;
-	ViewportDesc.Height *= 8.f;
+
+	_float fOriginalWidth = ViewportDesc.Width;
+	_float fOriginalHeight = ViewportDesc.Height;
+
+	ViewportDesc.Width *= m_fShadowTargetSizeRatio;
+	ViewportDesc.Height *= m_fShadowTargetSizeRatio;
 
 	m_pContext->RSSetViewports(iNumViewports, &ViewportDesc);
 	XMStoreFloat4x4(&m_LightView, XMMatrixLookAtLH(vEyePosition, vPosition, XMVectorSet(0.f, 1.f, 0.f, 0.f)));
@@ -705,14 +713,81 @@ HRESULT CRenderer::Render_Shadow()
 	}
 	m_RenderObjects[RG_SHADOW].clear();
 
+	/////////////////////////////////////
+
+	map<InstanceID, vector<CGameObject*>> cache;	// 요거 데이터 영역에 두면 중복 호출 피할 수 있음.
+
+	for (auto& pGameObject : m_RenderObjects[RG_SHADOW_INSTANCE])
+	{
+		if (nullptr == pGameObject->GetModel())
+			continue;
+
+		const _int iPassIndex = pGameObject->GetShader()->GetPassIndex();
+		const _int instanceId = pGameObject->GetModel()->GetInstanceID();
+		InstanceID ID(iPassIndex, instanceId);
+		cache[ID].push_back(pGameObject);
+
+		Safe_Release(pGameObject);
+	}
+	m_RenderObjects[RG_SHADOW_INSTANCE].clear();
+
+	for (auto& mapIter : cache)
+	{
+		vector<CGameObject*>& vecInstances = mapIter.second;
+
+		const InstanceID instanceId = mapIter.first;
+
+		CGameObject*& pHead = vecInstances[0];
+
+		for (_int i = 0; i < vecInstances.size(); i++)
+		{
+			CGameObject*& pGameObject = vecInstances[i];
+			InstancingData data;
+			data.matWorld = pGameObject->GetTransform()->WorldMatrix();
+
+			AddInstanceData(instanceId, data);
+		}
+
+		if (pHead->GetModel()->IsAnimModel())
+		{// INSTANCING
+			InstancedTweenDesc* tweenDesc = new InstancedTweenDesc;	// 요거 데이터 영역에 두면 중복 호출 피할 수 있음2.
+			for (_int i = 0; i < vecInstances.size(); i++)
+			{
+				CGameObject*& pGameObject = vecInstances[i];
+				tweenDesc->tweens[i] = pGameObject->GetModel()->GetTweenDesc();	// 소켓 아이템의 경우 어떻게 할지.(굳이 인스턴싱이 필요 없을 듯 함 근데.)
+			}
+
+			pHead->GetModel()->PushTweenData(*tweenDesc);
+
+			Safe_Delete(tweenDesc);
+		}
+		else
+		{
+			for (auto& iter : vecInstances)
+			{
+				iter->InitRendered();
+			}
+		}
+
+		_int iOriginalPass = pHead->GetShader()->GetPassIndex();
+
+		pHead->RenderShadow(m_LightView, m_LightProj);	// BindShaderResource 호출을 위함.
+		CVIBuffer_Instance*& buffer = m_InstanceBuffers[instanceId];
+		pHead->GetModel()->RenderShadowInstancing(buffer);
+
+		pHead->GetShader()->SetPassIndex(iOriginalPass);	// 구조상 바로 안돌려놓으면 패스아이디가 달라져서 다른 InstanceID가 생성될 수도 있음...
+	}
+
+	/////////////////////////////////////
+
 	if (FAILED(m_pTargetManager->End_MRT(m_pContext, m_pShadowDSV)))
 		return E_FAIL;
 	/*if (FAILED(m_pGraphicDevice->Clear_DepthStencil_View()))
 		return E_FAIL;*/
 
 	m_pContext->RSGetViewports(&iNumViewports, &ViewportDesc);
-	ViewportDesc.Width /= 8.f;
-	ViewportDesc.Height /= 8.f;
+	ViewportDesc.Width = fOriginalWidth;
+	ViewportDesc.Height = fOriginalHeight;
 
 	m_pContext->RSSetViewports(iNumViewports, &ViewportDesc);
 
@@ -1279,12 +1354,12 @@ HRESULT CRenderer::Render_Debug()
 			return E_FAIL;
 		if (FAILED(m_pTargetManager->Render(TEXT("MRT_Lights"), m_pShader, m_pVIBuffer)))
 			return E_FAIL;
-		/*if (FAILED(m_pTargetManager->Render(TEXT("MRT_Effect"), m_pShader, m_pVIBuffer)))
+		if (FAILED(m_pTargetManager->Render(TEXT("MRT_Effect"), m_pShader, m_pVIBuffer)))
 			return E_FAIL;
-		if (FAILED(m_pTargetManager->Render(TEXT("MRT_Scene"), m_pShader, m_pVIBuffer)))
-			return E_FAIL;
-		if (FAILED(m_pTargetManager->Render(TEXT("MRT_BlurHorizontal"), m_pShader, m_pVIBuffer)))
+		/*if (FAILED(m_pTargetManager->Render(TEXT("MRT_Scene"), m_pShader, m_pVIBuffer)))
 			return E_FAIL;*/
+		if (FAILED(m_pTargetManager->Render(TEXT("MRT_BlurHorizontal"), m_pShader, m_pVIBuffer)))
+			return E_FAIL;
 		if (FAILED(m_pTargetManager->Render(TEXT("MRT_BlurVertical"), m_pShader, m_pVIBuffer)))
 			return E_FAIL;
 		if (FAILED(m_pTargetManager->Render(TEXT("MRT_Refraction_Final"), m_pShader, m_pVIBuffer)))

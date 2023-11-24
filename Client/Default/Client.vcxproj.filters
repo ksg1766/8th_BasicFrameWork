@@ -840,14 +840,23 @@
     <ClInclude Include="..\Public\Water.h">
       <Filter>03.GameObjects\00.Static\Water</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\SkyPlane.h">
-      <Filter>03.GameObjects\00.Static\SkyBox</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Fire.h">
       <Filter>03.GameObjects\05.Particle\Fire</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Lightning.h">
       <Filter>03.GameObjects\05.Particle\Lightning</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Arena.h">
+      <Filter>03.GameObjects\00.Static\StaticBase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Wave_Ring.h">
+      <Filter>03.GameObjects\05.Particle\Lightning</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bubble.h">
+      <Filter>03.GameObjects\05.Particle\Lightning</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\GeyserCrack.h">
+      <Filter>03.GameObjects\03.Boss\00.Moloch\TremorCrystal</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1220,14 +1229,23 @@
     <ClCompile Include="..\Private\Water.cpp">
       <Filter>03.GameObjects\00.Static\Water</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\SkyPlane.cpp">
-      <Filter>03.GameObjects\00.Static\SkyBox</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Fire.cpp">
       <Filter>03.GameObjects\05.Particle\Fire</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Lightning.cpp">
       <Filter>03.GameObjects\05.Particle\Lightning</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Arena.cpp">
+      <Filter>03.GameObjects\00.Static\StaticBase</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Wave_Ring.cpp">
+      <Filter>03.GameObjects\05.Particle\Lightning</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Bubble.cpp">
+      <Filter>03.GameObjects\05.Particle\Lightning</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GeyserCrack.cpp">
+      <Filter>03.GameObjects\03.Boss\00.Moloch\TremorCrystal</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1299,6 +1317,9 @@
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Lightning.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Sphere.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

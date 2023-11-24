@@ -27,7 +27,7 @@ HRESULT CLightning::Initialize(void* pArg)
 	if (FAILED(Ready_Scripts(pArg)))
 		return E_FAIL;
 	
-	//GetTransform()->SetScale(Vec3(10.f, 10.f, 10.f));
+	GetTransform()->Translate(Vec3(0.f, 2.f, 0.f));
 	//GetTransform()->Rotate(Vec3(90.f, 0.0f, 0.f));
 
 	return S_OK;
@@ -38,26 +38,26 @@ void CLightning::Tick(const _float& fTimeDelta)
 	Super::Tick(fTimeDelta);
 
 	m_fFrameTime += fTimeDelta;
-	if (m_fFrameTime > 1.0f)
+	if (m_fFrameTime > 1.2f)
 	{
 		m_pGameInstance->DeleteObject(this);
 	}
 
-	if (m_fFrameTime > 0.1f && m_fFrameTime < 0.3f)
+	if (m_fFrameTime > 0.1f && m_fFrameTime < 0.32f)
 	{
 		CParticleController::PARTICLE_DESC tParticleDesc;
 		tParticleDesc.eType = CParticleController::ParticleType::FLOAT;
+		tParticleDesc.vSpeedMax = _float3(3.7f, 3.05f, 3.7f);
+		tParticleDesc.vSpeedMin = _float3(-3.7f, -1.2f, -3.7f);
+		tParticleDesc.fLifeTimeMin = 1.55f;
+		tParticleDesc.fLifeTimeMax = 2.55f;
+		tParticleDesc.fScaleMin = 0.125f;
 		tParticleDesc.fScaleMax = 0.25f;
-		tParticleDesc.fScaleMin = 0.15f;
-		tParticleDesc.vSpeedMax = _float3(3.7f, 3.3f, 3.7f);
-		tParticleDesc.vSpeedMin = _float3(-3.7f, -1.f, -3.7f);
-		tParticleDesc.fLifeTimeMin = 1.5f;
-		tParticleDesc.fLifeTimeMax = 2.5f;
 		tParticleDesc.iPass = 1;
 		tParticleDesc.vRange = Vec3(2.f, 16.f, 2.f);
 		tParticleDesc.vCenter = GetTransform()->GetPosition();
-		for (_int i = 0; i < 2; ++i)
-			m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Particle"), LAYERTAG::IGNORECOLLISION, &tParticleDesc);
+		//for (_int i = 0; i < 2; ++i)
+		m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Particle"), LAYERTAG::IGNORECOLLISION, &tParticleDesc);
 	}
 
 	//if ((_int)(m_fFrameTime / 0.1f) % 4)
@@ -83,18 +83,7 @@ HRESULT CLightning::Render()
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
-	if (m_fFrameTime < 0.8f)
-	{
-		if (FAILED(m_pTextureEx2->Bind_ShaderResource(GetShader(), "g_LightningTexture", (_int)(m_fFrameTime / 0.08f) % 4)))
-			return E_FAIL;
-		GetShader()->SetPassIndex(1);
-		if (FAILED(GetShader()->Begin()))
-			return E_FAIL;
-		if (FAILED(GetBuffer()->Render()))
-			return E_FAIL;
-	}
-
-	if (m_fFrameTime < 0.2f)
+	if (m_fFrameTime < 0.6f)
 	{
 		if (FAILED(GetTexture()->Bind_ShaderResource(GetShader(), "g_LightningTexture", (_int)(m_fFrameTime / 0.03f) % 4)))
 			return E_FAIL;
@@ -105,6 +94,16 @@ HRESULT CLightning::Render()
 			return E_FAIL;
 
 		if (FAILED(m_pTextureEx1->Bind_ShaderResource(GetShader(), "g_LightningTexture", (_int)(m_fFrameTime / 0.03f) % 4)))
+			return E_FAIL;
+		GetShader()->SetPassIndex(1);
+		if (FAILED(GetShader()->Begin()))
+			return E_FAIL;
+		if (FAILED(GetBuffer()->Render()))
+			return E_FAIL;
+	}
+	else
+	{
+		if (FAILED(m_pTextureEx2->Bind_ShaderResource(GetShader(), "g_LightningTexture", (_int)(m_fFrameTime / 0.15f) % 4)))
 			return E_FAIL;
 		GetShader()->SetPassIndex(1);
 		if (FAILED(GetShader()->Begin()))
@@ -161,9 +160,6 @@ HRESULT CLightning::Ready_Scripts(void* pArg)
 
 HRESULT CLightning::Bind_ShaderResources()
 {
-	_float4x4		WorldMatrix;
-	XMStoreFloat4x4(&WorldMatrix, XMMatrixIdentity());
-
 	/* 셰이더 전역변수로 던져야 할 값들을 던지자. */
 	if (FAILED(GetTransform()->Bind_ShaderResources(GetShader(), "g_WorldMatrix")) ||
 		FAILED(m_pGameInstance->Bind_TransformToShader(GetShader(), "g_ViewMatrix", CPipeLine::D3DTS_VIEW)) ||

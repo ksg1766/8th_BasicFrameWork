@@ -150,7 +150,7 @@ PS_OUT PS_YELLOW_MAIN(PS_IN In)
     if (vDiffuse.r < 0.01f)
         discard;
 	
-    vector vYellow = (1.f, 1.f, 0.1f, 1.f);
+    vector vYellow = vector(1.f, 1.f, 0.1f, 1.f);
     Out.vGlow = vYellow;
 
 	return Out;
@@ -165,7 +165,7 @@ PS_OUT PS_RED_MAIN(PS_IN In)
     if (vDiffuse.r < 0.01f)
         discard;
 	
-    vector vRed = (1.f, 0.05f, 0.0f, 1.f);
+    vector vRed = vector(1.f, 0.7f, 0.75f, 1.f);
     Out.vGlow = vRed;
 
     return Out;
@@ -180,7 +180,8 @@ PS_OUT PS_BLUE_MAIN(PS_IN In)
     if (vDiffuse.r < 0.01f)
         discard;
 	
-    vector vBlue = (0.0f, 0.05f, 1.f, 1.f);
+    vector vBlue = vector(0.0f, 0.05f, 1.f, 1.f);
+    //Out.vGlow = vBlue;
     Out.vGlow = vBlue;
 
     return Out;

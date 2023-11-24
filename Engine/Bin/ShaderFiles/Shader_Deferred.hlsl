@@ -312,7 +312,7 @@ float PCF_ShadowCalculation(float4 fragPosLightSpace/*, float3 lightDir*/)
 	// PCF
     float shadow = 0.0;
     float2 texelSize = float2(1.f / 1440.f, 1.f / 810.f);
-    texelSize /= 8.f;
+    texelSize /= 4.f;
     
     for (int x = -1; x <= 1; ++x)
     {
@@ -450,7 +450,7 @@ PS_OUT_BLURH PS_MAIN_BLURH(PS_IN_BLUR In)
     //weight3 = 0.18f;
     //weight4 = 0.1f;
     
-    normalization = (weight0 + 2.0f * (weight1 + weight2 + weight3 + weight4/* + weight5 + weight6*/));
+    normalization = (weight0 + 2.0f * (weight1 + weight2 + weight3 + weight4 + weight5 + weight6));
     
     weight0 = weight0 / normalization;
     weight1 = weight1 / normalization;
@@ -462,19 +462,19 @@ PS_OUT_BLURH PS_MAIN_BLURH(PS_IN_BLUR In)
     
     color = float4(0.0f, 0.0f, 0.0f, 0.0f);
     
-    color += (g_GlowTarget.Sample(LinearSampler, In.vTexcoord1) + g_SpecularTarget.Sample(LinearSampler, In.vTexcoord1) + g_vLightEmissive * g_EmissiveTarget.Sample(LinearSampler, In.vTexcoord1)) * weight6;
-    color += (g_GlowTarget.Sample(LinearSampler, In.vTexcoord2) + g_SpecularTarget.Sample(LinearSampler, In.vTexcoord2) + g_vLightEmissive * g_EmissiveTarget.Sample(LinearSampler, In.vTexcoord2)) * weight5;
-    color += (g_GlowTarget.Sample(LinearSampler, In.vTexcoord3) + g_SpecularTarget.Sample(LinearSampler, In.vTexcoord3) + g_vLightEmissive * g_EmissiveTarget.Sample(LinearSampler, In.vTexcoord3)) * weight4;
-    color += (g_GlowTarget.Sample(LinearSampler, In.vTexcoord4) + g_SpecularTarget.Sample(LinearSampler, In.vTexcoord4) + g_vLightEmissive * g_EmissiveTarget.Sample(LinearSampler, In.vTexcoord4)) * weight3;
-    color += (g_GlowTarget.Sample(LinearSampler, In.vTexcoord5) + g_SpecularTarget.Sample(LinearSampler, In.vTexcoord5) + g_vLightEmissive * g_EmissiveTarget.Sample(LinearSampler, In.vTexcoord5)) * weight2;
-    color += (g_GlowTarget.Sample(LinearSampler, In.vTexcoord6) + g_SpecularTarget.Sample(LinearSampler, In.vTexcoord6) + g_vLightEmissive * g_EmissiveTarget.Sample(LinearSampler, In.vTexcoord6)) * weight1;
-    color += (g_GlowTarget.Sample(LinearSampler, In.vTexcoord7) + g_SpecularTarget.Sample(LinearSampler, In.vTexcoord7) + g_vLightEmissive * g_EmissiveTarget.Sample(LinearSampler, In.vTexcoord7)) * weight0;
-    color += (g_GlowTarget.Sample(LinearSampler, In.vTexcoord8) + g_SpecularTarget.Sample(LinearSampler, In.vTexcoord8) + g_vLightEmissive * g_EmissiveTarget.Sample(LinearSampler, In.vTexcoord8)) * weight1;
-    color += (g_GlowTarget.Sample(LinearSampler, In.vTexcoord9) + g_SpecularTarget.Sample(LinearSampler, In.vTexcoord9) + g_vLightEmissive * g_EmissiveTarget.Sample(LinearSampler, In.vTexcoord9)) * weight2;
-    color += (g_GlowTarget.Sample(LinearSampler, In.vTexcoord10) + g_SpecularTarget.Sample(LinearSampler, In.vTexcoord10) + g_vLightEmissive * g_EmissiveTarget.Sample(LinearSampler, In.vTexcoord10)) * weight3;
-    color += (g_GlowTarget.Sample(LinearSampler, In.vTexcoord11) + g_SpecularTarget.Sample(LinearSampler, In.vTexcoord11) + g_vLightEmissive * g_EmissiveTarget.Sample(LinearSampler, In.vTexcoord11)) * weight4;
-    color += (g_GlowTarget.Sample(LinearSampler, In.vTexcoord12) + g_SpecularTarget.Sample(LinearSampler, In.vTexcoord12) + g_vLightEmissive * g_EmissiveTarget.Sample(LinearSampler, In.vTexcoord12)) * weight5;
-    color += (g_GlowTarget.Sample(LinearSampler, In.vTexcoord13) + g_SpecularTarget.Sample(LinearSampler, In.vTexcoord13) + g_vLightEmissive * g_EmissiveTarget.Sample(LinearSampler, In.vTexcoord13)) * weight6;
+    color += (g_GlowTarget.Sample(PointSampler, In.vTexcoord1) + g_SpecularTarget.Sample(PointSampler, In.vTexcoord1) + g_vLightEmissive * g_EmissiveTarget.Sample(PointSampler, In.vTexcoord1)) * weight6;
+    color += (g_GlowTarget.Sample(PointSampler, In.vTexcoord2) + g_SpecularTarget.Sample(PointSampler, In.vTexcoord2) + g_vLightEmissive * g_EmissiveTarget.Sample(PointSampler, In.vTexcoord2)) * weight5;
+    color += (g_GlowTarget.Sample(PointSampler, In.vTexcoord3) + g_SpecularTarget.Sample(PointSampler, In.vTexcoord3) + g_vLightEmissive * g_EmissiveTarget.Sample(PointSampler, In.vTexcoord3)) * weight4;
+    color += (g_GlowTarget.Sample(PointSampler, In.vTexcoord4) + g_SpecularTarget.Sample(PointSampler, In.vTexcoord4) + g_vLightEmissive * g_EmissiveTarget.Sample(PointSampler, In.vTexcoord4)) * weight3;
+    color += (g_GlowTarget.Sample(PointSampler, In.vTexcoord5) + g_SpecularTarget.Sample(PointSampler, In.vTexcoord5) + g_vLightEmissive * g_EmissiveTarget.Sample(PointSampler, In.vTexcoord5)) * weight2;
+    color += (g_GlowTarget.Sample(PointSampler, In.vTexcoord6) + g_SpecularTarget.Sample(PointSampler, In.vTexcoord6) + g_vLightEmissive * g_EmissiveTarget.Sample(PointSampler, In.vTexcoord6)) * weight1;
+    color += (g_GlowTarget.Sample(PointSampler, In.vTexcoord7) + g_SpecularTarget.Sample(PointSampler, In.vTexcoord7) + g_vLightEmissive * g_EmissiveTarget.Sample(PointSampler, In.vTexcoord7)) * weight0;
+    color += (g_GlowTarget.Sample(PointSampler, In.vTexcoord8) + g_SpecularTarget.Sample(PointSampler, In.vTexcoord8) + g_vLightEmissive * g_EmissiveTarget.Sample(PointSampler, In.vTexcoord8)) * weight1;
+    color += (g_GlowTarget.Sample(PointSampler, In.vTexcoord9) + g_SpecularTarget.Sample(PointSampler, In.vTexcoord9) + g_vLightEmissive * g_EmissiveTarget.Sample(PointSampler, In.vTexcoord9)) * weight2;
+    color += (g_GlowTarget.Sample(PointSampler, In.vTexcoord10) + g_SpecularTarget.Sample(PointSampler, In.vTexcoord10) + g_vLightEmissive * g_EmissiveTarget.Sample(PointSampler, In.vTexcoord10)) * weight3;
+    color += (g_GlowTarget.Sample(PointSampler, In.vTexcoord11) + g_SpecularTarget.Sample(PointSampler, In.vTexcoord11) + g_vLightEmissive * g_EmissiveTarget.Sample(PointSampler, In.vTexcoord11)) * weight4;
+    color += (g_GlowTarget.Sample(PointSampler, In.vTexcoord12) + g_SpecularTarget.Sample(PointSampler, In.vTexcoord12) + g_vLightEmissive * g_EmissiveTarget.Sample(PointSampler, In.vTexcoord12)) * weight5;
+    color += (g_GlowTarget.Sample(PointSampler, In.vTexcoord13) + g_SpecularTarget.Sample(PointSampler, In.vTexcoord13) + g_vLightEmissive * g_EmissiveTarget.Sample(PointSampler, In.vTexcoord13)) * weight6;
     
     color.a = 1.0f;
     
@@ -521,19 +521,19 @@ PS_OUT_BLURV PS_MAIN_BLURV(PS_IN_BLUR In)
     
     color = float4(0.0f, 0.0f, 0.0f, 0.0f);
     
-    color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord1) * weight6;
-    color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord2) * weight5;
-    color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord3) * weight4;
-    color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord4) * weight3;
-    color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord5) * weight2;
-    color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord6) * weight1;
-    color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord7) * weight0;
-    color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord8) * weight1;
-    color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord9) * weight2;
-    color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord10) * weight3;
-    color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord11) * weight4;
-    color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord12) * weight5;
-    color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord13) * weight6;
+    color += g_BlurHTarget.Sample(PointSampler, In.vTexcoord1) * weight6;
+    color += g_BlurHTarget.Sample(PointSampler, In.vTexcoord2) * weight5;
+    color += g_BlurHTarget.Sample(PointSampler, In.vTexcoord3) * weight4;
+    color += g_BlurHTarget.Sample(PointSampler, In.vTexcoord4) * weight3;
+    color += g_BlurHTarget.Sample(PointSampler, In.vTexcoord5) * weight2;
+    color += g_BlurHTarget.Sample(PointSampler, In.vTexcoord6) * weight1;
+    color += g_BlurHTarget.Sample(PointSampler, In.vTexcoord7) * weight0;
+    color += g_BlurHTarget.Sample(PointSampler, In.vTexcoord8) * weight1;
+    color += g_BlurHTarget.Sample(PointSampler, In.vTexcoord9) * weight2;
+    color += g_BlurHTarget.Sample(PointSampler, In.vTexcoord10) * weight3;
+    color += g_BlurHTarget.Sample(PointSampler, In.vTexcoord11) * weight4;
+    color += g_BlurHTarget.Sample(PointSampler, In.vTexcoord12) * weight5;
+    color += g_BlurHTarget.Sample(PointSampler, In.vTexcoord13) * weight6;
     
     color.a = 1.0f;
     

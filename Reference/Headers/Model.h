@@ -27,6 +27,7 @@ class CBone;
 class CSocket;
 class CMesh;
 class CAnimation;
+class CVIBuffer_Instance;
 class ENGINE_DLL CModel final : public CComponent
 {
 	using Super = CComponent;
@@ -44,7 +45,8 @@ public:
 	virtual void	Tick(const _float& fTimeDelta)	override;
 	void			DebugRender()					override;
 	HRESULT			Render();
-	HRESULT			RenderInstancing(class CVIBuffer_Instance*& pInstanceBuffer);
+	HRESULT			RenderShadowInstancing(CVIBuffer_Instance*& pInstanceBuffer);
+	HRESULT			RenderInstancing(CVIBuffer_Instance*& pInstanceBuffer);
 
 public:
 	HRESULT			UpdateTweenData(const _float& fTimeDelta);
