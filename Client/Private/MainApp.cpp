@@ -175,7 +175,10 @@ HRESULT CMainApp::Ready_Prototype_Components()
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Point_Instance.hlsl"), VTXPOINT::Elements, VTXPOINT::iNumElements))))
 		return E_FAIL;
 
-	// TODO: StaticInstancing도 셰이더 만들어 둘 것
+	/* For.Prototype_Component_Shader_Sun */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_Sun"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Sun.hlsl"), VTXMESH::Elements, VTXMESH::iNumElements))))
+		return E_FAIL;
 
 	/* For.Prototype_Component_Shader_VtxPosTex */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_VtxPosTex"),
@@ -407,6 +410,13 @@ HRESULT CMainApp::Ready_Prototype_Components()
 				//XMStoreFloat4x4(&matPivot, XMMatrixScaling(0.007f, 0.007f, 0.007f) * XMMatrixRotationY(XMConvertToRadians(172.0f)) * XMMatrixRotationX(XMConvertToRadians(98.0f)) * XMMatrixTranslation(-0.15f, 0.f, 0.095f));
 				XMStoreFloat4x4(&matPivot, XMMatrixScaling(0.007f, 0.007f, 0.007f) * XMMatrixRotationY(XMConvertToRadians(80.f)) * XMMatrixRotationX(XMConvertToRadians(270.0f)) * XMMatrixRotationY(XMConvertToRadians(270.f)) * XMMatrixRotationZ(XMConvertToRadians(330.0f))
 					* XMMatrixTranslation(1.6f, 0.4f, -2.5f));
+				if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_" + strFileName),
+					CModel::Create(m_pDevice, m_pContext, strStaticFilePath + strFileName, desc, matPivot))))
+					return E_FAIL;
+			}
+			else if (TEXT("Sun") == strFileName)
+			{
+				XMStoreFloat4x4(&matPivot, XMMatrixScaling(0.0003f, 0.0003f, 0.0003f));
 				if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_" + strFileName),
 					CModel::Create(m_pDevice, m_pContext, strStaticFilePath + strFileName, desc, matPivot))))
 					return E_FAIL;

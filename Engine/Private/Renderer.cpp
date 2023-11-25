@@ -162,6 +162,21 @@ HRESULT CRenderer::Initialize_Prototype()
 		ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
 		return E_FAIL;
 
+	/* For.Target_SunOccluder */
+	if (FAILED(m_pTargetManager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_SunOccluder"),
+		ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 1.f))))
+		return E_FAIL;
+
+	/* For.Target_Priority */
+	if (FAILED(m_pTargetManager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Priority"),
+		ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(1.f, 1.f, 1.f, 0.f))))
+		return E_FAIL;
+	
+	/* For.Target_GodRay */
+	if (FAILED(m_pTargetManager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_GodRay"),
+		ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 1.f))))
+		return E_FAIL;
+
 	/* For.Target_DepthShadow */
 	if (FAILED(m_pTargetManager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_ShadowDepth"),
 		m_fShadowTargetSizeRatio * ViewportDesc.Width, m_fShadowTargetSizeRatio * ViewportDesc.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.0f, 1.0f, 1.0f, 1.f))))
@@ -224,10 +239,10 @@ HRESULT CRenderer::Initialize_Prototype()
 	if (FAILED(m_pTargetManager->Ready_Debug(TEXT("Target_Specular"), 5.f * fTargetX, fTargetY, 288.f, 162.f)))
 		return E_FAIL;
 	//
-	if (FAILED(m_pTargetManager->Ready_Debug(TEXT("Target_Glow"), fTargetX, 9.f * fTargetY, 288.f, 162.f)))
+	/*if (FAILED(m_pTargetManager->Ready_Debug(TEXT("Target_Glow"), fTargetX, 9.f * fTargetY, 288.f, 162.f)))
 		return E_FAIL;
 	if (FAILED(m_pTargetManager->Ready_Debug(TEXT("Target_BlurH"), 3.f * fTargetX, 9.f * fTargetY, 288.f, 162.f)))
-		return E_FAIL;
+		return E_FAIL;*/
 	//
 	if (FAILED(m_pTargetManager->Ready_Debug(TEXT("Target_BlurHV"), fTargetX, 5.f * fTargetY, 288.f, 162.f)))
 		return E_FAIL;
@@ -243,10 +258,19 @@ HRESULT CRenderer::Initialize_Prototype()
 
 	if (FAILED(m_pTargetManager->Ready_Debug(TEXT("Target_ShadowDepth"), 5.f * fTargetX, 5.f * fTargetY, 288.f, 162.f)))
 		return E_FAIL;
+	
+	if (FAILED(m_pTargetManager->Ready_Debug(TEXT("Target_SunOccluder"), fTargetX, 9.f * fTargetY, 288.f, 162.f)))
+		return E_FAIL;
+	if (FAILED(m_pTargetManager->Ready_Debug(TEXT("Target_GodRay"), 3.f * fTargetX, 9.f * fTargetY, 288.f, 162.f)))
+		return E_FAIL;
+
 #endif
 
 	/* 이 렌더타겟들은 그려지는 객체로부터 값을 저장받는다. */
 	/* For.MRT_GameObjects */
+	if (FAILED(m_pTargetManager->Add_MRT(TEXT("MRT_Priority"), TEXT("Target_Priority"))))
+		return E_FAIL;
+	
 	if (FAILED(m_pTargetManager->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_Diffuse"))))
 		return E_FAIL;
 	if (FAILED(m_pTargetManager->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_Normal"))))
@@ -256,6 +280,8 @@ HRESULT CRenderer::Initialize_Prototype()
 	if (FAILED(m_pTargetManager->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_Emissive"))))
 		return E_FAIL;
 	if (FAILED(m_pTargetManager->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_DepthBlue"))))
+		return E_FAIL;
+	if (FAILED(m_pTargetManager->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_SunOccluder"))))
 		return E_FAIL;
 	
 	if (FAILED(m_pTargetManager->Add_MRT(TEXT("MRT_Refraction"), TEXT("Target_Refraction_Diffuse"))))
@@ -313,6 +339,9 @@ HRESULT CRenderer::Initialize_Prototype()
 
 	if (FAILED(m_pTargetManager->Add_MRT(TEXT("MRT_Shadow"), TEXT("Target_ShadowDepth"))))
 		return E_FAIL;
+	
+	if (FAILED(m_pTargetManager->Add_MRT(TEXT("MRT_GodRay"), TEXT("Target_GodRay"))))
+		return E_FAIL;
 
 	/*if (FAILED(m_pTargetManager->Add_MRT(TEXT("MRT_Distortion"), TEXT("Target_Distortion"))))
 		return E_FAIL;*/
@@ -328,6 +357,10 @@ HRESULT CRenderer::Initialize_Prototype()
 
 	m_pShader = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Deferred.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements);
 	if (nullptr == m_pShader)
+		return E_FAIL;
+	
+	m_pShaderPostProcess = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_PostProcess.hlsl"), VTXPOSTEX::Elements, VTXPOSTEX::iNumElements);
+	if (nullptr == m_pShaderPostProcess)
 		return E_FAIL;
 
 	XMStoreFloat4x4(&m_WorldMatrix, XMMatrixIdentity());
@@ -411,10 +444,16 @@ HRESULT CRenderer::Draw_RenderObjects()
 
 	if (FAILED(Render_Deferred()))
 		return S_OK;
+	
+	if (FAILED(Render_GodRay()))
+		return S_OK;
 
 	/*if (FAILED(Render_Distortion()))
 		return S_OK;*/
 	if (FAILED(Render_Blur()))
+		return S_OK;
+
+	if (FAILED(Render_PostProcess()))
 		return S_OK;
 
 	if (FAILED(Render_Blend()))
@@ -434,6 +473,9 @@ HRESULT CRenderer::Draw_RenderObjects()
 
 HRESULT CRenderer::Render_Priority()
 {
+	if (FAILED(m_pTargetManager->Begin_MRT(m_pContext, TEXT("MRT_Priority"))))
+		return E_FAIL;
+
 	for (auto& pGameObject : m_RenderObjects[RG_PRIORITY])
 	{
 		if (nullptr != pGameObject)
@@ -442,6 +484,9 @@ HRESULT CRenderer::Render_Priority()
 		//Safe_Release(pGameObject);
 	}
 	//m_RenderObjects[RG_PRIORITY].clear();
+
+	if (FAILED(m_pTargetManager->End_MRT(m_pContext)))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -686,7 +731,10 @@ HRESULT CRenderer::Render_Shadow()
 
 	const Vec3& vPos = pPlayer->GetTransform()->GetPosition();
 	_vector vPosition = XMVectorSet(vPos.x, vPos.y, vPos.z, 1.f);
-	_vector vEyePosition = XMVectorSet(vPos.x - 66.f, vPos.y + 99.f, vPos.z - 66.f, 1.f);
+
+	const LIGHT_DESC* pLightDesc = m_pLightManager->Get_LightDesc(0);
+	const _float4& vLightDir = pLightDesc->vLightDir;
+	_vector vLightPosition = XMVectorSet(vPos.x - 120.f * vLightDir.x, vPos.y - 120.f * vLightDir.y, vPos.z - 120.f * vLightDir.z, 1.f);
 
 	D3D11_VIEWPORT		ViewportDesc;
 
@@ -700,7 +748,7 @@ HRESULT CRenderer::Render_Shadow()
 	ViewportDesc.Height *= m_fShadowTargetSizeRatio;
 
 	m_pContext->RSSetViewports(iNumViewports, &ViewportDesc);
-	XMStoreFloat4x4(&m_LightView, XMMatrixLookAtLH(vEyePosition, vPosition, XMVectorSet(0.f, 1.f, 0.f, 0.f)));
+	XMStoreFloat4x4(&m_LightView, XMMatrixLookAtLH(vLightPosition, vPosition, XMVectorSet(0.f, 1.f, 0.f, 0.f)));
 
 	for (auto& pGameObject : m_RenderObjects[RG_SHADOW])
 	{
@@ -790,6 +838,73 @@ HRESULT CRenderer::Render_Shadow()
 	ViewportDesc.Height = fOriginalHeight;
 
 	m_pContext->RSSetViewports(iNumViewports, &ViewportDesc);
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_GodRay()
+{
+	if (FAILED(m_pTargetManager->Begin_MRT(m_pContext, TEXT("MRT_GodRay"))))
+		return E_FAIL;
+
+	_float3 vScreenSunPos = m_pLightManager->Get_SunScreenPos();
+	if (vScreenSunPos.x > 1.05f || vScreenSunPos.x < -0.05f || vScreenSunPos.y > 1.05f || vScreenSunPos.y < -0.05f || vScreenSunPos.z > 1.f || vScreenSunPos.z < 0.f)
+	{
+		if (FAILED(m_pTargetManager->End_MRT(m_pContext)))
+			return E_FAIL;
+		return S_OK;
+	}
+
+	_float2 vScreenSunUV(vScreenSunPos.x, vScreenSunPos.y);
+	if (FAILED(m_pShaderPostProcess->Bind_RawValue("g_ScreenSunPosition", &vScreenSunUV, sizeof(_float2))))
+		return E_FAIL;
+	
+	/*static _float4 vLightShaftValue = _float4(1.f, 0.97f, 1.f, 2.f);
+
+	if (KEY_PRESSING(KEY::CTRL) && KEY_DOWN(KEY::NUM_1))
+	{
+		if(KEY_PRESSING(KEY::SHIFT))
+			vLightShaftValue.x += 0.01f;
+		else
+			vLightShaftValue.x -= 0.01f;
+	}
+	else if (KEY_PRESSING(KEY::CTRL) && KEY_DOWN(KEY::NUM_2))
+	{
+		if (KEY_PRESSING(KEY::SHIFT))
+			vLightShaftValue.y += 0.01f;
+		else
+			vLightShaftValue.y -= 0.01f;
+	}
+	else if (KEY_PRESSING(KEY::CTRL) && KEY_DOWN(KEY::NUM_3))
+	{
+		if (KEY_PRESSING(KEY::SHIFT))
+			vLightShaftValue.z += 0.01f;
+		else
+			vLightShaftValue.z -= 0.01f;
+	}
+	else if (KEY_PRESSING(KEY::CTRL) && KEY_DOWN(KEY::NUM_4))
+	{
+		if (KEY_PRESSING(KEY::SHIFT))
+			vLightShaftValue.w += 0.1f;
+		else
+			vLightShaftValue.w -= 0.1f;
+	}
+
+	if (FAILED(m_pShaderPostProcess->Bind_RawValue("g_LightShaftValue", &vLightShaftValue, sizeof(_float4))))
+		return E_FAIL;*/
+
+	if (FAILED(m_pTargetManager->Bind_SRV(m_pShaderPostProcess, TEXT("Target_SunOccluder"), "g_SunOccluderTarget")))
+		return E_FAIL;
+
+	m_pShaderPostProcess->SetPassIndex(1);
+	if (FAILED(m_pShaderPostProcess->Begin()))
+		return E_FAIL;
+
+	if (FAILED(m_pVIBuffer->Render()))
+		return E_FAIL;
+
+	if (FAILED(m_pTargetManager->End_MRT(m_pContext)))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -1058,10 +1173,10 @@ HRESULT CRenderer::Render_Water()
 					return E_FAIL;
 				if (FAILED(m_pTargetManager->Bind_SRV(m_pShader, TEXT("Target_Refraction_Shade"), "g_ShadeTarget")))
 					return E_FAIL;
-				if (FAILED(m_pTargetManager->Bind_SRV(m_pShader, TEXT("Target_Refraction_Specular"), "g_SpecularTarget")))
-					return E_FAIL;
+				/*if (FAILED(m_pTargetManager->Bind_SRV(m_pShader, TEXT("Target_Refraction_Specular"), "g_SpecularTarget")))
+					return E_FAIL;*/
 
-				m_pShader->SetPassIndex(8);
+				m_pShader->SetPassIndex(6);
 				if (FAILED(m_pShader->Begin()))
 					return E_FAIL;
 
@@ -1083,10 +1198,10 @@ HRESULT CRenderer::Render_Water()
 					return E_FAIL;
 				if (FAILED(m_pTargetManager->Bind_SRV(m_pShader, TEXT("Target_Reflection_Shade"), "g_ShadeTarget")))
 					return E_FAIL;
-				if (FAILED(m_pTargetManager->Bind_SRV(m_pShader, TEXT("Target_Reflection_Specular"), "g_SpecularTarget")))
-					return E_FAIL;
+				/*if (FAILED(m_pTargetManager->Bind_SRV(m_pShader, TEXT("Target_Reflection_Specular"), "g_SpecularTarget")))
+					return E_FAIL;*/
 
-				m_pShader->SetPassIndex(9);
+				m_pShader->SetPassIndex(7);
 				if (FAILED(m_pShader->Begin()))
 					return E_FAIL;
 
@@ -1163,8 +1278,8 @@ HRESULT CRenderer::Render_Deferred()
 	if (FAILED(m_pTargetManager->Bind_SRV(m_pShader, TEXT("Target_ShadowDepth"), "g_ShadowDepthTarget")))
 		return E_FAIL;
 
-	/*if (FAILED(m_pTargetManager->Bind_SRV(m_pShader, TEXT("Target_Specular"), "g_SpecularTarget")))
-		return E_FAIL;*/
+	if (FAILED(m_pTargetManager->Bind_SRV(m_pShader, TEXT("Target_Priority"), "g_PriorityTarget")))
+		return E_FAIL;
 
 	if (FAILED(m_pShader->Bind_Matrix("g_LightViewMatrix", &m_LightView)))
 		return E_FAIL;
@@ -1205,22 +1320,53 @@ HRESULT CRenderer::Render_Distortion()
 	return S_OK;
 }
 
+HRESULT CRenderer::Render_PostProcess()
+{
+	if (FAILED(m_pTargetManager->Bind_SRV(m_pShaderPostProcess, TEXT("Target_Scene"), "g_SceneTarget")))
+		return E_FAIL;
+
+	if (FAILED(m_pShaderPostProcess->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
+		return E_FAIL;
+	if (FAILED(m_pShaderPostProcess->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
+		return E_FAIL;
+	if (FAILED(m_pShaderPostProcess->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
+		return E_FAIL;
+
+	if (FAILED(m_pTargetManager->Bind_SRV(m_pShaderPostProcess, TEXT("Target_BlurHV"), "g_BlurHVTarget")))
+		return E_FAIL;
+
+	//if (FAILED(m_pTargetManager->Bind_SRV(m_pShaderPostProcess, TEXT("Target_Distortion"), "g_DistortionTarget")))
+	//	return E_FAIL;
+
+	m_pShaderPostProcess->SetPassIndex(0);
+	if (FAILED(m_pShaderPostProcess->Begin()))
+		return E_FAIL;
+
+	if (FAILED(m_pVIBuffer->Render()))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 HRESULT CRenderer::Render_Blur()
 {
 	if (FAILED(m_pTargetManager->Begin_MRT(m_pContext, TEXT("MRT_BlurHorizontal"))))
 		return E_FAIL;
 
-	if (FAILED(m_pTargetManager->Bind_SRV(m_pShader, TEXT("Target_Glow"), "g_GlowTarget")))
+	if (FAILED(m_pTargetManager->Bind_SRV(m_pShaderPostProcess, TEXT("Target_Glow"), "g_GlowTarget")))
 		return E_FAIL;
 
-	if (FAILED(m_pTargetManager->Bind_SRV(m_pShader, TEXT("Target_Emissive"), "g_EmissiveTarget")))
+	if (FAILED(m_pTargetManager->Bind_SRV(m_pShaderPostProcess, TEXT("Target_Emissive"), "g_EmissiveTarget")))
 		return E_FAIL;
 
-	if (FAILED(m_pTargetManager->Bind_SRV(m_pShader, TEXT("Target_Specular"), "g_SpecularTarget")))
+	if (FAILED(m_pTargetManager->Bind_SRV(m_pShaderPostProcess, TEXT("Target_Specular"), "g_SpecularTarget")))
 		return E_FAIL;
 
-	m_pShader->SetPassIndex(4);
-	if (FAILED(m_pShader->Begin()))
+	if (FAILED(m_pTargetManager->Bind_SRV(m_pShaderPostProcess, TEXT("Target_GodRay"), "g_GodRayTarget")))
+		return E_FAIL;
+
+	m_pShaderPostProcess->SetPassIndex(2);
+	if (FAILED(m_pShaderPostProcess->Begin()))
 		return E_FAIL;
 
 	if (FAILED(m_pVIBuffer->Render()))
@@ -1232,11 +1378,11 @@ HRESULT CRenderer::Render_Blur()
 	if (FAILED(m_pTargetManager->Begin_MRT(m_pContext, TEXT("MRT_BlurVertical"))))
 		return E_FAIL;
 
-	if (FAILED(m_pTargetManager->Bind_SRV(m_pShader, TEXT("Target_BlurH"), "g_BlurHTarget")))
+	if (FAILED(m_pTargetManager->Bind_SRV(m_pShaderPostProcess, TEXT("Target_BlurH"), "g_BlurHTarget")))
 		return E_FAIL;
 
-	m_pShader->SetPassIndex(5);
-	if (FAILED(m_pShader->Begin()))
+	m_pShaderPostProcess->SetPassIndex(3);
+	if (FAILED(m_pShaderPostProcess->Begin()))
 		return E_FAIL;
 
 	if (FAILED(m_pVIBuffer->Render()))
@@ -1247,21 +1393,21 @@ HRESULT CRenderer::Render_Blur()
 
 	///////////////////////////// Scene
 
-	if (FAILED(m_pTargetManager->Bind_SRV(m_pShader, TEXT("Target_Scene"), "g_SceneTarget")))
-		return E_FAIL;
-
-	if (FAILED(m_pTargetManager->Bind_SRV(m_pShader, TEXT("Target_BlurHV"), "g_BlurHVTarget")))
-		return E_FAIL;
-
-	//if (FAILED(m_pTargetManager->Bind_SRV(m_pShader, TEXT("Target_Distortion"), "g_DistortionTarget")))
+	//if (FAILED(m_pTargetManager->Bind_SRV(m_pShader, TEXT("Target_Scene"), "g_SceneTarget")))
 	//	return E_FAIL;
 
-	m_pShader->SetPassIndex(6);
-	if (FAILED(m_pShader->Begin()))
-		return E_FAIL;
+	//if (FAILED(m_pTargetManager->Bind_SRV(m_pShader, TEXT("Target_BlurHV"), "g_BlurHVTarget")))
+	//	return E_FAIL;
 
-	if (FAILED(m_pVIBuffer->Render()))
-		return E_FAIL;
+	////if (FAILED(m_pTargetManager->Bind_SRV(m_pShader, TEXT("Target_Distortion"), "g_DistortionTarget")))
+	////	return E_FAIL;
+
+	//m_pShader->SetPassIndex(6);
+	//if (FAILED(m_pShader->Begin()))
+	//	return E_FAIL;
+
+	//if (FAILED(m_pVIBuffer->Render()))
+	//	return E_FAIL;
 
 	///////////////////////////// Scene
 
@@ -1354,12 +1500,12 @@ HRESULT CRenderer::Render_Debug()
 			return E_FAIL;
 		if (FAILED(m_pTargetManager->Render(TEXT("MRT_Lights"), m_pShader, m_pVIBuffer)))
 			return E_FAIL;
-		if (FAILED(m_pTargetManager->Render(TEXT("MRT_Effect"), m_pShader, m_pVIBuffer)))
-			return E_FAIL;
+		/*if (FAILED(m_pTargetManager->Render(TEXT("MRT_Effect"), m_pShader, m_pVIBuffer)))
+			return E_FAIL;*/
 		/*if (FAILED(m_pTargetManager->Render(TEXT("MRT_Scene"), m_pShader, m_pVIBuffer)))
 			return E_FAIL;*/
-		if (FAILED(m_pTargetManager->Render(TEXT("MRT_BlurHorizontal"), m_pShader, m_pVIBuffer)))
-			return E_FAIL;
+		/*if (FAILED(m_pTargetManager->Render(TEXT("MRT_BlurHorizontal"), m_pShader, m_pVIBuffer)))
+			return E_FAIL;*/
 		if (FAILED(m_pTargetManager->Render(TEXT("MRT_BlurVertical"), m_pShader, m_pVIBuffer)))
 			return E_FAIL;
 		if (FAILED(m_pTargetManager->Render(TEXT("MRT_Refraction_Final"), m_pShader, m_pVIBuffer)))
@@ -1367,6 +1513,8 @@ HRESULT CRenderer::Render_Debug()
 		if (FAILED(m_pTargetManager->Render(TEXT("MRT_Reflection_Final"), m_pShader, m_pVIBuffer)))
 			return E_FAIL;
 		if (FAILED(m_pTargetManager->Render(TEXT("MRT_Shadow"), m_pShader, m_pVIBuffer)))
+			return E_FAIL;
+		if (FAILED(m_pTargetManager->Render(TEXT("MRT_GodRay"), m_pShader, m_pVIBuffer)))
 			return E_FAIL;
 		//if (FAILED(m_pTargetManager->Render(TEXT("MRT_Distortion"), m_pShader, m_pVIBuffer)))
 		//	return E_FAIL;

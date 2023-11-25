@@ -412,6 +412,15 @@
     <Filter Include="03.GameObjects\05.Particle\Lightning">
       <UniqueIdentifier>{a235c40b-71a1-4bdf-b21b-e3d218e3b552}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.GameObjects\05.Particle\Crystal">
+      <UniqueIdentifier>{12bc31e9-c8ff-42a4-aac0-f3215b8130e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\01.Playable\00.P_Strife\Ammo\Nature">
+      <UniqueIdentifier>{c43e5f3f-a45e-4925-8b6c-bd22393a9f4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\00.Static\Sun">
+      <UniqueIdentifier>{08e19640-0c2a-452a-883d-1ce51d5dcabf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -858,6 +867,15 @@
     <ClInclude Include="..\Public\GeyserCrack.h">
       <Filter>03.GameObjects\03.Boss\00.Moloch\TremorCrystal</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\CrystalParticle.h">
+      <Filter>03.GameObjects\05.Particle\Crystal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Strife_Ammo_Nature.h">
+      <Filter>03.GameObjects\01.Playable\00.P_Strife\Ammo\Nature</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sun.h">
+      <Filter>03.GameObjects\00.Static\Sun</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1247,6 +1265,15 @@
     <ClCompile Include="..\Private\GeyserCrack.cpp">
       <Filter>03.GameObjects\03.Boss\00.Moloch\TremorCrystal</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\CrystalParticle.cpp">
+      <Filter>03.GameObjects\05.Particle\Crystal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Strife_Ammo_Nature.cpp">
+      <Filter>03.GameObjects\01.Playable\00.P_Strife\Ammo\Nature</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sun.cpp">
+      <Filter>03.GameObjects\00.Static\Sun</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1320,6 +1347,9 @@
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Sphere.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Sun.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

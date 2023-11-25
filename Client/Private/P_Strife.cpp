@@ -50,8 +50,20 @@ void CP_Strife::Tick(const _float& fTimeDelta)
 
 	if (KEY_PRESSING(KEY::CTRL) && KEY_DOWN(KEY::L))
 	{
-		CGameObject* pGameObject = m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_GeyserCrack"), LAYERTAG::IGNORECOLLISION);
-		pGameObject->GetTransform()->Translate(GetTransform()->GetPosition());
+		/*CParticleController::PARTICLE_DESC tParticleDesc;
+		tParticleDesc.vSpeedMax = _float3(4.f, 10.f, 4.f);
+		tParticleDesc.vSpeedMin = _float3(-4.f, 7.f, -4.f);
+		tParticleDesc.vCenter = GetTransform()->GetPosition();
+
+		tParticleDesc.eType = CParticleController::ParticleType::RIGIDBODY;
+		for (_int i = 0; i < 3; ++i)
+		{
+			m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_TremorCrystal_G"), LAYERTAG::IGNORECOLLISION, &tParticleDesc);
+			m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_TremorCrystal_H"), LAYERTAG::IGNORECOLLISION, &tParticleDesc);
+			m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_TremorCrystal_I"), LAYERTAG::IGNORECOLLISION, &tParticleDesc);
+			m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_TremorCrystal_L"), LAYERTAG::IGNORECOLLISION, &tParticleDesc);
+			m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_TremorCrystal_M"), LAYERTAG::IGNORECOLLISION, &tParticleDesc);
+		}*/
 	}
 }
 

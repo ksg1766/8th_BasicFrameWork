@@ -125,6 +125,21 @@ void CP_Strife_State_Aim::Input(const _float& fTimeDelta)
 
 		pController->GetFireMessage(CStrife_Ammo::AmmoType::BEAM);
 	}//공격
+	//if (MOUSE_DOWN(MOUSEKEYSTATE::DIM_RB) || MOUSE_PRESSING(MOUSEKEYSTATE::DIM_RB))
+	//{
+	//	const POINT& p = m_pGameInstance->GetMousePos();
+	//	Vec3 vPickPos;	_float fDistance;
+
+	//	pController->Pick(p.x, p.y, vPickPos, fDistance);
+	//	pController->Look(vPickPos, fTimeDelta);
+
+	//	m_fFR_Default_Timer -= fTimeDelta;
+	//	if (m_fFR_Default_Timer < 0.f)
+	//	{
+	//		pController->GetFireMessage(CStrife_Ammo::AmmoType::NATURE);
+	//		m_fFR_Default_Timer = 4.f * m_fFR_Default;
+	//	}
+	//}//공격
 }
 
 CP_Strife_State_Aim* CP_Strife_State_Aim::Create(CGameObject* pGameObject, const STATEANIMS& tStateAnim, CMonoBehaviour* pController)

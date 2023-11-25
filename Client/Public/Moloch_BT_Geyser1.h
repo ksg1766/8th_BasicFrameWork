@@ -26,6 +26,8 @@ private:
 	CGameObject*		GetTarget();
 
 	Vec3				m_vTargetPos;
+	Vec3				m_vTargetForward;
+	Vec3				m_vTargetRight;
 
 	_bool				m_bAttack;
 	_bool				m_bCrystalUp;

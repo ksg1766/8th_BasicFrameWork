@@ -101,6 +101,7 @@ public: /* For.PipeLine */
 public: /* For.LightManager */
 	const LIGHT_DESC* Get_LightDesc(_uint iLightIndex);
 	HRESULT			Add_Light(const LIGHT_DESC& LightDesc);
+	HRESULT			Add_Sun(CGameObject* pSun);
 
 private:
 	class CTimerManager*			m_pTimerManager = { nullptr };

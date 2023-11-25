@@ -34,6 +34,7 @@
 #include "Dagon.h"
 #include "Strife_Ammo_Default.h"
 #include "Strife_Ammo_Beam.h"
+#include "Strife_Ammo_Nature.h"
 #include "SkyBox.h"
 #include "Particle.h"
 #include "ParticleController.h"
@@ -48,6 +49,8 @@
 #include "Bubble.h"
 #include "Wave_Ring.h"
 #include "GeyserCrack.h"
+#include "CrystalParticle.h"
+#include "Sun.h"
 
 CLoader::CLoader(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: m_pDevice(pDevice)
@@ -390,6 +393,10 @@ HRESULT CLoader::Loading_GameObjects_For_Level_GamePlay()
 	/* For.Prototype_GameObject_Strife_Ammo_Static */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Strife_Ammo_Beam"), CStrife_Ammo_Beam::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+	
+	/* For.Prototype_GameObject_Strife_Ammo_Nature */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Strife_Ammo_Nature"), CStrife_Ammo_Nature::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
 	/* For.Prototype_GameObject_Strife_Ammo_Static */
 	/*if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Strife_Ammo_Static"), CStrife_Ammo_Static::Create(m_pDevice, m_pContext))))
@@ -458,6 +465,18 @@ HRESULT CLoader::Loading_GameObjects_For_Level_GamePlay()
 	/* For.Prototype_GameObject_GeyserCrack */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_GeyserCrack"), CGeyserCrack::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+	
+	/* For.Prototype_GameObject_Sun */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Sun"), CSun::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_TremorCrystal_ */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_TremorCrystal_G"), CCrystalParticle::Create(m_pDevice, m_pContext))) ||
+		FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_TremorCrystal_H"), CCrystalParticle::Create(m_pDevice, m_pContext))) ||
+		FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_TremorCrystal_I"), CCrystalParticle::Create(m_pDevice, m_pContext))) ||
+		FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_TremorCrystal_L"), CCrystalParticle::Create(m_pDevice, m_pContext))) ||
+		FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_TremorCrystal_M"), CCrystalParticle::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
 	/* For.Prototype_GameObject_Static */
 	wstring strStaticFilePath = TEXT("../Bin/Resources/Models/Static/");
@@ -470,7 +489,11 @@ HRESULT CLoader::Loading_GameObjects_For_Level_GamePlay()
 			strFileName == TEXT("Moloch_Sword") || strFileName == TEXT("TremorCrystal_A") ||
 			strFileName == TEXT("TremorCrystal_B") || strFileName == TEXT("Moloch_Sword_Slash") ||
 			strFileName == TEXT("Arena") || strFileName == TEXT("Bubble") ||
-			strFileName == TEXT("Wave_Ring")
+			strFileName == TEXT("Wave_Ring") || strFileName == TEXT("TremorCrystal_G") ||
+			strFileName == TEXT("TremorCrystal_H") || strFileName == TEXT("TremorCrystal_I") ||
+			strFileName == TEXT("TremorCrystal_L") || strFileName == TEXT("TremorCrystal_M") ||
+			strFileName == TEXT("Sun")
+
 			/* || strFileName == TEXT("LavaUpdate2") ||
 			strFileName == TEXT("LavaUpdate") || strFileName == TEXT("Lava_East_A1")*/)
 			continue;

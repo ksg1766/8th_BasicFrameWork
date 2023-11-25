@@ -48,6 +48,7 @@ private:
 private:
 	class CVIBuffer_Rect*						m_pVIBuffer = { nullptr };
 	class CShader*								m_pShader = { nullptr };
+	class CShader*								m_pShaderPostProcess = { nullptr };
 	ID3D11DepthStencilView*						m_pShadowDSV = nullptr;
 
 	_float4x4									m_WorldMatrix, m_ViewMatrix, m_ProjMatrix;
@@ -76,8 +77,10 @@ private:
 	HRESULT Render_Water();
 
 	HRESULT Render_Shadow();
+	HRESULT Render_GodRay();
 	HRESULT Render_Blur();
 	HRESULT Render_Distortion();
+	HRESULT Render_PostProcess();
 
 	HRESULT Render_Blend();
 	HRESULT Render_Blend_Instance();

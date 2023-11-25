@@ -22,8 +22,14 @@ HRESULT CParticleController::Initialize_Prototype()
 HRESULT CParticleController::Initialize(void* pArg)
 {
 	m_pTransform = GetTransform();
-	//m_pRigidBody = static_cast<CRigidDynamic*>(m_pGameObject->GetRigidBody());
-	
+	if (m_pGameObject->GetRigidBody())
+	{
+		m_pRigidBody = static_cast<CRigidDynamic*>(m_pGameObject->GetRigidBody());
+		m_pRigidBody->SetMass(0.25f);
+		m_pRigidBody->SetMaterialDrag(0.000001f);
+		m_pRigidBody->SetMaterialAngularDrag(0.f);
+	}
+
 	if (nullptr == pArg)
 		return E_FAIL;
 
@@ -53,6 +59,13 @@ HRESULT CParticleController::Initialize(void* pArg)
 	m_pTransform->SetScale(Vec3(fScale));
 	m_pTransform->SetPosition(Vec3(m_tProps.vCenter.x + RandomX(RandomNumber), 2.f + m_tProps.vCenter.y + RandomY(RandomNumber), m_tProps.vCenter.z + RandomZ(RandomNumber)));
 
+	if (m_pRigidBody)
+	{
+		m_pRigidBody->AddForce(m_vSpeed, ForceMode::IMPULSE);
+		m_vSpeed.x *= 2.f;
+		m_vSpeed.z *= 2.f;
+		m_pRigidBody->AddTorque(70.f * m_vSpeed, ForceMode::IMPULSE);
+	}
 	//m_pTransform->WorldMatrix().Backward(m_vSpeed);
 
 	//m_pRigidBody->AddForce(m_vSpeed, ForceMode::IMPULSE);
@@ -77,6 +90,9 @@ void CParticleController::Tick(const _float& fTimeDelta)
 			break;
 		case ParticleType::EXPLODE:
 			RandomExplode(fTimeDelta);
+			break;
+		case ParticleType::RIGIDBODY:
+			//RigidExplode(fTimeDelta);
 			break;
 		}
 	}
@@ -118,6 +134,10 @@ void CParticleController::RandomExplode(const _float& fTimeDelta)
 {
 	m_vSpeed.y -= 0.07f;
 	m_pTransform->Translate(m_vSpeed * fTimeDelta);
+}
+
+void CParticleController::RigidExplode(const _float& fTimeDelta)
+{
 }
 
 CParticleController* CParticleController::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

@@ -702,5 +702,8 @@
     <FxCompile Include="..\Bin\ShaderFiles\Engine_Shader_Defines.hlsl">
       <Filter>01.Utiltiy\04.Component\06.Shader\ShaderFiles</Filter>
     </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_PostProcess.hlsl">
+      <Filter>01.Utiltiy\04.Component\06.Shader\ShaderFiles</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

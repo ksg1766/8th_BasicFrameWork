@@ -34,7 +34,7 @@ HRESULT CWater::Initialize(void* pArg)
 
 void CWater::Tick(const _float& fTimeDelta)
 {
-	m_fWaterTranslation = m_fWaterTranslation + _float(-fTimeDelta * m_fWaterTranslationSpeed);
+	m_fWaterTranslation += _float(-fTimeDelta * m_fWaterTranslationSpeed);
 
 	if (m_fWaterTranslation < 0.f)	m_fWaterTranslation += 1.f;
 

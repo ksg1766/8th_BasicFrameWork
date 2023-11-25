@@ -56,8 +56,8 @@ void CRigidDynamic::Tick(const _float& fTimeDelta)	// FixedUpdate 처럼 동작하기 
 	//m_vPrePosition = GetTransform()->GetPosition();
 
 	// ColliderUpdate
-	m_pSphereCollider->Tick(fTimeDelta);
-	m_pOBBCollider->Tick(fTimeDelta);
+	if (m_pSphereCollider)	m_pSphereCollider->Tick(fTimeDelta);
+	if (m_pOBBCollider)		m_pOBBCollider->Tick(fTimeDelta);
 
 	if (m_IsSleeping)
 		return;
@@ -127,7 +127,7 @@ void CRigidDynamic::UpdateTransform(const _float& fTimeDelta)
 	pTransform->Translate(m_vLinearVelocity * fTimeDelta);
 }
 
-void CRigidDynamic::AddForce(const Vec3& vForce, ForceMode eMode)
+void CRigidDynamic::AddForce(const Vec3& vForce, const ForceMode& eMode)
 {
 	switch (eMode)
 	{
@@ -148,7 +148,7 @@ void CRigidDynamic::AddForce(const Vec3& vForce, ForceMode eMode)
 	WakeUp();
 }
 
-void CRigidDynamic::AddTorque(const Vec3& vTorque, ForceMode eMode)
+void CRigidDynamic::AddTorque(const Vec3& vTorque, const ForceMode& eMode)
 {
 	switch (eMode)
 	{
@@ -169,7 +169,7 @@ void CRigidDynamic::AddTorque(const Vec3& vTorque, ForceMode eMode)
 	WakeUp();
 }
 
-void CRigidDynamic::SetForceAndTorque(const Vec3& vForce, const Vec3& vTorque, ForceMode eMode)
+void CRigidDynamic::SetForceAndTorque(const Vec3& vForce, const Vec3& vTorque, const ForceMode& eMode)
 {
 	switch (eMode)
 	{
@@ -194,7 +194,7 @@ void CRigidDynamic::SetForceAndTorque(const Vec3& vForce, const Vec3& vTorque, F
 	WakeUp();
 }
 
-void CRigidDynamic::ClearForce(ForceMode eMode)
+void CRigidDynamic::ClearForce(const ForceMode& eMode)
 {
 	switch (eMode)
 	{
@@ -213,7 +213,7 @@ void CRigidDynamic::ClearForce(ForceMode eMode)
 	}
 }
 
-void CRigidDynamic::ClearTorque(ForceMode eMode)
+void CRigidDynamic::ClearTorque(const ForceMode& eMode)
 {
 	switch (eMode)
 	{

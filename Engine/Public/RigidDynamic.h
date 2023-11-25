@@ -31,44 +31,44 @@ public:
 public:
 
 #pragma region Property
-	_bool	UseGravity()	const						{ return m_UseGravity; }
-	void	UseGravity(_bool UseGravity)				{ m_UseGravity = UseGravity; }
-	_bool	IsKinematic()	const						{ return m_IsKinematic; }
-	void	IsKinematic(_bool IsKinematic)				{ m_IsKinematic = IsKinematic; }
+	_bool	UseGravity()	const							{ return m_UseGravity; }
+	void	UseGravity(_bool UseGravity)					{ m_UseGravity = UseGravity; }
+	_bool	IsKinematic()	const							{ return m_IsKinematic; }
+	void	IsKinematic(_bool IsKinematic)					{ m_IsKinematic = IsKinematic; }
 
-	_float	GetMass()	const							{ return m_fMass; }
-	void	SetMass(_float fMass)						{ m_fMass = fMass; }
-	_float	GetDrag()	const							{ return m_fDrag; }
-	_float	GetAngularDrag()	const					{ return m_fAngularDrag; }
-	void	SetMaterialDrag(_float fMaterialDrag)		{ m_fMaterialDrag = fMaterialDrag; }
+	_float	GetMass()	const								{ return m_fMass; }
+	void	SetMass(_float fMass)							{ m_fMass = fMass; }
+	_float	GetDrag()	const								{ return m_fDrag; }
+	_float	GetAngularDrag()	const						{ return m_fAngularDrag; }
+	void	SetMaterialDrag(_float fMaterialDrag)			{ m_fMaterialDrag = fMaterialDrag; }
 	void	SetMaterialAngularDrag(_float fMaterialAngularDrag)	
-														{ m_fMaterialAngularDrag = fMaterialAngularDrag; }
+															{ m_fMaterialAngularDrag = fMaterialAngularDrag; }
 
-	_bool	IsFrozePosition(Axis eAxis)					{ return m_byConstraints & 1 << (_int)eAxis; }
-	void	FreezePosition(Axis eAxis)					{ m_byConstraints ^= 1 << (_int)eAxis; }		// Switch On/Off
-	_bool	IsFrozeRotation(Axis eAxis)					{ return m_byConstraints & 1 << ((_int)eAxis + 3); }
-	void	FreezeRotation(Axis eAxis)					{ m_byConstraints ^= 1 << ((_int)eAxis + 3); }	// Switch On/Off
+	_bool	IsFrozePosition(const Axis& eAxis)				{ return m_byConstraints & 1 << (_int)eAxis; }
+	void	FreezePosition(const Axis& eAxis)				{ m_byConstraints ^= 1 << (_int)eAxis; }		// Switch On/Off
+	_bool	IsFrozeRotation(const Axis& eAxis)				{ return m_byConstraints & 1 << ((_int)eAxis + 3); }
+	void	FreezeRotation(const Axis& eAxis)				{ m_byConstraints ^= 1 << ((_int)eAxis + 3); }	// Switch On/Off
 
 	// Velocity
-	Vec3	GetLinearVelocity()	const					{ return m_vLinearVelocity; }
+	Vec3	GetLinearVelocity()	const						{ return m_vLinearVelocity; }
 	void	SetLinearVelocity(const Vec3& vLinearVelocity);
-	_float	GetLinearAxisVelocity(Axis eAxis)	const	{ return *((_float*)&m_vLinearVelocity + (_int)eAxis); }
-	void	SetLinearAxisVelocity(Axis eAxis, _float fVelocity)
-														{ *((_float*)&m_vLinearVelocity + (_int)eAxis) = fVelocity; }
+	_float	GetLinearAxisVelocity(const Axis& eAxis) const	{ return *((_float*)&m_vLinearVelocity + (_int)eAxis); }
+	void	SetLinearAxisVelocity(const Axis& eAxis, const _float& fVelocity)
+															{ *((_float*)&m_vLinearVelocity + (_int)eAxis) = fVelocity; }
 
-	Vec3	GetAngularVelocity()						{ return m_vAngularVelocity; }
+	Vec3	GetAngularVelocity()							{ return m_vAngularVelocity; }
 	void	SetAngularVelocity(const Vec3& vAngularVelocity);
-	_float	GetAngularAxisVelocity(Axis eAxis)	const	{ return *((_float*)&m_vAngularVelocity + (_int)eAxis); }
-	void	SetAngularAxisVelocity(Axis eAxis, _float fVelocity)
-														{ *((_float*)&m_vAngularVelocity + (_int)eAxis) = fVelocity; }
+	_float	GetAngularAxisVelocity(const Axis& eAxis) const	{ return *((_float*)&m_vAngularVelocity + (_int)eAxis); }
+	void	SetAngularAxisVelocity(const Axis& eAxis, const _float& fVelocity)
+															{ *((_float*)&m_vAngularVelocity + (_int)eAxis) = fVelocity; }
 
 	// Force/Torque modifiers
-	void	AddForce(const Vec3& vForce, ForceMode eMode);
-	void	AddTorque(const Vec3& vTorque, ForceMode eMode);
-	void	SetForceAndTorque(const Vec3& vForce, const Vec3& vTorque, ForceMode eMode);
+	void	AddForce(const Vec3& vForce, const ForceMode& eMode);
+	void	AddTorque(const Vec3& vTorque, const ForceMode& eMode);
+	void	SetForceAndTorque(const Vec3& vForce, const Vec3& vTorque, const ForceMode& eMode);
 
-	void	ClearForce(ForceMode eMode);
-	void	ClearTorque(ForceMode eMode);
+	void	ClearForce(const ForceMode& eMode);
+	void	ClearTorque(const ForceMode& eMode);
 	void	ClearNetPower();
 #pragma endregion Property
 

@@ -169,6 +169,7 @@ struct PS_OUT
     
     float4 vDepth : SV_TARGET2;
     float4 vEmissive : SV_TARGET3;
+    float4 vSunMask : SV_TARGET5;
 };
 
 struct PS_GEYSER_OUT
@@ -178,6 +179,7 @@ struct PS_GEYSER_OUT
     float4 vNormal : SV_TARGET1;
     float2 vDepth : SV_TARGET2;
     float4 vEmissive : SV_TARGET3;
+    float4 vSunMask : SV_TARGET5;
 };
 
 struct PS_WATER_OUT
@@ -185,6 +187,7 @@ struct PS_WATER_OUT
     float4 vColor : SV_TARGET0;
     float4 vNormal : SV_TARGET1;
     float4 vDepth : SV_TARGET2;
+    float4 vSunMask : SV_TARGET5;
 };
 
 /* 전달받은 픽셀의 정보를 이용하여 픽셀의 최종적인 색을 결정하자. */
@@ -217,7 +220,8 @@ PS_OUT PS_COLOR_MAIN(PS_IN In)
     Out.vNormal = float4(0.f, 1.f, 0.f, 1.f);
     //Out.vDepth = float4(0.f, 1.f, 0.f, 1.f);
     Out.vEmissive = g_Color;
-
+    Out.vSunMask = vector(0.f, 0.f, 0.f, 0.f);
+    
     return Out;
 }
 
@@ -234,7 +238,10 @@ PS_OUT PS_BEAM_MAIN(PS_IN In)
     vector vBeamColor = vSourColor * vDestColor;
     
     Out.vDiffuse = 0.9f * vBeamColor;
-    Out.vDiffuse.a = 0.6f;
+    Out.vNormal = float4(0.f, 1.f, 0.f, 1.f);
+    //Out.vDiffuse.a = 0.6f;
+    Out.vEmissive = Out.vDiffuse;
+    Out.vSunMask = vector(0.f, 0.f, 0.f, 0.f);
     
     return Out;
 }
@@ -279,7 +286,8 @@ PS_WATER_OUT PS_WATER_MAIN(PS_WATER_IN In)
     Out.vNormal = float4(vNormal, 0.f);
     //Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);
-
+    Out.vSunMask = vector(0.f, 0.f, 0.f, 0.f);
+    
     return Out;
 }
 
@@ -306,7 +314,8 @@ PS_GEYSER_OUT PS_GEYSER_MAIN(PS_GEYSER_IN In)
     Out.vNormal = float4(vNormal, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);
     Out.vEmissive = vRedColor;
-
+    Out.vSunMask = vector(0.f, 0.f, 0.f, 0.f);
+    
     return Out;
 }
 

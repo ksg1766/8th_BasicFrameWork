@@ -141,6 +141,7 @@ struct PS_OUT
     float4 vNormal : SV_TARGET1;
     float4 vDepth : SV_TARGET2;
     float4 vEmissive : SV_TARGET3;
+    float4 vSunMask : SV_TARGET5;
 };
 
 /* 전달받은 픽셀의 정보를 이용하여 픽셀의 최종적인 색을 결정하자. */
@@ -157,10 +158,13 @@ PS_OUT PS_MAIN(PS_IN In)
 	
     vector vMtrlEmissive = g_EmissiveTexture.Sample(LinearSampler, In.vTexcoord);
     Out.vDiffuse = vMtrlDiffuse;
-    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f); 
+
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);
     
-    Out.vEmissive.r = vMtrlEmissive.g * vMtrlEmissive.b;
+    Out.vEmissive.r = vMtrlEmissive.g * vMtrlEmissive.b + 0.1f;
+    Out.vEmissive.gb += 0.1f;
+    Out.vSunMask = vector(0.f, 0.f, 0.f, 0.f);
     
 	return Out;
 }
@@ -212,6 +216,7 @@ PS_OUT PS_RIM_MAIN(PS_IN In)
     fEmissive = pow(fEmissive, 2);
     
     Out.vEmissive = g_vMtrlEmissive * fEmissive;
+    Out.vSunMask = vector(0.f, 0.f, 0.f, 0.f);
     
     return Out;
 }
@@ -230,6 +235,7 @@ PS_OUT PS_DISSOLVE_MAIN(PS_IN In)
     Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);
+    Out.vSunMask = vector(0.f, 0.f, 0.f, 0.f);
     
     //  Dissolve    
     ComputeDissolveColor(Out.vDiffuse, In.vTexcoord);
@@ -267,6 +273,7 @@ PS_OUT PS_EFFECT_MAIN(PS_IN In)
     Out.vDiffuse = vMtrlDiffuse * vMask;
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);
+    Out.vSunMask = vector(0.f, 0.f, 0.f, 0.f);
     
     //  Dissolve    
     //ComputeDissolveColor(Out.vDiffuse, In.vTexcoord);

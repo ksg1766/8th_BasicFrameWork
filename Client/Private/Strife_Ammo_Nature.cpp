@@ -1,24 +1,24 @@
 #include "stdafx.h"
-#include "..\Public\Strife_Ammo_Default.h"
+#include "..\Public\Strife_Ammo_Nature.h"
 #include "GameInstance.h"
 #include "MonsterController.h"
 
-CStrife_Ammo_Default::CStrife_Ammo_Default(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CStrife_Ammo_Nature::CStrife_Ammo_Nature(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: Super(pDevice, pContext)
 {
 }
 
-CStrife_Ammo_Default::CStrife_Ammo_Default(const CStrife_Ammo_Default& rhs)
+CStrife_Ammo_Nature::CStrife_Ammo_Nature(const CStrife_Ammo_Nature& rhs)
 	: Super(rhs)
 {
 }
 
-HRESULT CStrife_Ammo_Default::Initialize_Prototype()
+HRESULT CStrife_Ammo_Nature::Initialize_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CStrife_Ammo_Default::Initialize(void* pArg)
+HRESULT CStrife_Ammo_Nature::Initialize(void* pArg)
 {
 	if(FAILED(Super::Initialize(pArg)))
 		return E_FAIL;
@@ -33,10 +33,10 @@ HRESULT CStrife_Ammo_Default::Initialize(void* pArg)
 	static_cast<CRigidDynamic*>(GetRigidBody())->IsKinematic(true);
 	static_cast<CRigidDynamic*>(GetRigidBody())->SetMass(0.5f);
 
-	GetTransform()->SetScale(Vec3(0.33f, 7.f, 1.f));
+	GetTransform()->SetScale(Vec3(0.24f, 5.5f, 1.f));
 	GetTransform()->Rotate(Vec3(90.f, 0.0f, 0.f));
 
-	GetRigidBody()->GetSphereCollider()->SetRadius(0.37f);
+	GetRigidBody()->GetSphereCollider()->SetRadius(0.5f);
 
 	Vec3 vExtents(0.25f, 0.25f, 0.25f);
 	GetRigidBody()->GetOBBCollider()->SetExtents(vExtents);
@@ -44,7 +44,7 @@ HRESULT CStrife_Ammo_Default::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CStrife_Ammo_Default::Tick(const _float& fTimeDelta)
+void CStrife_Ammo_Nature::Tick(const _float& fTimeDelta)
 {
 	Super::Tick(fTimeDelta);
 	
@@ -59,19 +59,19 @@ void CStrife_Ammo_Default::Tick(const _float& fTimeDelta)
 	GetRigidBody()->GetOBBCollider()->SetCenter(vPos);
 }
 
-void CStrife_Ammo_Default::LateTick(const _float& fTimeDelta)
+void CStrife_Ammo_Nature::LateTick(const _float& fTimeDelta)
 {
 	Super::LateTick(fTimeDelta);
 
 	GetRenderer()->Add_RenderGroup(CRenderer::RG_NONBLEND, this);
 }
 
-void CStrife_Ammo_Default::DebugRender()
+void CStrife_Ammo_Nature::DebugRender()
 {
 	Super::DebugRender();
 }
 
-HRESULT CStrife_Ammo_Default::Render()
+HRESULT CStrife_Ammo_Nature::Render()
 {
 	if (nullptr == GetShader())
 		return E_FAIL;
@@ -85,7 +85,7 @@ HRESULT CStrife_Ammo_Default::Render()
 	return S_OK;
 }
 
-HRESULT CStrife_Ammo_Default::Ready_FixedComponents()
+HRESULT CStrife_Ammo_Nature::Ready_FixedComponents()
 {
  	if (FAILED(Super::Ready_FixedComponents()))
 		return E_FAIL;
@@ -102,17 +102,20 @@ HRESULT CStrife_Ammo_Default::Ready_FixedComponents()
 	return S_OK;
 }
 
-HRESULT CStrife_Ammo_Default::Ready_Scripts()
+HRESULT CStrife_Ammo_Nature::Ready_Scripts()
 {
 	return S_OK;
 }
 
-HRESULT CStrife_Ammo_Default::Bind_ShaderResources()
+HRESULT CStrife_Ammo_Nature::Bind_ShaderResources()
 {
 	if (FAILED(Super::Bind_ShaderResources()))
 		return E_FAIL;
 
-	Color color(0.85f, 0.57f, 0.24f, 1.f);
+	//Color color(0.85f, 0.57f, 0.24f, 1.f);
+	Color color(0.05f, 0.501960814f, 0.05f, 1.f);
+	//Color color(DirectX::Colors::Green);
+	//Color color(DirectX::Colors::GreenYellow);
 	if (FAILED(GetShader()->Bind_RawValue("g_Color", &color, sizeof(Color))))
 		return E_FAIL;
 
@@ -122,7 +125,7 @@ HRESULT CStrife_Ammo_Default::Bind_ShaderResources()
 	return S_OK;
 }
 
-void CStrife_Ammo_Default::OnCollisionEnter(CGameObject* pOther)
+void CStrife_Ammo_Nature::OnCollisionEnter(CGameObject* pOther)
 {
 	const LAYERTAG& eLayerTag = pOther->GetLayerTag();
 	if (LAYERTAG::UNIT_GROUND == eLayerTag)
@@ -137,41 +140,41 @@ void CStrife_Ammo_Default::OnCollisionEnter(CGameObject* pOther)
 	m_pGameInstance->DeleteObject(this);
 }
 
-void CStrife_Ammo_Default::OnCollisionStay(CGameObject* pOther)
+void CStrife_Ammo_Nature::OnCollisionStay(CGameObject* pOther)
 {
 }
 
-void CStrife_Ammo_Default::OnCollisionExit(CGameObject* pOther)
+void CStrife_Ammo_Nature::OnCollisionExit(CGameObject* pOther)
 {
 }
 
-CStrife_Ammo_Default* CStrife_Ammo_Default::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CStrife_Ammo_Nature* CStrife_Ammo_Nature::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CStrife_Ammo_Default* pInstance = new CStrife_Ammo_Default(pDevice, pContext);
+	CStrife_Ammo_Nature* pInstance = new CStrife_Ammo_Nature(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CStrife_Ammo_Default");
+		MSG_BOX("Failed to Created : CStrife_Ammo_Nature");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CStrife_Ammo_Default::Clone(void* pArg)
+CGameObject* CStrife_Ammo_Nature::Clone(void* pArg)
 {
-	CStrife_Ammo_Default* pInstance = new CStrife_Ammo_Default(*this);
+	CStrife_Ammo_Nature* pInstance = new CStrife_Ammo_Nature(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CStrife_Ammo_Default");
+		MSG_BOX("Failed to Cloned : CStrife_Ammo_Nature");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CStrife_Ammo_Default::Free()
+void CStrife_Ammo_Nature::Free()
 {
 	Super::Free();
 }

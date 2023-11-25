@@ -54,19 +54,33 @@ void CTremorCrystal::Tick(const _float& fTimeDelta)
 		m_pGameInstance->DeleteObject(this);
 		m_pGameInstance->DeleteObject(m_pCrack);
 		CParticleController::PARTICLE_DESC tParticleDesc;
-		tParticleDesc.eType = CParticleController::ParticleType::EXPLODE;
 		tParticleDesc.vSpeedMax = _float3(4.f, 10.f, 4.f);
 		tParticleDesc.vSpeedMin = _float3(-4.f, 7.f, -4.f);
+		tParticleDesc.fLifeTimeMin = 1.7f;
+		tParticleDesc.fLifeTimeMax = 2.5f;
+		tParticleDesc.fScaleMax = 0.3f;
+		tParticleDesc.fScaleMin = 0.15f;
 		tParticleDesc.vCenter = GetTransform()->GetPosition();
-		tParticleDesc.iPass = 1;
+		
+		tParticleDesc.eType = CParticleController::ParticleType::RIGIDBODY;
+		for (_int i = 0; i < 5; ++i)
+		{
+			m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_TremorCrystal_G"), LAYERTAG::IGNORECOLLISION, &tParticleDesc);
+			m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_TremorCrystal_H"), LAYERTAG::IGNORECOLLISION, &tParticleDesc);
+			m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_TremorCrystal_I"), LAYERTAG::IGNORECOLLISION, &tParticleDesc);
+			m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_TremorCrystal_L"), LAYERTAG::IGNORECOLLISION, &tParticleDesc);
+			m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_TremorCrystal_M"), LAYERTAG::IGNORECOLLISION, &tParticleDesc);
+		}
 
+		tParticleDesc.eType = CParticleController::ParticleType::EXPLODE;
+		tParticleDesc.iPass = 1;
 		for (_int i = 0; i < 15; ++i)
 			m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Particle"), LAYERTAG::IGNORECOLLISION, &tParticleDesc);
 
 		if (m_bWithLightning)
 		{
 			CGameObject* pGameObject = m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Lightning"), LAYERTAG::IGNORECOLLISION, &tParticleDesc);
-			pGameObject->GetTransform()->SetScale(Vec3(2.3f, 1.2f, 2.3f));
+			pGameObject->GetTransform()->SetScale(Vec3(2.7f, 1.2f, 2.7f));
 			pGameObject->GetTransform()->Translate(GetTransform()->GetPosition());
 		}
 

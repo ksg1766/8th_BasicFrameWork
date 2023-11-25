@@ -17,7 +17,7 @@ class CParticleController : public CMonoBehaviour
 {
 	using Super = CMonoBehaviour;
 public:
-	enum class ParticleType { FLY, FLOAT, EXPLODE, TYPE_END};
+	enum class ParticleType { FLY, FLOAT, EXPLODE, RIGIDBODY, TYPE_END};
 	typedef struct tagParticleDesc
 	{
 		ParticleType	eType = ParticleType::TYPE_END;
@@ -47,6 +47,7 @@ private:
 	void	RandomFly(const _float& fTimeDelta);
 	void	RandomFloat(const _float& fTimeDelta);
 	void	RandomExplode(const _float& fTimeDelta);
+	void	RigidExplode(const _float& fTimeDelta);
 
 private:
 	CTransform*		m_pTransform	= nullptr;

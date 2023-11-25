@@ -271,6 +271,7 @@
     <ClInclude Include="..\Public\NavMeshView.h" />
     <ClInclude Include="..\Public\Particle.h" />
     <ClInclude Include="..\Public\ParticleController.h" />
+    <ClInclude Include="..\Public\CrystalParticle.h" />
     <ClInclude Include="..\Public\P_Strife.h" />
     <ClInclude Include="..\Public\P_Strife_State_Aim.h" />
     <ClInclude Include="..\Public\P_Strife_State_Dash.h" />
@@ -308,10 +309,12 @@
     <ClInclude Include="..\Public\Strife_Ammo.h" />
     <ClInclude Include="..\Public\Strife_Ammo_Beam.h" />
     <ClInclude Include="..\Public\Strife_Ammo_Default.h" />
+    <ClInclude Include="..\Public\Strife_Ammo_Nature.h" />
     <ClInclude Include="..\Public\Strife_Ammo_Static.h" />
     <ClInclude Include="..\Public\Strife_GunL.h" />
     <ClInclude Include="..\Public\Strife_GunR.h" />
     <ClInclude Include="..\Public\Strife_MotionTrail.h" />
+    <ClInclude Include="..\Public\Sun.h" />
     <ClInclude Include="..\Public\TempCube.h" />
     <ClInclude Include="..\Public\TestAIController.h" />
     <ClInclude Include="..\Public\TremorCrystal.h" />
@@ -409,6 +412,7 @@
     </ClCompile>
     <ClCompile Include="..\Private\Particle.cpp" />
     <ClCompile Include="..\Private\ParticleController.cpp" />
+    <ClCompile Include="..\Private\CrystalParticle.cpp" />
     <ClCompile Include="..\Private\P_Strife.cpp" />
     <ClCompile Include="..\Private\P_Strife_State_Aim.cpp" />
     <ClCompile Include="..\Private\P_Strife_State_Dash.cpp" />
@@ -446,10 +450,12 @@
     <ClCompile Include="..\Private\Strife_Ammo.cpp" />
     <ClCompile Include="..\Private\Strife_Ammo_Beam.cpp" />
     <ClCompile Include="..\Private\Strife_Ammo_Default.cpp" />
+    <ClCompile Include="..\Private\Strife_Ammo_Nature.cpp" />
     <ClCompile Include="..\Private\Strife_Ammo_Static.cpp" />
     <ClCompile Include="..\Private\Strife_GunL.cpp" />
     <ClCompile Include="..\Private\Strife_GunR.cpp" />
     <ClCompile Include="..\Private\Strife_MotionTrail.cpp" />
+    <ClCompile Include="..\Private\Sun.cpp" />
     <ClCompile Include="..\Private\TempCube.cpp" />
     <ClCompile Include="..\Private\TestAIController.cpp" />
     <ClCompile Include="..\Private\TremorCrystal.cpp" />
@@ -538,6 +544,7 @@
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Point_Instance.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Sphere.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Sun.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VTFSocket.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnimInstancing.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnimMesh.hlsl" />

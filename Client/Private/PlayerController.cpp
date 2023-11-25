@@ -237,17 +237,43 @@ void CPlayerController::Fire(CStrife_Ammo::AmmoType eAmmoType)
 	switch (eAmmoType)
 	{
 	case CStrife_Ammo::AmmoType::DEFAULT:
+	{
 		tProps = { eAmmoType, 7, 0, /*10*/50, 70.f * m_pTransform->GetForward(), false, 5.f };
 		pAmmo = m_pGameInstance->CreateObject(L"Prototype_GameObject_Strife_Ammo_Default", LAYERTAG::EQUIPMENT, &tProps);
-		vFireOffset = m_pTransform->GetPosition() + 2.f * m_pTransform->GetForward() - (m_bFireLR * 0.35f - 0.175f) * m_pTransform->GetRight() + 1.7f * m_pTransform->GetUp();
+		vFireOffset = m_pTransform->GetPosition() + 2.2f * m_pTransform->GetForward() - (m_bFireLR * 0.35f - 0.175f) * m_pTransform->GetRight() + 1.7f * m_pTransform->GetUp();
 		m_bFireLR = !m_bFireLR;
-		break;
 
+		pAmmo->GetTransform()->Rotate(qRot);
+		pAmmo->GetTransform()->SetPosition(vFireOffset);
+	}
+	break;
 	case CStrife_Ammo::AmmoType::BEAM:
+	{
 		tProps = { eAmmoType, 4, 0, 5, m_pTransform->GetForward(), false, 0.f };
 		pAmmo = m_pGameInstance->CreateObject(L"Prototype_GameObject_Strife_Ammo_Beam", LAYERTAG::EQUIPMENT, &tProps);
 		vFireOffset = m_pTransform->GetPosition() + 11.f * m_pTransform->GetForward() + 1.7f * m_pTransform->GetUp();
-		break;
+
+		pAmmo->GetTransform()->Rotate(qRot);
+		pAmmo->GetTransform()->SetPosition(vFireOffset);
+	}
+	break;
+	case CStrife_Ammo::AmmoType::NATURE:
+	{
+		for (_int i = 0; i < 17; ++i)
+		{
+			Vec3 vVelocity = m_pTransform->GetForward() + tanf((8 - i) * XMConvertToRadians(3.75f)) * m_pTransform->GetRight();
+			vVelocity.y = 0.f;
+			vVelocity.Normalize();
+			CStrife_Ammo::AMMOPROPS tProps{ eAmmoType, 4, 0, 2, 20.f * vVelocity, false, 3.f };
+			Quaternion qRotResult = qRot * Quaternion::CreateFromAxisAngle(Vec3::UnitY, (8 - i) * XMConvertToRadians(3.75f));
+			pAmmo = m_pGameInstance->CreateObject(L"Prototype_GameObject_Strife_Ammo_Nature", LAYERTAG::EQUIPMENT, &tProps);
+			vFireOffset = m_pTransform->GetPosition() + 2.2f * m_pTransform->GetForward() + 1.7f * m_pTransform->GetUp();
+
+			pAmmo->GetTransform()->Rotate(qRotResult);
+			pAmmo->GetTransform()->SetPosition(vFireOffset + 0.35f * pAmmo->GetTransform()->GetUp()); //RUL 방향 회전 돼서 다름.
+		}
+	}
+	break;
 
 	/*case CStrife_Ammo::AmmoType::STATIC:
 		tProps = { eAmmoType, 4, 0, 10, m_pTransform->GetForward(), false, 0.f };
@@ -265,19 +291,11 @@ void CPlayerController::Fire(CStrife_Ammo::AmmoType eAmmoType)
 		pAmmo = m_pGameInstance->CreateObject(L"Prototype_GameObject_Strife_Ammo_Gravity", LAYERTAG::EQUIPMENT, &tProps);
 		break;
 
-	case CStrife_Ammo::AmmoType::NATURE:
-		CStrife_Ammo::AMMOPROPS tProps{ eAmmoType, 4, 0, 1, 10.f * m_pTransform->GetForward(), false, 5.f };
-		pAmmo = m_pGameInstance->CreateObject(L"Prototype_GameObject_Strife_Ammo_Nature", LAYERTAG::EQUIPMENT, &tProps);
-		break;
-
 	case CStrife_Ammo::AmmoType::LAVA:
 		CStrife_Ammo::AMMOPROPS tProps{ eAmmoType, 4, 0, 1, 10.f * m_pTransform->GetForward(), false, 5.f };
 		pAmmo = m_pGameInstance->CreateObject(L"Prototype_GameObject_Strife_Ammo_Lava", LAYERTAG::EQUIPMENT, &tProps);
 		break;*/
 	}
-
-	pAmmo->GetTransform()->Rotate(qRot);
-	pAmmo->GetTransform()->SetPosition(vFireOffset);
 }
 
 _bool CPlayerController::Pick(_uint screenX, _uint screenY, Vec3& pickPos, _float& distance)

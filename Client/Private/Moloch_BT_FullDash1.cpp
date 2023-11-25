@@ -69,13 +69,29 @@ CBT_Node::BT_RETURN CMoloch_BT_FullDash1::OnUpdate(const _float& fTimeDelta)
 			}
 
 			CParticleController::PARTICLE_DESC tParticleDesc;
-			tParticleDesc.eType = CParticleController::ParticleType::EXPLODE;
-			tParticleDesc.fScaleMax = 0.4f;
-			tParticleDesc.fScaleMin = 0.2f;
 			tParticleDesc.vSpeedMax = _float3(5.f, 10.f, 5.f);
 			tParticleDesc.vSpeedMin = _float3(-5.f, 7.f, -5.f);
-			tParticleDesc.iPass = 1;
+			tParticleDesc.eType = CParticleController::ParticleType::RIGIDBODY;
+			tParticleDesc.fLifeTimeMin = 1.7f;
+			tParticleDesc.fLifeTimeMax = 2.5f;
+			tParticleDesc.fScaleMax = 0.3f;
+			tParticleDesc.fScaleMin = 0.15f;
 
+			for (_int i = 0; i < 4; ++i)
+			{
+				tParticleDesc.vCenter = pCrystal[i]->GetTransform()->GetPosition();
+				for (_int i = 0; i < 5; ++i)
+				{
+					m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_TremorCrystal_G"), LAYERTAG::IGNORECOLLISION, &tParticleDesc);
+					m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_TremorCrystal_H"), LAYERTAG::IGNORECOLLISION, &tParticleDesc);
+					m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_TremorCrystal_I"), LAYERTAG::IGNORECOLLISION, &tParticleDesc);
+					m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_TremorCrystal_L"), LAYERTAG::IGNORECOLLISION, &tParticleDesc);
+					m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_TremorCrystal_M"), LAYERTAG::IGNORECOLLISION, &tParticleDesc);
+				}
+			}
+
+			tParticleDesc.eType = CParticleController::ParticleType::EXPLODE;
+			tParticleDesc.iPass = 1;
 			for (_int i = 0; i < 4; ++i)
 			{
 				tParticleDesc.vCenter = pCrystal[i]->GetTransform()->GetPosition();

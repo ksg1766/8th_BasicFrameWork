@@ -417,6 +417,11 @@ HRESULT CGameInstance::Add_Light(const LIGHT_DESC& LightDesc)
 	return m_pLightManager->Add_Light(LightDesc);
 }
 
+HRESULT CGameInstance::Add_Sun(CGameObject* pSun)
+{
+	return m_pLightManager->Add_Sun(pSun);
+}
+
 
 void CGameInstance::Release_Engine()
 {

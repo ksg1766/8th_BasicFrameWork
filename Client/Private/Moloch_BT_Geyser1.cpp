@@ -6,6 +6,7 @@
 #include "MonsterController.h"
 #include "TremorCrystal.h"
 #include "Particle.h"
+#include "CrystalParticle.h"
 #include "ParticleController.h"
 
 CMoloch_BT_Geyser1::CMoloch_BT_Geyser1()
@@ -26,6 +27,8 @@ void CMoloch_BT_Geyser1::OnStart()
 	if (hashBlackBoard.end() == isSecondRun)
 	{
 		m_vTargetPos = GetTarget()->GetTransform()->GetPosition();
+		m_vTargetForward = GetTarget()->GetTransform()->GetForward();
+		m_vTargetRight = GetTarget()->GetTransform()->GetRight();
 		m_vecCrystal.clear();
 		m_vecCrystal.resize(13);
 	}
@@ -89,16 +92,14 @@ void CMoloch_BT_Geyser1::FirstRun()
 	{
 		if (m_fTimeSum > m_vecAnimIndexTime[0].second * 0.2f)
 		{
-			CTransform* pTargetTransform = GetTarget()->GetTransform();
-
 			Vec3 vCreatePosition[7] = {
 				m_vTargetPos - 3.3f * Vec3::UnitY,
-				m_vTargetPos + 7.7f * (1.2f * pTargetTransform->GetForward() + 0.7f * pTargetTransform->GetRight()) - 3.3f * Vec3::UnitY,
-				m_vTargetPos + 7.7f * (1.2f * pTargetTransform->GetForward() - 0.7f * pTargetTransform->GetRight()) - 3.3f * Vec3::UnitY,
-				m_vTargetPos - 7.7f * (1.2f * pTargetTransform->GetForward() + 0.7f * pTargetTransform->GetRight()) - 3.3f * Vec3::UnitY,
-				m_vTargetPos - 7.7f * (1.2f * pTargetTransform->GetForward() - 0.7f * pTargetTransform->GetRight()) - 3.3f * Vec3::UnitY,
-				m_vTargetPos + 7.5f * (2.f * pTargetTransform->GetForward()) - 3.3f * Vec3::UnitY,
-				m_vTargetPos - 7.5f * (2.f * pTargetTransform->GetForward()) - 3.3f * Vec3::UnitY,
+				m_vTargetPos + 7.7f * (1.2f * m_vTargetForward + 0.7f * m_vTargetRight) - 3.3f * Vec3::UnitY,
+				m_vTargetPos + 7.7f * (1.2f * m_vTargetForward - 0.7f * m_vTargetRight) - 3.3f * Vec3::UnitY,
+				m_vTargetPos - 7.7f * (1.2f * m_vTargetForward + 0.7f * m_vTargetRight) - 3.3f * Vec3::UnitY,
+				m_vTargetPos - 7.7f * (1.2f * m_vTargetForward - 0.7f * m_vTargetRight) - 3.3f * Vec3::UnitY,
+				m_vTargetPos + 7.5f * (2.f * m_vTargetForward) - 3.3f * Vec3::UnitY,
+				m_vTargetPos - 7.5f * (2.f * m_vTargetForward) - 3.3f * Vec3::UnitY,
 			};
 
 			CTremorCrystal::EFFECT_DESC desc;
@@ -114,18 +115,37 @@ void CMoloch_BT_Geyser1::FirstRun()
 				m_vecCrystal[i]->GetTransform()->Translate(vCreatePosition[i]);
 			}
 			CParticleController::PARTICLE_DESC tParticleDesc;
-			tParticleDesc.eType = CParticleController::ParticleType::EXPLODE;
 			tParticleDesc.vSpeedMax = _float3(4.f, 10.f, 4.f);
 			tParticleDesc.vSpeedMin = _float3(-4.f, 7.f, -4.f);
-			tParticleDesc.iPass = 1;
-			//tParticleDesc.vColor = Color(1.f, 0.f, 0.05f, 1.f);
+			tParticleDesc.fLifeTimeMin = 1.7f;
+			tParticleDesc.fLifeTimeMax = 2.5f;
+			tParticleDesc.fScaleMax = 0.3f;
+			tParticleDesc.fScaleMin = 0.15f;
 
+			tParticleDesc.eType = CParticleController::ParticleType::RIGIDBODY;
+			for (_int i = 0; i < 7; ++i)
+			{
+				tParticleDesc.vCenter = m_vecCrystal[i]->GetTransform()->GetPosition();
+				for (_int i = 0; i < 5; ++i)
+				{
+					m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_TremorCrystal_G"), LAYERTAG::IGNORECOLLISION, &tParticleDesc);
+					m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_TremorCrystal_H"), LAYERTAG::IGNORECOLLISION, &tParticleDesc);
+					m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_TremorCrystal_I"), LAYERTAG::IGNORECOLLISION, &tParticleDesc);
+					m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_TremorCrystal_L"), LAYERTAG::IGNORECOLLISION, &tParticleDesc);
+					m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_TremorCrystal_M"), LAYERTAG::IGNORECOLLISION, &tParticleDesc);
+				}
+			}
+
+			tParticleDesc.eType = CParticleController::ParticleType::EXPLODE;
+			tParticleDesc.iPass = 1;
 			for (_int i = 0; i < 7; ++i)
 			{
 				tParticleDesc.vCenter = m_vecCrystal[i]->GetTransform()->GetPosition();
 				for (_int i = 0; i < 15; ++i)
 					m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Particle"), LAYERTAG::IGNORECOLLISION, &tParticleDesc);
 			}
+
+			
 
 			m_bAttack = true;
 		}
@@ -152,12 +172,12 @@ void CMoloch_BT_Geyser1::SecondRun()
 			CTransform* pTargetTransform = GetTarget()->GetTransform();
 
 			Vec3 vCreatePosition[6] = {
-				m_vTargetPos + 7.f * (0.7f * pTargetTransform->GetForward() + 1.2f * pTargetTransform->GetRight()) - 3.3f * Vec3::UnitY,
-				m_vTargetPos + 7.f * (0.7f * pTargetTransform->GetForward() - 1.2f * pTargetTransform->GetRight()) - 3.3f * Vec3::UnitY,
-				m_vTargetPos - 7.f * (0.7f * pTargetTransform->GetForward() + 1.2f * pTargetTransform->GetRight()) - 3.3f * Vec3::UnitY,
-				m_vTargetPos - 7.f * (0.7f * pTargetTransform->GetForward() - 1.2f * pTargetTransform->GetRight()) - 3.3f * Vec3::UnitY,
-				m_vTargetPos + 5.5f * (1.f * pTargetTransform->GetForward()) - 3.3f * Vec3::UnitY,
-				m_vTargetPos - 5.5f * (1.f * pTargetTransform->GetForward()) - 3.3f * Vec3::UnitY,
+				m_vTargetPos + 7.f * (0.7f * m_vTargetForward + 1.2f * m_vTargetRight) - 3.3f * Vec3::UnitY,
+				m_vTargetPos + 7.f * (0.7f * m_vTargetForward - 1.2f * m_vTargetRight) - 3.3f * Vec3::UnitY,
+				m_vTargetPos - 7.f * (0.7f * m_vTargetForward + 1.2f * m_vTargetRight) - 3.3f * Vec3::UnitY,
+				m_vTargetPos - 7.f * (0.7f * m_vTargetForward - 1.2f * m_vTargetRight) - 3.3f * Vec3::UnitY,
+				m_vTargetPos + 5.5f * (1.f * m_vTargetForward) - 3.3f * Vec3::UnitY,
+				m_vTargetPos - 5.5f * (1.f * m_vTargetForward) - 3.3f * Vec3::UnitY,
 			};
 
 			CTremorCrystal::EFFECT_DESC desc;
@@ -173,12 +193,27 @@ void CMoloch_BT_Geyser1::SecondRun()
 				m_vecCrystal[i]->GetTransform()->Translate(vCreatePosition[i - 7]);
 
 			CParticleController::PARTICLE_DESC tParticleDesc;
-			tParticleDesc.eType = CParticleController::ParticleType::EXPLODE;
+			tParticleDesc.eType = CParticleController::ParticleType::RIGIDBODY;
 			tParticleDesc.vSpeedMax = _float3(4.f, 10.f, 4.f);
 			tParticleDesc.vSpeedMin = _float3(-4.f, 7.f, -4.f);
-			tParticleDesc.iPass = 1;
-			//tParticleDesc.vColor = Color(1.f, 0.f, 0.05f, 1.f);
+			tParticleDesc.fScaleMax = 0.4f;
+			tParticleDesc.fScaleMin = 0.2f;
 
+			for (_int i = 7; i < 13; ++i)
+			{
+				tParticleDesc.vCenter = m_vecCrystal[i]->GetTransform()->GetPosition();
+				for (_int i = 0; i < 5; ++i)
+				{
+					m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_TremorCrystal_G"), LAYERTAG::IGNORECOLLISION, &tParticleDesc);
+					m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_TremorCrystal_H"), LAYERTAG::IGNORECOLLISION, &tParticleDesc);
+					m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_TremorCrystal_I"), LAYERTAG::IGNORECOLLISION, &tParticleDesc);
+					m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_TremorCrystal_L"), LAYERTAG::IGNORECOLLISION, &tParticleDesc);
+					m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_TremorCrystal_M"), LAYERTAG::IGNORECOLLISION, &tParticleDesc);
+				}
+			}
+
+			tParticleDesc.eType = CParticleController::ParticleType::EXPLODE;
+			tParticleDesc.iPass = 1;
 			for (_int i = 7; i < 13; ++i)
 			{
 				tParticleDesc.vCenter = m_vecCrystal[i]->GetTransform()->GetPosition();

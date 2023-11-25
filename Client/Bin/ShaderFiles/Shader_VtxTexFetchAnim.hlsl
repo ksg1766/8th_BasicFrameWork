@@ -174,6 +174,7 @@ struct PS_OUT
     float4 vNormal : SV_TARGET1;
     float4 vDepth : SV_TARGET2;
     float4 vEmissive : SV_TARGET3;
+    float4 vSunMask : SV_TARGET5;
 };
 
 struct PS_OUT_BLUE
@@ -183,6 +184,7 @@ struct PS_OUT_BLUE
     float4 vDepth : SV_TARGET2;
     float4 vEmissive : SV_TARGET3;
     float4 vBlue : SV_TARGET4;
+    float4 vSunMask : SV_TARGET5;
 };
     
 struct PS_OUT_SHADOW
@@ -204,7 +206,8 @@ PS_OUT PS_MAIN(PS_IN In)
     Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);
-
+    Out.vSunMask = vector(0.f, 0.f, 0.f, 0.f);
+    
     return Out;
 }
 
@@ -236,6 +239,7 @@ PS_OUT PS_RIM_MAIN(PS_IN In)
     fEmissive = pow(fEmissive, 2);
 	//
     Out.vEmissive = g_vMtrlEmissive * fEmissive;
+    Out.vSunMask = vector(0.f, 0.f, 0.f, 0.f);
     
     return Out;
 }
@@ -256,6 +260,8 @@ PS_OUT PS_DISSOLVE_MAIN(PS_IN In)
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);
     
     ComputeDissolveColor(Out.vDiffuse, In.vTexcoord);
+
+    Out.vSunMask = vector(0.f, 0.f, 0.f, 0.f);
     
     return Out;
 }
@@ -295,6 +301,8 @@ PS_OUT_BLUE PS_BLUE_MAIN(PS_IN In)
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);
     Out.vBlue = vector(0.f, In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f);
     
+    Out.vSunMask = vector(0.f, 0.f, 0.f, 0.f);
+    
     return Out;
 }
 
@@ -308,6 +316,7 @@ PS_OUT_SHADOW PS_SHADOW_MAIN(PS_IN In)
         discard;
     
     Out.vDepth = vector(In.vProjPos.w / 2000.0f, In.vProjPos.w / 2000.0f, In.vProjPos.w / 2000.0f, 1.f);
+    //Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.z / In.vProjPos.w, In.vProjPos.z / In.vProjPos.w, 1.f);
     
     return Out;
 }
