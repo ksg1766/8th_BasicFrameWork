@@ -1699,8 +1699,8 @@ static void ShowDemoWindowWidgets()
             ImGui::TreePop();
         }
 
-        IMGUI_DEMO_MARKER("Widgets/Tabs/TabItemButton & Leading-Trailing flags");
-        if (ImGui::TreeNode("TabItemButton & Leading/Trailing flags"))
+        IMGUI_DEMO_MARKER("Widgets/Tabs/TabItemButton & Leading-SwordTrailing flags");
+        if (ImGui::TreeNode("TabItemButton & Leading/SwordTrailing flags"))
         {
             static ImVector<int> active_tabs;
             static int next_tab_id = 0;
@@ -1708,15 +1708,15 @@ static void ShowDemoWindowWidgets()
                 for (int i = 0; i < 3; i++)
                     active_tabs.push_back(next_tab_id++);
 
-            // TabItemButton() and Leading/Trailing flags are distinct features which we will demo together.
-            // (It is possible to submit regular tabs with Leading/Trailing flags, or TabItemButton tabs without Leading/Trailing flags...
+            // TabItemButton() and Leading/SwordTrailing flags are distinct features which we will demo together.
+            // (It is possible to submit regular tabs with Leading/SwordTrailing flags, or TabItemButton tabs without Leading/SwordTrailing flags...
             // but they tend to make more sense together)
             static bool show_leading_button = true;
-            static bool show_trailing_button = true;
+            static bool show_SwordTrailing_button = true;
             ImGui::Checkbox("Show Leading TabItemButton()", &show_leading_button);
-            ImGui::Checkbox("Show Trailing TabItemButton()", &show_trailing_button);
+            ImGui::Checkbox("Show SwordTrailing TabItemButton()", &show_SwordTrailing_button);
 
-            // Expose some other flags which are useful to showcase how they interact with Leading/Trailing tabs
+            // Expose some other flags which are useful to showcase how they interact with Leading/SwordTrailing tabs
             static ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_AutoSelectNewTabs | ImGuiTabBarFlags_Reorderable | ImGuiTabBarFlags_FittingPolicyResizeDown;
             ImGui::CheckboxFlags("ImGuiTabBarFlags_TabListPopupButton", &tab_bar_flags, ImGuiTabBarFlags_TabListPopupButton);
             if (ImGui::CheckboxFlags("ImGuiTabBarFlags_FittingPolicyResizeDown", &tab_bar_flags, ImGuiTabBarFlags_FittingPolicyResizeDown))
@@ -1736,10 +1736,10 @@ static void ShowDemoWindowWidgets()
                     ImGui::EndPopup();
                 }
 
-                // Demo Trailing Tabs: click the "+" button to add a new tab (in your app you may want to use a font icon instead of the "+")
-                // Note that we submit it before the regular tabs, but because of the ImGuiTabItemFlags_Trailing flag it will always appear at the end.
-                if (show_trailing_button)
-                    if (ImGui::TabItemButton("+", ImGuiTabItemFlags_Trailing | ImGuiTabItemFlags_NoTooltip))
+                // Demo SwordTrailing Tabs: click the "+" button to add a new tab (in your app you may want to use a font icon instead of the "+")
+                // Note that we submit it before the regular tabs, but because of the ImGuiTabItemFlags_SwordTrailing flag it will always appear at the end.
+                if (show_SwordTrailing_button)
+                    if (ImGui::TabItemButton("+", ImGuiTabItemFlags_SwordTrailing | ImGuiTabItemFlags_NoTooltip))
                         active_tabs.push_back(next_tab_id++); // Add new tab
 
                 // Submit our regular tabs
@@ -4172,7 +4172,7 @@ static void ShowDemoWindowTables()
     {
         HelpMarker(
             "Using TableSetupColumn() to alter resizing policy on a per-column basis.\n\n"
-            "When combining Fixed and Stretch columns, generally you only want one, maybe two trailing columns to use _WidthStretch.");
+            "When combining Fixed and Stretch columns, generally you only want one, maybe two SwordTrailing columns to use _WidthStretch.");
         static ImGuiTableFlags flags = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_RowBg | ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable;
 
         if (ImGui::BeginTable("table1", 3, flags))

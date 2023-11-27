@@ -51,6 +51,7 @@
 #include "GeyserCrack.h"
 #include "CrystalParticle.h"
 #include "Sun.h"
+#include "SwordTrail.h"
 
 CLoader::CLoader(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: m_pDevice(pDevice)
@@ -249,6 +250,16 @@ HRESULT CLoader::Loading_Components_For_Level_GamePlay()
 	//	CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Noise/Noise_RGB.png")))))
 	//	return E_FAIL;
 
+	/* For.Prototype_Component_Texture_SwordSwordTrail_Gradient*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_SwordTrail_Gradient"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/SwordTrail/SwordTrail_Gradient.png")))))
+		return E_FAIL;
+	
+	/* For.Prototype_Component_Texture_SwordSwordTrail_Mask*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_SwordTrail_Mask"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/SwordTrail/SwordTrail_Mask.png")))))
+		return E_FAIL;
+	
 	/* For.Prototype_Component_Texture_Shockwave*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Shockwave"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/ScreenSpace/Shockwave.png")))))
@@ -468,6 +479,10 @@ HRESULT CLoader::Loading_GameObjects_For_Level_GamePlay()
 	
 	/* For.Prototype_GameObject_Sun */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Sun"), CSun::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	
+	/* For.Prototype_GameObject_SwordTrail */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_SwordTrail"), CSwordTrail::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_TremorCrystal_ */

@@ -223,6 +223,9 @@
     <Filter Include="01.Utiltiy\04.Component\11.Model\01.Mesh">
       <UniqueIdentifier>{ca11ab3f-e0c9-44a0-9e86-9f5eafa4d113}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utiltiy\04.Component\05.Buffer\Dot">
+      <UniqueIdentifier>{a93a80fa-3480-4062-abb7-bcdcd928afd1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -465,6 +468,9 @@
     <ClInclude Include="..\Public\Light.h">
       <Filter>01.Utiltiy\04.Component\15.Light</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Dot.h">
+      <Filter>01.Utiltiy\04.Component\05.Buffer\Dot</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -688,6 +694,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Light.cpp">
       <Filter>01.Utiltiy\04.Component\15.Light</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Dot.cpp">
+      <Filter>01.Utiltiy\04.Component\05.Buffer\Dot</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

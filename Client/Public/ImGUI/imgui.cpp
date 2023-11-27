@@ -587,7 +587,7 @@ CODE
  - 2020/09/21 (1.79) - renamed OpenPopupContextItem() back to OpenPopupOnItemClick(), reverting the change from 1.77. For varieties of reason this is more self-explanatory.
  - 2020/09/21 (1.79) - removed return value from OpenPopupOnItemClick() - returned true on mouse release on an item - because it is inconsistent with other popup APIs and makes others misleading. It's also and unnecessary: you can use IsWindowAppearing() after BeginPopup() for a similar result.
  - 2020/09/17 (1.79) - removed ImFont::DisplayOffset in favor of ImFontConfig::GlyphOffset. DisplayOffset was applied after scaling and not very meaningful/useful outside of being needed by the default ProggyClean font. If you scaled this value after calling AddFontDefault(), this is now done automatically. It was also getting in the way of better font scaling, so let's get rid of it now!
- - 2020/08/17 (1.78) - obsoleted use of the trailing 'float power=1.0f' parameter for DragFloat(), DragFloat2(), DragFloat3(), DragFloat4(), DragFloatRange2(), DragScalar(), DragScalarN(), SliderFloat(), SliderFloat2(), SliderFloat3(), SliderFloat4(), SliderScalar(), SliderScalarN(), VSliderFloat() and VSliderScalar().
+ - 2020/08/17 (1.78) - obsoleted use of the SwordTrailing 'float power=1.0f' parameter for DragFloat(), DragFloat2(), DragFloat3(), DragFloat4(), DragFloatRange2(), DragScalar(), DragScalarN(), SliderFloat(), SliderFloat2(), SliderFloat3(), SliderFloat4(), SliderScalar(), SliderScalarN(), VSliderFloat() and VSliderScalar().
                        replaced the 'float power=1.0f' argument with integer-based flags defaulting to 0 (as with all our flags).
                        worked out a backward-compatibility scheme so hopefully most C++ codebase should not be affected. in short, when calling those functions:
                        - if you omitted the 'power' parameter (likely!), you are not affected.
@@ -1830,7 +1830,7 @@ const char* ImStristr(const char* haystack, const char* haystack_end, const char
     return NULL;
 }
 
-// Trim str by offsetting contents when there's leading data + writing a \0 at the trailing position. We use this in situation where the cost is negligible.
+// Trim str by offsetting contents when there's leading data + writing a \0 at the SwordTrailing position. We use this in situation where the cost is negligible.
 void ImStrTrimBlanks(char* buf)
 {
     char* p = buf;
@@ -1839,7 +1839,7 @@ void ImStrTrimBlanks(char* buf)
     char* p_start = p;
     while (*p != 0)                         // Find end of string
         p++;
-    while (p > p_start && (p[-1] == ' ' || p[-1] == '\t'))  // Trailing blanks
+    while (p > p_start && (p[-1] == ' ' || p[-1] == '\t'))  // SwordTrailing blanks
         p--;
     if (p_start != buf)                     // Copy memory if we had leading blanks
         memmove(buf, p_start, p - p_start);
@@ -2690,7 +2690,7 @@ void ImGuiTextIndex::append(const char* base, int old_size, int new_size)
         LineOffsets.push_back(EndOffset);
     const char* base_end = base + new_size;
     for (const char* p = base + old_size; (p = (const char*)memchr(p, '\n', base_end - p)) != 0; )
-        if (++p < base_end) // Don't push a trailing offset on last \n
+        if (++p < base_end) // Don't push a SwordTrailing offset on last \n
             LineOffsets.push_back((int)(intptr_t)(p - base));
     EndOffset = ImMax(EndOffset, new_size);
 }
@@ -3411,7 +3411,7 @@ void ImGui::RenderTextEllipsis(ImDrawList* draw_list, const ImVec2& pos_min, con
         }
         while (text_end_ellipsis > text && ImCharIsBlankA(text_end_ellipsis[-1]))
         {
-            // Trim trailing space before ellipsis (FIXME: Supporting non-ascii blanks would be nice, for this we need a function to backtrack in UTF-8 text)
+            // Trim SwordTrailing space before ellipsis (FIXME: Supporting non-ascii blanks would be nice, for this we need a function to backtrack in UTF-8 text)
             text_end_ellipsis--;
             text_size_clipped_x -= font->CalcTextSizeA(font_size, FLT_MAX, 0.0f, text_end_ellipsis, text_end_ellipsis + 1).x; // Ascii blanks are always 1 byte
         }
@@ -4555,7 +4555,7 @@ void ImGui::NewFrame()
     g.IO.Framerate = (g.FramerateSecPerFrameAccum > 0.0f) ? (1.0f / (g.FramerateSecPerFrameAccum / (float)g.FramerateSecPerFrameCount)) : FLT_MAX;
 
     // Process input queue (trickle as many events as possible), turn events into writes to IO structure
-    g.InputEventsTrail.resize(0);
+    g.InputEventsSwordTrail.resize(0);
     UpdateInputEvents(g.IO.ConfigInputTrickleEventQueue);
 
     // Update viewports (after processing input queue, so io.MouseHoveredViewport is set)
@@ -8883,7 +8883,7 @@ void ImGui::UpdateInputEvents(bool trickle_fast_inputs)
     ImGuiIO& io = g.IO;
 
     // Only trickle chars<>key when working with InputText()
-    // FIXME: InputText() could parse event trail?
+    // FIXME: InputText() could parse event SwordTrail?
     // FIXME: Could specialize chars<>keys trickling rules for control keys (those not typically associated to characters)
     const bool trickle_interleaved_keys_and_text = (trickle_fast_inputs && g.WantTextInputNextFrame == 1);
 
@@ -8972,10 +8972,10 @@ void ImGui::UpdateInputEvents(bool trickle_fast_inputs)
         }
     }
 
-    // Record trail (for domain-specific applications wanting to access a precise trail)
+    // Record SwordTrail (for domain-specific applications wanting to access a precise SwordTrail)
     //if (event_n != 0) IMGUI_DEBUG_LOG_IO("Processed: %d / Remaining: %d\n", event_n, g.InputEventsQueue.Size - event_n);
     for (int n = 0; n < event_n; n++)
-        g.InputEventsTrail.push_back(g.InputEventsQueue[n]);
+        g.InputEventsSwordTrail.push_back(g.InputEventsQueue[n]);
 
     // [DEBUG]
 #ifndef IMGUI_DISABLE_DEBUG_TOOLS
@@ -10581,7 +10581,7 @@ void ImGui::EndPopup()
 }
 
 // Helper to open a popup if mouse button is released over the item
-// - This is essentially the same as BeginPopupContextItem() but without the trailing BeginPopup()
+// - This is essentially the same as BeginPopupContextItem() but without the SwordTrailing BeginPopup()
 void ImGui::OpenPopupOnItemClick(const char* str_id, ImGuiPopupFlags popup_flags)
 {
     ImGuiContext& g = *GImGui;
@@ -12740,7 +12740,7 @@ void ImGui::LogRenderedText(const ImVec2* ref_pos, const char* text, const char*
     for (;;)
     {
         // Split the string. Each new line (after a '\n') is followed by indentation corresponding to the current depth of our log entry.
-        // We don't add a trailing \n yet to allow a subsequent item on the same line to be captured.
+        // We don't add a SwordTrailing \n yet to allow a subsequent item on the same line to be captured.
         const char* line_start = text_remaining;
         const char* line_end = ImStreolRange(line_start, text_end);
         const bool is_last_line = (line_end == text_end);

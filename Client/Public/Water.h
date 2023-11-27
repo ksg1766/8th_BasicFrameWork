@@ -35,10 +35,10 @@ private:
 	HRESULT			Ready_Scripts();
 	HRESULT			Bind_ShaderResources(); /* 셰이더 전역변수에 값 던진다. */
 
-	_float			m_fWaterTranslation = 0.f;
+	_float			m_fWaterTranslation = 0.1f;
 	_float			m_fReflectRefractScale = 0.1f;
 
-	_int			m_iCurrentNormalMap = 0;
+	_int			m_iCurrentNormalMap = 1;
 	_float			m_fWaterTranslationSpeed = 0.015f;
 
 public:

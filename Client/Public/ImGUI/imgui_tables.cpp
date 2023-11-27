@@ -131,7 +131,7 @@ Index of this file:
 // Default Width and default Weight can be overridden when calling TableSetupColumn().
 //-----------------------------------------------------------------------------
 // About mixing Fixed/Auto and Stretch columns together:
-//   - the typical use of mixing sizing policies is: any number of LEADING Fixed columns, followed by one or two TRAILING Stretch columns.
+//   - the typical use of mixing sizing policies is: any number of LEADING Fixed columns, followed by one or two SwordTrailING Stretch columns.
 //   - using mixed policies with ScrollX does not make much sense, as using Stretch columns with ScrollX does not make much sense in the first place!
 //     that is, unless 'inner_width' is passed to BeginTable() to explicitly provide a total width to layout columns in.
 //   - when using ImGuiTableFlags_SizingFixedSame with mixed columns, only the Fixed/Auto columns will match their widths to the width of the maximum contents.
@@ -2185,7 +2185,7 @@ void ImGui::TableSetColumnWidth(int column_n, float width)
     // - All stretch: easy.
     // - One or more fixed + one stretch: easy.
     // - One or more fixed + more than one stretch: tricky.
-    // Qt when manual resize is enabled only supports a single _trailing_ stretch column, we support more cases here.
+    // Qt when manual resize is enabled only supports a single _SwordTrailing_ stretch column, we support more cases here.
 
     // When forwarding resize from Wn| to Fn+1| we need to be considerate of the _NoResize flag on Fn+1.
     // FIXME-TABLE: Find a way to rewrite all of this so interactions feel more consistent for the user.

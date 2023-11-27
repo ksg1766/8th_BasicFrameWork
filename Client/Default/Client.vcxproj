@@ -317,6 +317,7 @@
     <ClInclude Include="..\Public\Sun.h" />
     <ClInclude Include="..\Public\TempCube.h" />
     <ClInclude Include="..\Public\TestAIController.h" />
+    <ClInclude Include="..\Public\SwordTrail.h" />
     <ClInclude Include="..\Public\TremorCrystal.h" />
     <ClInclude Include="..\Public\ViewMediator.h" />
     <ClInclude Include="..\Public\TransformView.h" />
@@ -458,6 +459,7 @@
     <ClCompile Include="..\Private\Sun.cpp" />
     <ClCompile Include="..\Private\TempCube.cpp" />
     <ClCompile Include="..\Private\TestAIController.cpp" />
+    <ClCompile Include="..\Private\SwordTrail.cpp" />
     <ClCompile Include="..\Private\TremorCrystal.cpp" />
     <ClCompile Include="..\Private\ViewMediator.cpp" />
     <ClCompile Include="..\Private\TransformView.cpp">
@@ -545,6 +547,7 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Point_Instance.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Sphere.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Sun.hlsl" />
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_SwordTrail.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VTFSocket.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnimInstancing.hlsl" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnimMesh.hlsl" />

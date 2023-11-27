@@ -95,6 +95,9 @@ void CMonsterController::Tick(const _float& fTimeDelta)
 	else if (m_vNetTrans.Length() > EPSILON)
 		Translate(fTimeDelta);
 
+	if (!m_pNavMeshAgent)
+		return;
+
 	if (!m_pNavMeshAgent->Walkable(m_pTransform->GetPosition()))
 	{
 		m_pTransform->SetPosition(m_vPrePos);

@@ -250,4 +250,29 @@ float4x4 extract_rotation_matrix(float4x4 m)
     return m;
 }
 
+float3 splineInterpolation(float3 p0, float3 p1, float3 p2, float3 p3, float t)
+{
+    float alpha = 1.0;
+    float tension = 0.0;
+    
+    float t01 = pow(distance(p0, p1), alpha);
+    float t12 = pow(distance(p1, p2), alpha);
+    float t23 = pow(distance(p2, p3), alpha);
+
+    float3 m1 = (1.0f - tension) *
+    	(p2 - p1 + t12 * ((p1 - p0) / t01 - (p2 - p0) / (t01 + t12)));
+    float3 m2 = (1.0f - tension) *
+    	(p2 - p1 + t12 * ((p3 - p2) / t23 - (p3 - p1) / (t12 + t23)));
+    
+    float3 a = 2.0f * (p1 - p2) + m1 + m2;
+    float3 b = -3.0f * (p1 - p2) - m1 - m1 - m2;
+    float3 c = m1;
+    float3 d = p1;
+
+    return a * t * t * t +
+           b * t * t +
+           c * t +
+           d;
+}
+
 #endif // __MATRIX_INCLUDED__

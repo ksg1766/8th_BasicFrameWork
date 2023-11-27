@@ -224,6 +224,11 @@ HRESULT CMainApp::Ready_Prototype_Components()
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_Sphere"),
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Sphere.hlsl"), VTXMESH::Elements, VTXMESH::iNumElements))))
 		return E_FAIL;
+	
+	/* For.Prototype_Component_Shader_SwordTrail*/
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_SwordTrail"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_SwordTrail.hlsl"), VTXPOS::Elements, VTXPOS::iNumElements))))
+		return E_FAIL;
 
 	/* For.Prototype_Component_Shader_ComputeParticles*/
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_ComputeParticles"),
@@ -248,6 +253,11 @@ HRESULT CMainApp::Ready_Prototype_Components()
 	/* For.Prototype_Component_VIBuffer_Point */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Point"),
 		CVIBuffer_Point::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	
+	/* For.Prototype_Component_VIBuffer_Dot */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Dot"),
+		CVIBuffer_Dot::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Terrain */

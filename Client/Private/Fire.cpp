@@ -128,9 +128,7 @@ HRESULT CFire::Bind_ShaderResources()
 		FAILED(m_pAlphaTexture->Bind_ShaderResource(GetShader(), "g_AlphaTexture", 0)) ||
 		FAILED(GetShader()->Bind_RawValue("g_fFrameTime", &m_fFrameTime, sizeof(_float))) ||
 		FAILED(GetShader()->Bind_Matrix("g_matOffset", &m_matPivot)))
-	{
 		return E_FAIL;
-	}
 
 	return S_OK;
 }

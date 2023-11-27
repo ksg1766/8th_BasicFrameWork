@@ -5,7 +5,7 @@
 
 BEGIN(Client)
 
-class CBossController;
+class CMonsterController;
 class CDagon final : public CGameObject
 {
 	using Super = CGameObject;
@@ -35,7 +35,7 @@ public:
 	virtual	void	OnCollisionExit(CGameObject* pOther)	override;
 
 private:
-	CBossController* m_pController = nullptr;
+	CMonsterController* m_pController = nullptr;
 
 public:
 	static	CDagon* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

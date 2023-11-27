@@ -6,10 +6,10 @@
 BEGIN(Client)
 
 class CFire;
+class CSwordTrail;
 class CMoloch_Sword final : public CGameObject
 {
 	using Super = CGameObject;
-
 private:
 	/* 원형을 생성할 때 */
 	CMoloch_Sword(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -29,9 +29,24 @@ private:
 	HRESULT			Ready_FixedComponents();
 	HRESULT			Ready_Scripts();
 	HRESULT			Bind_ShaderResources(); /* 셰이더 전역변수에 값 던진다. */
-	HRESULT			Bind_FireResources(); /* 셰이더 전역변수에 값 던진다. */
+	HRESULT			Bind_FireResources();
+
+	void			SwordTrailEmittor(const _float& fLifeTIme = 0.3f);
 
 	vector<CFire*>	m_vecFires;
+
+	deque<CSwordTrail*>	m_deqTrailsPool;
+	deque<CSwordTrail*>	m_deqSwordTrails;
+
+	Matrix			m_matOffsetTop;
+	Matrix			m_matOffsetBottom;
+
+	Matrix			m_matPreWorld = Matrix::Identity;
+	TWEENDESC		m_tPreTweenDesc;
+
+	//For CatmullRom
+	TWEENDESC		m_tPrePreTweenDesc;
+	TWEENDESC		m_tPrePrePreTweenDesc;
 
 public:
 	static	CMoloch_Sword* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

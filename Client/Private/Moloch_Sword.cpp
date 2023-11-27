@@ -2,6 +2,7 @@
 #include "..\Public\Moloch_Sword.h"
 #include "GameInstance.h"
 #include "Fire.h"
+#include "SwordTrail.h"
 
 CMoloch_Sword::CMoloch_Sword(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: Super(pDevice, pContext)
@@ -39,44 +40,29 @@ HRESULT CMoloch_Sword::Initialize(void* pArg)
 		m_vecFires.push_back(pFire);
 	}
 
+	Matrix matTrailTop;
+
+	const Matrix& matPivot = GetModel()->GetPivotMatrix();
+
+	XMStoreFloat4x4(&matTrailTop, XMMatrixTranslation(-0.6f - 0.24f * 11, 0.5f + 0.15f * 11, -0.4f));
+	matTrailTop = matPivot * matTrailTop;
+
+	m_matOffsetTop = matTrailTop;
+	m_matOffsetBottom = matOffset[0];
+
 	return S_OK;
 }
 
 void CMoloch_Sword::Tick(const _float& fTimeDelta)
 {
 	Super::Tick(fTimeDelta);
-
-	/*const Matrix& matPivot = GetModel()->GetPivotMatrix();
-	Matrix matOffset(Matrix::Identity);
-	if (KEY_PRESSING(KEY::CTRL) && KEY_DOWN(KEY::R))
-	{
-		m_vecTemp[0] += Vec3(0.f, 0.1f, 0.f);
-	}
-	else if (KEY_PRESSING(KEY::CTRL) && KEY_DOWN(KEY::Y))
-	{
-		m_vecTemp[0] += Vec3(0.f, -0.1f, 0.f);
-	}
-	else if (KEY_PRESSING(KEY::CTRL) && KEY_DOWN(KEY::T))
-	{
-		m_vecTemp[0] += Vec3(0.f, 0.f, 0.1f);
-	}
-	else if (KEY_PRESSING(KEY::CTRL) && KEY_DOWN(KEY::G))
-	{
-		m_vecTemp[0] += Vec3(0.f, 0.f, -0.1f);
-	}
-	else if (KEY_PRESSING(KEY::CTRL) && KEY_DOWN(KEY::F))
-	{
-		m_vecTemp[0] += Vec3(0.1f, 0.f, 0.f);
-	}
-	else if (KEY_PRESSING(KEY::CTRL) && KEY_DOWN(KEY::H))
-	{
-		m_vecTemp[0] += Vec3(-0.1f, 0.f, 0.f);
-	}*/
 }
 
 void CMoloch_Sword::LateTick(const _float& fTimeDelta)
 {
 	Super::LateTick(fTimeDelta);
+
+	SwordTrailEmittor(0.3f);
 
 	GetRenderer()->Add_RenderGroup(CRenderer::RG_NONBLEND, this);
 }
@@ -145,9 +131,7 @@ HRESULT CMoloch_Sword::Bind_ShaderResources()
 	if (FAILED(GetTransform()->Bind_ShaderResources(GetShader(), "g_WorldMatrix")) || 
 		FAILED(m_pGameInstance->Bind_TransformToShader(GetShader(), "g_ViewMatrix", CPipeLine::D3DTS_VIEW)) ||
 		FAILED(m_pGameInstance->Bind_TransformToShader(GetShader(), "g_ProjMatrix", CPipeLine::D3DTS_PROJ)))
-	{
 		return E_FAIL;
-	}
 
 	if (FAILED(GetTexture()->Bind_ShaderResource(GetShader(), "g_EmissiveTexture", 0)))
 		return E_FAIL;
@@ -167,11 +151,33 @@ HRESULT CMoloch_Sword::Bind_FireResources()
 		return E_FAIL;
 
 	for (_int i = 0; i < m_vecFires.size(); ++i)
-	{
 		m_vecFires[i]->GetTransform()->Set_WorldMatrix(GetTransform()->WorldMatrix());
-	}
+
+	m_matPreWorld = GetTransform()->WorldMatrix();
+	//m_tPrePrePreTweenDesc = m_tPrePreTweenDesc;
+	//m_tPrePreTweenDesc = m_tPreTweenDesc;
+	m_tPreTweenDesc = GetModel()->GetTweenDesc();
 
 	return S_OK;
+}
+
+void CMoloch_Sword::SwordTrailEmittor(const _float& fLifeTIme)
+{
+	CSwordTrail::SWORDTRAIL_DESC desc;
+
+	desc.fLifeTime			= fLifeTIme;
+	desc.pModel				= GetModel();
+	desc.matCurWorld		= GetTransform()->WorldMatrix();
+	desc.matPreWorld		= m_matPreWorld;
+	desc.pCurTweenDesc		= GetModel()->GetTweenDesc();
+	//desc.pPrePrePreTweenDesc= m_tPrePrePreTweenDesc;
+	//desc.pPrePreTweenDesc	= m_tPrePreTweenDesc;
+	desc.pPreTweenDesc		= m_tPreTweenDesc;
+	desc.pMatOffsetTop		= &m_matOffsetTop;
+	desc.pMatOffsetBottom	= &m_matOffsetBottom;
+	desc.iBoneIndex			= GetModel()->GetSocketBoneIndex();
+	
+	static_cast<CSwordTrail*>(m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_SwordTrail"), LAYERTAG::IGNORECOLLISION, &desc));
 }
 
 CMoloch_Sword* CMoloch_Sword::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

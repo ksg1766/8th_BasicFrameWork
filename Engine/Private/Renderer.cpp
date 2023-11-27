@@ -1475,6 +1475,7 @@ HRESULT CRenderer::Render_UI()
 	return S_OK;
 }
 
+#ifdef _DEBUG
 HRESULT CRenderer::Render_Debug()
 {
 	CLevelManager* pInstance = GET_INSTANCE(CLevelManager);
@@ -1528,6 +1529,7 @@ HRESULT CRenderer::Render_Debug()
 
 	return S_OK;
 }
+#endif
 
 void CRenderer::AddInstanceData(InstanceID instanceId, InstancingData& data)
 {

@@ -3274,7 +3274,7 @@ const char* ImParseFormatFindEnd(const char* fmt)
     return fmt;
 }
 
-// Extract the format out of a format string with leading or trailing decorations
+// Extract the format out of a format string with leading or SwordTrailing decorations
 //  fmt = "blah blah"  -> return ""
 //  fmt = "%.3f"       -> return fmt
 //  fmt = "hello %.3f" -> return fmt + 6
@@ -3679,9 +3679,9 @@ static ImVec2 InputTextCalcTextSizeW(ImGuiContext* ctx, const ImWchar* text_begi
         text_size.x = line_width;
 
     if (out_offset)
-        *out_offset = ImVec2(line_width, text_size.y + line_height);  // offset allow for the possibility of sitting after a trailing \n
+        *out_offset = ImVec2(line_width, text_size.y + line_height);  // offset allow for the possibility of sitting after a SwordTrailing \n
 
-    if (line_width > 0 || text_size.y == 0.0f)                        // whereas size.y will ignore the trailing \n
+    if (line_width > 0 || text_size.y == 0.0f)                        // whereas size.y will ignore the SwordTrailing \n
         text_size.y += line_height;
 
     if (remaining)
@@ -6296,7 +6296,7 @@ bool ImGui::TreeNodeBehavior(ImGuiID id, ImGuiTreeNodeFlags flags, const char* l
             RenderArrow(window->DrawList, ImVec2(text_pos.x - text_offset_x + padding.x, text_pos.y), text_col, is_open ? ((flags & ImGuiTreeNodeFlags_UpsideDownArrow) ? ImGuiDir_Up : ImGuiDir_Down) : ImGuiDir_Right, 1.0f);
         else // Leaf without bullet, left-adjusted text
             text_pos.x -= text_offset_x -padding.x;
-        if (flags & ImGuiTreeNodeFlags_ClipLabelForTrailingButton)
+        if (flags & ImGuiTreeNodeFlags_ClipLabelForSwordTrailingButton)
             frame_bb.Max.x -= g.FontSize + style.FramePadding.x;
 
         if (g.LogEnabled)
@@ -6421,7 +6421,7 @@ bool ImGui::CollapsingHeader(const char* label, bool* p_visible, ImGuiTreeNodeFl
     ImGuiID id = window->GetID(label);
     flags |= ImGuiTreeNodeFlags_CollapsingHeader;
     if (p_visible)
-        flags |= ImGuiTreeNodeFlags_AllowOverlap | ImGuiTreeNodeFlags_ClipLabelForTrailingButton;
+        flags |= ImGuiTreeNodeFlags_AllowOverlap | ImGuiTreeNodeFlags_ClipLabelForSwordTrailingButton;
     bool is_open = TreeNodeBehavior(id, flags, label);
     if (p_visible != NULL)
     {
@@ -7725,7 +7725,7 @@ ImGuiTabBar::ImGuiTabBar()
 
 static inline int TabItemGetSectionIdx(const ImGuiTabItem* tab)
 {
-    return (tab->Flags & ImGuiTabItemFlags_Leading) ? 0 : (tab->Flags & ImGuiTabItemFlags_Trailing) ? 2 : 1;
+    return (tab->Flags & ImGuiTabItemFlags_Leading) ? 0 : (tab->Flags & ImGuiTabItemFlags_SwordTrailing) ? 2 : 1;
 }
 
 static int IMGUI_CDECL TabItemComparerBySection(const void* lhs, const void* rhs)
@@ -7873,7 +7873,7 @@ void    ImGui::EndTabBar()
     g.CurrentTabBar = g.CurrentTabBarStack.empty() ? NULL : GetTabBarFromTabBarRef(g.CurrentTabBarStack.back());
 }
 
-// Scrolling happens only in the central section (leading/trailing sections are not scrolling)
+// Scrolling happens only in the central section (leading/SwordTrailing sections are not scrolling)
 static float TabBarCalcScrollableWidth(ImGuiTabBar* tab_bar, ImGuiTabBarSection* sections)
 {
     return tab_bar->BarRect.GetWidth() - sections[0].Width - sections[2].Width - sections[1].Spacing;
@@ -7890,7 +7890,7 @@ static void ImGui::TabBarLayout(ImGuiTabBar* tab_bar)
     // Detect if we need to sort out tab list (e.g. in rare case where a tab changed section)
     int tab_dst_n = 0;
     bool need_sort_by_section = false;
-    ImGuiTabBarSection sections[3]; // Layout sections: Leading, Central, Trailing
+    ImGuiTabBarSection sections[3]; // Layout sections: Leading, Central, SwordTrailing
     for (int tab_src_n = 0; tab_src_n < tab_bar->Tabs.Size; tab_src_n++)
     {
         ImGuiTabItem* tab = &tab_bar->Tabs[tab_src_n];
@@ -7908,7 +7908,7 @@ static void ImGui::TabBarLayout(ImGuiTabBar* tab_bar)
         tab = &tab_bar->Tabs[tab_dst_n];
         tab->IndexDuringLayout = (ImS16)tab_dst_n;
 
-        // We will need sorting if tabs have changed section (e.g. moved from one of Leading/Central/Trailing to another)
+        // We will need sorting if tabs have changed section (e.g. moved from one of Leading/Central/SwordTrailing to another)
         int curr_tab_section_n = TabItemGetSectionIdx(tab);
         if (tab_dst_n > 0)
         {
@@ -7957,8 +7957,8 @@ static void ImGui::TabBarLayout(ImGuiTabBar* tab_bar)
         if (ImGuiTabItem* tab_to_select = TabBarTabListPopupButton(tab_bar)) // NB: Will alter BarRect.Min.x!
             scroll_to_tab_id = tab_bar->SelectedTabId = tab_to_select->ID;
 
-    // Leading/Trailing tabs will be shrink only if central one aren't visible anymore, so layout the shrink data as: leading, trailing, central
-    // (whereas our tabs are stored as: leading, central, trailing)
+    // Leading/SwordTrailing tabs will be shrink only if central one aren't visible anymore, so layout the shrink data as: leading, SwordTrailing, central
+    // (whereas our tabs are stored as: leading, central, SwordTrailing)
     int shrink_buffer_indexes[3] = { 0, sections[0].TabCount + sections[2].TabCount, sections[0].TabCount };
     g.ShrinkWidthBuffer.resize(tab_bar->Tabs.Size);
 
@@ -8022,9 +8022,9 @@ static void ImGui::TabBarLayout(ImGuiTabBar* tab_bar)
     if (central_section_is_visible)
         width_excess = ImMax(section_1_w - (tab_bar->BarRect.GetWidth() - section_0_w - section_2_w), 0.0f); // Excess used to shrink central section
     else
-        width_excess = (section_0_w + section_2_w) - tab_bar->BarRect.GetWidth(); // Excess used to shrink leading/trailing section
+        width_excess = (section_0_w + section_2_w) - tab_bar->BarRect.GetWidth(); // Excess used to shrink leading/SwordTrailing section
 
-    // With ImGuiTabBarFlags_FittingPolicyScroll policy, we will only shrink leading/trailing if the central section is not visible anymore
+    // With ImGuiTabBarFlags_FittingPolicyScroll policy, we will only shrink leading/SwordTrailing if the central section is not visible anymore
     if (width_excess >= 1.0f && ((tab_bar->Flags & ImGuiTabBarFlags_FittingPolicyResizeDown) || !central_section_is_visible))
     {
         int shrink_data_count = (central_section_is_visible ? sections[1].TabCount : sections[0].TabCount + sections[2].TabCount);
@@ -8233,7 +8233,7 @@ static void ImGui::TabBarScrollToTab(ImGuiTabBar* tab_bar, ImGuiID tab_id, ImGui
     float margin = g.FontSize * 1.0f; // When to scroll to make Tab N+1 visible always make a bit of N visible to suggest more scrolling area (since we don't have a scrollbar)
     int order = TabBarGetTabOrder(tab_bar, tab);
 
-    // Scrolling happens only in the central section (leading/trailing sections are not scrolling)
+    // Scrolling happens only in the central section (leading/SwordTrailing sections are not scrolling)
     float scrollable_width = TabBarCalcScrollableWidth(tab_bar, sections);
 
     // We make all tabs positions all relative Sections[0].Width to make code simpler
@@ -8532,7 +8532,7 @@ bool    ImGui::TabItemEx(ImGuiTabBar* tab_bar, const char* label, bool* p_open, 
     }
 
     IM_ASSERT(!p_open || !(flags & ImGuiTabItemFlags_Button));
-    IM_ASSERT((flags & (ImGuiTabItemFlags_Leading | ImGuiTabItemFlags_Trailing)) != (ImGuiTabItemFlags_Leading | ImGuiTabItemFlags_Trailing)); // Can't use both Leading and Trailing
+    IM_ASSERT((flags & (ImGuiTabItemFlags_Leading | ImGuiTabItemFlags_SwordTrailing)) != (ImGuiTabItemFlags_Leading | ImGuiTabItemFlags_SwordTrailing)); // Can't use both Leading and SwordTrailing
 
     // Store into ImGuiTabItemFlags_NoCloseButton, also honor ImGuiTabItemFlags_NoCloseButton passed by user (although not documented)
     if (flags & ImGuiTabItemFlags_NoCloseButton)

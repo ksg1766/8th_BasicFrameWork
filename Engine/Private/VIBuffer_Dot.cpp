@@ -1,22 +1,19 @@
-#include "..\Public\VIBuffer_Point.h"
+#include "..\Public\VIBuffer_Dot.h"
 
-_int CVIBuffer_Point::m_iNextInstanceID = -1;
-
-CVIBuffer_Point::CVIBuffer_Point(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CVIBuffer_Dot::CVIBuffer_Dot(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CVIBuffer(pDevice, pContext)
 {
 }
 
-CVIBuffer_Point::CVIBuffer_Point(const CVIBuffer_Point& rhs)
+CVIBuffer_Dot::CVIBuffer_Dot(const CVIBuffer_Dot& rhs)
 	: CVIBuffer(rhs)
-	, m_iInstanceID(rhs.m_iInstanceID)
 {
 
 }
 
-HRESULT CVIBuffer_Point::Initialize_Prototype()
+HRESULT CVIBuffer_Dot::Initialize_Prototype()
 {
-	m_iStride = sizeof(VTXPOINT); /* 정점하나의 크기 .*/
+	m_iStride = sizeof(VTXPOS); /* 정점하나의 크기 .*/
 	m_iNumVertices = 1;
 	m_iNumVBs = 1;
 
@@ -33,11 +30,10 @@ HRESULT CVIBuffer_Point::Initialize_Prototype()
 	m_BufferDesc.MiscFlags = 0;
 	m_BufferDesc.StructureByteStride = m_iStride;
 
-	VTXPOINT*		pVertices = new VTXPOINT;
-	ZeroMemory(pVertices, sizeof(VTXPOINT));
+	VTXPOS*		pVertices = new VTXPOS;
+	ZeroMemory(pVertices, sizeof(VTXPOS));
 
 	pVertices->vPosition = _float3(0.f, 0.f, 0.f);
-	pVertices->vPSize = _float2(1.f, 1.f);
 
 	ZeroMemory(&m_SubResourceData, sizeof m_SubResourceData);
 	m_SubResourceData.pSysMem = pVertices;
@@ -81,37 +77,35 @@ HRESULT CVIBuffer_Point::Initialize_Prototype()
 	Safe_Delete_Array(pIndices);
 #pragma endregion
 
-	m_iInstanceID = m_iNextInstanceID--;
-
 	return S_OK;
 }
 
-HRESULT CVIBuffer_Point::Initialize(void * pArg)
+HRESULT CVIBuffer_Dot::Initialize(void * pArg)
 {
 	return S_OK;
 }
 
-CVIBuffer_Point * CVIBuffer_Point::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
+CVIBuffer_Dot * CVIBuffer_Dot::Create(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 {
-	CVIBuffer_Point*	pInstance = new CVIBuffer_Point(pDevice, pContext);
+	CVIBuffer_Dot*	pInstance = new CVIBuffer_Dot(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CVIBuffer_Point");
+		MSG_BOX("Failed to Created : CVIBuffer_Dot");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CComponent * CVIBuffer_Point::Clone(CGameObject* pGameObject, void * pArg)
+CComponent * CVIBuffer_Dot::Clone(CGameObject* pGameObject, void * pArg)
 {
-	CVIBuffer_Point*	pInstance = new CVIBuffer_Point(*this);
+	CVIBuffer_Dot*	pInstance = new CVIBuffer_Dot(*this);
 	pInstance->m_pGameObject = pGameObject;
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CVIBuffer_Point");
+		MSG_BOX("Failed to Cloned : CVIBuffer_Dot");
 		Safe_Release(pInstance);
 	}
 
@@ -119,7 +113,7 @@ CComponent * CVIBuffer_Point::Clone(CGameObject* pGameObject, void * pArg)
 }
 
 
-void CVIBuffer_Point::Free()
+void CVIBuffer_Dot::Free()
 {
 	Super::Free();
 

@@ -421,6 +421,12 @@
     <Filter Include="03.GameObjects\00.Static\Sun">
       <UniqueIdentifier>{08e19640-0c2a-452a-883d-1ce51d5dcabf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.GameObjects\05.Particle\Particle">
+      <UniqueIdentifier>{a3e64665-a652-4752-bc78-eade768fb7bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\03.Boss\00.Moloch\Effect\SwordTrail">
+      <UniqueIdentifier>{d6baac35-7dcf-453d-8451-8e3954ee5b58}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -629,9 +635,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\Strife_Ammo_Static.h">
       <Filter>03.GameObjects\01.Playable\00.P_Strife\Ammo\Static</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Particle.h">
-      <Filter>03.GameObjects\05.Particle</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ParticleController.h">
       <Filter>03.GameObjects\05.Particle\Script</Filter>
@@ -876,6 +879,12 @@
     <ClInclude Include="..\Public\Sun.h">
       <Filter>03.GameObjects\00.Static\Sun</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Particle.h">
+      <Filter>03.GameObjects\05.Particle\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SwordTrail.h">
+      <Filter>03.GameObjects\03.Boss\00.Moloch\Effect\SwordTrail</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1066,9 +1075,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Strife_Ammo_Static.cpp">
       <Filter>03.GameObjects\01.Playable\00.P_Strife\Ammo\Static</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Particle.cpp">
-      <Filter>03.GameObjects\05.Particle</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ParticleController.cpp">
       <Filter>03.GameObjects\05.Particle\Script</Filter>
@@ -1274,6 +1280,12 @@
     <ClCompile Include="..\Private\Sun.cpp">
       <Filter>03.GameObjects\00.Static\Sun</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Particle.cpp">
+      <Filter>03.GameObjects\05.Particle\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SwordTrail.cpp">
+      <Filter>03.GameObjects\03.Boss\00.Moloch\Effect\SwordTrail</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1350,6 +1362,9 @@
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Sun.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_SwordTrail.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>
