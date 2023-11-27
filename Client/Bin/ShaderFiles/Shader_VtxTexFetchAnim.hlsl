@@ -282,7 +282,7 @@ PS_OUT PS_ALPHA_MAIN(PS_IN In)
     Out.vDiffuse = g_vLightDiffuse * vMtrlDiffuse;
     
     Out.vDiffuse += g_ColorOffset;
-    Out.vDiffuse.a = 0.45f;
+    Out.vDiffuse.a = 0.4f;
     
     return Out;
 }

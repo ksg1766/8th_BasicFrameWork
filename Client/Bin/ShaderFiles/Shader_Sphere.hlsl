@@ -80,11 +80,13 @@ struct PS_IN
 struct PS_OUT
 {
     float4 vColor : SV_TARGET0;
+    float4 vDistortion : SV_TARGET1;
 };
     
 struct PS_WAVE_OUT
 {
     float4 vColor : SV_TARGET0;
+    float4 vDistortion : SV_TARGET1;
 };
 
 PS_OUT PS_BUBBLE_MAIN(PS_IN In)
@@ -105,6 +107,7 @@ PS_OUT PS_BUBBLE_MAIN(PS_IN In)
     fEmissive = pow(fEmissive, 2 + 10.f * g_fFrameTime);
     
     Out.vColor = vRedColor * fEmissive;
+    Out.vDistortion = 5.f * Out.vColor.x;
     
     return Out;
 }
@@ -139,6 +142,7 @@ PS_WAVE_OUT PS_WAVERING_MAIN(PS_IN In)
     clamp(vColor.b, 0.f, 1.f);
     
     Out.vColor = float4(vColor, (0.55f - 2.f * g_fFrameTime) * vColor.g);
+    Out.vDistortion = 5.f * Out.vColor.x;
     
     return Out;
 }

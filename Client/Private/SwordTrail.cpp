@@ -31,13 +31,18 @@ HRESULT CSwordTrail::Initialize(void* pArg)
 	m_fLifeTime = pDesc->fLifeTime;
 	GetTransform()->Set_WorldMatrix(pDesc->matCurWorld);
 	m_matPreWorld = pDesc->matPreWorld;
-	//m_tPrePrePreTweenDesc = pDesc->pPrePrePreTweenDesc;
-	//m_tPrePreTweenDesc = pDesc->pPrePreTweenDesc;
+
+	/*m_matPrePrePreWorld = pDesc->matPrePrePreWorld;
+	m_matPrePreWorld = pDesc->matPrePreWorld;*/
+
 	m_tPreTweenDesc = pDesc->pPreTweenDesc;
 	m_tCurTweenDesc = pDesc->pCurTweenDesc;
 	m_pOffsetTop = pDesc->pMatOffsetTop;
 	m_pOffsetBottom = pDesc->pMatOffsetBottom;
 	m_iBoneIndex = pDesc->iBoneIndex;
+
+	/*m_tPrePrePreTweenDesc = pDesc->tPrePrePreTweenDesc;
+	m_tPrePreTweenDesc = pDesc->tPrePreTweenDesc;*/
 
 	return S_OK;
 }
@@ -51,6 +56,10 @@ void CSwordTrail::Tick(const _float& fTimeDelta)
 		m_pGameInstance->DeleteObject(this);
 		return;
 	}
+
+	m_vDistortionOffset.y += fTimeDelta * 1.f;
+	if (m_vDistortionOffset.y > 1.f)
+		m_vDistortionOffset.y = 0.f;
 
 	Super::Tick(fTimeDelta);
 }
@@ -133,17 +142,26 @@ HRESULT CSwordTrail::Bind_ShaderResources()
 		FAILED(m_pAlphaTexture->Bind_ShaderResource(GetShader(), "g_AlphaTexture", 0)))
 		return E_FAIL;
 
-	if (FAILED(GetShader()->Bind_Matrix("g_preWorldMatrix", &m_matPreWorld)) ||
-		//FAILED(GetShader()->Bind_RawValue("g_preTweenframes", &m_tPrePrePreTweenDesc, sizeof(TWEENDESC))) ||
-		//FAILED(GetShader()->Bind_RawValue("g_preTweenframes", &m_tPrePreTweenDesc, sizeof(TWEENDESC))) ||
-		FAILED(GetShader()->Bind_RawValue("g_preTweenframes", &m_tPreTweenDesc, sizeof(TWEENDESC))) ||
-		FAILED(GetShader()->Bind_RawValue("g_Tweenframes", &m_tCurTweenDesc, sizeof(TWEENDESC))) ||
-		FAILED(GetShader()->Bind_Texture("g_TransformMap", m_pModel->GetSRV())) ||
-		FAILED(GetShader()->Bind_Matrix("g_matOffsetTop", m_pOffsetTop)) ||
-		FAILED(GetShader()->Bind_Matrix("g_matOffsetBottom", m_pOffsetBottom)) ||
-		FAILED(GetShader()->Bind_RawValue("g_iSocketBoneIndex", &m_iBoneIndex, sizeof(_int)))
-		)
+	if (FAILED(GetShader()->Bind_Matrix("g_PreWorldMatrix", &m_matPreWorld)))
 		return E_FAIL;
+	if (FAILED(GetShader()->Bind_RawValue("g_preTweenframes", &m_tPreTweenDesc, sizeof(TWEENDESC))))
+		return E_FAIL;
+	if (FAILED(GetShader()->Bind_RawValue("g_Tweenframes", &m_tCurTweenDesc, sizeof(TWEENDESC))))
+		return E_FAIL;
+	if (FAILED(GetShader()->Bind_Texture("g_TransformMap", m_pModel->GetSRV())))
+		return E_FAIL;
+	if (FAILED(GetShader()->Bind_Matrix("g_matOffsetTop", m_pOffsetTop)))
+		return E_FAIL;
+	if (FAILED(GetShader()->Bind_Matrix("g_matOffsetBottom", m_pOffsetBottom)))
+		return E_FAIL;
+	if (FAILED(GetShader()->Bind_RawValue("g_iSocketBoneIndex", &m_iBoneIndex, sizeof(_int))))
+		return E_FAIL;
+
+	/*if (FAILED(GetShader()->Bind_Matrix("g_PrePrePreWorldMatrix", &m_matPrePrePreWorld)) ||
+		FAILED(GetShader()->Bind_Matrix("g_PrePreWorldMatrix", &m_matPrePreWorld)) ||
+		FAILED(GetShader()->Bind_RawValue("g_preprepreTweenframes", &m_tPrePrePreTweenDesc, sizeof(TWEENDESC))) ||
+		FAILED(GetShader()->Bind_RawValue("g_prepreTweenframes", &m_tPrePreTweenDesc, sizeof(TWEENDESC))))
+		return E_FAIL;*/
 
 	return S_OK;
 }

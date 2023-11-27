@@ -36,6 +36,7 @@ Texture2D	g_BlurHVTarget;
 Texture2D	g_DistortionTarget;
 
 Texture2D	g_SceneTarget;
+Texture2D   g_BlendTarget;
 
 // Temp : LightShafting
 Texture2D   g_GodRayTarget;
@@ -317,6 +318,7 @@ PS_REFLECTION_OUT PS_MAIN_REFLECTION(PS_IN In)
     return Out;
 }
 
+// 이거 안씀 //패스 5번도 다른걸로 채우든지 해야함.
 PS_OUT PS_MAIN_SCENE(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
@@ -324,9 +326,41 @@ PS_OUT PS_MAIN_SCENE(PS_IN In)
     vector vScene = g_SceneTarget.Sample(PointSampler, In.vTexcoord);
     vector vBlur = g_BlurHVTarget.Sample(LinearSampler, In.vTexcoord);
     vector vGodRay = g_GodRayTarget.Sample(LinearSampler, In.vTexcoord);
-    
+  
     Out.vColor = vScene + vBlur + vGodRay;
 
+    return Out;
+}
+
+PS_OUT PS_MAIN_NONBLENDFINAL(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    //float4 vDistortion = g_DistortionTarget.Sample(LinearSampler, In.vTexcoord);
+    //float2 vDistort = vDistortion.xy;
+    float4 vScene = g_SceneTarget.Sample(LinearSampler, In.vTexcoord);
+    if (vScene.a == 0.f)
+        discard;
+    
+    float4 vBlur = g_BlurHVTarget.Sample(LinearSampler, In.vTexcoord);
+    
+    Out.vColor = vScene + vBlur;
+    
+    return Out;
+}
+
+PS_OUT PS_MAIN_BLENDFINAL(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    //float4 vDistortion = g_DistortionTarget.Sample(LinearSampler, In.vTexcoord);
+    //float2 vDistort = vDistortion.xy;
+    float4 vNonBlend = g_SceneTarget.Sample(LinearSampler, In.vTexcoord);
+    
+    float4 vBlend = g_BlendTarget.Sample(LinearSampler, In.vTexcoord);
+    
+    Out.vColor = vNonBlend + vBlend;
+    
     return Out;
 }
 
@@ -388,7 +422,21 @@ technique11 DefaultTechnique
         ComputeShader = NULL;
     }
 
-    pass Scene  // 4
+    //pass Scene  // 4
+    //{
+    //    SetRasterizerState(RS_Default);
+    //    SetDepthStencilState(DSS_None, 0);
+    //    SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+
+    //    VertexShader = compile vs_5_0 VS_MAIN();
+    //    GeometryShader = NULL;
+    //    HullShader = NULL;
+    //    DomainShader = NULL;
+    //    PixelShader = compile ps_5_0 PS_MAIN_SCENE();
+    //    ComputeShader = NULL;
+    //}
+
+    pass NonBlendFinal  // 4
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_None, 0);
@@ -398,7 +446,7 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         HullShader = NULL;
         DomainShader = NULL;
-        PixelShader = compile ps_5_0 PS_MAIN_SCENE();
+        PixelShader = compile ps_5_0 PS_MAIN_NONBLENDFINAL();
         ComputeShader = NULL;
     }
 
@@ -441,6 +489,23 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_REFLECTION();
+        ComputeShader = NULL;
+    }
+
+    pass BlendFinal // 8
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_OneBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        //SetRasterizerState(RS_Default);
+        //SetDepthStencilState(DSS_None, 0);
+        //SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_BLENDFINAL();
         ComputeShader = NULL;
     }
 }

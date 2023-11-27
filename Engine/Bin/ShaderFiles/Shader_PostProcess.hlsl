@@ -171,9 +171,9 @@ PS_OUT PS_MAIN_BLURH(PS_IN_BLUR In)
     for (int j = -6; j < 7; ++j)
     {
         color += (
-        g_GlowTarget.Sample(PointSampler, In.vTexcoord[7 + j]) + 
-        g_SpecularTarget.Sample(PointSampler, In.vTexcoord[7 + j]) + 
-        g_EmissiveTarget.Sample(PointSampler, In.vTexcoord[7 + j]) * g_vLightEmissive + 
+        g_GlowTarget.Sample(LinearSampler, In.vTexcoord[7 + j]) +
+        g_SpecularTarget.Sample(LinearSampler, In.vTexcoord[7 + j]) +
+        g_EmissiveTarget.Sample(LinearSampler, In.vTexcoord[7 + j]) * g_vLightEmissive +
         g_GodRayTarget.Sample(LinearSampler, In.vTexcoord[7 + j])
         ) * fWeight[abs(j)];
     }
@@ -208,7 +208,7 @@ PS_OUT PS_MAIN_BLURV(PS_IN_BLUR In)
     color = float4(0.0f, 0.0f, 0.0f, 0.0f);
     
     for (int j = -6; j < 7; ++j)
-        color += g_BlurHTarget.Sample(PointSampler, In.vTexcoord[7 + j]) * fWeight[abs(j)];
+        color += g_BlurHTarget.Sample(LinearSampler, In.vTexcoord[7 + j]) * fWeight[abs(j)];
     
     color.a = 1.0f;
     
@@ -221,15 +221,26 @@ PS_OUT PS_MAIN_POSTPROCESS(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
 
-    vector vScene = g_SceneTarget.Sample(PointSampler, In.vTexcoord);
+    float4 vDistortion = g_DistortionTarget.Sample(LinearSampler, In.vTexcoord);
+
+    if (any(vDistortion.xy))
+    {
+        vDistortion.xy -= float2(0.5f, 0.5f);
+        vDistortion.xy *= 2.f;
+        vDistortion.xy *= 0.02f;
+    }
+    
+    float4 vScene = g_SceneTarget.Sample(LinearSampler, saturate(In.vTexcoord + vDistortion.xy));
     if (vScene.a == 0.f)
         discard;
-  
-    vector vBlur = g_BlurHVTarget.Sample(LinearSampler, In.vTexcoord);
+    
+    //float4 vBlur = g_BlurHVTarget.Sample(LinearSampler, In.vTexcoord);
+    //float4 vBlend = g_BlendTarget.Sample(LinearSampler, In.vTexcoord);
+    
+    Out.vColor = vScene /* + vBlur*/ /* + vBlend*/;
+    
 
-    Out.vColor = vScene + vBlur;
-
-    return Out;
+        return Out;
 }
 
 technique11 DefaultTechnique

@@ -23,14 +23,17 @@ public:
 		Matrix		matPreWorld = Matrix::Identity;
 		Matrix		matCurWorld = Matrix::Identity;
 		TWEENDESC	pPreTweenDesc;
-		//TWEENDESC	pPrePreTweenDesc;
-		//TWEENDESC	pPrePrePreTweenDesc;
 		TWEENDESC	pCurTweenDesc;
 
 		Matrix*		pMatOffsetTop = nullptr;
 		Matrix*		pMatOffsetBottom = nullptr;
 
 		_int		iBoneIndex = 0;
+
+		/*Matrix		matPrePrePreWorld = Matrix::Identity;
+		Matrix		matPrePreWorld = Matrix::Identity;
+		TWEENDESC	tPrePreTweenDesc;
+		TWEENDESC	tPrePrePreTweenDesc;*/
 
 	}SWORDTRAIL_DESC;
 
@@ -54,6 +57,8 @@ private:
 	CTexture*		m_pAlphaTexture = nullptr;
 
 	_float			m_fLifeTime = 0.3f;
+	Matrix			m_matPrePrePreWorld = Matrix::Identity;
+	Matrix			m_matPrePreWorld = Matrix::Identity;
 	Matrix			m_matPreWorld = Matrix::Identity;
 	TWEENDESC		m_tPrePrePreTweenDesc;
 	TWEENDESC		m_tPrePreTweenDesc;
@@ -63,6 +68,8 @@ private:
 
 	Matrix*			m_pOffsetTop = nullptr;
 	Matrix*			m_pOffsetBottom = nullptr;
+
+	Vec2			m_vDistortionOffset = Vec2(0.f, 0.f);
 
 private:
 	HRESULT			Bind_ShaderResources(); /* 셰이더 전역변수에 값 던진다. */

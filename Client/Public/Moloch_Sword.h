@@ -41,6 +41,8 @@ private:
 	Matrix			m_matOffsetTop;
 	Matrix			m_matOffsetBottom;
 
+	Matrix			m_matPrePrePreWorld = Matrix::Identity;
+	Matrix			m_matPrePreWorld = Matrix::Identity;
 	Matrix			m_matPreWorld = Matrix::Identity;
 	TWEENDESC		m_tPreTweenDesc;
 

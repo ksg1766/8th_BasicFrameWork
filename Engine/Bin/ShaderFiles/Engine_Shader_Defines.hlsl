@@ -51,7 +51,7 @@ BlendState BS_AlphaBlend
 
 	SrcBlend[0] = Src_Alpha;
 	DestBlend[0] = Inv_Src_Alpha;
-	BlendOp[0] = Add;	
+	BlendOp[0] = Add;
 
 	//SrcBlend[0] = Src_Alpha;
 	//DestBlend[0] = Inv_Src_Alpha;

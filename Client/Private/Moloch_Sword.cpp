@@ -62,7 +62,7 @@ void CMoloch_Sword::LateTick(const _float& fTimeDelta)
 {
 	Super::LateTick(fTimeDelta);
 
-	SwordTrailEmittor(0.3f);
+	SwordTrailEmittor(0.5f);
 
 	GetRenderer()->Add_RenderGroup(CRenderer::RG_NONBLEND, this);
 }
@@ -153,9 +153,12 @@ HRESULT CMoloch_Sword::Bind_FireResources()
 	for (_int i = 0; i < m_vecFires.size(); ++i)
 		m_vecFires[i]->GetTransform()->Set_WorldMatrix(GetTransform()->WorldMatrix());
 
+	/*m_matPrePrePreWorld = m_matPrePreWorld;
+	m_matPrePreWorld = m_matPreWorld;
+	m_tPrePrePreTweenDesc = m_tPrePreTweenDesc;
+	m_tPrePreTweenDesc = m_tPreTweenDesc;*/
+
 	m_matPreWorld = GetTransform()->WorldMatrix();
-	//m_tPrePrePreTweenDesc = m_tPrePreTweenDesc;
-	//m_tPrePreTweenDesc = m_tPreTweenDesc;
 	m_tPreTweenDesc = GetModel()->GetTweenDesc();
 
 	return S_OK;
@@ -170,12 +173,15 @@ void CMoloch_Sword::SwordTrailEmittor(const _float& fLifeTIme)
 	desc.matCurWorld		= GetTransform()->WorldMatrix();
 	desc.matPreWorld		= m_matPreWorld;
 	desc.pCurTweenDesc		= GetModel()->GetTweenDesc();
-	//desc.pPrePrePreTweenDesc= m_tPrePrePreTweenDesc;
-	//desc.pPrePreTweenDesc	= m_tPrePreTweenDesc;
 	desc.pPreTweenDesc		= m_tPreTweenDesc;
 	desc.pMatOffsetTop		= &m_matOffsetTop;
 	desc.pMatOffsetBottom	= &m_matOffsetBottom;
 	desc.iBoneIndex			= GetModel()->GetSocketBoneIndex();
+
+	/*desc.matPrePrePreWorld	= m_matPrePrePreWorld;
+	desc.matPrePreWorld		= m_matPrePreWorld;
+	desc.tPrePrePreTweenDesc= m_tPrePrePreTweenDesc;
+	desc.tPrePreTweenDesc	= m_tPrePreTweenDesc;*/
 	
 	static_cast<CSwordTrail*>(m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_SwordTrail"), LAYERTAG::IGNORECOLLISION, &desc));
 }

@@ -182,6 +182,27 @@ HRESULT CRenderer::Initialize_Prototype()
 		m_fShadowTargetSizeRatio * ViewportDesc.Width, m_fShadowTargetSizeRatio * ViewportDesc.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.0f, 1.0f, 1.0f, 1.f))))
 		return E_FAIL;
 
+	/* For.Target_BlendScene */
+	if (FAILED(m_pTargetManager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_BlendScene"),
+		ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
+		return E_FAIL;
+
+	/* For.Target_Distortion */
+	if (FAILED(m_pTargetManager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_Distortion"),
+		ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 1.f))))
+		return E_FAIL;
+	
+	/* For.Target_NonBlendFinal */
+	if (FAILED(m_pTargetManager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_NonBlendFinal"),
+		ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
+		return E_FAIL;
+
+	/* For.Target_BlendFinal */
+	if (FAILED(m_pTargetManager->Add_RenderTarget(m_pDevice, m_pContext, TEXT("Target_BlendFinal"),
+		ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
+		return E_FAIL;
+
+
 	if (nullptr == m_pDevice)
 		return E_FAIL;
 
@@ -263,6 +284,11 @@ HRESULT CRenderer::Initialize_Prototype()
 		return E_FAIL;
 	if (FAILED(m_pTargetManager->Ready_Debug(TEXT("Target_GodRay"), 3.f * fTargetX, 9.f * fTargetY, 288.f, 162.f)))
 		return E_FAIL;
+	
+	if (FAILED(m_pTargetManager->Ready_Debug(TEXT("Target_BlendScene"), 5.f * fTargetX, 7.f * fTargetY, 288.f, 162.f)))
+		return E_FAIL;
+	if (FAILED(m_pTargetManager->Ready_Debug(TEXT("Target_Distortion"), 5.f * fTargetX, 9.f * fTargetY, 288.f, 162.f)))
+		return E_FAIL;
 
 #endif
 
@@ -341,6 +367,16 @@ HRESULT CRenderer::Initialize_Prototype()
 		return E_FAIL;
 	
 	if (FAILED(m_pTargetManager->Add_MRT(TEXT("MRT_GodRay"), TEXT("Target_GodRay"))))
+		return E_FAIL;
+
+	if (FAILED(m_pTargetManager->Add_MRT(TEXT("MRT_Blend"), TEXT("Target_BlendScene"))))
+		return E_FAIL;
+	if (FAILED(m_pTargetManager->Add_MRT(TEXT("MRT_Blend"), TEXT("Target_Distortion"))))
+		return E_FAIL;
+
+	if (FAILED(m_pTargetManager->Add_MRT(TEXT("MRT_NonBlendFinal"), TEXT("Target_NonBlendFinal"))))
+		return E_FAIL;
+	if (FAILED(m_pTargetManager->Add_MRT(TEXT("MRT_BlendFinal"), TEXT("Target_BlendFinal"))))
 		return E_FAIL;
 
 	/*if (FAILED(m_pTargetManager->Add_MRT(TEXT("MRT_Distortion"), TEXT("Target_Distortion"))))
@@ -448,18 +484,20 @@ HRESULT CRenderer::Draw_RenderObjects()
 	if (FAILED(Render_GodRay()))
 		return S_OK;
 
-	/*if (FAILED(Render_Distortion()))
-		return S_OK;*/
 	if (FAILED(Render_Blur()))
 		return S_OK;
 
-	if (FAILED(Render_PostProcess()))
-		return S_OK;
+	//if (FAILED(Render_PostProcess()))
+	//	return S_OK;
 
 	if (FAILED(Render_Blend()))
 		return S_OK;
 	if (FAILED(Render_Blend_Instance()))
 		return S_OK;
+
+	if (FAILED(Render_PostProcess()))
+		return S_OK;
+
 	if (FAILED(Render_UI()))
 		return S_OK;
 
@@ -1322,8 +1360,47 @@ HRESULT CRenderer::Render_Distortion()
 
 HRESULT CRenderer::Render_PostProcess()
 {
-	if (FAILED(m_pTargetManager->Bind_SRV(m_pShaderPostProcess, TEXT("Target_Scene"), "g_SceneTarget")))
+	// NonBlend & Blend Scene ÇÕÄ¡±â
+	if (FAILED(m_pTargetManager->Begin_MRT(m_pContext, TEXT("MRT_NonBlendFinal"))))
 		return E_FAIL;
+
+	if (FAILED(m_pTargetManager->Bind_SRV(m_pShader, TEXT("Target_Scene"), "g_SceneTarget")))
+		return E_FAIL;
+
+	if (FAILED(m_pTargetManager->Bind_SRV(m_pShader, TEXT("Target_BlurHV"), "g_BlurHVTarget")))
+		return E_FAIL;
+
+	m_pShader->SetPassIndex(4);
+	if (FAILED(m_pShader->Begin()))
+		return E_FAIL;
+
+	if (FAILED(m_pVIBuffer->Render()))
+		return E_FAIL;
+
+	if (FAILED(m_pTargetManager->End_MRT(m_pContext)))
+		return E_FAIL;
+
+	if (FAILED(m_pTargetManager->Begin_MRT(m_pContext, TEXT("MRT_BlendFinal"))))
+		return E_FAIL;
+
+	if (FAILED(m_pTargetManager->Bind_SRV(m_pShader, TEXT("Target_NonBlendFinal"), "g_SceneTarget")))
+		return E_FAIL;
+
+	if (FAILED(m_pTargetManager->Bind_SRV(m_pShader, TEXT("Target_BlendScene"), "g_BlendTarget")))
+		return E_FAIL;
+
+	m_pShader->SetPassIndex(8);
+	if (FAILED(m_pShader->Begin()))
+		return E_FAIL;
+
+	if (FAILED(m_pVIBuffer->Render()))
+		return E_FAIL;
+
+	if (FAILED(m_pTargetManager->End_MRT(m_pContext)))
+		return E_FAIL;
+
+	/////////////////////
+	// PostProcess
 
 	if (FAILED(m_pShaderPostProcess->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
 		return E_FAIL;
@@ -1332,11 +1409,11 @@ HRESULT CRenderer::Render_PostProcess()
 	if (FAILED(m_pShaderPostProcess->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
 
-	if (FAILED(m_pTargetManager->Bind_SRV(m_pShaderPostProcess, TEXT("Target_BlurHV"), "g_BlurHVTarget")))
+	if (FAILED(m_pTargetManager->Bind_SRV(m_pShaderPostProcess, TEXT("Target_BlendFinal"), "g_SceneTarget")))
 		return E_FAIL;
-
-	//if (FAILED(m_pTargetManager->Bind_SRV(m_pShaderPostProcess, TEXT("Target_Distortion"), "g_DistortionTarget")))
-	//	return E_FAIL;
+	
+	if (FAILED(m_pTargetManager->Bind_SRV(m_pShaderPostProcess, TEXT("Target_Distortion"), "g_DistortionTarget")))
+		return E_FAIL;
 
 	m_pShaderPostProcess->SetPassIndex(0);
 	if (FAILED(m_pShaderPostProcess->Begin()))
@@ -1435,6 +1512,9 @@ HRESULT CRenderer::Render_Blur()
 
 HRESULT CRenderer::Render_Blend()
 {
+	if (FAILED(m_pTargetManager->Begin_MRT(m_pContext, TEXT("MRT_Blend"))))
+		return E_FAIL;
+
 	for (auto& pGameObject : m_RenderObjects[RG_BLEND])
 	{
 		if (nullptr != pGameObject)
@@ -1457,6 +1537,9 @@ HRESULT CRenderer::Render_Blend_Instance()
 		Safe_Release(pGameObject);
 	}
 	m_RenderObjects[RG_BLEND_INSTANCE].clear();
+
+	if (FAILED(m_pTargetManager->End_MRT(m_pContext)))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -1517,11 +1600,9 @@ HRESULT CRenderer::Render_Debug()
 			return E_FAIL;
 		if (FAILED(m_pTargetManager->Render(TEXT("MRT_GodRay"), m_pShader, m_pVIBuffer)))
 			return E_FAIL;
-		//if (FAILED(m_pTargetManager->Render(TEXT("MRT_Distortion"), m_pShader, m_pVIBuffer)))
-		//	return E_FAIL;
-		/*if (FAILED(m_pTargetManager->Render(TEXT("MRT_Scene"), m_pShader, m_pVIBuffer)))
+		if (FAILED(m_pTargetManager->Render(TEXT("MRT_Blend"), m_pShader, m_pVIBuffer)))
 			return E_FAIL;
-		if (FAILED(m_pTargetManager->Render(TEXT("MRT_PostProcess"), m_pShader, m_pVIBuffer)))
+		/*if (FAILED(m_pTargetManager->Render(TEXT("MRT_PostProcess"), m_pShader, m_pVIBuffer)))
 			return E_FAIL;*/
 	}
 
