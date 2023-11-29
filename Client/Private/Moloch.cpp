@@ -98,6 +98,25 @@ HRESULT CMoloch::Render()
 	return S_OK;
 }
 
+HRESULT CMoloch::RenderShadow(const Matrix& matLightView, const Matrix& matLightProj)
+{
+	if (FAILED(GetTransform()->Bind_ShaderResources(GetShader(), "g_WorldMatrix")))
+		return E_FAIL;
+
+	if (FAILED(GetShader()->Bind_Matrix("g_ViewMatrix", &matLightView)))
+		return E_FAIL;
+
+	if (FAILED(GetShader()->Bind_Matrix("g_ProjMatrix", &matLightProj)))
+		return E_FAIL;
+
+	GetShader()->SetPassIndex(5);
+
+	if (FAILED(GetModel()->Render()))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 HRESULT CMoloch::Ready_Parts()
 {
 	CGameObject* pGameObject = m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Moloch_Sword"), LAYERTAG::IGNORECOLLISION);

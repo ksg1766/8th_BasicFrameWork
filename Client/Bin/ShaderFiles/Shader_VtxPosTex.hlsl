@@ -171,6 +171,12 @@ struct PS_OUT
     float4 vEmissive : SV_TARGET3;
     float4 vSunMask : SV_TARGET5;
 };
+    
+struct PS_BEAM_OUT
+{
+    float4 vDiffuse : SV_TARGET0;
+    float4 vDistortion : SV_TARGET1;
+};
 
 struct PS_GEYSER_OUT
 {
@@ -225,23 +231,24 @@ PS_OUT PS_COLOR_MAIN(PS_IN In)
     return Out;
 }
 
-PS_OUT PS_BEAM_MAIN(PS_IN In)
+PS_BEAM_OUT PS_BEAM_MAIN(PS_IN In)
 {
-    PS_OUT Out = (PS_OUT) 0;
+    PS_BEAM_OUT Out = (PS_BEAM_OUT) 0;
 
     vector vSourColor = g_Textures[0].Sample(LinearSampler, In.vTexcoord + g_UVoffset);
-    if (vSourColor.r < 0.1f)
+    if (vSourColor.r < 0.2f)
         discard;
     
     vector vDestColor = g_Textures[1].Sample(LinearSampler, In.vTexcoord);
     
     vector vBeamColor = vSourColor * vDestColor;
     
-    Out.vDiffuse = 0.9f * vBeamColor;
-    Out.vNormal = float4(0.f, 1.f, 0.f, 1.f);
-    //Out.vDiffuse.a = 0.6f;
-    Out.vEmissive = Out.vDiffuse;
-    Out.vSunMask = vector(0.f, 0.f, 0.f, 0.f);
+    Out.vDiffuse = 0.8f * vBeamColor;
+    Out.vDistortion = Out.vDiffuse;
+    //Out.vNormal = float4(0.f, 1.f, 0.f, 1.f);
+    ////Out.vDiffuse.a = 0.6f;
+    //Out.vEmissive = Out.vDiffuse;
+    //Out.vSunMask = vector(0.f, 0.f, 0.f, 0.f);
     
     return Out;
 }

@@ -50,20 +50,43 @@ void CP_Strife::Tick(const _float& fTimeDelta)
 
 	if (KEY_PRESSING(KEY::CTRL) && KEY_DOWN(KEY::L))
 	{
-		/*CParticleController::PARTICLE_DESC tParticleDesc;
-		tParticleDesc.vSpeedMax = _float3(4.f, 10.f, 4.f);
-		tParticleDesc.vSpeedMin = _float3(-4.f, 7.f, -4.f);
-		tParticleDesc.vCenter = GetTransform()->GetPosition();
+		//for (_int i = 0; i < 2; ++i)
+		//{
+			CGameObject* pWaterLightning = m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_WaterLightning"), LAYERTAG::IGNORECOLLISION);
+			pWaterLightning->GetTransform()->SetScale(Vec3(2.7f, 1.2f, 2.7f));
+			pWaterLightning->GetTransform()->SetPosition(GetTransform()->GetPosition());
+		//}
 
-		tParticleDesc.eType = CParticleController::ParticleType::RIGIDBODY;
-		for (_int i = 0; i < 3; ++i)
-		{
-			m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_TremorCrystal_G"), LAYERTAG::IGNORECOLLISION, &tParticleDesc);
-			m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_TremorCrystal_H"), LAYERTAG::IGNORECOLLISION, &tParticleDesc);
-			m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_TremorCrystal_I"), LAYERTAG::IGNORECOLLISION, &tParticleDesc);
-			m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_TremorCrystal_L"), LAYERTAG::IGNORECOLLISION, &tParticleDesc);
-			m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_TremorCrystal_M"), LAYERTAG::IGNORECOLLISION, &tParticleDesc);
-		}*/
+		CGameObject* pBolts = nullptr;
+
+		static _int iBoltNum = 0;
+
+		if (0 == iBoltNum)
+			pBolts = m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Bolts0"), LAYERTAG::IGNORECOLLISION);
+		if (1 == iBoltNum)
+			pBolts = m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Bolts1"), LAYERTAG::IGNORECOLLISION);
+		if (2 == iBoltNum)
+			pBolts = m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Bolts2"), LAYERTAG::IGNORECOLLISION);
+		if (3 == iBoltNum)
+			pBolts = m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Bolts3"), LAYERTAG::IGNORECOLLISION);
+
+		if (3 == iBoltNum)
+			iBoltNum = 0;
+		else
+			++iBoltNum;
+
+		pBolts->GetTransform()->Rotate(Vec3(rand() % 360, rand() % 360, rand() % 360));
+		pBolts->GetTransform()->SetPosition(GetTransform()->GetPosition());
+	}
+	else if (KEY_PRESSING(KEY::CTRL) && KEY_DOWN(KEY::K))
+	{
+		CGameObject* pLightningSpark = m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Lightning_Spark"), LAYERTAG::IGNORECOLLISION);
+		pLightningSpark->GetTransform()->SetPosition(GetTransform()->GetPosition());
+	}
+	else if (KEY_PRESSING(KEY::CTRL) && KEY_DOWN(KEY::J))
+	{
+		CGameObject* pOrb1 = m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Orb"), LAYERTAG::IGNORECOLLISION);
+		pOrb1->GetTransform()->SetPosition(GetTransform()->GetPosition() + 2.f * Vec3::UnitY);
 	}
 }
 

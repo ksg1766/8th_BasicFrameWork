@@ -391,6 +391,16 @@ HRESULT CMainApp::Ready_Prototype_Components()
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Lightning_Spark"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Lightning/Lightning_Spark%d.png"), 4))))
 		return E_FAIL;
+	
+	/* For.Prototype_Component_Texture_Bolts*/
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Bolts"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Lightning/Bolts%d.png"), 4))))
+		return E_FAIL;
+	
+	/* For.Prototype_Component_Texture_Lightning_Bolts_Large*/
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Lightning_Bolts_Large"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Lightning/Lightning_Bolts_Large%d.png"), 4))))
+		return E_FAIL;
 
 	/* For.Prototype_Component_Model_Static */
 	{
@@ -427,6 +437,20 @@ HRESULT CMainApp::Ready_Prototype_Components()
 			else if (TEXT("Sun") == strFileName)
 			{
 				XMStoreFloat4x4(&matPivot, XMMatrixScaling(0.0003f, 0.0003f, 0.0003f));
+				if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_" + strFileName),
+					CModel::Create(m_pDevice, m_pContext, strStaticFilePath + strFileName, desc, matPivot))))
+					return E_FAIL;
+			}
+			else if (TEXT("Wisp") == strFileName)
+			{
+				XMStoreFloat4x4(&matPivot, XMMatrixScaling(0.003f, 0.003f, 0.003f) * XMMatrixTranslation(0.0f, -0.5f, 0.0f));
+				if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_" + strFileName),
+					CModel::Create(m_pDevice, m_pContext, strStaticFilePath + strFileName, desc, matPivot))))
+					return E_FAIL;
+			}
+			else if (TEXT("SphereSwirl") == strFileName)
+			{
+				XMStoreFloat4x4(&matPivot, XMMatrixScaling(0.537f, 0.537f, 0.537f));
 				if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_" + strFileName),
 					CModel::Create(m_pDevice, m_pContext, strStaticFilePath + strFileName, desc, matPivot))))
 					return E_FAIL;

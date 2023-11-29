@@ -427,6 +427,15 @@
     <Filter Include="03.GameObjects\03.Boss\00.Moloch\Effect\SwordTrail">
       <UniqueIdentifier>{d6baac35-7dcf-453d-8451-8e3954ee5b58}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.GameObjects\05.Particle\WaterLightning">
+      <UniqueIdentifier>{01e0ec1c-46c1-4144-8aea-944368567741}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\00.Static\Bolts">
+      <UniqueIdentifier>{4eac4057-04f0-4385-b9d8-75ccf6c0a241}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\03.Boss\01.Dagon\Effect">
+      <UniqueIdentifier>{97e145bc-1f19-461e-8982-8274228ca69b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -885,6 +894,21 @@
     <ClInclude Include="..\Public\SwordTrail.h">
       <Filter>03.GameObjects\03.Boss\00.Moloch\Effect\SwordTrail</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\WaterLightning.h">
+      <Filter>03.GameObjects\05.Particle\WaterLightning</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bolts.h">
+      <Filter>03.GameObjects\00.Static\Bolts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Lightning_Spark.h">
+      <Filter>03.GameObjects\05.Particle\WaterLightning</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Orb.h">
+      <Filter>03.GameObjects\03.Boss\01.Dagon\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SphereSwirl.h">
+      <Filter>03.GameObjects\03.Boss\01.Dagon\Effect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1285,6 +1309,21 @@
     </ClCompile>
     <ClCompile Include="..\Private\SwordTrail.cpp">
       <Filter>03.GameObjects\03.Boss\00.Moloch\Effect\SwordTrail</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\WaterLightning.cpp">
+      <Filter>03.GameObjects\05.Particle\WaterLightning</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Bolts.cpp">
+      <Filter>03.GameObjects\00.Static\Bolts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Lightning_Spark.cpp">
+      <Filter>03.GameObjects\05.Particle\WaterLightning</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Orb.cpp">
+      <Filter>03.GameObjects\03.Boss\01.Dagon\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SphereSwirl.cpp">
+      <Filter>03.GameObjects\03.Boss\01.Dagon\Effect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

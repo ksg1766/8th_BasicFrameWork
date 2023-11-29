@@ -115,10 +115,10 @@ void CQuadTreeNode::DebugRender()
 void CQuadTreeNode::Free()
 {
 #ifdef _DEBUG
-	Safe_Delete(m_pBatch);
-	Safe_Delete(m_pEffect);
+	//Safe_Delete(m_pBatch);
+	//Safe_Delete(m_pEffect);
 
-	Safe_Release(m_pInputLayout);
+	//Safe_Release(m_pInputLayout);
 #endif // _DEBUG
 
 	if (!m_vecChildren.empty())

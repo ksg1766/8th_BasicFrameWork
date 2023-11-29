@@ -180,8 +180,7 @@ PS_OUT PS_BLUE_MAIN(PS_IN In)
     if (vDiffuse.r < 0.01f)
         discard;
 	
-    vector vBlue = vector(0.0f, 0.05f, 1.f, 1.f);
-    //Out.vGlow = vBlue;
+    vector vBlue = vector(0.35f, 0.35f, 1.2f, 1.f);
     Out.vGlow = vBlue;
 
     return Out;

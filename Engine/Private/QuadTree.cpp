@@ -25,7 +25,7 @@ HRESULT CQuadTree::Build_QuadTree(_uint iNumLevels)
    
     CObjectManager* pObjectManager = GET_INSTANCE(CObjectManager);
 
-    m_pQuadTreeRoot = BuildQuadTree(Vec3(0.f, m_vRootExtents.y, 0.f), 0.5f * m_vRootExtents, m_iDepthLimit);
+    m_pQuadTreeRoot = BuildQuadTree(Vec3(0.f, -1.f, 0.f), 0.5f * m_vRootExtents, m_iDepthLimit);
 
     const map<LAYERTAG, CLayer*>& mapLayers = pObjectManager->GetCurrentLevelLayers();
 
@@ -91,7 +91,7 @@ HRESULT CQuadTree::Build_QuadTree(_uint iNumLevels)
     RELEASE_INSTANCE(CObjectManager)
 
 #ifdef _DEBUG
-        InitDebugFrustum();
+        //InitDebugFrustum();
 #endif // DEBUG
 
 
@@ -209,7 +209,7 @@ CQuadTreeNode* CQuadTree::BuildQuadTree(Vec3 vCenter, Vec3 vHalfExtents, _int iD
     }
 
 #ifdef _DEBUG
-    pNode->InitDebugSquare();
+    //pNode->InitDebugSquare();
 #endif
 
     return pNode;

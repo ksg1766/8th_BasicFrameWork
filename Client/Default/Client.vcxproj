@@ -181,6 +181,7 @@
     <ClInclude Include="..\Public\Arena.h" />
     <ClInclude Include="..\public\BackGround.h" />
     <ClInclude Include="..\Public\BasicTerrain.h" />
+    <ClInclude Include="..\Public\Bolts.h" />
     <ClInclude Include="..\Public\BossController.h" />
     <ClInclude Include="..\Public\Bubble.h" />
     <ClInclude Include="..\Public\Dagon.h" />
@@ -240,6 +241,7 @@
     <ClInclude Include="..\Public\LavaTerrain.h" />
     <ClInclude Include="..\Public\Lava.h" />
     <ClInclude Include="..\Public\Lightning.h" />
+    <ClInclude Include="..\Public\Lightning_Spark.h" />
     <ClInclude Include="..\Public\MainCamera.h" />
     <ClInclude Include="..\Public\MainCameraController.h" />
     <ClInclude Include="..\Public\Moloch.h" />
@@ -269,6 +271,7 @@
     <ClInclude Include="..\Public\MonsterController.h" />
     <ClInclude Include="..\Public\MonsterStats.h" />
     <ClInclude Include="..\Public\NavMeshView.h" />
+    <ClInclude Include="..\Public\Orb.h" />
     <ClInclude Include="..\Public\Particle.h" />
     <ClInclude Include="..\Public\ParticleController.h" />
     <ClInclude Include="..\Public\CrystalParticle.h" />
@@ -304,6 +307,7 @@
     <ClInclude Include="..\Public\PlayerController.h" />
     <ClInclude Include="..\Public\Shockwave.h" />
     <ClInclude Include="..\Public\SkyBox.h" />
+    <ClInclude Include="..\Public\SphereSwirl.h" />
     <ClInclude Include="..\Public\StaticBase.h" />
     <ClInclude Include="..\Public\StaticTest.h" />
     <ClInclude Include="..\Public\Strife_Ammo.h" />
@@ -323,6 +327,7 @@
     <ClInclude Include="..\Public\TransformView.h" />
     <ClInclude Include="..\Public\View.h" />
     <ClInclude Include="..\Public\Water.h" />
+    <ClInclude Include="..\Public\WaterLightning.h" />
     <ClInclude Include="..\Public\Wave_Ring.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
@@ -336,6 +341,7 @@
     <ClCompile Include="..\Private\Arena.cpp" />
     <ClCompile Include="..\private\BackGround.cpp" />
     <ClCompile Include="..\Private\BasicTerrain.cpp" />
+    <ClCompile Include="..\Private\Bolts.cpp" />
     <ClCompile Include="..\Private\BossController.cpp" />
     <ClCompile Include="..\Private\Bubble.cpp" />
     <ClCompile Include="..\Private\Dagon.cpp" />
@@ -386,6 +392,7 @@
     <ClCompile Include="..\Private\LavaTerrain.cpp" />
     <ClCompile Include="..\Private\Lava.cpp" />
     <ClCompile Include="..\Private\Lightning.cpp" />
+    <ClCompile Include="..\Private\Lightning_Spark.cpp" />
     <ClCompile Include="..\Private\MainCamera.cpp" />
     <ClCompile Include="..\Private\MainCameraController.cpp" />
     <ClCompile Include="..\Private\Moloch.cpp" />
@@ -411,6 +418,7 @@
     <ClCompile Include="..\Private\NavMeshView.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\Private\Orb.cpp" />
     <ClCompile Include="..\Private\Particle.cpp" />
     <ClCompile Include="..\Private\ParticleController.cpp" />
     <ClCompile Include="..\Private\CrystalParticle.cpp" />
@@ -446,6 +454,7 @@
     <ClCompile Include="..\Private\PlayerController.cpp" />
     <ClCompile Include="..\Private\Shockwave.cpp" />
     <ClCompile Include="..\Private\SkyBox.cpp" />
+    <ClCompile Include="..\Private\SphereSwirl.cpp" />
     <ClCompile Include="..\Private\StaticBase.cpp" />
     <ClCompile Include="..\Private\StaticTest.cpp" />
     <ClCompile Include="..\Private\Strife_Ammo.cpp" />
@@ -469,6 +478,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\Private\Water.cpp" />
+    <ClCompile Include="..\Private\WaterLightning.cpp" />
     <ClCompile Include="..\Private\Wave_Ring.cpp" />
     <ClCompile Include="..\Public\ImGUI\imgui.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>

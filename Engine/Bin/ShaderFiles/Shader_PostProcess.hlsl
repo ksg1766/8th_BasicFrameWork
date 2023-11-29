@@ -227,7 +227,7 @@ PS_OUT PS_MAIN_POSTPROCESS(PS_IN In)
     {
         vDistortion.xy -= float2(0.5f, 0.5f);
         vDistortion.xy *= 2.f;
-        vDistortion.xy *= 0.02f;
+        vDistortion.xy *= 0.05f;
     }
     
     float4 vScene = g_SceneTarget.Sample(LinearSampler, saturate(In.vTexcoord + vDistortion.xy));

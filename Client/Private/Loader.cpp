@@ -46,11 +46,16 @@
 #include "Water.h"
 #include "Fire.h"
 #include "Lightning.h"
+#include "WaterLightning.h"
+#include "Lightning_Spark.h"
 #include "Bubble.h"
+#include "Orb.h"
+#include "Bolts.h"
 #include "Wave_Ring.h"
 #include "GeyserCrack.h"
 #include "CrystalParticle.h"
 #include "Sun.h"
+#include "SphereSwirl.h"
 #include "SwordTrail.h"
 
 CLoader::CLoader(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -420,6 +425,10 @@ HRESULT CLoader::Loading_GameObjects_For_Level_GamePlay()
 	/* For.Prototype_GameObject_Lightning */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Lightning"), CLightning::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+	
+	/* For.Prototype_GameObject_WaterLightning */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_WaterLightning"), CWaterLightning::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
 	/* For.Prototype_GameObject_Particle */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Particle"), CParticle::Create(m_pDevice, m_pContext))))
@@ -493,6 +502,25 @@ HRESULT CLoader::Loading_GameObjects_For_Level_GamePlay()
 		FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_TremorCrystal_M"), CCrystalParticle::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	/* For.Prototype_GameObject_Bolts */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Bolts0"), CBolts::Create(m_pDevice, m_pContext))) ||
+		FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Bolts1"), CBolts::Create(m_pDevice, m_pContext))) ||
+		FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Bolts2"), CBolts::Create(m_pDevice, m_pContext))) ||
+		FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Bolts3"), CBolts::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Lightning_Spark */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Lightning_Spark"), CLightning_Spark::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Orb */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Orb"), COrb::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_SphereSwirl */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_SphereSwirl"), CSphereSwirl::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	/* For.Prototype_GameObject_Static */
 	wstring strStaticFilePath = TEXT("../Bin/Resources/Models/Static/");
 	for (const auto& entry : filesystem::directory_iterator(strStaticFilePath))
@@ -507,8 +535,10 @@ HRESULT CLoader::Loading_GameObjects_For_Level_GamePlay()
 			strFileName == TEXT("Wave_Ring") || strFileName == TEXT("TremorCrystal_G") ||
 			strFileName == TEXT("TremorCrystal_H") || strFileName == TEXT("TremorCrystal_I") ||
 			strFileName == TEXT("TremorCrystal_L") || strFileName == TEXT("TremorCrystal_M") ||
-			strFileName == TEXT("Sun")
-
+			strFileName == TEXT("Sun") || strFileName == TEXT("Bolts0") || strFileName == TEXT("Bolts1") ||
+			strFileName == TEXT("Bolts2") || strFileName == TEXT("Bolts3") || strFileName == TEXT("Lightning_Spark0") ||
+			strFileName == TEXT("Lightning_Spark1") || strFileName == TEXT("Lightning_Spark2") ||
+			strFileName == TEXT("Lightning_Spark3") || strFileName == TEXT("Orb") || strFileName == TEXT("SphereSwirl")
 			/* || strFileName == TEXT("LavaUpdate2") ||
 			strFileName == TEXT("LavaUpdate") || strFileName == TEXT("Lava_East_A1")*/)
 			continue;

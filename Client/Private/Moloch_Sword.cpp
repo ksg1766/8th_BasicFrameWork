@@ -40,7 +40,7 @@ HRESULT CMoloch_Sword::Initialize(void* pArg)
 		m_vecFires.push_back(pFire);
 	}
 
-	Matrix matTrailTop;
+	/*Matrix matTrailTop;
 
 	const Matrix& matPivot = GetModel()->GetPivotMatrix();
 
@@ -48,7 +48,7 @@ HRESULT CMoloch_Sword::Initialize(void* pArg)
 	matTrailTop = matPivot * matTrailTop;
 
 	m_matOffsetTop = matTrailTop;
-	m_matOffsetBottom = matOffset[0];
+	m_matOffsetBottom = matOffset[0];*/
 
 	return S_OK;
 }
@@ -62,7 +62,7 @@ void CMoloch_Sword::LateTick(const _float& fTimeDelta)
 {
 	Super::LateTick(fTimeDelta);
 
-	SwordTrailEmittor(0.5f);
+	//SwordTrailEmittor(0.5f);
 
 	GetRenderer()->Add_RenderGroup(CRenderer::RG_NONBLEND, this);
 }
@@ -158,8 +158,8 @@ HRESULT CMoloch_Sword::Bind_FireResources()
 	m_tPrePrePreTweenDesc = m_tPrePreTweenDesc;
 	m_tPrePreTweenDesc = m_tPreTweenDesc;*/
 
-	m_matPreWorld = GetTransform()->WorldMatrix();
-	m_tPreTweenDesc = GetModel()->GetTweenDesc();
+	//m_matPreWorld = GetTransform()->WorldMatrix();
+	//m_tPreTweenDesc = GetModel()->GetTweenDesc();
 
 	return S_OK;
 }

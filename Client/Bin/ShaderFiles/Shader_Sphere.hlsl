@@ -4,6 +4,7 @@
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
 float   g_fFrameTime;
+float   g_fEmissivePower = 1.f;
 
 vector g_vCamPosition;
 
@@ -63,6 +64,27 @@ VS_OUT VS_BUBBLE_MAIN(VS_IN In)
     Out.vWorldPos = mul(float4(In.vPosition, 1.f), g_WorldMatrix);
     Out.vTangent = normalize(mul(float4(In.vTangent, 0.f), g_WorldMatrix)).xyz;
     Out.vProjPos = Out.vPosition;
+    
+    return Out;
+}
+
+struct VS_BOLTS_OUT
+{
+    float4 vPosition : SV_POSITION;
+    float2 vTexcoord : TEXCOORD0;
+};
+
+VS_BOLTS_OUT VS_BOLTS_MAIN(VS_IN In)
+{
+    VS_BOLTS_OUT Out = (VS_BOLTS_OUT) 0;
+
+    matrix matWV, matWVP;
+
+    matWV = mul(g_WorldMatrix, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
+
+    Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
+    Out.vTexcoord = In.vTexcoord;
     
     return Out;
 }
@@ -147,6 +169,136 @@ PS_WAVE_OUT PS_WAVERING_MAIN(PS_IN In)
     return Out;
 }
 
+struct PS_BOLTS_IN
+{
+    float4 vPosition : SV_POSITION;
+    float2 vTexcoord : TEXCOORD0;
+};
+
+struct PS_BOLTS_OUT
+{
+    float4 vDiffuse : SV_TARGET0;
+    float4 vEmissive : SV_TARGET3;
+};
+
+PS_BOLTS_OUT PS_WATERBOLTS_MAIN(PS_BOLTS_IN In)
+{
+    PS_BOLTS_OUT Out = (PS_BOLTS_OUT) 0;
+    
+    float2 vNewUV = float2(In.vTexcoord.x, In.vTexcoord.y + g_fFrameTime);
+    float3 vColor = g_DiffuseTexture.Sample(LinearSampler, vNewUV);
+    
+    if (vColor.b == 0.f)
+        discard;
+    
+    if (vColor.b * g_fEmissivePower * 1.6f < 0.5f)
+        discard;
+    
+    vColor = 1.f - vColor;
+    vColor.rg = 1.f - (0.8f * vColor.b);
+    vColor.b = 1.2f;
+    vColor.rg *= 0.5f;
+    
+    Out.vDiffuse = float4(vColor, 0.7f);
+    Out.vEmissive = float4(g_fEmissivePower * vColor, 1.f);
+    
+    return Out;
+}
+
+PS_BOLTS_OUT PS_LIGHTNINGSPARK_MAIN(PS_BOLTS_IN In)
+{
+    PS_BOLTS_OUT Out = (PS_BOLTS_OUT) 0;
+    
+    float3 vColor = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+    
+    if (vColor.b == 0.f)
+        discard;
+    
+    //if (vColor.b * g_fEmissivePower * 1.6f < 0.3f)
+    //    discard;
+    
+    vColor = 1.f - vColor;
+    vColor.rg = 1.f - (0.8f * vColor.b);
+    vColor.b = 1.2f;
+    vColor.rg *= 1.9f;
+    
+    Out.vDiffuse = float4(vColor, 1.f);
+    Out.vEmissive = float4(g_fEmissivePower * vColor, 1.f);
+    
+    return Out;
+}
+
+struct PS_ORB_OUT
+{
+    float4 vDiffuse : SV_TARGET0;
+    //float4 vNormal : SV_TARGET1;
+    float4 vDepth : SV_TARGET2;
+    float4 vEmissive : SV_TARGET3;
+    float4 vSunMask : SV_TARGET5;
+};
+
+PS_ORB_OUT PS_ORB_MAIN(PS_IN In)
+{
+    PS_ORB_OUT Out = (PS_ORB_OUT) 0;
+    
+    float2 vNewUV = float2(In.vTexcoord.x - g_fFrameTime, In.vTexcoord.y + 0.73f * g_fFrameTime);
+    
+    float3 vColor = g_DiffuseTexture.Sample(LinearSampler, vNewUV);
+    
+    Out.vDiffuse = float4(0.f, 0.f, 0.03f, 1.f);
+   
+    if (vColor.r > 0.77f)
+        Out.vEmissive = float4(vColor.b * float3(0.25f, 0.75f, 1.3f), 1.f);
+    
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);
+    Out.vSunMask = vector(0.f, 0.f, 0.f, 0.f);
+    
+    return Out;
+}
+
+PS_ORB_OUT PS_WISP_MAIN(PS_IN In)
+{
+    PS_ORB_OUT Out = (PS_ORB_OUT) 0;
+   
+    float2 vNewUV = In.vTexcoord + 2.f * g_fFrameTime;
+    
+    float3 vNoiseSample = g_DiffuseTexture.Sample(LinearSampler, vNewUV);
+   
+    if (vNoiseSample.r > 0.67f + 0.5f * g_fFrameTime)
+    {
+        Out.vDiffuse = float4(0.f, 0.7f, 1.f, 1.f);
+        Out.vEmissive = float4(0.f, 0.7f, 1.f, 1.f);
+    }
+    else
+        discard;
+    
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);
+    Out.vSunMask = vector(0.f, 0.f, 0.f, 0.f);
+    
+    return Out;
+}
+
+struct PS_SPHERESWIRL_OUT
+{
+    float4 vColor : SV_TARGET0;
+    float4 vDistortion : SV_TARGET1;
+};
+
+PS_SPHERESWIRL_OUT PS_SPHERESWIRL_MAIN(PS_IN In)
+{
+    PS_SPHERESWIRL_OUT Out = (PS_SPHERESWIRL_OUT) 0;
+   
+    float2 vNewUV = In.vTexcoord + g_fFrameTime;
+    
+    float4 vNoiseSample = g_DiffuseTexture.Sample(LinearSampler, vNewUV);
+   
+    Out.vColor = vNoiseSample;
+    Out.vDistortion = Out.vColor;
+    Out.vColor.a = 0.15f;
+    
+    return Out;
+}
+
 technique11 DefaultTechnique
 {
 	pass Bubble
@@ -175,6 +327,76 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_WAVERING_MAIN();
+        ComputeShader = NULL;
+    }
+
+    pass WaterBolts // 2
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_OneBlend, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_BOLTS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_WATERBOLTS_MAIN();
+        ComputeShader = NULL;
+    }
+
+    pass LightningSpark // 3
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_OneBlend, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_BOLTS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_LIGHTNINGSPARK_MAIN();
+        ComputeShader = NULL;
+    }
+
+    pass Orb // 4
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_ORB_MAIN();
+        ComputeShader = NULL;
+    }
+
+    pass Wisp // 5
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_WISP_MAIN();
+        ComputeShader = NULL;
+    }
+
+    pass SphereSwirl // 6
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_SPHERESWIRL_MAIN();
         ComputeShader = NULL;
     }
 }

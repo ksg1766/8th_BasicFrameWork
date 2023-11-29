@@ -37,7 +37,7 @@ private:
     const _int      m_iDepthLimit = 4;
     const _float    m_fLooseFactor = 1.5f;
 
-    Vec3            m_vRootExtents = Vec3(1280.f, -1.f, 1280.f);
+    Vec3            m_vRootExtents = Vec3(1280.f, 128.f, 1280.f);
     CQuadTreeNode*  m_pQuadTreeRoot = nullptr;
 
 #ifdef _DEBUG

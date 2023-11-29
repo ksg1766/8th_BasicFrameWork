@@ -206,7 +206,7 @@ PS_OUT PS_MAIN(PS_IN In)
     
     //if (vAlpha.r < 0.01f)
     //    discard;
-    Out.vDiffuse.r = vAlpha;
+    Out.vDiffuse.r = 0.5f * vAlpha;
     Out.vDistortion = vAlpha;
     Out.vDiffuse.a = 0.7f;
     

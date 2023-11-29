@@ -226,7 +226,7 @@ float PCF_ShadowCalculation(float4 fragPosLightSpace/*, float3 lightDir*/)
 	// PCF
     float shadow = 0.0;
     float2 texelSize = float2(1.f / 1440.f, 1.f / 810.f);
-    texelSize /= 4.f;
+    texelSize /= 3.f;
     
     for (int x = -2; x <= 2; ++x)
     {
@@ -355,9 +355,9 @@ PS_OUT PS_MAIN_BLENDFINAL(PS_IN In)
 
     //float4 vDistortion = g_DistortionTarget.Sample(LinearSampler, In.vTexcoord);
     //float2 vDistort = vDistortion.xy;
-    float4 vNonBlend = g_SceneTarget.Sample(LinearSampler, In.vTexcoord);
+    float4 vNonBlend = g_SceneTarget.Sample(PointSampler, In.vTexcoord);
     
-    float4 vBlend = g_BlendTarget.Sample(LinearSampler, In.vTexcoord);
+    float4 vBlend = g_BlendTarget.Sample(PointSampler, In.vTexcoord);
     
     Out.vColor = vNonBlend + vBlend;
     
