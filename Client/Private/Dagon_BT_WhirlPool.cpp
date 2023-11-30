@@ -16,6 +16,8 @@ void CDagon_BT_WhirlPool::OnStart()
 
 CBT_Node::BT_RETURN CDagon_BT_WhirlPool::OnUpdate(const _float& fTimeDelta)
 {
+	return BT_FAIL; // 이 패턴은 스킵하도록 하자
+
 	if (IsZeroHP())
 		return BT_FAIL;
 

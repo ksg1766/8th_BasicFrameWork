@@ -111,10 +111,14 @@ HRESULT CMoloch::RenderShadow(const Matrix& matLightView, const Matrix& matLight
 	if (FAILED(GetShader()->Bind_Matrix("g_ProjMatrix", &matLightProj)))
 		return E_FAIL;
 
-	GetShader()->SetPassIndex(5);
+	_int iPass = GetShader()->GetPassIndex();
+	//if (!IsDead())
+		GetShader()->SetPassIndex(5);
 
 	if (FAILED(GetModel()->Render()))
 		return E_FAIL;
+
+	GetShader()->SetPassIndex(iPass);
 
 	return S_OK;
 }
@@ -389,11 +393,10 @@ HRESULT CMoloch::Bind_ShaderResources()
 		FAILED(m_pGameInstance->Bind_TransformToShader(GetShader(), "g_ViewMatrix", CPipeLine::D3DTS_VIEW)) ||
 		FAILED(m_pGameInstance->Bind_TransformToShader(GetShader(), "g_ProjMatrix", CPipeLine::D3DTS_PROJ)) ||
 		FAILED(GetShader()->Bind_RawValue("g_vCamPosition", &static_cast<const _float4&>(m_pGameInstance->Get_CamPosition_Float4()), sizeof(_float4))))
-	{
 		return E_FAIL;
-	}
 
-	GetShader()->SetPassIndex(0);
+	//if (!IsDead())
+		//GetShader()->SetPassIndex(0);
 
 	return S_OK;
 }

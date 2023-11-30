@@ -87,7 +87,7 @@ HRESULT CCrystalParticle::Ready_FixedComponents()
 	/* Com_Shader */
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Shader, TEXT("Prototype_Component_Shader_VtxNonAnimInstancing"))))
 		return E_FAIL;
-
+	GetShader()->SetPassIndex(6);
 	/* Com_Model */
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Model, TEXT("Prototype_Component_Model_") + GetObjectTag())))
 		return E_FAIL;

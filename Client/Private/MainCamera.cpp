@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\Public\MainCamera.h"
 #include "GameInstance.h"
+#include "MainCameraController.h"
 
 CMainCamera::CMainCamera(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CGameObject(pDevice, pContext)
@@ -57,9 +58,11 @@ HRESULT CMainCamera::Ready_FixedComponents()
 
 HRESULT CMainCamera::Ready_Scripts()
 {
-	/* Com_PlayerController */
+	/* Com_MainCameraController */
 	if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::Script, TEXT("Prototype_Component_MainCameraController"))))
 		return E_FAIL;
+
+	m_pController = static_cast<CMainCameraController*>(m_vecScripts[0]);
 
 	return S_OK;
 }

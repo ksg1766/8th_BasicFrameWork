@@ -4,6 +4,11 @@
 #include "GameObject.h"
 #include "MonoBehaviour.h"
 #include "DissolveManager.h"
+#include "MonsterController.h"
+#include "MainCameraController.h"
+
+#include "MainCamera.h"
+#include "MainCameraController.h"
 
 CDagon_BT_Dead::CDagon_BT_Dead()
 {
@@ -21,11 +26,21 @@ CBT_Node::BT_RETURN CDagon_BT_Dead::OnUpdate(const _float& fTimeDelta)
 {
 	ConditionalAbort(fTimeDelta);
 
+	m_pGameInstance->Get_LightDesc(0)->vDiffuse = _float4(std::min(0.5f + m_fTimeSum, 1.f), std::min(0.5f + m_fTimeSum, 1.f), std::min(0.5f + m_fTimeSum, 1.f), 1.f);
+
 	if (!m_bDissolveFlag && m_fTimeSum > m_vecAnimIndexTime[0].second * 0.92f)
 	{
 		m_pModel->PauseAnimation(true);
 		CDissolveManager::GetInstance()->AddDissolve(m_pGameObject);
 		m_bDissolveFlag = true;
+
+		m_pGameInstance->Get_LightDesc(0)->vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
+
+		static_cast<CMonsterController*>(m_pController)->StopRain();
+
+		CMainCamera* pCamera = static_cast<CMainCamera*>(m_pGameInstance->GetCurrentCamera());
+		CMainCameraController* pController = pCamera->GetController();
+		pController->SetCameraMode(CMainCameraController::CameraMode::DagonToBase);
 		//return BT_RUNNING;
 	}
 

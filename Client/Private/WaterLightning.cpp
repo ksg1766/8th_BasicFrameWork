@@ -27,7 +27,8 @@ HRESULT CWaterLightning::Initialize(void* pArg)
 	if (FAILED(Ready_Scripts(pArg)))
 		return E_FAIL;
 	
-	GetTransform()->Translate(Vec3(0.f, 2.f, 0.f));
+	GetTransform()->SetScale(Vec3(1.3f, 1.5f, 1.3f));
+	GetTransform()->Translate(Vec3(0.f, 5.f, 0.f));
 	//GetTransform()->Rotate(Vec3(90.f, 0.0f, 0.f));
 
 	return S_OK;
@@ -51,8 +52,8 @@ void CWaterLightning::Tick(const _float& fTimeDelta)
 		tParticleDesc.vSpeedMin = _float3(-1.f, 0.25f, -1.f);
 		//tParticleDesc.fLifeTimeMin = 1.55f;
 		//tParticleDesc.fLifeTimeMax = 2.55f;
-		tParticleDesc.fScaleMin = 0.15f;
-		tParticleDesc.fScaleMax = 0.21f;
+		tParticleDesc.fScaleMin = 0.17f;
+		tParticleDesc.fScaleMax = 0.29f;
 		tParticleDesc.iPass = 2;
 		tParticleDesc.vRange = Vec3(1.f, 12.f, 1.f);
 		tParticleDesc.vCenter = GetTransform()->GetPosition();
@@ -70,8 +71,8 @@ void CWaterLightning::Tick(const _float& fTimeDelta)
 		tParticleDesc.vSpeedMin = _float3(-5.f, 4.3f, -3.5f);
 		//tParticleDesc.fLifeTimeMin = 1.55f;
 		//tParticleDesc.fLifeTimeMax = 2.55f;
-		tParticleDesc.fScaleMin = 0.125f;
-		tParticleDesc.fScaleMax = 0.25f;
+		tParticleDesc.fScaleMin = 0.17f;
+		tParticleDesc.fScaleMax = 0.29f;
 		tParticleDesc.iPass = 2;
 		//tParticleDesc.vRange = Vec3(2.f, 1.f, 2.f);
 		tParticleDesc.vCenter = GetTransform()->GetPosition();

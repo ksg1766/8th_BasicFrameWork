@@ -20,6 +20,7 @@ private:
 	virtual void		ConditionalAbort(const _float& fTimeDelta);
 
 	_bool				IsZeroHP();
+	_bool				m_bAttacked = false;
 
 public:
 	static	CDagon_BT_Tentacle* Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController);

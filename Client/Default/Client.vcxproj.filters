@@ -921,6 +921,12 @@
     <ClInclude Include="..\Public\Particle_Rain.h">
       <Filter>03.GameObjects\05.Particle\Particle</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Particle_WaveSplash.h">
+      <Filter>03.GameObjects\05.Particle\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Particle_Waterfall.h">
+      <Filter>03.GameObjects\05.Particle\Particle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1341,6 +1347,12 @@
       <Filter>03.GameObjects\03.Boss\01.Dagon\Effect\Wave</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Particle_Rain.cpp">
+      <Filter>03.GameObjects\05.Particle\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Particle_WaveSplash.cpp">
+      <Filter>03.GameObjects\05.Particle\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Particle_Waterfall.cpp">
       <Filter>03.GameObjects\05.Particle\Particle</Filter>
     </ClCompile>
   </ItemGroup>

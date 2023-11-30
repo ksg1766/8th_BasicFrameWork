@@ -21,6 +21,8 @@ private:
 
 	_bool				IsZeroHP();
 
+	_bool				m_bAttacked = false;
+
 public:
 	static	CDagon_BT_Wave* Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController);
 	virtual void Free() override;

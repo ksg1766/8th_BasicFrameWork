@@ -29,6 +29,7 @@ public:
 	_float	GetHeightOffset();
 	_float3	GetPassedEdgeNormal(_fvector vPos);
 
+	_int	GetCurrentIndex() {	return m_iCurrentIndex;	}
 	void	SetCurrentIndex(_int iCurrentIndex);// { m_iCurrentIndex = iCurrentIndex; }
 
 private:

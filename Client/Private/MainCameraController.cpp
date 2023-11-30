@@ -51,6 +51,25 @@ HRESULT CMainCameraController::Initialize(void* pArg)
 
 void CMainCameraController::Tick(const _float& fTimeDelta)
 {
+	switch (m_eCameraMode)
+	{
+	case CameraMode::Default:
+		//m_vOffset = m_vBaseOffset;
+		break;
+	case CameraMode::Dagon:
+		Dagon(fTimeDelta);
+		break;
+	case CameraMode::DagonToBase:
+		DagonToBase(fTimeDelta);
+		break;
+	case CameraMode::Moloch:
+		//Moloch(fTimeDelta);
+		break;
+	case CameraMode::MolochToBase:
+		//MolochToBase(fTimeDelta);
+		break;
+	}
+
 	//Input(fTimeDelta);
 }
 
@@ -93,6 +112,43 @@ void CMainCameraController::Trace(const _float& fTimeDelta)
 	Vec3 vUp = vDist.Cross(vRight);
 	vUp.Normalize();
 	matWorld.Up(/*fUp * */vUp);
+}
+
+void CMainCameraController::Dagon(const _float& fTimeDelta)
+{
+	if (m_fTimer >= 1.f)
+	{
+		m_fTimer = 1.f;
+		m_vOffset = m_vOffsetDagon;
+	}
+	else
+		m_vOffset = Vec3::Lerp(m_vOffset, m_vOffsetDagon, m_fTimer);
+		//m_vOffset = Vec3::Lerp(m_vBaseOffset, m_vOffsetDagon, m_fTimer);
+
+	m_fTimer += 0.01f * fTimeDelta;
+}
+
+void CMainCameraController::DagonToBase(const _float& fTimeDelta)
+{
+	if (m_fTimer <= 0.f)
+	{
+		m_fTimer = 0.f;
+		m_vOffset = m_vBaseOffset;
+		m_eCameraMode = CameraMode::Default;
+	}
+	else
+		m_vOffset = Vec3::Lerp(m_vBaseOffset, m_vOffset, m_fTimer);
+		//m_vOffset = Vec3::Lerp(m_vBaseOffset, m_vOffsetDagon, m_fTimer);
+
+	m_fTimer -= 0.01f * fTimeDelta;
+}
+
+void CMainCameraController::Moloch(const _float& fTimeDelta)
+{
+}
+
+void CMainCameraController::MolochToBase(const _float& fTimeDelta)
+{
 }
 
 CMainCameraController* CMainCameraController::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

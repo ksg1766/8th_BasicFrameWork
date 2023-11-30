@@ -244,8 +244,8 @@ void CMonsterController::Hit(_int iDamage)
 	if (m_pStats->GetHP() <= 0)
 	{
 		m_IsZeroHP = true;
-		m_pRigidBody->IsKinematic(false);
-		return;
+		if(TEXT("Dagon") != m_pGameObject->GetObjectTag() && TEXT("Moloch") != m_pGameObject->GetObjectTag())
+			m_pRigidBody->IsKinematic(false);
 	}
 
 	m_iHitEffectCount = 20;
@@ -269,6 +269,17 @@ void CMonsterController::Look(const Vec3& vPoint, const _float& fTimeDelta)
 
 		m_pTransform->RotateYAxisFixed(fTimeDelta * 0.3f * vRotateAmount);
 	}
+}
+
+void CMonsterController::StartRain()
+{
+	m_pRainDrop = m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Particle_Rain"), LAYERTAG::IGNORECOLLISION);
+	m_pRainDrop->GetTransform()->SetPosition(GetTransform()->GetPosition() + 5.f * Vec3::UnitY + 3.f * GetTransform()->GetForward());
+}
+
+void CMonsterController::StopRain()
+{
+	m_pGameInstance->DeleteObject(m_pRainDrop);
 }
 
 void CMonsterController::OnCollisionEnter(CGameObject* pOther)

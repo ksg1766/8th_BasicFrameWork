@@ -11,6 +11,7 @@ CDagon_BT_Wave::CDagon_BT_Wave()
 void CDagon_BT_Wave::OnStart()
 {
 	Super::OnStart(0);
+	m_bAttacked = false;
 }
 
 CBT_Node::BT_RETURN CDagon_BT_Wave::OnUpdate(const _float& fTimeDelta)
@@ -21,6 +22,21 @@ CBT_Node::BT_RETURN CDagon_BT_Wave::OnUpdate(const _float& fTimeDelta)
 	if (m_fTimeSum > m_vecAnimIndexTime[0].second * 0.9f)
 	{
 		return BT_SUCCESS;
+	}
+
+	if (!m_bAttacked && m_fTimeSum > m_vecAnimIndexTime[0].second * 0.3f)
+	{
+		CGameObject* pDagonWave = m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_DagonWave"), LAYERTAG::IGNORECOLLISION);
+		const Vec3& vForward = m_pGameObject->GetTransform()->GetForward();
+
+		pDagonWave->GetTransform()->SetForward(const_cast<Vec3&>(vForward));
+		Vec3 vNewRight = Vec3::UnitY.Cross(vForward);
+		pDagonWave->GetTransform()->SetRight(vNewRight);
+		Vec3 vNewUp = vForward.Cross(vNewRight);
+		pDagonWave->GetTransform()->SetUp(vNewUp);
+
+		pDagonWave->GetTransform()->SetPosition(m_pGameObject->GetTransform()->GetPosition() + 1.5f * Vec3::UnitY);
+		m_bAttacked = true;
 	}
 
 	m_fTimeSum += fTimeDelta;

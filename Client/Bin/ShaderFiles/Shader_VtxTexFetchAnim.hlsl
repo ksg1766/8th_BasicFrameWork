@@ -326,21 +326,7 @@ PS_OUT_SHADOW PS_SHADOW_MAIN(PS_IN In)
 
 PS_OUT PS_WAVE_MAIN(PS_IN In)
 {
-    //PS_ORB_OUT Out = (PS_ORB_OUT) 0;
-    
-    //float2 vNewUV = float2(In.vTexcoord.x - g_fFrameTime, In.vTexcoord.y + 0.73f * g_fFrameTime);
-    
-    //float3 vColor = g_DiffuseTexture.Sample(LinearSampler, vNewUV);
-    
-    //Out.vDiffuse = float4(0.f, 0.f, 0.03f, 1.f);
-   
-    //if (vColor.r > 0.77f)
-    //    Out.vEmissive = float4(vColor.b * float3(0.25f, 0.75f, 1.3f), 1.f);
-    
-    //Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);
-    //Out.vSunMask = vector(0.f, 0.f, 0.f, 0.f);
-    
-    float2 vNewUV = float2(In.vTexcoord.x/* - g_fFrameTime*/, In.vTexcoord.y + 0.33f * g_fFrameTime);
+    float2 vNewUV = float2(In.vTexcoord.x/* - g_fFrameTime*/, In.vTexcoord.y + 0.25f * g_fFrameTime);
     float4 vColor = g_DiffuseTexture.Sample(LinearSampler, vNewUV);
     
     ComputeNormalMapping(In.vNormal, In.vTangent, In.vTexcoord);
@@ -355,7 +341,7 @@ PS_OUT PS_WAVE_MAIN(PS_IN In)
     if (vColor.r > 0.1f)
         Out.vDiffuse = vColor;
     else
-        Out.vDiffuse = float4(0.f, 0.f, 0.1f, 1.f);
+        Out.vDiffuse = float4(0.1f, 0.1f, 0.3f, 1.f);
     
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);

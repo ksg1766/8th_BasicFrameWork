@@ -26,7 +26,7 @@ HRESULT COrb::Initialize(void* pArg)
 	if (FAILED(Ready_Scripts()))
 		return E_FAIL;
 
-	GetTransform()->SetScale(Vec3(3.f, 3.f, 3.f));
+	GetTransform()->SetScale(Vec3(4.f, 4.f, 4.f));
 
 	return S_OK;
 }
@@ -48,20 +48,26 @@ void COrb::Tick(const _float& fTimeDelta)
 
 	if (m_fFrameTime < 0.4f)
 	{
-		GetTransform()->SetScale(Vec3(7.5f * m_fFrameTime, 7.5f * m_fFrameTime, 7.5f * m_fFrameTime));
-		m_pSphereSwirl->GetTransform()->SetScale(Vec3(7.5f * m_fFrameTime, 7.5f * m_fFrameTime, 7.5f * m_fFrameTime));
+		GetTransform()->SetScale(Vec3(10.f * m_fFrameTime, 10.f * m_fFrameTime, 10.f * m_fFrameTime));
+		m_pSphereSwirl->GetTransform()->SetScale(Vec3(10.f * m_fFrameTime, 10.f * m_fFrameTime, 10.f * m_fFrameTime));
 	}
 	else
 	{
 		if (!m_bSpawned)
 		{
-			GetTransform()->SetScale(Vec3(3.f, 3.f, 3.f));
-			m_pSphereSwirl->GetTransform()->SetScale(Vec3(3.f, 3.f, 3.f));
+			GetTransform()->SetScale(Vec3(4.f, 4.f, 4.f));
+			m_pSphereSwirl->GetTransform()->SetScale(Vec3(4.f, 4.f, 4.f));
 			m_bSpawned = true;
 		}
 	}
 
-	if (m_fFrameTime > 15.f)
+	if (m_fFrameTime > 10.f)
+	{
+		GetTransform()->SetScale(Vec3(1.f / 2.5f * (m_fFrameTime - 9.f), 1.f / 2.5f * (m_fFrameTime - 9.f), 1.f / 2.5f * (m_fFrameTime - 9.f)));
+		m_pSphereSwirl->GetTransform()->SetScale(Vec3(1.f / 2.5f * (m_fFrameTime - 9.f), 1.f / 2.5f * (m_fFrameTime - 9.f), 1.f / 2.5f * (m_fFrameTime - 9.f)));
+	}
+
+	if (m_fFrameTime > 11.5f)
 	{
 		m_pGameInstance->DeleteObject(this);
 		m_pGameInstance->DeleteObject(m_pSphereSwirl);

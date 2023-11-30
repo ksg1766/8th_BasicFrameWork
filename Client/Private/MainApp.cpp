@@ -543,7 +543,7 @@ HRESULT CMainApp::Ready_Prototype_Components()
 			}
 			else if (TEXT("DagonWave") == strFileName)
 			{
-				XMStoreFloat4x4(&matPivot, XMMatrixScaling(0.004f, 0.004f, 0.004f) * XMMatrixRotationY(XMConvertToRadians(270.0f)));
+				XMStoreFloat4x4(&matPivot, XMMatrixScaling(0.00427f, 0.00427f, 0.00427f) * XMMatrixRotationY(XMConvertToRadians(270.0f)));
 				if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_" + strFileName),
 					CModel::Create(m_pDevice, m_pContext, strSkeletalFilePath + strFileName, desc, matPivot))))
 					return E_FAIL;

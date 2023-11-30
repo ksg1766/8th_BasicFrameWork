@@ -17,7 +17,7 @@ CVIBuffer_ParticleSystem::CVIBuffer_ParticleSystem(const CVIBuffer_ParticleSyste
 
 HRESULT CVIBuffer_ParticleSystem::Initialize_Prototype()
 {
-	m_iStride = sizeof(VTXPARTICLE);
+	/*m_iStride = sizeof(VTXPARTICLE);
 	m_iNumVertices = 1;
 	m_iNumVBs = 1;
 	m_eTopology = D3D_PRIMITIVE_TOPOLOGY_POINTLIST;
@@ -55,13 +55,53 @@ HRESULT CVIBuffer_ParticleSystem::Initialize_Prototype()
 		return E_FAIL;
 	if (FAILED(m_pDevice->CreateBuffer(&m_BufferDesc, 0, &m_pStreamOutVB)))
 		return E_FAIL;
-#pragma endregion
+#pragma endregion*/
 
 	return S_OK;
 }
 
 HRESULT CVIBuffer_ParticleSystem::Initialize(void * pArg)
 {
+	m_iStride = sizeof(VTXPARTICLE);
+	m_iNumVertices = 1;
+	m_iNumVBs = 1;
+	m_eTopology = D3D_PRIMITIVE_TOPOLOGY_POINTLIST;
+
+#pragma region VERTEX_BUFFER
+	ZeroMemory(&m_BufferDesc, sizeof m_BufferDesc);
+
+	m_BufferDesc.ByteWidth = m_iStride * m_iNumVertices;
+	m_BufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	m_BufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	m_BufferDesc.CPUAccessFlags = 0;
+	m_BufferDesc.MiscFlags = 0;
+	m_BufferDesc.StructureByteStride = 0;
+
+	VTXPARTICLE* pVertices = new VTXPARTICLE;
+	ZeroMemory(pVertices, sizeof(VTXPARTICLE));
+
+	pVertices->vPosition = _float3(0.f, 0.f, 0.f);
+	pVertices->vSize = _float2(1.f, 1.f);
+	pVertices->fAge = 0.f;
+	pVertices->iType = 0;
+
+	ZeroMemory(&m_SubResourceData, sizeof m_SubResourceData);
+	m_SubResourceData.pSysMem = pVertices;
+
+	if (FAILED(Super::Create_Buffer(&m_pVB)))
+		return E_FAIL;
+
+	Safe_Delete_Array(pVertices);
+
+	m_BufferDesc.ByteWidth = sizeof(VTXPARTICLE) * m_fMaxParticles;
+	m_BufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER | D3D11_BIND_STREAM_OUTPUT;
+
+	if (FAILED(m_pDevice->CreateBuffer(&m_BufferDesc, 0, &m_pDrawVB)))
+		return E_FAIL;
+	if (FAILED(m_pDevice->CreateBuffer(&m_BufferDesc, 0, &m_pStreamOutVB)))
+		return E_FAIL;
+#pragma endregion
+
 	return S_OK;
 }
 

@@ -4,6 +4,9 @@
 #include "GameObject.h"
 #include "Strife_Ammo_Default.h"
 #include "Strife_Ammo_Static.h"
+// 허허...
+#include "MainCamera.h"
+#include "MainCameraController.h"
 
 constexpr auto EPSILON = 0.001f;
 
@@ -60,8 +63,15 @@ void CPlayerController::Tick(const _float& fTimeDelta)
 	//////////
 	if (KEY_PRESSING(KEY::CTRL) && KEY_DOWN(KEY::N))
 	{
-		m_pTransform->SetPosition(Vec3(82.f, 6.5f, 41.f));
-		m_pGameObject->GetNavMeshAgent()->SetCurrentIndex(573);
+		//m_pTransform->SetPosition(Vec3(82.f, 6.5f, 41.f));
+		//m_pGameObject->GetNavMeshAgent()->SetCurrentIndex(573);
+		m_pTransform->SetPosition(Vec3(-147.f, 19.4f, 146.65f));
+		m_pGameObject->GetNavMeshAgent()->SetCurrentIndex(480);
+	}
+	if (KEY_PRESSING(KEY::CTRL) && KEY_DOWN(KEY::M))
+	{
+		m_pTransform->SetPosition(Vec3(233.6f, 6.85f, 180.3f));
+		m_pGameObject->GetNavMeshAgent()->SetCurrentIndex(646);
 	}
 	//////////
 
@@ -73,6 +83,22 @@ void CPlayerController::Tick(const _float& fTimeDelta)
 		Vec3 vPassedLine = m_pNavMeshAgent->GetPassedEdgeNormal(m_pTransform->GetPosition());
 		
 		m_pTransform->SetPosition(m_vPrePos + vDir - vDir.Dot(vPassedLine) * vPassedLine);*/
+	}
+
+	// TODO: 아래는 시간되면 GameManager 만들어서 옮길 것.
+	if (!m_bDagonCreated && 480 <= m_pNavMeshAgent->GetCurrentIndex() && m_pTransform->GetPosition().z > 145.f)
+	{
+		m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Dagon"), LAYERTAG::UNIT_GROUND);
+		m_bDagonCreated = true;
+
+		CMainCamera* pCamera = static_cast<CMainCamera*>(m_pGameInstance->GetCurrentCamera());
+		CMainCameraController* pController = pCamera->GetController();
+		pController->SetCameraMode(CMainCameraController::CameraMode::Dagon);
+	}
+	else if (!m_bMolochCreated && 646 <= m_pNavMeshAgent->GetCurrentIndex() && m_pTransform->GetPosition().x > 220.f && m_pTransform->GetPosition().z > 177.f)
+	{
+		m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Moloch"), LAYERTAG::UNIT_GROUND);
+		m_bMolochCreated = true;
 	}
 }
 
@@ -199,7 +225,7 @@ void CPlayerController::Jump()
 	m_pRigidBody->UseGravity(true);
 	m_pRigidBody->ClearForce(ForceMode::FORCE);
 	m_pRigidBody->ClearForce(ForceMode::IMPULSE);
-	m_pRigidBody->AddForce(12.f * Vec3::UnitY, ForceMode::IMPULSE);
+	m_pRigidBody->AddForce(18.f * Vec3::UnitY, ForceMode::IMPULSE);
 }
 
 void CPlayerController::Land()

@@ -16,7 +16,7 @@ private:
 	virtual ~CLightManager() = default;
 
 public:
-	const LIGHT_DESC* Get_LightDesc(_uint iLightIndex = 0);
+	LIGHT_DESC* Get_LightDesc(_uint iLightIndex = 0);
 	_float3 Get_SunScreenPos();
 
 public:

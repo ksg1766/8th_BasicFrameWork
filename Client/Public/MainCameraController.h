@@ -8,6 +8,8 @@ BEGIN(Client)
 class CMainCameraController : public CMonoBehaviour
 {
 	using Super = CMonoBehaviour;
+public:
+	enum class CameraMode { Default = 0, Dagon, DagonToBase, Moloch, MolochToBase, End };
 
 private:
 	CMainCameraController(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -22,17 +24,29 @@ public:
 	virtual void	DebugRender()						override;
 
 public:
-	void	SetTarget(CTransform* pTargetTransform) { m_pTargetTransform = pTargetTransform; }
+	void	SetTarget(CTransform* pTargetTransform)	{ m_pTargetTransform = pTargetTransform; }
+
+	void	SetCameraMode(CameraMode eCameraMode)	{ m_eCameraMode = eCameraMode; }
 
 private:
 	void	Input(const _float& fTimeDelta);
 	void	Trace(const _float& fTimeDelta);
 
+	void	Dagon(const _float& fTimeDelta);
+	void	DagonToBase(const _float& fTimeDelta);
+	void	Moloch(const _float& fTimeDelta);
+	void	MolochToBase(const _float& fTimeDelta);
+
 private:
 	CTransform*		m_pTransform = nullptr;
 	CTransform*		m_pTargetTransform = nullptr;
 
-	Vec3			m_vOffset = Vec3::Zero;
+	Vec3			m_vOffset = Vec3(0.f, 13.f, -15.f);
+	Vec3			m_vBaseOffset = Vec3(0.f, 13.f, -15.f);
+	Vec3			m_vOffsetDagon = Vec3(14.f, 17.f, -14.f);
+	_float			m_fTimer = 0.f;
+
+	CameraMode		m_eCameraMode = CameraMode::End;
 
 public:
 	static	CMainCameraController* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -4,6 +4,9 @@
 #include "GameObject.h"
 #include "BossController.h"
 
+_int CDagon_BT_Orb::m_iOrbNum = 0;
+_bool CDagon_BT_Orb::m_isOrbLeft = false;
+
 CDagon_BT_Orb::CDagon_BT_Orb()
 {
 }
@@ -12,6 +15,13 @@ void CDagon_BT_Orb::OnStart()
 {
 	Super::OnStart(0);
 	HitOrMiss();
+	m_bAttacked = false;
+
+	if (2 == m_iOrbNum)
+	{
+		m_iOrbNum = -1;
+		m_isOrbLeft = false;
+	}
 }
 
 CBT_Node::BT_RETURN CDagon_BT_Orb::OnUpdate(const _float& fTimeDelta)
@@ -19,12 +29,39 @@ CBT_Node::BT_RETURN CDagon_BT_Orb::OnUpdate(const _float& fTimeDelta)
 	if (IsZeroHP())
 		return BT_FAIL;
 
+	if (-1 == m_iOrbNum)
+	{
+		m_iOrbNum = 0;
+		return BT_FAIL;
+	}
+
 	if (!m_bHitOrMiss)
 		return BT_FAIL;
 
 	if (m_fTimeSum > m_vecAnimIndexTime[0].second * 0.9f)
 	{
 		return BT_SUCCESS;
+	}
+
+	if (!m_bAttacked && m_fTimeSum > m_vecAnimIndexTime[0].second * 0.3f)
+	{
+		_int iLeftRight = 0;
+		if (m_isOrbLeft)
+		{
+			iLeftRight = 1;
+		}
+		else
+		{
+			iLeftRight = -1;
+			m_isOrbLeft = true;
+		}
+
+		CGameObject* pOrb1 = m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Orb"), LAYERTAG::IGNORECOLLISION);
+		pOrb1->GetTransform()->SetPosition(m_pGameObject->GetTransform()->GetPosition() + 3.f * m_pGameObject->GetTransform()->GetForward() +
+			5.f * iLeftRight * m_pGameObject->GetTransform()->GetRight() + 2.f * Vec3::UnitY);
+
+		++m_iOrbNum;
+		m_bAttacked = true;
 	}
 
 	m_fTimeSum += fTimeDelta;
@@ -56,7 +93,7 @@ void CDagon_BT_Orb::HitOrMiss()
 	mt19937_64							RandomNumber(RandomDevice());
 	uniform_int_distribution<_int>		iRandom(0, 20);
 
-	if (4 >= iRandom(RandomNumber))
+	if (6 >= iRandom(RandomNumber))
 		m_bHitOrMiss = true;
 	else
 		m_bHitOrMiss = false;

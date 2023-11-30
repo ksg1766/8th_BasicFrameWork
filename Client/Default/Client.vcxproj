@@ -277,6 +277,8 @@
     <ClInclude Include="..\Public\ParticleController.h" />
     <ClInclude Include="..\Public\CrystalParticle.h" />
     <ClInclude Include="..\Public\Particle_Rain.h" />
+    <ClInclude Include="..\Public\Particle_Waterfall.h" />
+    <ClInclude Include="..\Public\Particle_WaveSplash.h" />
     <ClInclude Include="..\Public\P_Strife.h" />
     <ClInclude Include="..\Public\P_Strife_State_Aim.h" />
     <ClInclude Include="..\Public\P_Strife_State_Dash.h" />
@@ -426,6 +428,8 @@
     <ClCompile Include="..\Private\ParticleController.cpp" />
     <ClCompile Include="..\Private\CrystalParticle.cpp" />
     <ClCompile Include="..\Private\Particle_Rain.cpp" />
+    <ClCompile Include="..\Private\Particle_Waterfall.cpp" />
+    <ClCompile Include="..\Private\Particle_WaveSplash.cpp" />
     <ClCompile Include="..\Private\P_Strife.cpp" />
     <ClCompile Include="..\Private\P_Strife_State_Aim.cpp" />
     <ClCompile Include="..\Private\P_Strife_State_Dash.cpp" />

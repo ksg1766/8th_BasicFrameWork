@@ -50,6 +50,11 @@ public:
 	void	SetStats(CMonsterStats* pStats)			{ m_pStats = pStats; }
 
 public:
+	// Only For Dagon!!!
+	void	StartRain();
+	void	StopRain();
+
+public:
 	void	OnCollisionEnter(CGameObject* pOther);
 	void	OnCollisionStay(CGameObject* pOther);
 	void	OnCollisionExit(CGameObject* pOther);
@@ -88,6 +93,11 @@ private:
 	CMonsterStats*	m_pStats		= nullptr;
 	_bool			m_IsZeroHP		= false;
 	_int			m_iHitEffectCount = -1;
+
+
+	// Only For Dagon!!!
+	CGameObject*	m_pRainDrop = nullptr;
+
 
 #ifdef _DEBUG
 private:

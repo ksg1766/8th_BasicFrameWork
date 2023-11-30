@@ -30,10 +30,13 @@ private:
 
 private:
 	_float			m_fFrameTime = 0.f;
-	_float			m_fEmissivePower = 1.5f;
+	_float			m_fEmissivePower = 1.f;
 
 	_byte			m_byteFlag = 5;
 	CModel*			m_pSparkModels[4] = {};
+
+	CShader*		m_pShaderStream = nullptr;
+	CShader*		m_pShaderDraw = nullptr;
 
 public:
 	static	CLightning_Spark* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

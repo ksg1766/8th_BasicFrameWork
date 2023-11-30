@@ -27,7 +27,7 @@ HRESULT CLightning_Spark::Initialize(void* pArg)
 	if (FAILED(Ready_Scripts()))
 		return E_FAIL;
 	
-	GetTransform()->SetScale(Vec3(1.5f, 3.3f, 1.5f));
+	GetTransform()->SetScale(Vec3(1.75f, 3.3f, 1.75f));
 	GetTransform()->RotateYAxisFixed(Vec3(0.f, rand(), 0.f));
 
 	return S_OK;
@@ -43,7 +43,7 @@ void CLightning_Spark::Tick(const _float& fTimeDelta)
 		m_pGameInstance->DeleteObject(this);
 	}
 
-	if (0.2f < m_fFrameTime && m_fFrameTime < 0.6f)
+	if (0.1f < m_fFrameTime && m_fFrameTime < 0.6f)
 	{
 		CParticleController::PARTICLE_DESC tParticleDesc;
 		tParticleDesc.eType = CParticleController::ParticleType::EXPLODE;

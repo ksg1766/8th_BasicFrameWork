@@ -23,6 +23,8 @@ private:
 	void				HitOrMiss();
 	_bool				m_bHitOrMiss;
 
+	_bool				m_bAttacked = false;
+
 public:
 	static	CDagon_BT_Lightning* Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController);
 	virtual void Free() override;

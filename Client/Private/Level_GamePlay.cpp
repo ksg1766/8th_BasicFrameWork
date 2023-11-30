@@ -333,11 +333,11 @@ HRESULT CLevel_GamePlay::Ready_Layer_UnitGround()
 		pGameObject->GetNavMeshAgent()->SetCurrentIndex(520 + 2 * i);
 	}*/
 
-	pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_Moloch"));
+	/*pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_Moloch"));
 	if (nullptr == pGameObject)	return E_FAIL;
 
 	pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_Dagon"));
-	if (nullptr == pGameObject)	return E_FAIL;
+	if (nullptr == pGameObject)	return E_FAIL;*/
 
 	return S_OK;
 }

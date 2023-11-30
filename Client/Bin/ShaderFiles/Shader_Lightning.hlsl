@@ -234,7 +234,7 @@ PS_OUT PS_WATERLIGHTNING_MAIN(PS_IN In)
     vColor = 1.f - vColor;
     vColor.rg = 1.f - (0.8f * vColor.b);
     vColor.b = 1.2f;
-    vColor.rg *= 0.5f;
+    vColor.rg *= 0.37f;
     
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);
@@ -251,13 +251,13 @@ PS_OUT PS_WATERSPARK_MAIN(PS_IN In)
    
     float3 vColor = g_LightningTexture.Sample(LinearSampler, In.vTexcoord);
     
-    if (vColor.b < 0.4f)
+    if (vColor.b < 0.35f)
         discard;
     
     vColor = 1.f - vColor;
     vColor.rg = 1.f - (0.8f * vColor.b);
     vColor.b = 1.f;
-    vColor.rg *= 0.5f;
+    vColor.rg *= 0.33f;
     //vColor.r = 0.7f;
     
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);

@@ -5,6 +5,7 @@
 
 BEGIN(Client)
 
+class CMainCameraController;
 class CMainCamera final : public CGameObject
 {
 	using Super = CGameObject;
@@ -19,9 +20,14 @@ public:
 	virtual void	Tick(const _float& fTimeDelta)		override;
 	virtual void	LateTick(const _float& fTimeDelta)	override;
 
+public:
+	CMainCameraController* GetController() { return m_pController; }
+
 private:
 	HRESULT			Ready_FixedComponents();
 	HRESULT			Ready_Scripts();
+
+	CMainCameraController* m_pController = nullptr;
 
 public:
 	static	CMainCamera* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

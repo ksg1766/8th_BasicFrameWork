@@ -23,6 +23,10 @@ private:
 	void				HitOrMiss();
 	_bool				m_bHitOrMiss;
 
+	_bool				m_bAttacked = false;
+	static _int			m_iOrbNum;
+	static _bool		m_isOrbLeft;
+
 public:
 	static	CDagon_BT_Orb* Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController);
 	virtual void Free() override;

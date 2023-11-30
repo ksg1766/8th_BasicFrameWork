@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\Public\DagonWave.h"
 #include "GameInstance.h"
+#include "Particle_WaveSplash.h"
 
 CDagonWave::CDagonWave(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: Super(pDevice, pContext)
@@ -25,6 +26,10 @@ HRESULT CDagonWave::Initialize(void* pArg)
 	if (FAILED(Ready_Scripts()))
 		return E_FAIL;
 
+	m_pSplash = static_cast<CParticle_WaveSplash*>(m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Particle_WaveSplash"), LAYERTAG::IGNORECOLLISION));
+	if (nullptr == m_pSplash)
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -34,10 +39,15 @@ void CDagonWave::Tick(const _float& fTimeDelta)
 
 	m_fFrameTime += fTimeDelta;
 
-	if (m_fFrameTime > 15.f)
+	if (m_fFrameTime > 10.f)
+	{
 		m_pGameInstance->DeleteObject(this);
+		m_pGameInstance->DeleteObject(m_pSplash);
+	}
 
 	GetTransform()->Translate(3.f * fTimeDelta * GetTransform()->GetForward());
+	m_pSplash->GetTransform()->SetPosition(GetTransform()->GetPosition());
+	m_pSplash->SetEmitDirection(GetTransform()->GetForward());
 }
 
 void CDagonWave::LateTick(const _float& fTimeDelta)

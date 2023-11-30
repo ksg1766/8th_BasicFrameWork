@@ -296,6 +296,11 @@ HRESULT CGameInstance::ChangeCamera(const wstring& strName)
 	return m_pCameraManager->ChangeCamera(strName);
 }
 
+CGameObject* CGameInstance::GetCurrentCamera()
+{
+	return m_pCameraManager->GetCurrentCamera();
+}
+
 HRESULT CGameInstance::Reserve_Pool(const wstring& strObjectName, const _uint& iReserveCount, void* pArg)
 {
 	if (nullptr == m_pPoolManager)
@@ -407,7 +412,7 @@ _matrix CGameInstance::Get_Transform_Matrix_Inverse(CPipeLine::TRANSFORMSTATE eS
 	return m_pPipeLine->Get_Transform_Matrix_Inverse(eState);
 }
 
-const LIGHT_DESC* CGameInstance::Get_LightDesc(_uint iLightIndex)
+LIGHT_DESC* CGameInstance::Get_LightDesc(_uint iLightIndex)
 {
 	return m_pLightManager->Get_LightDesc(iLightIndex);
 }

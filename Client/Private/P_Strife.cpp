@@ -11,6 +11,9 @@
 #include "P_Strife_State_Dash.h"
 #include "P_Strife_State_Impact.h"
 
+//
+#include "Particle_Waterfall.h"
+
 CP_Strife::CP_Strife(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: Super(pDevice, pContext)
 {
@@ -50,62 +53,23 @@ void CP_Strife::Tick(const _float& fTimeDelta)
 
 	if (KEY_PRESSING(KEY::CTRL) && KEY_DOWN(KEY::L))
 	{
-		//for (_int i = 0; i < 2; ++i)
-		//{
-			CGameObject* pWaterLightning = m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_WaterLightning"), LAYERTAG::IGNORECOLLISION);
-			pWaterLightning->GetTransform()->SetScale(Vec3(2.7f, 1.2f, 2.7f));
-			pWaterLightning->GetTransform()->SetPosition(GetTransform()->GetPosition());
-		//}
-
-		CGameObject* pBolts = nullptr;
-
-		static _int iBoltNum = 0;
-
-		if (0 == iBoltNum)
-			pBolts = m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Bolts0"), LAYERTAG::IGNORECOLLISION);
-		if (1 == iBoltNum)
-			pBolts = m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Bolts1"), LAYERTAG::IGNORECOLLISION);
-		if (2 == iBoltNum)
-			pBolts = m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Bolts2"), LAYERTAG::IGNORECOLLISION);
-		if (3 == iBoltNum)
-			pBolts = m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Bolts3"), LAYERTAG::IGNORECOLLISION);
-
-		if (3 == iBoltNum)
-			iBoltNum = 0;
-		else
-			++iBoltNum;
-
-		pBolts->GetTransform()->Rotate(Vec3(rand() % 360, rand() % 360, rand() % 360));
-		pBolts->GetTransform()->SetPosition(GetTransform()->GetPosition());
+		CParticle_Waterfall* pWaterfallSplash = static_cast<CParticle_Waterfall*>(m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Particle_Waterfall"), LAYERTAG::IGNORECOLLISION));
+		pWaterfallSplash->SetEmitDirection(GetTransform()->GetUp());
+		//pWaterfallSplash->SetEmitDirection(GetTransform()->GetForward());
+		pWaterfallSplash->SetLifeTime(10.f);
+		//pWaterLightning->GetTransform()->SetScale(Vec3(2.7f, 1.2f, 2.7f));
+		pWaterfallSplash->GetTransform()->SetPosition(GetTransform()->GetPosition());
+		//SetEmitDirection();
+		//SetLifeTime();
 	}
-	else if (KEY_PRESSING(KEY::CTRL) && KEY_DOWN(KEY::K))
+	if (KEY_PRESSING(KEY::CTRL) && KEY_DOWN(KEY::K))
 	{
-		CGameObject* pLightningSpark = m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Lightning_Spark"), LAYERTAG::IGNORECOLLISION);
-		pLightningSpark->GetTransform()->SetPosition(GetTransform()->GetPosition());
-	}
-	else if (KEY_PRESSING(KEY::CTRL) && KEY_DOWN(KEY::J))
-	{
-		CGameObject* pOrb1 = m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Orb"), LAYERTAG::IGNORECOLLISION);
-		pOrb1->GetTransform()->SetPosition(GetTransform()->GetPosition() + 2.f * Vec3::UnitY);
-	}
-	else if (KEY_PRESSING(KEY::CTRL) && KEY_DOWN(KEY::H))
-	{
-		CGameObject* pDagonWave = m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_DagonWave"), LAYERTAG::IGNORECOLLISION);
-		const Vec3& vForward = GetTransform()->GetForward();
-
-		pDagonWave->GetTransform()->SetForward(const_cast<Vec3&>(vForward));
-		Vec3 vNewRight = Vec3::UnitY.Cross(vForward);
-		pDagonWave->GetTransform()->SetRight(vNewRight);
-		Vec3 vNewUp = vForward.Cross(vNewRight);
-		pDagonWave->GetTransform()->SetUp(vNewUp);
-
-		pDagonWave->GetTransform()->SetPosition(GetTransform()->GetPosition());
-	}
-	else if (KEY_PRESSING(KEY::CTRL) && KEY_DOWN(KEY::G))
-	{
-		CGameObject* pRainDrop = m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Particle_Rain"), LAYERTAG::IGNORECOLLISION);
-		
-		pRainDrop->GetTransform()->SetPosition(GetTransform()->GetPosition() + 5.f * Vec3::UnitY);
+		CParticle_Waterfall* pWaterfallSplash = static_cast<CParticle_Waterfall*>(m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Particle_Waterfall"), LAYERTAG::IGNORECOLLISION));
+		//pWaterfallSplash->SetEmitDirection(GetTransform()->GetUp());
+		pWaterfallSplash->SetEmitDirection(GetTransform()->GetForward());
+		pWaterfallSplash->SetLifeTime(10.f);
+		//pWaterLightning->GetTransform()->SetScale(Vec3(2.7f, 1.2f, 2.7f));
+		pWaterfallSplash->GetTransform()->SetPosition(GetTransform()->GetPosition());
 	}
 }
 

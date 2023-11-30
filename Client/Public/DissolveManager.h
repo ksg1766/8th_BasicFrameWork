@@ -35,7 +35,7 @@ public:
 	void	Tick_Dissolve(const _float& fTimeDelta);
 
 public:
-	void	AddDissolve(CGameObject* pDissolveObject, _float fPlayTime = 2.f);
+	void	AddDissolve(CGameObject* pDissolveObject, _float fPlayTime = 3.f);
 
 private:
 	list<DISSOLVE_DESC>	m_listDissolve;

@@ -37,6 +37,7 @@ public:
 
 private:
 	CMonsterController* m_pController = nullptr;
+	_bool			m_bRainStarted = false;
 
 public:
 	static	CDagon* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

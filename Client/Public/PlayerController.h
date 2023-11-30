@@ -86,6 +86,9 @@ private:
 
 	_bool			m_bFireLR = true;
 
+	_bool			m_bDagonCreated = false;
+	_bool			m_bMolochCreated = false;
+
 public:
 	static	CPlayerController* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CComponent* Clone(CGameObject* pGameObject, void* pArg) override;

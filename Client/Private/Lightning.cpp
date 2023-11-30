@@ -27,7 +27,7 @@ HRESULT CLightning::Initialize(void* pArg)
 	if (FAILED(Ready_Scripts(pArg)))
 		return E_FAIL;
 	
-	GetTransform()->Translate(Vec3(0.f, 2.f, 0.f));
+	GetTransform()->Translate(Vec3(0.f, 7.f, 0.f));
 	//GetTransform()->Rotate(Vec3(90.f, 0.0f, 0.f));
 
 	return S_OK;

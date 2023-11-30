@@ -11,7 +11,7 @@ CLightManager::CLightManager()
 
 }
 
-const LIGHT_DESC* CLightManager::Get_LightDesc(_uint iLightIndex)
+LIGHT_DESC* CLightManager::Get_LightDesc(_uint iLightIndex)
 {
 	if (iLightIndex >= m_vecLights.size())
 		return nullptr;

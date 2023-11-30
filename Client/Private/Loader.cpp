@@ -39,6 +39,8 @@
 #include "SkyBox.h"
 #include "Particle.h"
 #include "Particle_Rain.h"
+#include "Particle_WaveSplash.h"
+#include "Particle_Waterfall.h"
 #include "ParticleController.h"
 #include "Strife_MotionTrail.h"
 #include "Moloch_MotionTrail.h"
@@ -251,6 +253,16 @@ HRESULT CLoader::Loading_Components_For_Level_GamePlay()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Raindrop"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Particles/Raindrop.dds")))))
 		return E_FAIL;
+	
+	/* For.Prototype_Component_Texture_CloudSplash*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_CloudSplash"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Particles/CloudSplash_%d.png"), 4))))
+		return E_FAIL;
+	
+	/* For.Prototype_Component_Texture_WaterfallSplash*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_WaterfallSplash"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Particles/WaterfallSplash_%d.png"), 4))))
+		return E_FAIL;
 
 	///* For.Prototype_Component_Texture_Mask_Swipe*/
 	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Mask_Swipe"),
@@ -447,6 +459,14 @@ HRESULT CLoader::Loading_GameObjects_For_Level_GamePlay()
 	
 	/* For.Prototype_GameObject_Particle_Rain */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Particle_Rain"), CParticle_Rain::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	
+	/* For.Prototype_GameObject_Particle_WaveSplash */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Particle_WaveSplash"), CParticle_WaveSplash::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	
+	/* For.Prototype_GameObject_Particle_Waterfall */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Particle_Waterfall"), CParticle_Waterfall::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_SkyBox */

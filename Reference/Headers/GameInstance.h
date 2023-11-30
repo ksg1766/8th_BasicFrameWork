@@ -63,6 +63,7 @@ public: /* For.CameraManager */
 	HRESULT			AddCamera(const wstring& strName, CGameObject* pCamera);
 	HRESULT			DeleteCamera(const wstring& strName);
 	HRESULT			ChangeCamera(const wstring& strName);
+	CGameObject*	GetCurrentCamera();
 
 public: /* For.PoolManager */
 	HRESULT			Reserve_Pool(const wstring& strObjectName, const _uint& iReserveCount, void* pArg = nullptr);	// 매니저 초기화 아님.
@@ -99,7 +100,7 @@ public: /* For.PipeLine */
 	_matrix			Get_Transform_Matrix_Inverse(CPipeLine::TRANSFORMSTATE eState) const;
 
 public: /* For.LightManager */
-	const LIGHT_DESC* Get_LightDesc(_uint iLightIndex);
+	LIGHT_DESC*		Get_LightDesc(_uint iLightIndex);
 	HRESULT			Add_Light(const LIGHT_DESC& LightDesc);
 	HRESULT			Add_Sun(CGameObject* pSun);
 

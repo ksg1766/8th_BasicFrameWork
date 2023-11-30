@@ -56,7 +56,7 @@ void CDagon_BT_WaveLoop::HitOrMiss()
 	mt19937_64							RandomNumber(RandomDevice());
 	uniform_int_distribution<_int>		iRandom(0, 20);
 
-	if (3 >= iRandom(RandomNumber))
+	if (4 >= iRandom(RandomNumber))
 		m_bHitOrMiss = true;
 	else
 		m_bHitOrMiss = false;

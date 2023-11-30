@@ -324,6 +324,26 @@ PS_OUT_SHADOW PS_SHADOW_MAIN(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_CRYSTAL_MAIN(PS_IN In)
+{
+    ComputeNormalMapping(In.vNormal, In.vTangent, In.vTexcoord);
+	
+    PS_OUT Out = (PS_OUT) 0;
+	
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+
+    if (vMtrlDiffuse.a < 0.3f)
+        discard;
+	
+    Out.vDiffuse = vMtrlDiffuse;
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);
+    Out.vEmissive = vector(vMtrlDiffuse.r, 0.8f * vMtrlDiffuse.gb, vMtrlDiffuse.a);
+    Out.vSunMask = vector(0.f, 0.f, 0.f, 0.f);
+
+    return Out;
+}
+
 struct PS_WATER_IN
 {
     float4 vPosition : SV_POSITION;
@@ -466,6 +486,20 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_SHADOW_MAIN();
+        ComputeShader = NULL;
+    }
+
+    pass CrystalParticle // 6
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_CRYSTAL_MAIN();
         ComputeShader = NULL;
     }
 }
