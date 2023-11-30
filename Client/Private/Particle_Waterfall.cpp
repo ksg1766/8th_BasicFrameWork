@@ -131,7 +131,7 @@ HRESULT CParticle_Waterfall::Bind_ShaderResources()
 		FAILED(m_pShaderStream->Bind_RawValue("g_vEmitDirection", &m_vEmitDirection, sizeof(_float3))) ||
 		FAILED(m_pShaderStream->Bind_RawValue("g_fGameTime", &m_fLifeTime, sizeof(_float))) ||
 		FAILED(m_pShaderStream->Bind_RawValue("g_fTimeStep", &m_fTimeDelta, sizeof(_float))) ||
-		FAILED(m_pShaderStream->Bind_RawValue("g_WaveSplashAcc", &vGravity, sizeof(_float3))))
+		FAILED(GetShader()->Bind_RawValue("g_WaveSplashAcc", &vGravity, sizeof(_float3))))
 		return E_FAIL;
 	//g_WaveSplashAcc // 중력은 여기다 넣어줘야 재활용할 수 있을 듯
 
