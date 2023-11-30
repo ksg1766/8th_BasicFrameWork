@@ -82,7 +82,11 @@ HRESULT CMainApp::Render()
 
 	if (m_dwTime + 1000 < GetTickCount())
 	{
-		swprintf_s(m_szFPS, L"FPS : %d", m_iFps);
+#ifdef _DEBUG
+		swprintf_s(m_szFPS, L"FPS : %d - DEBUG", m_iFps);
+#elif
+		swprintf_s(m_szFPS, L"FPS : %d - RELEASE", m_iFps);
+#endif
 		SetWindowText(g_hWnd, m_szFPS);
 
 		m_iFps = 0;
@@ -234,10 +238,25 @@ HRESULT CMainApp::Ready_Prototype_Components()
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_ComputeParticles"),
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_ComputeParticles.hlsl"), nullptr, 0))))
 		return E_FAIL;
+	
+	/* For.Prototype_Component_Shader_ParticleSystem_Stream*/
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_ParticleSystem_Stream"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_ParticleSystem_Stream.hlsl"), VTXPARTICLE::Elements, VTXPARTICLE::iNumElements))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Shader_ParticleSystem_Draw*/
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Shader_ParticleSystem_Draw"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_ParticleSystem_Draw.hlsl"), VTXPARTICLE::Elements, VTXPARTICLE::iNumElements))))
+		return E_FAIL;
 
 	/* For.Prototype_Component_VIBuffer_Rect */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_Rect"),
 		CVIBuffer_Rect::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_VIBuffer_ParticleSystem */
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_VIBuffer_ParticleSystem"),
+		CVIBuffer_ParticleSystem::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_VIBuffer_Cube */
@@ -301,11 +320,6 @@ HRESULT CMainApp::Ready_Prototype_Components()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/SkyBox/Sunset.dds")))))
 		return E_FAIL;
 	
-	/* For.Prototype_Component_Texture_SkyPlane */
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_SkyPlane"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/SkyBox/SkyPlane.png")))))
-		return E_FAIL;
-
 	/* For.Prototype_Component_Texture_Lava_A_emissive */
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Lava_A_emissive"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Emissive/Lava_A_emissive0.png")))))
@@ -527,9 +541,16 @@ HRESULT CMainApp::Ready_Prototype_Components()
 					CModel::Create(m_pDevice, m_pContext, strSkeletalFilePath + strFileName, desc, matPivot))))
 					return E_FAIL;
 			}
+			else if (TEXT("DagonWave") == strFileName)
+			{
+				XMStoreFloat4x4(&matPivot, XMMatrixScaling(0.004f, 0.004f, 0.004f) * XMMatrixRotationY(XMConvertToRadians(270.0f)));
+				if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_" + strFileName),
+					CModel::Create(m_pDevice, m_pContext, strSkeletalFilePath + strFileName, desc, matPivot))))
+					return E_FAIL;
+			}
 			else
 			{
-				XMStoreFloat4x4(&matPivot, XMMatrixScaling(0.01f, 0.01f, 0.01f));
+				//XMStoreFloat4x4(&matPivot, XMMatrixScaling(0.01f, 0.01f, 0.01f));
 				if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Model_" + strFileName),
 					CModel::Create(m_pDevice, m_pContext, strSkeletalFilePath + strFileName, desc, matPivot))))
 					return E_FAIL;
@@ -584,6 +605,4 @@ void Client::CMainApp::Free()
 	CDissolveManager::GetInstance()->Free();
 
 	CGameInstance::Release_Engine();
-	
-
 }

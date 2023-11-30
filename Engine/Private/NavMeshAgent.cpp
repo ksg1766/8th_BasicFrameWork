@@ -102,8 +102,8 @@ HRESULT CNavMeshAgent::Initialize(void* pArg)
 void CNavMeshAgent::Tick(const _float& fTimeDelta)
 {
 #ifdef _DEBUG
-	if (m_IsRendered)
-		m_IsRendered = false;
+	//if (m_IsRendered)
+	//	m_IsRendered = false;
 #endif
 }
 

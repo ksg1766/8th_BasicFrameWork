@@ -181,6 +181,19 @@ namespace Engine
 		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
 
 	}VTXPOINT;
+	
+	typedef struct ENGINE_DLL tagVertex_Particle
+	{
+		XMFLOAT3	vPosition;
+		XMFLOAT3	vVelocity;
+		XMFLOAT2	vSize;
+		_float		fAge;
+		_int		iType;
+
+		static const unsigned int				iNumElements = 5;
+		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
+
+	}VTXPARTICLE;
 
 	typedef struct ENGINE_DLL tagVertex_Mesh
 	{

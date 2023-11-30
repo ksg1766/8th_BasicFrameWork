@@ -14,6 +14,8 @@ public:
 
 	static wstring ToWString(string value);
 	static string ToString(wstring value);
+
+	static void CreateRandomTexture1DSRV(ID3D11Device* device, ID3D11ShaderResourceView** ppSRV);
 };
 
 END

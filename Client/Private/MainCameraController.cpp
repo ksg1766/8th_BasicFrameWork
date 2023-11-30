@@ -52,12 +52,11 @@ HRESULT CMainCameraController::Initialize(void* pArg)
 void CMainCameraController::Tick(const _float& fTimeDelta)
 {
 	//Input(fTimeDelta);
-	Trace(fTimeDelta);
-
 }
 
 void CMainCameraController::LateTick(const _float& fTimeDelta)
 {
+	Trace(fTimeDelta);
 }
 
 void CMainCameraController::DebugRender()
@@ -87,12 +86,13 @@ void CMainCameraController::Trace(const _float& fTimeDelta)
 	_float fUp = matWorld.Up().Length();
 	_float fLook = matWorld.Backward().Length();
 
-	matWorld.Backward(fLook * vDist);
+	matWorld.Backward(/*fLook * */vDist);
 	Vec3 vRight = Vec3::UnitY.Cross(vDist);
 	vRight.Normalize();
-	matWorld.Right(fRight * vRight);
+	matWorld.Right(/*fRight * */vRight);
 	Vec3 vUp = vDist.Cross(vRight);
-	matWorld.Up(fUp * vUp);
+	vUp.Normalize();
+	matWorld.Up(/*fUp * */vUp);
 }
 
 CMainCameraController* CMainCameraController::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

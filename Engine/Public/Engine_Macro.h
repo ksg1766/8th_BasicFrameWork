@@ -117,6 +117,7 @@
 #define D3DCOLOR_RGBA(r,g,b,a) \
     ((D3DCOLOR)((((r)&0xff)<<24)|(((g)&0xff)<<16)|(((b)&0xff)<<8)|((a)&0xff)))
 
+#define	D3D11_APPEND_ALIGNED_ELEMENT	( 0xffffffff )
 
 // For.KeyManager
 #define KEY_CHECK(key, state) m_pGameInstance->GetKeyState(key) == state

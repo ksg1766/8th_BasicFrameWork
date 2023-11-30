@@ -261,6 +261,7 @@ call Copy.bat</Command>
     <ClInclude Include="..\Public\VIBuffer_Dot.h" />
     <ClInclude Include="..\Public\VIBuffer_Grid.h" />
     <ClInclude Include="..\Public\VIBuffer_Instance.h" />
+    <ClInclude Include="..\Public\VIBuffer_ParticleSystem.h" />
     <ClInclude Include="..\Public\VIBuffer_Point.h" />
     <ClInclude Include="..\public\VIBuffer_Rect.h" />
     <FxCompile Include="..\Bin\ShaderFiles\Shader_PostProcess.hlsl">
@@ -347,6 +348,7 @@ call Copy.bat</Command>
     <ClCompile Include="..\Private\VIBuffer_Dot.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Grid.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Instance.cpp" />
+    <ClCompile Include="..\Private\VIBuffer_ParticleSystem.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Point.cpp" />
     <ClCompile Include="..\private\VIBuffer_Rect.cpp" />
   </ItemGroup>

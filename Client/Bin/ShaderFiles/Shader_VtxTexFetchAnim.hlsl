@@ -16,6 +16,8 @@ vector g_vMtrlSpecular = vector(1.f, 1.f, 1.f, 1.f);
 //vector g_vMtrlEmissive = vector(1.f, 0.f, 0.f, 1.f);
 vector g_vMtrlEmissive = vector(1.f, 0.843137324f, 0.f, 1.f);
 
+float g_fFrameTime;
+
 vector g_vCamPosition;
 
 vector g_ColorOffset;
@@ -322,6 +324,46 @@ PS_OUT_SHADOW PS_SHADOW_MAIN(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_WAVE_MAIN(PS_IN In)
+{
+    //PS_ORB_OUT Out = (PS_ORB_OUT) 0;
+    
+    //float2 vNewUV = float2(In.vTexcoord.x - g_fFrameTime, In.vTexcoord.y + 0.73f * g_fFrameTime);
+    
+    //float3 vColor = g_DiffuseTexture.Sample(LinearSampler, vNewUV);
+    
+    //Out.vDiffuse = float4(0.f, 0.f, 0.03f, 1.f);
+   
+    //if (vColor.r > 0.77f)
+    //    Out.vEmissive = float4(vColor.b * float3(0.25f, 0.75f, 1.3f), 1.f);
+    
+    //Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);
+    //Out.vSunMask = vector(0.f, 0.f, 0.f, 0.f);
+    
+    float2 vNewUV = float2(In.vTexcoord.x/* - g_fFrameTime*/, In.vTexcoord.y + 0.33f * g_fFrameTime);
+    float4 vColor = g_DiffuseTexture.Sample(LinearSampler, vNewUV);
+    
+    ComputeNormalMapping(In.vNormal, In.vTangent, In.vTexcoord);
+	
+    PS_OUT Out = (PS_OUT) 0;
+	
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+
+    if (vMtrlDiffuse.a < 0.3f)
+        discard;
+    
+    if (vColor.r > 0.1f)
+        Out.vDiffuse = vColor;
+    else
+        Out.vDiffuse = float4(0.f, 0.f, 0.1f, 1.f);
+    
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);
+    Out.vSunMask = vector(0.f, 0.f, 0.f, 0.f);
+    
+    return Out;
+}
+
 technique11 DefaultTechnique
 {
     pass Mesh
@@ -404,6 +446,20 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_SHADOW_MAIN();
+        ComputeShader = NULL;
+    }
+
+    pass WaveMesh // 6
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_WAVE_MAIN();
         ComputeShader = NULL;
     }
 }

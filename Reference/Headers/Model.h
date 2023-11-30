@@ -131,6 +131,8 @@ public:
 	void			SetShader(CShader*& pShader)			{ m_pShader = pShader; }
 	HRESULT			EquipParts(const _int& iSocketIndex, CModel* pModel);
 
+	static HRESULT	ReleaseAllVTF();
+
 private:
 	HRESULT			Ready_Bones(const wstring& strModelFilePath, const SOCKETDESC& desc);
 	HRESULT			Ready_Meshes(const wstring& strModelFilePath, Matrix matPivot);

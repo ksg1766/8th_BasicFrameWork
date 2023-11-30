@@ -32,11 +32,13 @@
 #include "Moloch_Sword.h"
 #include "TremorCrystal.h"
 #include "Dagon.h"
+#include "DagonWave.h"
 #include "Strife_Ammo_Default.h"
 #include "Strife_Ammo_Beam.h"
 #include "Strife_Ammo_Nature.h"
 #include "SkyBox.h"
 #include "Particle.h"
+#include "Particle_Rain.h"
 #include "ParticleController.h"
 #include "Strife_MotionTrail.h"
 #include "Moloch_MotionTrail.h"
@@ -244,6 +246,11 @@ HRESULT CLoader::Loading_Components_For_Level_GamePlay()
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Water_Normal"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Noise/Water_normal%d.png"), 3))))
 		return E_FAIL;
+	
+	/* For.Prototype_Component_Texture_Raindrop*/
+	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Raindrop"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Particles/Raindrop.dds")))))
+		return E_FAIL;
 
 	///* For.Prototype_Component_Texture_Mask_Swipe*/
 	//if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Mask_Swipe"),
@@ -401,6 +408,10 @@ HRESULT CLoader::Loading_GameObjects_For_Level_GamePlay()
 	/* For.Prototype_GameObject_Dagon */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Dagon"), CDagon::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+	
+	/* For.Prototype_GameObject_DagonWave */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_DagonWave"), CDagonWave::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
 	/* For.Prototype_GameObject_Strife_Ammo_Default */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Strife_Ammo_Default"), CStrife_Ammo_Default::Create(m_pDevice, m_pContext))))
@@ -432,6 +443,10 @@ HRESULT CLoader::Loading_GameObjects_For_Level_GamePlay()
 
 	/* For.Prototype_GameObject_Particle */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Particle"), CParticle::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	
+	/* For.Prototype_GameObject_Particle_Rain */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Particle_Rain"), CParticle_Rain::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_SkyBox */

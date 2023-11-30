@@ -436,6 +436,12 @@
     <Filter Include="03.GameObjects\03.Boss\01.Dagon\Effect">
       <UniqueIdentifier>{97e145bc-1f19-461e-8982-8274228ca69b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.GameObjects\03.Boss\01.Dagon\Effect\Orb">
+      <UniqueIdentifier>{d42bd742-13d7-4da1-93b2-c9f0f026dffd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.GameObjects\03.Boss\01.Dagon\Effect\Wave">
+      <UniqueIdentifier>{468fdfc1-7ade-4270-a6e0-320fef5a0c98}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -904,10 +910,16 @@
       <Filter>03.GameObjects\05.Particle\WaterLightning</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Orb.h">
-      <Filter>03.GameObjects\03.Boss\01.Dagon\Effect</Filter>
+      <Filter>03.GameObjects\03.Boss\01.Dagon\Effect\Orb</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\SphereSwirl.h">
-      <Filter>03.GameObjects\03.Boss\01.Dagon\Effect</Filter>
+      <Filter>03.GameObjects\03.Boss\01.Dagon\Effect\Orb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\DagonWave.h">
+      <Filter>03.GameObjects\03.Boss\01.Dagon\Effect\Wave</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Particle_Rain.h">
+      <Filter>03.GameObjects\05.Particle\Particle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1320,10 +1332,16 @@
       <Filter>03.GameObjects\05.Particle\WaterLightning</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Orb.cpp">
-      <Filter>03.GameObjects\03.Boss\01.Dagon\Effect</Filter>
+      <Filter>03.GameObjects\03.Boss\01.Dagon\Effect\Orb</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\SphereSwirl.cpp">
-      <Filter>03.GameObjects\03.Boss\01.Dagon\Effect</Filter>
+      <Filter>03.GameObjects\03.Boss\01.Dagon\Effect\Orb</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\DagonWave.cpp">
+      <Filter>03.GameObjects\03.Boss\01.Dagon\Effect\Wave</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Particle_Rain.cpp">
+      <Filter>03.GameObjects\05.Particle\Particle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1404,6 +1422,12 @@
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_SwordTrail.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_ParticleSystem_Draw.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_ParticleSystem_Stream.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

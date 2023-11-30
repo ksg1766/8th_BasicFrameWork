@@ -41,6 +41,11 @@ DepthStencilState DSS_Skybox
 	DepthWriteMask = zero;	
 };
 
+DepthStencilState DSS_NoDepthWrite
+{
+    DepthEnable = true;
+    DepthWriteMask = zero;
+};
 
 BlendState BS_Default
 {

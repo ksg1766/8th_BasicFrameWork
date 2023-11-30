@@ -48,6 +48,7 @@ public:
 	_bool	IsZeroHP()								{ return m_IsZeroHP; }
 	CMonsterStats* GetStats()						{ return m_pStats; }
 	void	SetStats(CMonsterStats* pStats)			{ m_pStats = pStats; }
+
 public:
 	void	OnCollisionEnter(CGameObject* pOther);
 	void	OnCollisionStay(CGameObject* pOther);

@@ -73,6 +73,7 @@ void CMoloch::LateTick(const _float& fTimeDelta)
 {
 	Super::LateTick(fTimeDelta);
 
+	GetRenderer()->Add_RenderGroup(CRenderer::RG_SHADOW, this);
 	GetRenderer()->Add_RenderGroup(CRenderer::RG_NONBLEND, this);
 }
 
@@ -89,7 +90,8 @@ HRESULT CMoloch::Render()
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
-	GetModel()->Render();
+	if (FAILED(GetModel()->Render()))
+		return E_FAIL;
 
 #ifdef _DEBUG
 	DebugRender();
@@ -390,6 +392,8 @@ HRESULT CMoloch::Bind_ShaderResources()
 	{
 		return E_FAIL;
 	}
+
+	GetShader()->SetPassIndex(0);
 
 	return S_OK;
 }

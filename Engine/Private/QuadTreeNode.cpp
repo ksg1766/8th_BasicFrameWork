@@ -125,8 +125,11 @@ void CQuadTreeNode::Free()
 	{
 		for (auto& iter : m_vecChildren)
 		{
-			iter->Free();
-			Safe_Delete(iter);
+			while (0 != Safe_Release(iter))
+			{
+			}
+			/*iter->Free();
+			Safe_Delete(iter);*/
 		}
 		m_vecObjects.clear();
 		m_vecChildren.clear();

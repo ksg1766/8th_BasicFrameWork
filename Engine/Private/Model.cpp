@@ -460,6 +460,23 @@ HRESULT CModel::EquipParts(const _int& iSocketIndex, CModel* pModel)
 	return S_OK;
 }
 
+HRESULT CModel::ReleaseAllVTF()
+{
+	for (auto iter = m_mapVTFExist.begin(); iter != m_mapVTFExist.end(); ++iter)
+	{
+		while (0 != Safe_Release(iter->second))
+		{
+			//Safe_Release(iter->second);
+		}
+		m_mapVTFExist.erase(iter);
+	}
+
+	if(!m_mapVTFExist.empty())
+		return E_FAIL;
+
+	return S_OK;
+}
+
 HRESULT CModel::Ready_Bones(const wstring& strModelFilePath, const SOCKETDESC& desc)
 {
 	/* 파일 셋업 */
@@ -809,6 +826,8 @@ HRESULT CModel::CreateVertexTexture2DArray()
 
 		if (FAILED(m_pDevice->CreateShaderResourceView(m_pTexture, &desc, &m_pSRV)))
 			return E_FAIL;
+
+		Safe_AddRef(m_pSRV);	// 레퍼런스 카운트 1올려줌으로써 오브젝트 다 죽어도 애니메이션 정보 유지
 	}
 
 	return S_OK;

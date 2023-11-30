@@ -40,7 +40,7 @@ public:
 	void	GetMaxSpeedMessage()					{ m_bMax = true; }
 
 	void	Look(const Vec3& vPoint, const _float& fTimeDelta = 1.f);
-	void	ForceHeight()							{ m_pTransform->Translate(Vec3(0.f, m_pNavMeshAgent->GetHeightOffset(), 0.f)); }
+	void	ForceHeight()							{ m_pNavMeshAgent->ForceHeight(); }
 	_float	GetHeightOffset()						{ return m_pNavMeshAgent->GetHeightOffset(); }
 	_bool	Walkable(_fvector vPoint)				{ return m_pNavMeshAgent->Walkable(vPoint); }
 

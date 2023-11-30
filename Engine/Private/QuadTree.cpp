@@ -299,8 +299,9 @@ void CQuadTree::Free()
     Safe_Release(m_pInputLayout);
 #endif // _DEBUG
 
-    m_pQuadTreeRoot->Free();
-    Safe_Delete(m_pQuadTreeRoot);
+    Safe_Release(m_pQuadTreeRoot);
+    //m_pQuadTreeRoot->Free();
+    //Safe_Delete(m_pQuadTreeRoot);
 
     RELEASE_INSTANCE(CPipeLine);
 }

@@ -88,6 +88,25 @@ void CP_Strife::Tick(const _float& fTimeDelta)
 		CGameObject* pOrb1 = m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Orb"), LAYERTAG::IGNORECOLLISION);
 		pOrb1->GetTransform()->SetPosition(GetTransform()->GetPosition() + 2.f * Vec3::UnitY);
 	}
+	else if (KEY_PRESSING(KEY::CTRL) && KEY_DOWN(KEY::H))
+	{
+		CGameObject* pDagonWave = m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_DagonWave"), LAYERTAG::IGNORECOLLISION);
+		const Vec3& vForward = GetTransform()->GetForward();
+
+		pDagonWave->GetTransform()->SetForward(const_cast<Vec3&>(vForward));
+		Vec3 vNewRight = Vec3::UnitY.Cross(vForward);
+		pDagonWave->GetTransform()->SetRight(vNewRight);
+		Vec3 vNewUp = vForward.Cross(vNewRight);
+		pDagonWave->GetTransform()->SetUp(vNewUp);
+
+		pDagonWave->GetTransform()->SetPosition(GetTransform()->GetPosition());
+	}
+	else if (KEY_PRESSING(KEY::CTRL) && KEY_DOWN(KEY::G))
+	{
+		CGameObject* pRainDrop = m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Particle_Rain"), LAYERTAG::IGNORECOLLISION);
+		
+		pRainDrop->GetTransform()->SetPosition(GetTransform()->GetPosition() + 5.f * Vec3::UnitY);
+	}
 }
 
 void CP_Strife::LateTick(const _float& fTimeDelta)
@@ -249,12 +268,14 @@ HRESULT CP_Strife::Ready_Parts()
 	CGameObject* pGameObject = m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Strife_GunL"), LAYERTAG::IGNORECOLLISION);
 	if (nullptr == pGameObject)	return E_FAIL;
 	m_vecParts.push_back(pGameObject);
-	GetModel()->EquipParts(0, pGameObject->GetModel());
+	if (FAILED(GetModel()->EquipParts(0, pGameObject->GetModel())))
+		return E_FAIL;
 
 	pGameObject = m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Strife_GunR"), LAYERTAG::IGNORECOLLISION);
 	if (nullptr == pGameObject)	return E_FAIL;
 	m_vecParts.push_back(pGameObject);
-	GetModel()->EquipParts(1, pGameObject->GetModel());
+	if (FAILED(GetModel()->EquipParts(1, pGameObject->GetModel())))
+		return E_FAIL;
 
 	return S_OK;
 }

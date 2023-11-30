@@ -444,6 +444,7 @@ CLevel_GamePlay * CLevel_GamePlay::Create(ID3D11Device * pDevice, ID3D11DeviceCo
 void CLevel_GamePlay::Free()
 {
 	Super::Free();
+	CModel::ReleaseAllVTF();
 
 	RELEASE_INSTANCE(CGameInstance);
 }

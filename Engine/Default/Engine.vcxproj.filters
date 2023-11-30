@@ -226,6 +226,9 @@
     <Filter Include="01.Utiltiy\04.Component\05.Buffer\Dot">
       <UniqueIdentifier>{a93a80fa-3480-4062-abb7-bcdcd928afd1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utiltiy\04.Component\05.Buffer\ParticleSystem">
+      <UniqueIdentifier>{e0f2570e-850f-4cbe-bfff-561a47893bd3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -471,6 +474,9 @@
     <ClInclude Include="..\Public\VIBuffer_Dot.h">
       <Filter>01.Utiltiy\04.Component\05.Buffer\Dot</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_ParticleSystem.h">
+      <Filter>01.Utiltiy\04.Component\05.Buffer\ParticleSystem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -697,6 +703,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_Dot.cpp">
       <Filter>01.Utiltiy\04.Component\05.Buffer\Dot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_ParticleSystem.cpp">
+      <Filter>01.Utiltiy\04.Component\05.Buffer\ParticleSystem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

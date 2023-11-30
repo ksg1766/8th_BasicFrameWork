@@ -422,10 +422,8 @@ HRESULT CGameInstance::Add_Sun(CGameObject* pSun)
 	return m_pLightManager->Add_Sun(pSun);
 }
 
-
 void CGameInstance::Release_Engine()
 {
-	CGameInstance::GetInstance()->DestroyInstance();
 	CLevelManager::GetInstance()->DestroyInstance();
 	CObjectManager::GetInstance()->DestroyInstance();
 	CComponentManager::GetInstance()->DestroyInstance();
@@ -441,6 +439,7 @@ void CGameInstance::Release_Engine()
 	CPipeLine::GetInstance()->DestroyInstance();
 	CLightManager::GetInstance()->DestroyInstance();
 	CTargetManager::GetInstance()->DestroyInstance();
+	CGameInstance::GetInstance()->DestroyInstance();
 }
 
 void CGameInstance::Free()

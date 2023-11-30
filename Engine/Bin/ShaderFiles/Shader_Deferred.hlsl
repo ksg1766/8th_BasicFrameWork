@@ -20,7 +20,7 @@ vector	g_vLightAmbient;
 vector	g_vLightSpecular;
 
 vector  g_vMtrlAmbient = vector(0.4f, 0.4f, 0.4f, 1.f);
-vector  g_vMtrlSpecular = vector(1.f, 1.f, 1.f, 1.f);
+vector  g_vMtrlSpecular = vector(0.7f, 0.7f, 0.7f, 1.f);
 
 Texture2D g_PriorityTarget;
 
@@ -220,23 +220,24 @@ float PCF_ShadowCalculation(float4 fragPosLightSpace/*, float3 lightDir*/)
     projCoords.x = projCoords.x * 0.5f + 0.5f;
     projCoords.y = projCoords.y * -0.5f + 0.5f;
     float currentDepth = projCoords.z;
-    if (currentDepth > 1.0)
-        return 1.0;
+    if (currentDepth > 1.0f)
+        return 1.0f;
     
 	// PCF
-    float shadow = 0.0;
+    float shadow = 0.0f;
     float2 texelSize = float2(1.f / 1440.f, 1.f / 810.f);
     texelSize /= 3.f;
     
-    for (int x = -2; x <= 2; ++x)
+    for (int x = -1; x <= 1; ++x)
     {
-        for (int y = -2; y <= 2; ++y)
+        for (int y = -1; y <= 1; ++y)
         {
             float pcfDepth = g_ShadowDepthTarget.Sample(PointSampler, projCoords.xy + float2(x, y) * texelSize).r;
             shadow += fragPosLightSpace.w > pcfDepth * 2000.f ? 0.5f : 1.0f;
         }
     }
-    shadow /= 25.0;
+    //shadow *= 0.04f;
+    shadow /= 9.f;
     return shadow;
 }
 
