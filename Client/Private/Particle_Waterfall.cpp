@@ -135,8 +135,8 @@ HRESULT CParticle_Waterfall::Bind_ShaderResources()
 		return E_FAIL;
 	//g_WaveSplashAcc // 중력은 여기다 넣어줘야 재활용할 수 있을 듯
 
-	if (/*FAILED(GetTexture()->Bind_ShaderResource(GetShader(), "g_Texture", 0)) ||*/
-		FAILED(m_pTextureEx->Bind_ShaderResource(GetShader(), "g_Texture", 0)) ||
+	if (FAILED(GetTexture()->Bind_ShaderResource(GetShader(), "g_Texture", 0)) ||
+		//FAILED(m_pTextureEx->Bind_ShaderResource(GetShader(), "g_Texture", 0)) ||
 		FAILED(m_pShaderStream->Bind_Texture("g_RandomTexture", m_pRandomTexture)))
 		return E_FAIL;
 
