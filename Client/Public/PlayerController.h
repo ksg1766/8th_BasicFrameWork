@@ -88,6 +88,7 @@ private:
 
 	_bool			m_bDagonCreated = false;
 	_bool			m_bMolochCreated = false;
+	_bool			m_bWaterCreated = false;
 
 public:
 	static	CPlayerController* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -1,7 +1,6 @@
 #pragma once
-
 #include "Client_Defines.h"
-#include "StaticBase.h"
+#include "GameObject.h"
 
 BEGIN(Client)
 
@@ -14,6 +13,8 @@ public:
 		_float3 vPos;
 		_float2 vSize;
 	}WATER_DESC;
+
+	enum class WaterLevelMode { Dagon, Dessert, End };
 
 private:
 	/* 원형을 생성할 때 */
@@ -30,6 +31,13 @@ public:
 	virtual void	DebugRender()						override;
 	virtual HRESULT Render()							override;
 
+public:
+	void			SetMode(const WaterLevelMode& eMode) { m_eMode = eMode; }
+
+private:
+	void			Dagon(const _float& fTimeDelta);
+	void			Desert(const _float& fTimeDelta);
+
 private:
 	HRESULT			Ready_FixedComponents(WATER_DESC* pDesc);
 	HRESULT			Ready_Scripts();
@@ -40,6 +48,8 @@ private:
 
 	_int			m_iCurrentNormalMap = 1;
 	_float			m_fWaterTranslationSpeed = 0.015f;
+
+	WaterLevelMode	m_eMode = WaterLevelMode::End;
 
 public:
 	static	CWater* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

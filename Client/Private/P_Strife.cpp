@@ -58,7 +58,9 @@ void CP_Strife::Tick(const _float& fTimeDelta)
 		//pWaterfallSplash->SetEmitDirection(GetTransform()->GetForward());
 		pWaterfallSplash->SetLifeTime(10.f);
 		//pWaterLightning->GetTransform()->SetScale(Vec3(2.7f, 1.2f, 2.7f));
-		pWaterfallSplash->GetTransform()->SetPosition(GetTransform()->GetPosition());
+
+		//TODO :: 
+		pWaterfallSplash->GetTransform()->SetPosition(3.f * Vec3::UnitY + GetTransform()->GetPosition());
 		//SetEmitDirection();
 		//SetLifeTime();
 	}
@@ -69,16 +71,14 @@ void CP_Strife::Tick(const _float& fTimeDelta)
 		pWaterfallSplash->SetEmitDirection(GetTransform()->GetForward());
 		pWaterfallSplash->SetLifeTime(10.f);
 		//pWaterLightning->GetTransform()->SetScale(Vec3(2.7f, 1.2f, 2.7f));
-		pWaterfallSplash->GetTransform()->SetPosition(GetTransform()->GetPosition());
+		//TODO ::
+		pWaterfallSplash->GetTransform()->SetPosition(3.f * Vec3::UnitY + GetTransform()->GetPosition());
 	}
 }
 
 void CP_Strife::LateTick(const _float& fTimeDelta)
 {
 	Super::LateTick(fTimeDelta);
-
-	GetRenderer()->Add_RenderGroup(CRenderer::RG_SHADOW, this);
-	GetRenderer()->Add_RenderGroup(CRenderer::RG_NONBLEND, this);
 }
 
 void CP_Strife::DebugRender()
@@ -118,6 +118,14 @@ HRESULT CP_Strife::RenderShadow(const Matrix& matLightView, const Matrix& matLig
 
 	if (FAILED(GetModel()->Render()))
 		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CP_Strife::AddRenderGroup()
+{
+	GetRenderer()->Add_RenderGroup(CRenderer::RG_SHADOW, this);
+	GetRenderer()->Add_RenderGroup(CRenderer::RG_NONBLEND, this);
 
 	return S_OK;
 }

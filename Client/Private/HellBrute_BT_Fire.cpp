@@ -5,6 +5,8 @@
 #include "GameObject.h"
 #include "MonsterController.h"
 
+#include "Strife_Ammo_Default.h"
+
 CHellBrute_BT_Fire::CHellBrute_BT_Fire()
 {
 }
@@ -30,7 +32,7 @@ CBT_Node::BT_RETURN CHellBrute_BT_Fire::OnUpdate(const _float& fTimeDelta)
 
 	CMonsterController* pController = static_cast<CMonsterController*>(m_pController);
 	pController->Look(vTargetPos);
-	pController->GetAttackMessage();
+	//pController->GetAttackMessage();
 
 	return BT_RUNNING;
 }
@@ -100,6 +102,23 @@ _bool CHellBrute_BT_Fire::IsZeroHP()
 		return true;
 
 	return false;
+}
+
+void CHellBrute_BT_Fire::Fire()
+{
+	//CGameObject* pAmmo = nullptr;
+	//CStrife_Ammo::AMMOPROPS tProps;
+
+	//Vec3 vFireOffset;
+	//Quaternion qRot = m_pTransform->GetRotationQuaternion();
+
+	//tProps = { eAmmoType, 7, 0, /*10*/50, 70.f * m_pTransform->GetForward(), false, 5.f };
+	//pAmmo = m_pGameInstance->CreateObject(L"Prototype_GameObject_Strife_Ammo_Default", LAYERTAG::IGNORECOLLISION, &tProps);
+	//vFireOffset = m_pTransform->GetPosition() + 2.2f * m_pTransform->GetForward() - (m_bFireLR * 0.35f - 0.175f) * m_pTransform->GetRight() + 1.7f * m_pTransform->GetUp();
+	//m_bFireLR = !m_bFireLR;
+
+	//pAmmo->GetTransform()->Rotate(qRot);
+	//pAmmo->GetTransform()->SetPosition(vFireOffset);
 }
 
 CHellBrute_BT_Fire* CHellBrute_BT_Fire::Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController)

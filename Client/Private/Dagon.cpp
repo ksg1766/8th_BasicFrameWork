@@ -64,9 +64,6 @@ void CDagon::Tick(const _float& fTimeDelta)
 void CDagon::LateTick(const _float& fTimeDelta)
 {
 	Super::LateTick(fTimeDelta);
-
-	GetRenderer()->Add_RenderGroup(CRenderer::RG_SHADOW, this);
-	GetRenderer()->Add_RenderGroup(CRenderer::RG_NONBLEND, this);
 }
 
 void CDagon::DebugRender()
@@ -110,6 +107,14 @@ HRESULT CDagon::RenderShadow(const Matrix& matLightView, const Matrix& matLightP
 		return E_FAIL;
 
 	GetShader()->SetPassIndex(iPass);
+
+	return S_OK;
+}
+
+HRESULT CDagon::AddRenderGroup()
+{
+	GetRenderer()->Add_RenderGroup(CRenderer::RG_SHADOW, this);
+	GetRenderer()->Add_RenderGroup(CRenderer::RG_NONBLEND, this);
 
 	return S_OK;
 }

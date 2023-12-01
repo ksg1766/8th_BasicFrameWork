@@ -25,6 +25,7 @@ public:
 	virtual void	DebugRender()						override;
 	virtual HRESULT Render()							override;
 	virtual HRESULT RenderShadow(const Matrix& matLightView, const Matrix& matLightProj)	override;
+	virtual HRESULT AddRenderGroup()					override;
 
 private:
 	HRESULT			Ready_FixedComponents();

@@ -35,7 +35,7 @@ CBT_Node::BT_RETURN CDagon_BT_Wave::OnUpdate(const _float& fTimeDelta)
 		Vec3 vNewUp = vForward.Cross(vNewRight);
 		pDagonWave->GetTransform()->SetUp(vNewUp);
 
-		pDagonWave->GetTransform()->SetPosition(m_pGameObject->GetTransform()->GetPosition() + 1.5f * Vec3::UnitY);
+		pDagonWave->GetTransform()->SetPosition(m_pGameObject->GetTransform()->GetPosition());
 		m_bAttacked = true;
 	}
 

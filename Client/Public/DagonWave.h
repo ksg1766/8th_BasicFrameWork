@@ -6,6 +6,7 @@
 BEGIN(Client)
 
 class CParticle_WaveSplash;
+class CParticle_Waterfall;
 class CDagonWave final : public CGameObject
 {
 	using Super = CGameObject;
@@ -36,7 +37,7 @@ public:
 
 private:
 	_float			m_fFrameTime = 0.f;
-	CParticle_WaveSplash* m_pSplash = nullptr;
+	CParticle_WaveSplash*	m_pSplash = nullptr;
 
 public:
 	static	CDagonWave* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

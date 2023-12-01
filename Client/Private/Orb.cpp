@@ -67,7 +67,7 @@ void COrb::Tick(const _float& fTimeDelta)
 		m_pSphereSwirl->GetTransform()->SetScale(Vec3(1.f / 2.5f * (m_fFrameTime - 9.f), 1.f / 2.5f * (m_fFrameTime - 9.f), 1.f / 2.5f * (m_fFrameTime - 9.f)));
 	}
 
-	if (m_fFrameTime > 11.5f)
+	if (m_fFrameTime > 12.5f)
 	{
 		m_pGameInstance->DeleteObject(this);
 		m_pGameInstance->DeleteObject(m_pSphereSwirl);

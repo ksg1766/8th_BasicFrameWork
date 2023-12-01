@@ -7,6 +7,7 @@
 #include "FileUtils.h"
 #include "Utils.h"
 #include "Cell.h"
+#include "Particle_Waterfall.h"
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
 	: CLevel(pDevice, pContext)
@@ -94,7 +95,7 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 
 	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
 	LightDesc.vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
-	LightDesc.vSpecular = LightDesc.vDiffuse;
+	XMStoreFloat4(&LightDesc.vSpecular, 0.8f * XMLoadFloat4(&LightDesc.vDiffuse));
 
 	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
 		return E_FAIL;
@@ -140,7 +141,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Terrain()
 	CGameObject* pGameObject = nullptr;
 	LAYERTAG	eLayerTag = LAYERTAG::TERRAIN;
 
-	CWater::WATER_DESC tWaterDesc = tWaterDesc = { Vec3(0.f, -5.f, 265.f), Vec2(1280.f, 500.f) };
+	//CWater::WATER_DESC tWaterDesc = { Vec3(0.f, 28.25f, 265.f), Vec2(1280.f, 500.f) };
+	CWater::WATER_DESC tWaterDesc = { Vec3(0.f, -3.f, 265.f), Vec2(1280.f, 500.f) };
 	pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_Water"), &tWaterDesc);
 	if (nullptr == pGameObject)	return E_FAIL;
 
@@ -187,8 +189,31 @@ HRESULT CLevel_GamePlay::Ready_Layer_IgnoreCollision()
 	CGameObject* pGameObject = nullptr;
 	LAYERTAG	eLayerTag = LAYERTAG::IGNORECOLLISION;
 
-	/*pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_Shockwave"));
-	if (nullptr == pGameObject)	return E_FAIL;*/
+	for (_int i = 0; i < 5; ++i)
+	{
+		pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_Particle_Waterfall"));
+		if (nullptr == pGameObject)	return E_FAIL;
+		static_cast<CParticle_Waterfall*>(pGameObject)->SetEmitDirection(Vec3(0.f, 0.f, -1.f));
+		pGameObject->GetTransform()->Translate(Vec3(-154.5f + 4.0f * i, 48.f, 251.5f));
+	}
+
+	pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_Particle_Waterfall"));
+	if (nullptr == pGameObject)	return E_FAIL;
+	static_cast<CParticle_Waterfall*>(pGameObject)->SetEmitDirection(Vec3(0.205f, 0.f, -1.f));
+	pGameObject->GetTransform()->Translate(Vec3(-170.f, 45.5f, 245.f));
+
+	pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_Particle_Waterfall"));
+	if (nullptr == pGameObject)	return E_FAIL;
+	static_cast<CParticle_Waterfall*>(pGameObject)->SetEmitDirection(Vec3(-0.215f, 0.f, -1.f));
+	pGameObject->GetTransform()->Translate(Vec3(-124.15f, 45.5f, 245.f));
+
+	for (_int i = 0; i < 5; ++i)
+	{
+		pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_Particle_Waterfall"));
+		if (nullptr == pGameObject)	return E_FAIL;
+		static_cast<CParticle_Waterfall*>(pGameObject)->SetEmitDirection(Vec3(0.f, 1.f, -0.05f));
+		pGameObject->GetTransform()->Translate(0.33f * Vec3::UnitY + Vec3(-154.5f + 4.0f * i, 29.f, 242.7f));
+	}
 
 	return S_OK;
 }
@@ -199,7 +224,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_UnitGround()
 	CGameObject* pGameObject = nullptr;
 	LAYERTAG	eLayerTag = LAYERTAG::UNIT_GROUND;
 
-	/*pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_HellHound"));
+	pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_HellHound"));
 	if (nullptr == pGameObject)	return E_FAIL;
 	pGameObject->GetNavMeshAgent()->SetCurrentIndex(61);
 
@@ -220,7 +245,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_UnitGround()
 	pGameObject->GetNavMeshAgent()->SetCurrentIndex(65);
 
 
-	for (_int i = 0; i < 5; ++i)
+	for (_int i = 0; i < 4; ++i)
 	{
 		pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_HellHound"));
 		if (nullptr == pGameObject)	return E_FAIL;
@@ -251,7 +276,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_UnitGround()
 	if (nullptr == pGameObject)	return E_FAIL;
 	pGameObject->GetNavMeshAgent()->SetCurrentIndex(86);
 
-	for (_int i = 0; i < 5; ++i)
+	for (_int i = 0; i < 4; ++i)
 	{
 		pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_HellHound"));
 		if (nullptr == pGameObject)	return E_FAIL;
@@ -266,7 +291,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_UnitGround()
 		pGameObject->GetNavMeshAgent()->SetCurrentIndex(151 + 3 * i);
 	}
 
-	for (_int i = 0; i < 10; ++i)
+	for (_int i = 0; i < 8; ++i)
 	{
 		pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_HellHound"));
 		if (nullptr == pGameObject)	return E_FAIL;
@@ -285,7 +310,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_UnitGround()
 		pGameObject->GetNavMeshAgent()->SetCurrentIndex(220 + 8 * i);
 	}
 
-	for (_int i = 0; i < 5; ++i)
+	for (_int i = 0; i < 4; ++i)
 	{
 		pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_HellHound"));
 		if (nullptr == pGameObject)	return E_FAIL;
@@ -304,7 +329,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_UnitGround()
 	if (nullptr == pGameObject)	return E_FAIL;
 	pGameObject->GetNavMeshAgent()->SetCurrentIndex(431);
 
-	for (_int i = 0; i < 7; ++i)
+	for (_int i = 0; i < 5; ++i)
 	{
 		pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_HellHound"));
 		if (nullptr == pGameObject)	return E_FAIL;
@@ -315,7 +340,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_UnitGround()
 		pGameObject->GetNavMeshAgent()->SetCurrentIndex(484 + 4 * i);
 	}
 
-	for (_int i = 0; i < 4; ++i)
+	for (_int i = 0; i < 3; ++i)
 	{
 		pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_HellBrute"));
 		if (nullptr == pGameObject)	return E_FAIL;
@@ -326,7 +351,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_UnitGround()
 		pGameObject->GetNavMeshAgent()->SetCurrentIndex(486 + 6 * i);
 	}
 
-	for (_int i = 0; i < 15; ++i)
+	/*for (_int i = 0; i < 12; ++i)
 	{
 		pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_HellHound"));
 		if (nullptr == pGameObject)	return E_FAIL;
@@ -375,7 +400,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Wall()
 HRESULT CLevel_GamePlay::LoadData_Map()
 {
 	shared_ptr<FileUtils> file = make_shared<FileUtils>();
-	file->Open(TEXT("../Bin/LevelData/MainStage_v03.dat"), Read);
+	file->Open(TEXT("../Bin/LevelData/MainStage_v04.dat"), Read);
 	//file->Open(TEXT("../Bin/LevelData/NavTest.dat"), Read);
 
 	while (true)
@@ -400,6 +425,135 @@ HRESULT CLevel_GamePlay::LoadData_Map()
 			__debugbreak();
 
 		Matrix matWorld = file->Read<Matrix>();
+		string tempObjectTag;
+		file->Read(tempObjectTag);
+
+		if (tempObjectTag == "Water_Pond" || tempObjectTag == "WaterFall_Foar")
+			continue;
+
+		if (static_cast<_uint>(LAYERTAG::DEFAULT_LAYER_END) < static_cast<_uint>(eLayer) &&
+			static_cast<_uint>(LAYERTAG::DYNAMIC_LAYER_END) < static_cast<_uint>(eLayer))
+		{
+
+		}
+
+		if (static_cast<_uint>(LAYERTAG::DYNAMIC_LAYER_END) < static_cast<_uint>(eLayer) &&
+			static_cast<_uint>(LAYERTAG::STATIC_LAYER_END) > static_cast<_uint>(eLayer))
+		{
+			const wstring strPrototypeTag = TEXT("Prototype_GameObject_") + Utils::ToWString(tempObjectTag);
+
+			//CGameObject* pGameObject = m_pGameInstance->CreateObject(strPrototypeTag, eLayer);
+			CGameObject* pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayer, strPrototypeTag);
+			if (nullptr == pGameObject)
+				__debugbreak();
+			pGameObject->GetTransform()->Set_WorldMatrix(matWorld);
+		}
+	}
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::LoadData_Map_Area0()
+{
+	shared_ptr<FileUtils> file = make_shared<FileUtils>();
+	file->Open(TEXT("../Bin/LevelData/MainStage_v04.dat"), Read);
+	//file->Open(TEXT("../Bin/LevelData/NavTest.dat"), Read);
+
+	while (true)
+	{
+		// key 값 저장
+		LAYERTAG eLayer = LAYERTAG::LAYER_END;
+		string strLayerTag = "";
+
+		if (false == file->Read(strLayerTag))
+			break;
+
+		const _int LayerTag_End = sizeof(LayerTag_string) / sizeof(_char*);
+		for (_int i = 0; i < LayerTag_End; ++i)
+		{
+			if (0 == strcmp(LayerTag_string[i], strLayerTag.c_str()))
+			{
+				eLayer = static_cast<LAYERTAG>(i);
+				break;
+			}
+		}
+		if (LAYERTAG::LAYER_END == eLayer)
+			__debugbreak();
+
+		Matrix matWorld = file->Read<Matrix>();
+		
+		if (0 <= matWorld.Translation().x)
+		{
+			string tempObjectTag;
+			file->Read(tempObjectTag);	// Pass~
+
+			continue;
+		}
+
+		string tempObjectTag;
+		file->Read(tempObjectTag);
+
+		if (tempObjectTag == "Water_Pond")
+			continue;
+
+		if (static_cast<_uint>(LAYERTAG::DEFAULT_LAYER_END) < static_cast<_uint>(eLayer) &&
+			static_cast<_uint>(LAYERTAG::DYNAMIC_LAYER_END) < static_cast<_uint>(eLayer))
+		{
+
+		}
+
+		if (static_cast<_uint>(LAYERTAG::DYNAMIC_LAYER_END) < static_cast<_uint>(eLayer) &&
+			static_cast<_uint>(LAYERTAG::STATIC_LAYER_END) > static_cast<_uint>(eLayer))
+		{
+			const wstring strPrototypeTag = TEXT("Prototype_GameObject_") + Utils::ToWString(tempObjectTag);
+
+			//CGameObject* pGameObject = m_pGameInstance->CreateObject(strPrototypeTag, eLayer);
+			CGameObject* pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayer, strPrototypeTag);
+			if (nullptr == pGameObject)
+				__debugbreak();
+			pGameObject->GetTransform()->Set_WorldMatrix(matWorld);
+		}
+	}
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::LoadData_Map_Area1()
+{
+	shared_ptr<FileUtils> file = make_shared<FileUtils>();
+	file->Open(TEXT("../Bin/LevelData/MainStage_v04.dat"), Read);
+	//file->Open(TEXT("../Bin/LevelData/NavTest.dat"), Read);
+
+	while (true)
+	{
+		// key 값 저장
+		LAYERTAG eLayer = LAYERTAG::LAYER_END;
+		string strLayerTag = "";
+
+		if (false == file->Read(strLayerTag))
+			break;
+
+		const _int LayerTag_End = sizeof(LayerTag_string) / sizeof(_char*);
+		for (_int i = 0; i < LayerTag_End; ++i)
+		{
+			if (0 == strcmp(LayerTag_string[i], strLayerTag.c_str()))
+			{
+				eLayer = static_cast<LAYERTAG>(i);
+				break;
+			}
+		}
+		if (LAYERTAG::LAYER_END == eLayer)
+			__debugbreak();
+
+		Matrix matWorld = file->Read<Matrix>();
+		if (0 > matWorld.Translation().x)
+		{
+			string tempObjectTag;
+			file->Read(tempObjectTag);	// Pass~
+
+			continue;
+		}
+		
 		string tempObjectTag;
 		file->Read(tempObjectTag);
 

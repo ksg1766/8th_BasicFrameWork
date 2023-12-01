@@ -36,6 +36,7 @@ public:
 	virtual HRESULT			Render();
 	virtual HRESULT			RenderInstance();
 	virtual HRESULT			RenderShadow(const Matrix& matLightView, const Matrix& matLightProj) { return S_OK; }
+	virtual HRESULT			AddRenderGroup() { return S_OK; }
 
 	CComponent*				GetFixedComponent(const ComponentType& type);
 	CTransform*				GetTransform();

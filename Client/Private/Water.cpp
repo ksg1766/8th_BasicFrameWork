@@ -39,6 +39,15 @@ void CWater::Tick(const _float& fTimeDelta)
 	if (m_fWaterTranslation < 0.f)	m_fWaterTranslation += 1.f;
 
 	Super::Tick(fTimeDelta);
+
+	if (WaterLevelMode::Dagon == m_eMode)
+	{
+		Dagon(fTimeDelta);
+	}
+	else if(WaterLevelMode::Dessert == m_eMode)
+	{
+		Desert(fTimeDelta);
+	}
 }
 
 void CWater::LateTick(const _float& fTimeDelta)
@@ -69,6 +78,36 @@ HRESULT CWater::Render()
 #endif
 
 	return S_OK;
+}
+
+void CWater::Dagon(const _float& fTimeDelta)
+{
+	const Vec3& vPos = GetTransform()->GetPosition();
+	if (vPos.y > 28.25f)
+	{
+		Vec3 vEndPos = vPos;
+		vEndPos.y = 28.25f;
+		GetTransform()->SetPosition(vEndPos);
+		m_eMode = WaterLevelMode::End;
+		return;
+	}
+	m_iCurrentNormalMap = 0;
+	GetTransform()->Translate(2.f * fTimeDelta * Vec3::UnitY);
+}
+
+void CWater::Desert(const _float& fTimeDelta)
+{
+	const Vec3& vPos = GetTransform()->GetPosition();
+	if (vPos.y < 1.f)
+	{
+		Vec3 vEndPos = vPos;
+		vEndPos.y = 0.f;
+		GetTransform()->SetPosition(vEndPos);
+		m_eMode = WaterLevelMode::End;
+		m_iCurrentNormalMap = 1;
+		return;
+	}
+	GetTransform()->Translate(3.f * -fTimeDelta * Vec3::UnitY);
 }
 
 HRESULT CWater::Ready_FixedComponents(WATER_DESC* pDesc)

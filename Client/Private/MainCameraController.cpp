@@ -71,11 +71,12 @@ void CMainCameraController::Tick(const _float& fTimeDelta)
 	}
 
 	//Input(fTimeDelta);
+	
+	Trace(fTimeDelta);
 }
 
 void CMainCameraController::LateTick(const _float& fTimeDelta)
 {
-	Trace(fTimeDelta);
 }
 
 void CMainCameraController::DebugRender()

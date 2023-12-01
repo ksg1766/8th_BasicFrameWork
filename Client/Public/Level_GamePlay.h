@@ -32,6 +32,8 @@ private:
 	HRESULT			Ready_Layer_Wall();	// Static
 
 	HRESULT			LoadData_Map();
+	HRESULT			LoadData_Map_Area0();
+	HRESULT			LoadData_Map_Area1();
 
 public:
 	static class CLevel_GamePlay* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -38,8 +38,8 @@ HRESULT CHellBrute::Initialize(void* pArg)
 	if (FAILED(Ready_Scripts()))
 		return E_FAIL;
 
-	GetRigidBody()->GetSphereCollider()->SetRadius(1.f);
-	GetRigidBody()->GetOBBCollider()->SetExtents(Vec3(1.f, 1.f, 0.8f));
+	GetRigidBody()->GetSphereCollider()->SetRadius(3.156f);
+	GetRigidBody()->GetOBBCollider()->SetExtents(Vec3(2.f, 2.f, 1.6f));
 
 	return S_OK;
 }
@@ -52,11 +52,6 @@ void CHellBrute::Tick(const _float& fTimeDelta)
 void CHellBrute::LateTick(const _float& fTimeDelta)
 {
 	Super::LateTick(fTimeDelta);
-
-	if(IsInstance())
-		GetRenderer()->Add_RenderGroup(CRenderer::RG_NONBLEND_INSTANCE, this);
-	else
-		GetRenderer()->Add_RenderGroup(CRenderer::RG_NONBLEND, this);
 }
 
 void CHellBrute::DebugRender()
@@ -95,6 +90,32 @@ HRESULT CHellBrute::RenderInstance()
 #ifdef _DEBUG
 	DebugRender();
 #endif
+
+	return S_OK;
+}
+
+HRESULT CHellBrute::RenderShadow(const Matrix& matLightView, const Matrix& matLightProj)
+{
+	if (FAILED(GetShader()->Bind_Matrix("g_ViewMatrix", &matLightView)))
+		return E_FAIL;
+
+	if (FAILED(GetShader()->Bind_Matrix("g_ProjMatrix", &matLightProj)))
+		return E_FAIL;
+
+	GetShader()->SetPassIndex(3);
+
+	return S_OK;
+}
+
+HRESULT CHellBrute::AddRenderGroup()
+{
+	if(IsInstance())
+	{
+		//GetRenderer()->Add_RenderGroup(CRenderer::RG_SHADOW_INSTANCE, this);
+		GetRenderer()->Add_RenderGroup(CRenderer::RG_NONBLEND_INSTANCE, this);
+	}
+	else
+		GetRenderer()->Add_RenderGroup(CRenderer::RG_NONBLEND, this);
 
 	return S_OK;
 }

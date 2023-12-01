@@ -7,6 +7,9 @@
 // 허허...
 #include "MainCamera.h"
 #include "MainCameraController.h"
+#include "Water.h"
+#include "ObjectManager.h"
+#include "Layer.h"
 
 constexpr auto EPSILON = 0.001f;
 
@@ -72,6 +75,26 @@ void CPlayerController::Tick(const _float& fTimeDelta)
 	{
 		m_pTransform->SetPosition(Vec3(233.6f, 6.85f, 180.3f));
 		m_pGameObject->GetNavMeshAgent()->SetCurrentIndex(646);
+
+		// WaterLevel
+		map<LAYERTAG, CLayer*>& mapLayers = m_pGameInstance->GetCurrentLevelLayers();
+		const auto& pair = mapLayers.find(LAYERTAG::TERRAIN);
+
+		CWater* pWater = nullptr;
+		if (mapLayers.end() == pair)
+		{
+			for (auto& iter : pair->second->GetGameObjects())
+			{
+				if (TEXT("Water") == iter->GetObjectTag())
+				{
+					pWater = static_cast<CWater*>(iter);
+					break;
+				}
+			}
+		}
+
+		if (nullptr != pWater)
+			pWater->SetMode(CWater::WaterLevelMode::Dessert);
 	}
 	//////////
 
@@ -86,7 +109,8 @@ void CPlayerController::Tick(const _float& fTimeDelta)
 	}
 
 	// TODO: 아래는 시간되면 GameManager 만들어서 옮길 것.
-	if (!m_bDagonCreated && 480 <= m_pNavMeshAgent->GetCurrentIndex() && m_pTransform->GetPosition().z > 145.f)
+	const Vec3& vPosition = m_pTransform->GetPosition();
+	if (!m_bDagonCreated && 480 <= m_pNavMeshAgent->GetCurrentIndex() && vPosition.z > 145.f)
 	{
 		m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Dagon"), LAYERTAG::UNIT_GROUND);
 		m_bDagonCreated = true;
@@ -94,12 +118,31 @@ void CPlayerController::Tick(const _float& fTimeDelta)
 		CMainCamera* pCamera = static_cast<CMainCamera*>(m_pGameInstance->GetCurrentCamera());
 		CMainCameraController* pController = pCamera->GetController();
 		pController->SetCameraMode(CMainCameraController::CameraMode::Dagon);
+
+		map<LAYERTAG, class CLayer*>& mapLayers = m_pGameInstance->GetCurrentLevelLayers();
+		const auto& pair = mapLayers.find(LAYERTAG::TERRAIN);
+
+		CWater* pWater = nullptr;
+		for(auto& iter : pair->second->GetGameObjects())
+		{
+			if (TEXT("Water") == iter->GetObjectTag())
+				pWater = static_cast<CWater*>(iter);
+		}
+
+		if (nullptr != pWater)
+			pWater->SetMode(CWater::WaterLevelMode::Dagon);
 	}
-	else if (!m_bMolochCreated && 646 <= m_pNavMeshAgent->GetCurrentIndex() && m_pTransform->GetPosition().x > 220.f && m_pTransform->GetPosition().z > 177.f)
+	else if (!m_bMolochCreated && 646 <= m_pNavMeshAgent->GetCurrentIndex() && vPosition.x > 220.f && vPosition.z > 177.f)
 	{
 		m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Moloch"), LAYERTAG::UNIT_GROUND);
 		m_bMolochCreated = true;
 	}
+	/*else if (!m_bWaterCreated && 362 <= m_pNavMeshAgent->GetCurrentIndex() && vPosition.z > 12.f && vPosition.x > -149.f)
+	{
+		CWater::WATER_DESC tWaterDesc = tWaterDesc = { Vec3(0.f, -5.f, 265.f), Vec2(1280.f, 500.f) };
+		m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Water"), LAYERTAG::TERRAIN, &tWaterDesc);
+		m_bMolochCreated = true;
+	}*/
 }
 
 void CPlayerController::LateTick(const _float& fTimeDelta)
@@ -225,7 +268,8 @@ void CPlayerController::Jump()
 	m_pRigidBody->UseGravity(true);
 	m_pRigidBody->ClearForce(ForceMode::FORCE);
 	m_pRigidBody->ClearForce(ForceMode::IMPULSE);
-	m_pRigidBody->AddForce(18.f * Vec3::UnitY, ForceMode::IMPULSE);
+	//m_pRigidBody->AddForce(18.f * Vec3::UnitY, ForceMode::IMPULSE);
+	m_pRigidBody->AddForce(15.f * Vec3::UnitY, ForceMode::IMPULSE);
 }
 
 void CPlayerController::Land()
@@ -242,7 +286,7 @@ void CPlayerController::Dash(const Vec3& vDir)
 	m_pRigidBody->ClearForce(ForceMode::IMPULSE);
 	m_pRigidBody->IsKinematic(false);
 	m_pRigidBody->UseGravity(false);
-	m_pRigidBody->AddForce(35.f * m_pTransform->GetForward(), ForceMode::IMPULSE);
+	m_pRigidBody->AddForce(25.f * m_pTransform->GetForward(), ForceMode::IMPULSE);
 }
 
 void CPlayerController::DashEnd()
@@ -275,7 +319,7 @@ void CPlayerController::Fire(CStrife_Ammo::AmmoType eAmmoType)
 	break;
 	case CStrife_Ammo::AmmoType::BEAM:
 	{
-		tProps = { eAmmoType, 4, 0, 5, m_pTransform->GetForward(), false, 0.f };
+		tProps = { eAmmoType, 4, 0, 10, m_pTransform->GetForward(), false, 0.f };
 		pAmmo = m_pGameInstance->CreateObject(L"Prototype_GameObject_Strife_Ammo_Beam", LAYERTAG::EQUIPMENT, &tProps);
 		vFireOffset = m_pTransform->GetPosition() + 11.f * m_pTransform->GetForward() + 1.7f * m_pTransform->GetUp();
 

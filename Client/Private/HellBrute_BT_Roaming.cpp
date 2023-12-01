@@ -58,8 +58,7 @@ void CHellBrute_BT_Roaming::SetRoamingPoint()
 
 	if (tRoamingPoint == hashBlackBoard.end())
 	{
-		srand(time(NULL));
-		Vec3 vRandPos(rand() % 9 - 5, 0.f, rand() * 7 % 9 - 5);
+		Vec3 vRandPos(rand() % 4 - 2, 0.f, rand() * 7 % 4 - 2);
 
 		CMonsterController* pController = static_cast<CMonsterController*>(m_pController);
 		/*while (!pController->Walkable(vRandPos))

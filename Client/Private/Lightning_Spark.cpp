@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "Layer.h"
 #include "ParticleController.h"
+#include "Particle_Waterfall.h"
 
 CLightning_Spark::CLightning_Spark(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: Super(pDevice, pContext)
@@ -58,6 +59,23 @@ void CLightning_Spark::Tick(const _float& fTimeDelta)
 		tParticleDesc.vCenter = GetTransform()->GetPosition();
 		//for (_int i = 0; i < 2; ++i)
 		m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Particle"), LAYERTAG::IGNORECOLLISION, &tParticleDesc);
+
+		tParticleDesc.vSpeedMax = _float3(3.3f, 7.7f, 3.3f);
+		tParticleDesc.vSpeedMin = _float3(-3.3f, 5.7f, -3.3f);
+		tParticleDesc.fScaleMin = 0.1f;
+		tParticleDesc.fScaleMax = 0.2f;
+
+		tParticleDesc.eType = CParticleController::ParticleType::FLOAT;
+		m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Particle"), LAYERTAG::IGNORECOLLISION, &tParticleDesc);
+
+		if (!m_bWaterSplash)
+		{
+			CParticle_Waterfall* pWaterfall = static_cast<CParticle_Waterfall*>(m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Particle_Waterfall"), LAYERTAG::IGNORECOLLISION));
+			pWaterfall->SetEmitDirection(Vec3::UnitY);
+			pWaterfall->SetLifeTime(1.f);
+			pWaterfall->GetTransform()->Translate(2.f * Vec3::UnitY + GetTransform()->GetPosition());
+			m_bWaterSplash = true;
+		}
 	}
 
 	//GetTransform()->RotateYAxisFixed(Vec3(0.f, rand(), 0.f));

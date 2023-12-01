@@ -22,6 +22,8 @@ private:
 	_bool				IsInSight();
 	_bool				IsZeroHP();
 
+	void				Fire();
+
 public:
 	static	CHellBrute_BT_Fire* Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController);
 	virtual void Free() override;

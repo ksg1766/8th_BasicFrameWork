@@ -132,8 +132,8 @@ HRESULT CParticle_WaveSplash::Bind_ShaderResources()
 		FAILED(m_pShaderStream->Bind_RawValue("g_fTimeStep", &m_fTimeDelta, sizeof(_float))))
 		return E_FAIL;
 
-	if (/*FAILED(GetTexture()->Bind_ShaderResource(GetShader(), "g_Texture", 0)) ||*/
-		FAILED(m_pTextureEx->Bind_ShaderResource(GetShader(), "g_Texture", 0)) ||
+	if (FAILED(GetTexture()->Bind_ShaderResource(GetShader(), "g_Texture", 0)) ||
+		/*FAILED(m_pTextureEx->Bind_ShaderResource(GetShader(), "g_Texture", 0)) ||*/
 		FAILED(m_pShaderStream->Bind_Texture("g_RandomTexture", m_pRandomTexture)))
 		return E_FAIL;
 

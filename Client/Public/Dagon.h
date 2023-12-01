@@ -23,7 +23,8 @@ public:
 	virtual void	LateTick(const _float& fTimeDelta)	override;
 	virtual void	DebugRender()						override;
 	virtual HRESULT Render()							override;
-	virtual HRESULT	RenderShadow(const Matrix& matLightView, const Matrix& matLightProj);
+	virtual HRESULT	RenderShadow(const Matrix& matLightView, const Matrix& matLightProj) override;
+	virtual HRESULT	AddRenderGroup()					override;
 
 private:
 	HRESULT			Ready_FixedComponents();

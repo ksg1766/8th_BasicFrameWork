@@ -52,11 +52,11 @@ private:
 	ID3D11DepthStencilView*						m_pShadowDSV = nullptr;
 
 	_float4x4									m_WorldMatrix, m_ViewMatrix, m_ProjMatrix;
-	_int										m_iWaterCaptureCount = 1;
-	_int										m_iMaxWaterCaptureCount = 5;
+	_int										m_iWaterCaptureCount = 5;
+	_int										m_iMaxWaterCaptureCount = 1;
 
 	_float4x4									m_LightView, m_LightProj;
-	_float										m_fShadowTargetSizeRatio = 3.f;
+	_float										m_fShadowTargetSizeRatio = 4.f;
 
 #ifdef _DEBUG
 private:

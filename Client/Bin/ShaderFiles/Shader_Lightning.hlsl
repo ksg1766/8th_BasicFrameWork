@@ -233,13 +233,14 @@ PS_OUT PS_WATERLIGHTNING_MAIN(PS_IN In)
     
     vColor = 1.f - vColor;
     vColor.rg = 1.f - (0.8f * vColor.b);
-    vColor.b = 1.2f;
-    vColor.rg *= 0.37f;
+    vColor.b = 1.5f;
+    vColor.g *= 0.7f;
+    vColor.r *= 0.3f;
     
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);
     
-    Out.vDiffuse = float4(vColor, 0.7f);
+    Out.vDiffuse = float4(vColor, 1.f);
     Out.vEmissive = float4(g_fEmissivePower * vColor, 1.f);
     
     return Out;
@@ -256,8 +257,9 @@ PS_OUT PS_WATERSPARK_MAIN(PS_IN In)
     
     vColor = 1.f - vColor;
     vColor.rg = 1.f - (0.8f * vColor.b);
-    vColor.b = 1.f;
-    vColor.rg *= 0.33f;
+    vColor.b = 1.5f;
+    vColor.g *= 0.7f;
+    vColor.r *= 0.3f;
     //vColor.r = 0.7f;
     
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);

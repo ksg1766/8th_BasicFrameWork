@@ -313,10 +313,10 @@ PS_OUT_SHADOW PS_SHADOW_MAIN(PS_IN In)
 {
     PS_OUT_SHADOW Out = (PS_OUT_SHADOW) 0;
 	
-    vector vMtrlDiffuse = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
+    //vector vMtrlDiffuse = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
     
-    if (vMtrlDiffuse.a < 0.3f)
-        discard;
+    //if (vMtrlDiffuse.a < 0.3f)
+    //    discard;
     
     Out.vDepth = vector(In.vProjPos.w / 2000.0f, In.vProjPos.w / 2000.0f, In.vProjPos.w / 2000.0f, 1.f);
     //Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.z / In.vProjPos.w, In.vProjPos.z / In.vProjPos.w, 1.f);
@@ -339,9 +339,9 @@ PS_OUT PS_WAVE_MAIN(PS_IN In)
         discard;
     
     if (vColor.r > 0.1f)
-        Out.vDiffuse = vColor;
+        Out.vDiffuse = vColor * 1.5f;
     else
-        Out.vDiffuse = float4(0.1f, 0.1f, 0.3f, 1.f);
+        Out.vDiffuse = float4(0.1f, 0.1f, 0.17f, 1.f);
     
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);

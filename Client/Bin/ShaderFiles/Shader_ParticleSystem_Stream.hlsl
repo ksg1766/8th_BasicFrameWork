@@ -79,7 +79,7 @@ void GS_RAIN_MAIN(point GS_PARTICLE In[1], inout PointStream<GS_PARTICLE> OutStr
 
                 GS_PARTICLE p;
                 p.vPosition = g_vEmitPosition.xyz + vRandom;
-                p.vVelocity = float3(0.0f, 0.0f, 0.0f);
+                p.vVelocity = float3(0.33f, 0.0f, -0.33f);
                 p.vSize = float2(1.0f, 1.0f);
                 p.fAge = 0.0f;
                 p.iType = PT_PARTICLE;
@@ -154,15 +154,12 @@ void GS_WATERFALL_MAIN(point GS_PARTICLE In[1], inout PointStream<GS_PARTICLE> O
         {
             // Spread rain drops out above the camera.
             float3 vRandom = RandUnitVec3(0.0f);
-            //vRandom.x *= 0.5f;
-            vRandom.x *= 0.15f;
-            //vRandom.y *= 0.5f;
-            vRandom.y *= 0.15f;
+            //vRandom *= 0.5f;
             
             GS_PARTICLE p;
             p.vPosition = g_vEmitPosition.xyz;
-            p.vVelocity = 1.23f * (vRandom + g_vEmitDirection);
-            p.vSize = float2(3.f, 3.f);
+            p.vVelocity = (vRandom + 3.7f * g_vEmitDirection);
+            p.vSize = float2(5.f, 5.f);
             p.fAge = 0.0f;
             p.iType = PT_PARTICLE;
 
@@ -177,7 +174,7 @@ void GS_WATERFALL_MAIN(point GS_PARTICLE In[1], inout PointStream<GS_PARTICLE> O
     else
     {
 		// Specify conditions to keep particle; this may vary from system to system.
-        if (In[0].fAge <= 1.f)
+        if (In[0].fAge <= 2.f)
             OutStream.Append(In[0]);
     }
 }
@@ -190,7 +187,6 @@ technique11 StreamOutTech
         SetDepthStencilState(DSS_None, 0);
 		SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
 
-		/* 여러 셰이더에 대해서 각각 어떤 버젼으로 빌드하고 어떤 함수를 호출하여 해당 셰이더가 구동되는지를 설정한다. */
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = ConstructGSWithSO(CompileShader(gs_5_0, GS_RAIN_MAIN()), "POSITION.xyz; VELOCITY.xyz; SIZE.xy; AGE.x; TYPE.x");
 		HullShader = NULL;
@@ -205,7 +201,6 @@ technique11 StreamOutTech
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
-		/* 여러 셰이더에 대해서 각각 어떤 버젼으로 빌드하고 어떤 함수를 호출하여 해당 셰이더가 구동되는지를 설정한다. */
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = ConstructGSWithSO(CompileShader(gs_5_0, GS_WAVE_MAIN()), "POSITION.xyz; VELOCITY.xyz; SIZE.xy; AGE.x; TYPE.x");
 		HullShader = NULL;
@@ -220,7 +215,6 @@ technique11 StreamOutTech
         SetDepthStencilState(DSS_None, 0);
         SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
-		/* 여러 셰이더에 대해서 각각 어떤 버젼으로 빌드하고 어떤 함수를 호출하여 해당 셰이더가 구동되는지를 설정한다. */
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = ConstructGSWithSO(CompileShader(gs_5_0, GS_WATERFALL_MAIN()), "POSITION.xyz; VELOCITY.xyz; SIZE.xy; AGE.x; TYPE.x");
 		HullShader = NULL;

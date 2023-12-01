@@ -248,7 +248,7 @@ PS_ORB_OUT PS_ORB_MAIN(PS_IN In)
     Out.vDiffuse = float4(0.f, 0.f, 0.03f, 1.f);
    
     if (vColor.r > 0.77f)
-        Out.vEmissive = float4(vColor.b * float3(0.25f, 0.75f, 1.3f), 1.f);
+        Out.vEmissive = float4(vColor.b * float3(0.5f, 0.93f, 2.f), 1.f);
     
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);
     Out.vSunMask = vector(0.f, 0.f, 0.f, 0.f);
@@ -266,8 +266,8 @@ PS_ORB_OUT PS_WISP_MAIN(PS_IN In)
    
     if (vNoiseSample.r > 0.67f + 0.5f * g_fFrameTime)
     {
-        Out.vDiffuse = float4(0.f, 0.7f, 1.f, 1.f);
-        Out.vEmissive = float4(0.f, 0.7f, 1.f, 1.f);
+        Out.vDiffuse = float4(0.f, 0.77f, 1.f, 1.f);
+        Out.vEmissive = float4(0.5f, 0.93f, 2.f, 1.f);
     }
     else
         discard;

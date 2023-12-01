@@ -113,7 +113,7 @@ HRESULT CStrife_Ammo_Nature::Bind_ShaderResources()
 		return E_FAIL;
 
 	//Color color(0.85f, 0.57f, 0.24f, 1.f);
-	Color color(0.15f, 0.601960814f, 0.15f, 1.f);
+	Color color(0.22f, 0.671960814f, 0.22f, 1.f);
 	//Color color(DirectX::Colors::Green);
 	//Color color(DirectX::Colors::GreenYellow);
 	if (FAILED(GetShader()->Bind_RawValue("g_Color", &color, sizeof(Color))))

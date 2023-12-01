@@ -20,7 +20,7 @@ vector	g_vLightAmbient;
 vector	g_vLightSpecular;
 
 vector  g_vMtrlAmbient = vector(0.4f, 0.4f, 0.4f, 1.f);
-vector  g_vMtrlSpecular = vector(0.7f, 0.7f, 0.7f, 1.f);
+vector  g_vMtrlSpecular = vector(0.3f, 0.3f, 0.3f, 1.f);
 
 Texture2D g_PriorityTarget;
 
@@ -212,6 +212,13 @@ sampler PointClampSampler = sampler_state
     AddressV = clamp;
 };
 
+sampler Sampler = sampler_state
+{
+    Filter = MIN_MAG_MIP_LINEAR;
+    //AddressU = clamp;
+    //AddressV = clamp;
+};
+
 float PCF_ShadowCalculation(float4 fragPosLightSpace/*, float3 lightDir*/)
 {
 	// perform perspective divide
@@ -226,13 +233,13 @@ float PCF_ShadowCalculation(float4 fragPosLightSpace/*, float3 lightDir*/)
 	// PCF
     float shadow = 0.0f;
     float2 texelSize = float2(1.f / 1440.f, 1.f / 810.f);
-    texelSize /= 3.f;
+    texelSize /= 4.f;
     
     for (int x = -1; x <= 1; ++x)
     {
         for (int y = -1; y <= 1; ++y)
         {
-            float pcfDepth = g_ShadowDepthTarget.Sample(PointSampler, projCoords.xy + float2(x, y) * texelSize).r;
+            float pcfDepth = g_ShadowDepthTarget.Sample(Sampler, projCoords.xy + float2(x, y) * texelSize).r;
             shadow += fragPosLightSpace.w > pcfDepth * 2000.f ? 0.5f : 1.0f;
         }
     }
@@ -240,6 +247,10 @@ float PCF_ShadowCalculation(float4 fragPosLightSpace/*, float3 lightDir*/)
     shadow /= 9.f;
     return shadow;
 }
+
+// 안개
+float2 g_vFogStartEnd = { -3.f, -20.f };
+float4 g_vFogColor = { 0.7f, 0.47f, 0.2f, 1.f };
 
 PS_OUT PS_MAIN_DEFERRED(PS_IN In)
 {
@@ -273,9 +284,11 @@ PS_OUT PS_MAIN_DEFERRED(PS_IN In)
     vWorldPos.w = 1.f;
 
 	/* 뷰스페이스 상의 위치를 구한다. */
-    float fViewZ = (vDepth.y - fBias) * 2000.f;
+    //float fViewZ = (vDepth.y - fBias) * 2000.f;
+    float fViewZ = (vDepth.y - g_fBias) * 2000.f;
     vWorldPos = vWorldPos * fViewZ;
     vWorldPos = mul(vWorldPos, g_ProjMatrixInv);
+    float fViewHieght = vWorldPos.y;
 
 	/* 월드까지 가자. */
     vWorldPos = mul(vWorldPos, g_ViewMatrixInv);
@@ -285,6 +298,11 @@ PS_OUT PS_MAIN_DEFERRED(PS_IN In)
     vPosition = mul(vPosition, g_LightProjMatrix);
     //
     float shadow = PCF_ShadowCalculation(vPosition);
+    
+    // 안개                                            s                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              cos(15.f / 13.f); // 1.154f
+    float fFogFactor = saturate((vWorldPos.y - g_vFogStartEnd.y) / (g_vFogStartEnd.x - g_vFogStartEnd.y));
+    //fFogFactor = pow(fFogFactor, 2.f);
+    vDiffuse = fFogFactor * vDiffuse + (1.f - fFogFactor) * g_vFogColor;
     
     Out.vColor = (vDiffuse * vShade) * float4(shadow, shadow, shadow, 1.f) /* + vSpecular*/;
     

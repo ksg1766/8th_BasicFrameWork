@@ -72,9 +72,6 @@ void CMoloch::Tick(const _float& fTimeDelta)
 void CMoloch::LateTick(const _float& fTimeDelta)
 {
 	Super::LateTick(fTimeDelta);
-
-	GetRenderer()->Add_RenderGroup(CRenderer::RG_SHADOW, this);
-	GetRenderer()->Add_RenderGroup(CRenderer::RG_NONBLEND, this);
 }
 
 void CMoloch::DebugRender()
@@ -119,6 +116,14 @@ HRESULT CMoloch::RenderShadow(const Matrix& matLightView, const Matrix& matLight
 		return E_FAIL;
 
 	GetShader()->SetPassIndex(iPass);
+
+	return S_OK;
+}
+
+HRESULT CMoloch::AddRenderGroup()
+{
+	GetRenderer()->Add_RenderGroup(CRenderer::RG_SHADOW, this);
+	GetRenderer()->Add_RenderGroup(CRenderer::RG_NONBLEND, this);
 
 	return S_OK;
 }

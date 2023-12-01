@@ -927,6 +927,9 @@
     <ClInclude Include="..\Public\Particle_Waterfall.h">
       <Filter>03.GameObjects\05.Particle\Particle</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Waterfall_Foar.h">
+      <Filter>03.GameObjects\00.Static\StaticBase</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -1354,6 +1357,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Particle_Waterfall.cpp">
       <Filter>03.GameObjects\05.Particle\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Waterfall_Foar.cpp">
+      <Filter>03.GameObjects\00.Static\StaticBase</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

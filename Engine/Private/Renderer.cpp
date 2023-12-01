@@ -444,6 +444,8 @@ HRESULT CRenderer::Draw_RenderObjects()
 	if (FAILED(Render_Shadow()))
 		return S_OK;
 
+	ClearInstanceData();
+
 	if (FAILED(Render_Water()))
 		return S_OK;
 
@@ -955,9 +957,9 @@ HRESULT CRenderer::Render_Water()
 		if (FAILED(m_pTargetManager->Begin_MRT(m_pContext, TEXT("MRT_Refraction"))))
 			return E_FAIL;
 
-		for (auto& pGameObject : m_RenderObjects[RG_WATER])
+		for (auto& pWater : m_RenderObjects[RG_WATER])
 		{
-			if (nullptr != pGameObject)
+			if (nullptr != pWater)
 			{
 				for (auto& pGameObject : m_RenderObjects[RG_PRIORITY])
 				{
@@ -965,17 +967,17 @@ HRESULT CRenderer::Render_Water()
 						pGameObject->Render();
 				}
 
-				for (auto& pNonBlendObject : m_RenderObjects[RG_NONBLEND])
+				/*for (auto& pNonBlendObject : m_RenderObjects[RG_NONBLEND])
 				{
 					if (nullptr != pNonBlendObject)
 						pNonBlendObject->Render();
-				}
+				}*/
 
 				map<InstanceID, vector<CGameObject*>> cache;
 
 				for (auto& pNonBlendInstance : m_RenderObjects[RG_NONBLEND_INSTANCE])
 				{
-					if (nullptr == pNonBlendInstance->GetModel())
+					if (nullptr == pNonBlendInstance->GetModel() || pNonBlendInstance->GetModel()->IsAnimModel())
 						continue;
 
 					const _int iPassIndex = pNonBlendInstance->GetShader()->GetPassIndex();
@@ -1001,24 +1003,11 @@ HRESULT CRenderer::Render_Water()
 						AddInstanceData(instanceId, data);
 					}
 
-					if (pHead->GetModel()->IsAnimModel())
-					{// INSTANCING
-						InstancedTweenDesc* tweenDesc = new InstancedTweenDesc;
-						for (_int i = 0; i < vecInstances.size(); i++)
-						{
-							CGameObject*& pInstance = vecInstances[i];
-							tweenDesc->tweens[i] = pInstance->GetModel()->GetTweenDesc();	// 소켓 아이템의 경우 어떻게 할지.(굳이 인스턴싱이 필요 없을 듯 함 근데.)
-						}
-
-						pHead->GetModel()->PushTweenData(*tweenDesc);
-
-						Safe_Delete(tweenDesc);
-
-						pHead->RenderInstance();	// BindShaderResource 호출을 위함.
-						CVIBuffer_Instance*& buffer = m_InstanceBuffers[instanceId];
-						pHead->GetModel()->RenderInstancing(buffer);
-					}
-					else
+					//if (pHead->GetModel()->IsAnimModel())
+					//{// INSTANCING
+					//	
+					//}
+					//else
 					{
 						for (auto& iter : vecInstances)
 						{
@@ -1027,8 +1016,9 @@ HRESULT CRenderer::Render_Water()
 						_int iPassIndex = pHead->GetShader()->GetPassIndex();
 
 						pHead->GetShader()->SetPassIndex(4); // 4 == Refract;
-						_float4 vClipPlane = _float4(0.0f, -1.0f, 0.0f, pGameObject->GetTransform()->GetPosition().y + 0.1f);
-						pHead->GetShader()->Bind_RawValue("g_vClipPlane", &vClipPlane, sizeof(_float4));
+						_float4 vClipPlane = _float4(0.0f, -1.0f, 0.0f, pWater->GetTransform()->GetPosition().y + 0.1f);
+						if(FAILED(pHead->GetShader()->Bind_RawValue("g_vClipPlane", &vClipPlane, sizeof(_float4))))
+							__debugbreak();
 
 						pHead->RenderInstance();	// BindShaderResource 호출을 위함.
 						CVIBuffer_Instance*& buffer = m_InstanceBuffers[instanceId];
@@ -1059,17 +1049,19 @@ HRESULT CRenderer::Render_Water()
 		if (FAILED(m_pGraphicDevice->Clear_DepthStencil_View()))
 			return E_FAIL;
 
+		ClearInstanceData();
+
 		if (FAILED(m_pTargetManager->Begin_MRT(m_pContext, TEXT("MRT_Reflection"))))
 			return E_FAIL;
 
-		for (auto& pGameObject : m_RenderObjects[RG_WATER])
+		for (auto& pWater : m_RenderObjects[RG_WATER])
 		{
-			if (nullptr != pGameObject)
+			if (nullptr != pWater)
 			{
 				CCameraManager* pCameraManager = GET_INSTANCE(CCameraManager);
 				CPipeLine* pPipeLine = GET_INSTANCE(CPipeLine);
 
-				_float fWaterLevel = pGameObject->GetTransform()->GetPosition().y;
+				_float fWaterLevel = pWater->GetTransform()->GetPosition().y;
 				pCameraManager->UpdateReflectionMatrix(fWaterLevel);
 				_matrix matReflectionView = pCameraManager->GetReflectionMatrix();
 				_matrix matOriginalView = pPipeLine->Get_Transform_Matrix(CPipeLine::D3DTS_VIEW);
@@ -1081,10 +1073,68 @@ HRESULT CRenderer::Render_Water()
 						pGameObject->Render();
 				}
 
-				if (FAILED(Render_NonBlend()))
+				/*for (auto& pGameObject : m_RenderObjects[RG_NONBLEND])
+				{
+					if (nullptr != pGameObject)
+						pGameObject->Render();
+				}*/
+
+				map<InstanceID, vector<CGameObject*>> cache;
+
+				for (auto& pGameObject : m_RenderObjects[RG_NONBLEND_INSTANCE])
+				{
+					if (nullptr == pGameObject->GetModel() || pGameObject->GetModel()->IsAnimModel())
+						continue;
+
+					const _int iPassIndex = pGameObject->GetShader()->GetPassIndex();
+					const _int instanceId = pGameObject->GetModel()->GetInstanceID();
+					InstanceID ID(iPassIndex, instanceId);
+					cache[ID].push_back(pGameObject);
+
+					//Safe_Release(pGameObject);
+				}
+
+				for (auto& mapIter : cache)
+				{
+					vector<CGameObject*>& vecInstances = mapIter.second;
+
+					const InstanceID instanceId = mapIter.first;
+
+					CGameObject*& pHead = vecInstances[0];
+
+					// 위에서 걸러짐
+					//if (!pHead->GetModel()->IsAnimModel())
+					{// INSTANCING
+						for (_int i = 0; i < vecInstances.size(); i++)
+						{
+							CGameObject*& pGameObject = vecInstances[i];
+							pGameObject->InitRendered();
+
+							InstancingData data;
+							data.matWorld = pGameObject->GetTransform()->WorldMatrix();
+
+							AddInstanceData(instanceId, data);
+						}
+					}
+
+					_int iPassIndex = pHead->GetShader()->GetPassIndex();
+
+					pHead->GetShader()->SetPassIndex(7); // 7 == Reflect;
+					_float4 vClipPlane = _float4(0.0f, 1.0f, 0.0f, -(pWater->GetTransform()->GetPosition().y - 0.1f));
+					if (FAILED(pHead->GetShader()->Bind_RawValue("g_vClipPlane", &vClipPlane, sizeof(_float4))))
+						__debugbreak();
+
+					pHead->RenderInstance();	// BindShaderResource 호출을 위함.
+					CVIBuffer_Instance*& buffer = m_InstanceBuffers[instanceId];
+					pHead->GetModel()->RenderInstancing(buffer);
+
+					pHead->GetShader()->SetPassIndex(iPassIndex);
+				}
+
+				/*if (FAILED(Render_NonBlend()))
 					return S_OK;
 				if (FAILED(Render_NonBlend_Instance()))
-					return S_OK;
+					return S_OK;*/
 
 				pPipeLine->Set_Transform(CPipeLine::D3DTS_VIEW, matOriginalView);
 				pPipeLine->Tick();
@@ -1324,7 +1374,20 @@ HRESULT CRenderer::Render_Deferred()
 
 	if (FAILED(m_pShader->Bind_Matrix("g_LightProjMatrix", &m_LightProj)))
 		return E_FAIL;
-		
+	
+	//////////
+	static _float fBias = 0.0001f;
+
+	if (KEY_PRESSING(KEY::CTRL) && KEY_DOWN(KEY::C))
+		fBias += 0.0001f;
+
+	if (KEY_PRESSING(KEY::CTRL) && KEY_DOWN(KEY::V))
+		fBias -= 0.0001f;
+
+	if (FAILED(m_pShader->Bind_RawValue("g_fBias", &fBias, sizeof(_float))))
+		return E_FAIL;
+	//////////
+
 	m_pShader->SetPassIndex(3);
 	if (FAILED(m_pShader->Begin()))
 		return E_FAIL;

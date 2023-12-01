@@ -53,11 +53,6 @@ void CGoblin::Tick(const _float& fTimeDelta)
 void CGoblin::LateTick(const _float& fTimeDelta)
 {
 	Super::LateTick(fTimeDelta);
-
-	if(IsInstance())
-		GetRenderer()->Add_RenderGroup(CRenderer::RG_NONBLEND_INSTANCE, this);
-	else
-		GetRenderer()->Add_RenderGroup(CRenderer::RG_NONBLEND, this);
 }
 
 void CGoblin::DebugRender()
@@ -96,6 +91,32 @@ HRESULT CGoblin::RenderInstance()
 #ifdef _DEBUG
 	DebugRender();
 #endif
+
+	return S_OK;
+}
+
+HRESULT CGoblin::RenderShadow(const Matrix& matLightView, const Matrix& matLightProj)
+{
+	if (FAILED(GetShader()->Bind_Matrix("g_ViewMatrix", &matLightView)))
+		return E_FAIL;
+
+	if (FAILED(GetShader()->Bind_Matrix("g_ProjMatrix", &matLightProj)))
+		return E_FAIL;
+
+	GetShader()->SetPassIndex(3);
+
+	return S_OK;
+}
+
+HRESULT CGoblin::AddRenderGroup()
+{
+	if (IsInstance())
+	{
+		//GetRenderer()->Add_RenderGroup(CRenderer::RG_SHADOW_INSTANCE, this);
+		GetRenderer()->Add_RenderGroup(CRenderer::RG_NONBLEND_INSTANCE, this);
+	}
+	else
+		GetRenderer()->Add_RenderGroup(CRenderer::RG_NONBLEND, this);
 
 	return S_OK;
 }

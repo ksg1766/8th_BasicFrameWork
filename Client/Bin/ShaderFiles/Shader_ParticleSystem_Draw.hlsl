@@ -168,7 +168,8 @@ void GS_WAVE_MAIN(point VS_WAVE_OUT In[1],
 
 struct PS_OUT
 {
-    float4 vColor : SV_TARGET;
+    float4 vColor : SV_TARGET0;
+    float4 vDistortion : SV_TARGET1;
 };
 
 PS_OUT PS_RAIN_MAIN(GS_RAIN_OUT In)
@@ -189,7 +190,8 @@ PS_OUT PS_WAVE_MAIN(GS_WAVE_OUT In)
     if (Out.vColor.r < 0.01f)
         discard;
     
-    Out.vColor.a *= 0.8f;
+    Out.vColor.rgb *= 1.5f;
+    Out.vDistortion = Out.vColor * 0.005f;
     
     return Out;
 }

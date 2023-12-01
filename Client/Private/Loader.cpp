@@ -60,6 +60,7 @@
 #include "CrystalParticle.h"
 #include "Sun.h"
 #include "SphereSwirl.h"
+#include "Waterfall_Foar.h"
 #include "SwordTrail.h"
 
 CLoader::CLoader(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -528,6 +529,10 @@ HRESULT CLoader::Loading_GameObjects_For_Level_GamePlay()
 	/* For.Prototype_GameObject_SwordTrail */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_SwordTrail"), CSwordTrail::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+	
+	/* For.Prototype_GameObject_Waterfall_Foar */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Waterfall_Foar"), CWaterfall_Foar::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
 	/* For.Prototype_GameObject_TremorCrystal_ */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_TremorCrystal_G"), CCrystalParticle::Create(m_pDevice, m_pContext))) ||
@@ -573,7 +578,8 @@ HRESULT CLoader::Loading_GameObjects_For_Level_GamePlay()
 			strFileName == TEXT("Sun") || strFileName == TEXT("Bolts0") || strFileName == TEXT("Bolts1") ||
 			strFileName == TEXT("Bolts2") || strFileName == TEXT("Bolts3") || strFileName == TEXT("Lightning_Spark0") ||
 			strFileName == TEXT("Lightning_Spark1") || strFileName == TEXT("Lightning_Spark2") ||
-			strFileName == TEXT("Lightning_Spark3") || strFileName == TEXT("Orb") || strFileName == TEXT("SphereSwirl")
+			strFileName == TEXT("Lightning_Spark3") || strFileName == TEXT("Orb") || strFileName == TEXT("SphereSwirl") ||
+			strFileName == TEXT("Waterfall_Foar")
 			/* || strFileName == TEXT("LavaUpdate2") ||
 			strFileName == TEXT("LavaUpdate") || strFileName == TEXT("Lava_East_A1")*/)
 			continue;

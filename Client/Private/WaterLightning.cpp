@@ -3,6 +3,7 @@
 #include "GameInstance.h"
 #include "Layer.h"
 #include "ParticleController.h"
+#include "Particle_Waterfall.h"
 
 CWaterLightning::CWaterLightning(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: Super(pDevice, pContext)
@@ -39,7 +40,7 @@ void CWaterLightning::Tick(const _float& fTimeDelta)
 	Super::Tick(fTimeDelta);
 
 	m_fFrameTime += fTimeDelta;
-	if (m_fFrameTime > 2.5f)
+	if (m_fFrameTime > 4.3f)
 	{
 		m_pGameInstance->DeleteObject(this);
 	}
@@ -78,6 +79,15 @@ void CWaterLightning::Tick(const _float& fTimeDelta)
 		tParticleDesc.vCenter = GetTransform()->GetPosition();
 		//for (_int i = 0; i < 2; ++i)
 		m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Particle"), LAYERTAG::IGNORECOLLISION, &tParticleDesc);
+
+		if (!m_bWaterSplash)
+		{
+			CParticle_Waterfall* pWaterfall = static_cast<CParticle_Waterfall*>(m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Particle_Waterfall"), LAYERTAG::IGNORECOLLISION));
+			pWaterfall->SetEmitDirection(Vec3::UnitY);
+			pWaterfall->SetLifeTime(1.f);
+			pWaterfall->GetTransform()->Translate(2.f * Vec3::UnitY + GetTransform()->GetPosition());
+			m_bWaterSplash = true;
+		}
 	}
 }
 
@@ -130,7 +140,7 @@ HRESULT CWaterLightning::Render()
 			return E_FAIL;
 	}
 	
-	if ((_int)(m_fFrameTime / 0.3f) % 5 > 3)
+	if ((_int)(m_fFrameTime / 0.3f) % 3 > 3)
 	{
 		if (FAILED(m_pTextureEx2->Bind_ShaderResource(GetShader(), "g_LightningTexture", (_int)(m_fFrameTime / 0.15f) % 4)))
 			return E_FAIL;

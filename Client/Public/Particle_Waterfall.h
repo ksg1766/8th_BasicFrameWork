@@ -31,7 +31,7 @@ public:
 
 public:
 	void			SetEmitDirection(const Vec3& vEmitDirection)	{ m_vEmitDirection = vEmitDirection; }
-	void			SetLifeTime(const _float& fLifeTime)			{ m_fLifeTime = fLifeTime; }
+	void			SetLifeTime(const _float& fMaxLifeTime)			{ m_fMaxLifeTime = fMaxLifeTime; }
 
 private:
 	HRESULT			Bind_ShaderResources(); /* 셰이더 전역변수에 값 던진다. */
@@ -40,6 +40,7 @@ private:
 
 private:
 	CShader*		m_pShaderStream = nullptr;
+	_float			m_fMaxLifeTime = -0.f;
 	_float			m_fLifeTime = 0.f;
 	_float			m_fTimeDelta = 0.f;
 

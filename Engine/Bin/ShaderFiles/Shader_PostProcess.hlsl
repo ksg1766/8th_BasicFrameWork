@@ -221,16 +221,16 @@ PS_OUT PS_MAIN_POSTPROCESS(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
 
-    float4 vDistortion = g_DistortionTarget.Sample(LinearSampler, In.vTexcoord);
+    float fDistortion = g_DistortionTarget.Sample(LinearSampler, In.vTexcoord).x;
 
-    if (any(vDistortion.xy))
+    if (fDistortion > 0.f)
     {
-        vDistortion.xy -= float2(0.5f, 0.5f);
-        vDistortion.xy *= 2.f;
-        vDistortion.xy *= 0.05f;
+        fDistortion -= 0.5f;
+        fDistortion *= 2.f;
+        fDistortion *= 0.05f;
     }
     
-    float4 vScene = g_SceneTarget.Sample(LinearSampler, saturate(In.vTexcoord + vDistortion.xy));
+    float4 vScene = g_SceneTarget.Sample(LinearSampler, saturate(In.vTexcoord + float2(fDistortion, fDistortion)));
     if (vScene.a == 0.f)
         discard;
     

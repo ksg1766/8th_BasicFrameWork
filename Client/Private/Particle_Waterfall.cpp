@@ -35,6 +35,9 @@ void CParticle_Waterfall::Tick(const _float& fTimeDelta)
 {
 	Super::Tick(fTimeDelta);
 
+	if (m_fMaxLifeTime > 0.f && m_fMaxLifeTime < m_fLifeTime)
+		m_pGameInstance->DeleteObject(this);
+
 	m_fTimeDelta = fTimeDelta;
 	m_fLifeTime += m_fTimeDelta;
 }

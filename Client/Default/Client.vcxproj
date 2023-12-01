@@ -331,6 +331,7 @@
     <ClInclude Include="..\Public\TransformView.h" />
     <ClInclude Include="..\Public\View.h" />
     <ClInclude Include="..\Public\Water.h" />
+    <ClInclude Include="..\Public\Waterfall_Foar.h" />
     <ClInclude Include="..\Public\WaterLightning.h" />
     <ClInclude Include="..\Public\Wave_Ring.h" />
     <ClInclude Include="Client.h" />
@@ -486,6 +487,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\Private\Water.cpp" />
+    <ClCompile Include="..\Private\Waterfall_Foar.cpp" />
     <ClCompile Include="..\Private\WaterLightning.cpp" />
     <ClCompile Include="..\Private\Wave_Ring.cpp" />
     <ClCompile Include="..\Public\ImGUI\imgui.cpp">

@@ -4,6 +4,7 @@
 #include "GameObject.h"
 #include "GameInstance.h"
 #include "Transform.h"
+#include "ColliderSphere.h"
 #include "Layer.h"
 #include "PipeLine.h"
 
@@ -98,24 +99,21 @@ HRESULT CQuadTree::Build_QuadTree(_uint iNumLevels)
     return S_OK;
 }
 
-void CQuadTree::Update_QuadTree()
+HRESULT CQuadTree::Clear_QuadTree(_uint iNumLevels)
 {
-#ifdef NDEBUG
-  BoundingFrustum tFrustum;
-  Update_Frustum(tFrustum);
-  FrustumCull(tFrustum, m_pQuadTreeRoot);
-#elif _DEBUG
-  Update_Frustum(m_tBoundingFrustum);
-  FrustumCull(m_tBoundingFrustum, m_pQuadTreeRoot);
-#endif
+    Safe_Release(m_pQuadTreeRoot);
+
+    return S_OK;
 }
 
-void CQuadTree::Update_Frustum(BoundingFrustum& tFrustum)
+void CQuadTree::Update_QuadTree()
 {
-#ifdef NDEBUG
-    BoundingFrustum::CreateFromMatrix(tFrustum, m_pPipeLine->Get_Transform_Matrix(CPipeLine::D3DTS_PROJ));
-    tFrustum.Transform(tFrustum, m_pPipeLine->Get_Transform_Matrix_Inverse(CPipeLine::D3DTS_VIEW));
-#elif _DEBUG
+    Update_Frustum();
+    FrustumCull(m_pQuadTreeRoot);
+}
+
+void CQuadTree::Update_Frustum()
+{
     static _bool bUpdateFrustum = true;
     if (KEY_PRESSING_EX(KEY::CTRL) && KEY_DOWN_EX(KEY::F7))
         bUpdateFrustum = !bUpdateFrustum;
@@ -125,12 +123,12 @@ void CQuadTree::Update_Frustum(BoundingFrustum& tFrustum)
 
     BoundingFrustum::CreateFromMatrix(m_tBoundingFrustum, m_pPipeLine->Get_Transform_Matrix(CPipeLine::D3DTS_PROJ));
     m_tBoundingFrustum.Transform(m_tBoundingFrustum, m_pPipeLine->Get_Transform_Matrix_Inverse(CPipeLine::D3DTS_VIEW));
-#endif
 }
 
 void CQuadTree::Render_QuadTree(const _float& fTimeDelta)
 {
     m_pQuadTreeRoot->Render_QuadTreeNode(fTimeDelta);
+    FrustumCull();
 
 #ifdef _DEBUG
     //m_pEffect->SetWorld(XMMatrixIdentity());
@@ -215,9 +213,9 @@ CQuadTreeNode* CQuadTree::BuildQuadTree(Vec3 vCenter, Vec3 vHalfExtents, _int iD
     return pNode;
 }
 
-void CQuadTree::FrustumCull(BoundingFrustum& tFrustum, CQuadTreeNode* pNode)
+void CQuadTree::FrustumCull(CQuadTreeNode* pNode)
 {
-    switch (tFrustum.Contains(*pNode->GetBoundingBox()))
+    switch (m_tBoundingFrustum.Contains(*pNode->GetBoundingBox()))
     {
     case CONTAINS:
         pNode->CullNode(CONTAINS);
@@ -234,7 +232,37 @@ void CQuadTree::FrustumCull(BoundingFrustum& tFrustum, CQuadTreeNode* pNode)
 
     if (!vecChildren.empty())
         for (_int i = 0; i < 4; ++i)
-            FrustumCull(tFrustum, vecChildren[i]);
+            FrustumCull(vecChildren[i]);
+}
+
+void CQuadTree::FrustumCull()
+{
+    CObjectManager* pObjectManager = GET_INSTANCE(CObjectManager);
+
+    map<LAYERTAG, CLayer*>& mapLayers = pObjectManager->GetCurrentLevelLayers();
+
+    for (_int i = 0; i < DYNAMIC_LAYER_COUNT; ++i)
+    {
+        const auto& pair = mapLayers.find((LAYERTAG)(i + DEFAULT_LAYER_COUNT + 1));
+        if (mapLayers.end() == pair)
+            continue;
+        
+        for (auto& iter : pair->second->GetGameObjects())
+        {
+            CRigidBody* pRigidBody = iter->GetRigidBody();
+            if (!pRigidBody)
+                continue;
+
+            CSphereCollider*& pSphereCollider = pRigidBody->GetSphereCollider();
+            if (!pSphereCollider)
+                continue;
+
+            if (m_tBoundingFrustum.Contains(pSphereCollider->GetBoundingSphere()))
+                iter->AddRenderGroup();
+        }
+    }
+
+    RELEASE_INSTANCE(CObjectManager);
 }
 
 #ifdef _DEBUG

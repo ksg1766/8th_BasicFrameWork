@@ -117,8 +117,8 @@ void CCollisionManager::CheckDynamicCollision(LAYERTAG& eLayerLeft, LAYERTAG& eL
 				CRigidBody* pRigidR = pObjR->GetRigidBody();
 				if (!pRigidR) return false;
 
-				BoundingSphere& tBoundingSphereL = pObjL->GetRigidBody()->GetSphereCollider()->GetBoundingSphere();
-				BoundingSphere& tBoundingSphereR = pObjR->GetRigidBody()->GetSphereCollider()->GetBoundingSphere();
+				BoundingSphere& tBoundingSphereL = pRigidL->GetSphereCollider()->GetBoundingSphere();
+				BoundingSphere& tBoundingSphereR = pRigidR->GetSphereCollider()->GetBoundingSphere();
 				return tBoundingSphereL.Center.z - tBoundingSphereL.Radius < tBoundingSphereR.Center.z - tBoundingSphereR.Radius;
 			});
 

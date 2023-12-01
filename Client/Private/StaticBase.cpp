@@ -137,13 +137,14 @@ HRESULT CStaticBase::Ready_FixedComponents()
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Renderer, TEXT("Prototype_Component_Renderer"))))
 		return E_FAIL;
 
-	/* Com_RigidBody */
-	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::RigidBody, TEXT("Prototype_Component_RigidStatic"))))
-		return E_FAIL;
 
 	if (LEVEL_GAMETOOL == m_pGameInstance->GetCurrentLevelIndex())
-		if(FAILED(GetRigidBody()->InitializeCollider()))
+	{/* Com_RigidBody */
+		if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::RigidBody, TEXT("Prototype_Component_RigidStatic"))))
 			return E_FAIL;
+		if (FAILED(GetRigidBody()->InitializeCollider()))
+			return E_FAIL;
+	}
 
 	return S_OK;
 }

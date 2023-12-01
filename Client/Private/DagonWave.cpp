@@ -45,7 +45,7 @@ void CDagonWave::Tick(const _float& fTimeDelta)
 		m_pGameInstance->DeleteObject(m_pSplash);
 	}
 
-	GetTransform()->Translate(3.f * fTimeDelta * GetTransform()->GetForward());
+	GetTransform()->Translate(4.f * fTimeDelta * GetTransform()->GetForward());
 	m_pSplash->GetTransform()->SetPosition(GetTransform()->GetPosition());
 	m_pSplash->SetEmitDirection(GetTransform()->GetForward());
 }

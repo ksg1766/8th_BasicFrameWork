@@ -26,6 +26,11 @@ CBT_Node::BT_RETURN CGoblin_BT_Suicide::OnUpdate(const _float& fTimeDelta)
 		
 		m_pGameInstance->DeleteObject(m_pGameObject);
 
+		m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Bubble"), LAYERTAG::IGNORECOLLISION)
+			->GetTransform()->Translate(m_pGameObject->GetTransform()->GetPosition());
+		m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Wave_Ring"), LAYERTAG::IGNORECOLLISION)
+			->GetTransform()->Translate(m_pGameObject->GetTransform()->GetPosition());
+
 		return BT_SUCCESS;
 	}
 

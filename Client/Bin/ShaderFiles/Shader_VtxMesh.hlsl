@@ -213,7 +213,7 @@ PS_OUT PS_RIM_MAIN(PS_IN In)
     float fEmissive = 1.0f - value;
     
     fEmissive = smoothstep(0.0f, 1.0f, fEmissive);
-    fEmissive = pow(fEmissive, 2);
+    fEmissive = pow(fEmissive, 3.f);
     
     Out.vEmissive = g_vMtrlEmissive * fEmissive;
     Out.vSunMask = vector(0.f, 0.f, 0.f, 0.f);
@@ -297,6 +297,32 @@ PS_OUT_SHADOW PS_SHADOW_MAIN(PS_IN In)
         discard;
     
     Out.vDepth = vector(In.vProjPos.w / 2000.0f, In.vProjPos.w / 2000.0f, In.vProjPos.w / 2000.0f, 1.f);
+    
+    return Out;
+}
+
+PS_OUT PS_WATERFALLFOAR_MAIN(PS_IN In)
+{
+    float2 vNewUV = In.vTexcoord + g_UVoffset;
+    //float2 vNewUV = In.vTexcoord * 0.5f + g_UVoffset;
+    //vNewUV.y *= 0.5f;
+    ComputeNormalMapping(In.vNormal, In.vTangent, vNewUV);
+	
+    PS_OUT Out = (PS_OUT) 0;
+
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, vNewUV);
+
+    if (vMtrlDiffuse.a < 0.3f)
+        discard;
+    
+    Out.vDiffuse = vMtrlDiffuse;
+    Out.vDiffuse += 0.2f;
+    //Out.vDiffuse.b *= 1.05f;
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+    Out.vEmissive = 0.5f * Out.vDiffuse;
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);
+    
+    Out.vSunMask = vector(0.f, 0.f, 0.f, 0.f);
     
     return Out;
 }
@@ -391,6 +417,21 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_SHADOW_MAIN();
+        ComputeShader = NULL;
+    }
+
+    pass WaterfallFoar // 6
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+
+		/* 여러 셰이더에 대해서 각각 어떤 버젼으로 빌드하고 어떤 함수를 호출하여 해당 셰이더가 구동되는지를 설정한다. */
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_WATERFALLFOAR_MAIN();
         ComputeShader = NULL;
     }
 }

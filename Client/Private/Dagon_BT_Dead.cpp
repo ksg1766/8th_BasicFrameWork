@@ -9,6 +9,8 @@
 
 #include "MainCamera.h"
 #include "MainCameraController.h"
+#include "Layer.h"
+#include "Water.h"
 
 CDagon_BT_Dead::CDagon_BT_Dead()
 {
@@ -41,6 +43,23 @@ CBT_Node::BT_RETURN CDagon_BT_Dead::OnUpdate(const _float& fTimeDelta)
 		CMainCamera* pCamera = static_cast<CMainCamera*>(m_pGameInstance->GetCurrentCamera());
 		CMainCameraController* pController = pCamera->GetController();
 		pController->SetCameraMode(CMainCameraController::CameraMode::DagonToBase);
+
+		// WaterLevel
+		map<LAYERTAG, CLayer*>& mapLayers = m_pGameInstance->GetCurrentLevelLayers();
+		const auto& pair = mapLayers.find(LAYERTAG::TERRAIN);
+
+		CWater* pWater = nullptr;
+		for (auto& iter : pair->second->GetGameObjects())
+		{
+			if (TEXT("Water") == iter->GetObjectTag())
+			{
+				pWater = static_cast<CWater*>(iter);
+				break;
+			}
+		}
+
+		if (nullptr != pWater)
+			pWater->SetMode(CWater::WaterLevelMode::Dessert);
 		//return BT_RUNNING;
 	}
 

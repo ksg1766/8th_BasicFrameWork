@@ -38,6 +38,8 @@ private:
 	_float		m_fFrameTime = 0.f;
 	_bool		m_LightningDead = false;
 
+	_bool		m_bWaterSplash = false;
+
 	CTexture*	m_pTextureEx1 = nullptr;
 	CTexture*	m_pTextureEx2 = nullptr;
 

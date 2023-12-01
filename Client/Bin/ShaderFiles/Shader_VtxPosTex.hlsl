@@ -266,7 +266,7 @@ PS_WATER_OUT PS_WATER_MAIN(PS_WATER_IN In)
     
     In.vTexcoord.y += g_fWaterTranslation;
     
-    vNormalMap = g_NormalTexture.Sample(LinearSampler, In.vTexcoord * 4.f);
+    vNormalMap = g_NormalTexture.Sample(LinearSampler, In.vTexcoord * 8.f);
     vNormal = (vNormalMap.xyz * 2.0f) - 1.0f;
     
     vReflectTexCoord.x = In.vReflectionPos.x / In.vReflectionPos.w / 2.0f + 0.5f;
@@ -281,15 +281,16 @@ PS_WATER_OUT PS_WATER_MAIN(PS_WATER_IN In)
     vReflectionColor = g_ReflectionTexture.Sample(LinearSampler, vReflectTexCoord);
     vRefractionColor = g_RefractionTexture.Sample(LinearSampler, vRefractTexCoord);
 
-    //float fFresnelTerm = 0.f;
-    //vector vLook = In.vWorldPos - g_vCamPosition;
-    //vLook = normalize(vLook);
+    float fFresnelTerm = 0.f;
+    vector vLook = In.vProjPos - g_vCamPosition;
+    vLook = normalize(vLook);
     
-    //fFresnelTerm = 0.02 + 0.97f * pow((1 - dot(vLook, float4(vNormal, 1.f))), 5);
-    //float4 vCombinedColor = vRefractionColor * (1 - fFresnelTerm) * vRefractionColor.a * vReflectionColor.a + vReflectionColor * fFresnelTerm * vReflectionColor.a * vRefractionColor.a;
-    //Out.vColor = vCombinedColor * float4(0.95f, 1.00f, 1.05f, 1.0f);
+    fFresnelTerm = 0.02f + 0.97f * pow((1.f - dot(vLook, float4(vNormal, 1.f))), 5.f);
+    float4 vCombinedColor = vRefractionColor * (1 - fFresnelTerm) * vRefractionColor.a * vReflectionColor.a + vReflectionColor * fFresnelTerm * vReflectionColor.a * vRefractionColor.a;
+    Out.vColor = saturate(vCombinedColor * float4(0.95f, 1.00f, 1.05f, 1.0f));
     //Out.vColor = lerp(vReflectionColor, vRefractionColor, 0.6f) * float4(0.95f, 1.00f, 1.05f, 1.0f);
-    Out.vColor = lerp(vReflectionColor, vRefractionColor, 0.3f) * float4(0.90f, 1.00f, 1.10f, 1.0f) + float4(0.15f, 0.15f, 0.15f, 0.0f); //
+    
+    //Out.vColor = lerp(vReflectionColor, vRefractionColor, 0.5f) * float4(0.90f, 1.00f, 1.10f, 1.0f) + float4(0.15f, 0.15f, 0.15f, 0.0f); //
     Out.vNormal = float4(vNormal, 0.f);
     //Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);
