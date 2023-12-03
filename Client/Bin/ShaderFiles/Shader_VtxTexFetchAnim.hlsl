@@ -268,9 +268,15 @@ PS_OUT PS_DISSOLVE_MAIN(PS_IN In)
     return Out;
 }
 
-PS_OUT PS_ALPHA_MAIN(PS_IN In)
+struct PS_ALPHA_OUT
 {
-    PS_OUT Out = (PS_OUT) 0;
+    float4 vDiffuse : SV_TARGET0;
+    float4 vDistortion : SV_TARGET1;
+};
+
+PS_ALPHA_OUT PS_ALPHA_MAIN(PS_IN In)
+{
+    PS_ALPHA_OUT Out = (PS_ALPHA_OUT) 0;
 	
     vector vMtrlDiffuse = g_DiffuseTexture.Sample(PointSampler, In.vTexcoord);
 
@@ -324,35 +330,32 @@ PS_OUT_SHADOW PS_SHADOW_MAIN(PS_IN In)
     return Out;
 }
 
-PS_OUT PS_WAVE_MAIN(PS_IN In)
+PS_ALPHA_OUT PS_WAVE_MAIN(PS_IN In)
 {
     float2 vNewUV = float2(In.vTexcoord.x/* - g_fFrameTime*/, In.vTexcoord.y + 0.25f * g_fFrameTime);
     float4 vColor = g_DiffuseTexture.Sample(LinearSampler, vNewUV);
     
-    ComputeNormalMapping(In.vNormal, In.vTangent, In.vTexcoord);
+    //ComputeNormalMapping(In.vNormal, In.vTangent, In.vTexcoord);
 	
-    PS_OUT Out = (PS_OUT) 0;
-	
-    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+    PS_ALPHA_OUT Out = (PS_ALPHA_OUT) 0;
 
-    if (vMtrlDiffuse.a < 0.3f)
+    if (vColor.a < 0.001f)
         discard;
     
-    if (vColor.r > 0.1f)
-        Out.vDiffuse = vColor * 1.5f;
-    else
-        Out.vDiffuse = float4(0.1f, 0.1f, 0.17f, 1.f);
+    Out.vDiffuse = vColor * 1.5f;    
+    Out.vDiffuse.rgb += float3(0.1f, 0.1f, 0.17f);
+    Out.vDiffuse.a = 0.7f;
     
-    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
-    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);
-    Out.vSunMask = vector(0.f, 0.f, 0.f, 0.f);
+    //Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+    //Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);
+    //Out.vSunMask = vector(0.f, 0.f, 0.f, 0.f);
     
     return Out;
 }
 
 technique11 DefaultTechnique
 {
-    pass Mesh
+    pass Mesh // 0
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -366,7 +369,7 @@ technique11 DefaultTechnique
         ComputeShader = NULL;
     }
 
-    pass RimMesh
+    pass RimMesh // 1
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -380,7 +383,7 @@ technique11 DefaultTechnique
         ComputeShader = NULL;
     }
 
-    pass DissolveMesh
+    pass DissolveMesh // 2
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -394,7 +397,7 @@ technique11 DefaultTechnique
         ComputeShader = NULL;
     }
 
-    pass AlphaMesh
+    pass AlphaMesh // 3
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -407,7 +410,7 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_ALPHA_MAIN();
     }
 
-    pass BlueMesh
+    pass BlueMesh // 4
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -439,7 +442,7 @@ technique11 DefaultTechnique
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
-        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
 
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;

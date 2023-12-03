@@ -18,22 +18,10 @@ public:
 	typedef struct tagCSwordTrailDesc
 	{
 		CModel*		pModel = nullptr;
-		_float		fLifeTime = 0.3f;
+		//_float	fLifeTime = 0.3f;
 
-		Matrix		matPreWorld = Matrix::Identity;
-		Matrix		matCurWorld = Matrix::Identity;
-		TWEENDESC	pPreTweenDesc;
-		TWEENDESC	pCurTweenDesc;
-
-		Matrix*		pMatOffsetTop = nullptr;
-		Matrix*		pMatOffsetBottom = nullptr;
-
-		_int		iBoneIndex = 0;
-
-		/*Matrix		matPrePrePreWorld = Matrix::Identity;
-		Matrix		matPrePreWorld = Matrix::Identity;
-		TWEENDESC	tPrePreTweenDesc;
-		TWEENDESC	tPrePrePreTweenDesc;*/
+		Matrix		matOffsetTop;
+		_int		iIndex = 0;
 
 	}SWORDTRAIL_DESC;
 
@@ -51,25 +39,25 @@ public:
 	virtual void	DebugRender()						override;
 	virtual HRESULT Render()							override;
 
+public:
+
 private:
-	CModel*			m_pModel = nullptr;
+	CShader*		m_pShaderStream = nullptr;
+	CModel*			m_pModel		= nullptr;
 
-	CTexture*		m_pAlphaTexture = nullptr;
+	CTexture*		m_pMaskTexture	= nullptr;
 
-	_float			m_fLifeTime = 0.3f;
-	Matrix			m_matPrePrePreWorld = Matrix::Identity;
-	Matrix			m_matPrePreWorld = Matrix::Identity;
-	Matrix			m_matPreWorld = Matrix::Identity;
-	TWEENDESC		m_tPrePrePreTweenDesc;
-	TWEENDESC		m_tPrePreTweenDesc;
-	TWEENDESC		m_tPreTweenDesc;
-	TWEENDESC		m_tCurTweenDesc;
-	_int			m_iBoneIndex = 0;
+	_float			m_fLifeTime		= 0.3f;
+	_float			m_fTimeDelta	= 0.0f;
 
-	Matrix*			m_pOffsetTop = nullptr;
+	//TWEENDESC		m_tTweenDesc;
+	_int			m_iBoneIndex	= 0;
+	_int			m_iTextureIndex	= 0;
+
+	Matrix			m_matOffsetTop;
 	Matrix*			m_pOffsetBottom = nullptr;
 
-	Vec2			m_vDistortionOffset = Vec2(0.f, 0.f);
+	//Vec2			m_vDistortionOffset = Vec2(0.f, 0.f);
 
 private:
 	HRESULT			Bind_ShaderResources(); /* 셰이더 전역변수에 값 던진다. */

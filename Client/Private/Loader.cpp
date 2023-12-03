@@ -61,6 +61,8 @@
 #include "Sun.h"
 #include "SphereSwirl.h"
 #include "Waterfall_Foar.h"
+#include "Ring_Flat_Wave.h"
+#include "WaterShield.h"
 #include "SwordTrail.h"
 
 CLoader::CLoader(ID3D11Device * pDevice, ID3D11DeviceContext * pContext)
@@ -215,16 +217,6 @@ HRESULT CLoader::Loading_Components_For_Level_GamePlay()
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
 
-	/* For.Prototype_Component_Texture_Sky */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Sky"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/SkyBox/Sky_%d.dds"), 4))))
-		return E_FAIL;
-
-	/* For.Prototype_Component_Texture_Terrain*/
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Terrain"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Tile0.jpg")))))
-		return E_FAIL;
-	
 	/* For.Prototype_Component_Texture_Strife_Ammo_Default*/
 	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Strife_Ammo_Default"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Ammo/Strife_Ammo_Default_%d.png"), 4))))
@@ -560,6 +552,14 @@ HRESULT CLoader::Loading_GameObjects_For_Level_GamePlay()
 	/* For.Prototype_GameObject_SphereSwirl */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_SphereSwirl"), CSphereSwirl::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+	
+	/* For.Prototype_GameObject_Ring_Flat_Wave */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Ring_Flat_Wave"), CRing_Flat_Wave::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	
+	/* For.Prototype_GameObject_WaterShield */
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_WaterShield"), CRing_Flat_Wave::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
 	/* For.Prototype_GameObject_Static */
 	wstring strStaticFilePath = TEXT("../Bin/Resources/Models/Static/");
@@ -579,7 +579,8 @@ HRESULT CLoader::Loading_GameObjects_For_Level_GamePlay()
 			strFileName == TEXT("Bolts2") || strFileName == TEXT("Bolts3") || strFileName == TEXT("Lightning_Spark0") ||
 			strFileName == TEXT("Lightning_Spark1") || strFileName == TEXT("Lightning_Spark2") ||
 			strFileName == TEXT("Lightning_Spark3") || strFileName == TEXT("Orb") || strFileName == TEXT("SphereSwirl") ||
-			strFileName == TEXT("Waterfall_Foar")
+			strFileName == TEXT("Waterfall_Foar") || strFileName == TEXT("Ring_Flat_Wave") ||
+			strFileName == TEXT("WaterShield")
 			/* || strFileName == TEXT("LavaUpdate2") ||
 			strFileName == TEXT("LavaUpdate") || strFileName == TEXT("Lava_East_A1")*/)
 			continue;
@@ -727,6 +728,10 @@ HRESULT CLoader::Loading_GameObjects_For_Level_GameTool()
 
 	/* For.Prototype_GameObject_SkyBox */
 	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_SkyBox"), CSkyBox::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Fire*/
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_Fire"), CFire::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	RELEASE_INSTANCE(CGameInstance);

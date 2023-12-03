@@ -40,15 +40,26 @@ HRESULT CMoloch_Sword::Initialize(void* pArg)
 		m_vecFires.push_back(pFire);
 	}
 
-	/*Matrix matTrailTop;
-
 	const Matrix& matPivot = GetModel()->GetPivotMatrix();
 
-	XMStoreFloat4x4(&matTrailTop, XMMatrixTranslation(-0.6f - 0.24f * 11, 0.5f + 0.15f * 11, -0.4f));
-	matTrailTop = matPivot * matTrailTop;
+	Matrix matTrail;
+	//XMStoreFloat4x4(&matTrail, XMMatrixTranslation(-0.6f - 0.24f * 11, 0.5f + 0.15f * 11, -0.4f)); 
+	
+	//XMStoreFloat4x4(&matTrail, XMMatrixTranslation(0.f, 5.f, 0.f)); 
+	//matTrail = matPivot * matTrail;
 
-	m_matOffsetTop = matTrailTop;
-	m_matOffsetBottom = matOffset[0];*/
+
+	CSwordTrail::SWORDTRAIL_DESC desc;
+	desc.pModel = GetModel();
+
+	for (_int i = 0; i < 10; ++i)
+	{
+		XMStoreFloat4x4(&matTrail, matOffset[i]);
+		matTrail = matPivot * matTrail;
+		desc.matOffsetTop = matTrail;
+		desc.iIndex = i % 4;
+		m_pFire[i] = static_cast<CSwordTrail*>(m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_SwordTrail"), LAYERTAG::IGNORECOLLISION, &desc));
+	}
 
 	return S_OK;
 }
@@ -61,8 +72,6 @@ void CMoloch_Sword::Tick(const _float& fTimeDelta)
 void CMoloch_Sword::LateTick(const _float& fTimeDelta)
 {
 	Super::LateTick(fTimeDelta);
-
-	//SwordTrailEmittor(0.5f);
 
 	GetRenderer()->Add_RenderGroup(CRenderer::RG_NONBLEND, this);
 }
@@ -153,37 +162,7 @@ HRESULT CMoloch_Sword::Bind_FireResources()
 	for (_int i = 0; i < m_vecFires.size(); ++i)
 		m_vecFires[i]->GetTransform()->Set_WorldMatrix(GetTransform()->WorldMatrix());
 
-	/*m_matPrePrePreWorld = m_matPrePreWorld;
-	m_matPrePreWorld = m_matPreWorld;
-	m_tPrePrePreTweenDesc = m_tPrePreTweenDesc;
-	m_tPrePreTweenDesc = m_tPreTweenDesc;*/
-
-	//m_matPreWorld = GetTransform()->WorldMatrix();
-	//m_tPreTweenDesc = GetModel()->GetTweenDesc();
-
 	return S_OK;
-}
-
-void CMoloch_Sword::SwordTrailEmittor(const _float& fLifeTIme)
-{
-	CSwordTrail::SWORDTRAIL_DESC desc;
-
-	desc.fLifeTime			= fLifeTIme;
-	desc.pModel				= GetModel();
-	desc.matCurWorld		= GetTransform()->WorldMatrix();
-	desc.matPreWorld		= m_matPreWorld;
-	desc.pCurTweenDesc		= GetModel()->GetTweenDesc();
-	desc.pPreTweenDesc		= m_tPreTweenDesc;
-	desc.pMatOffsetTop		= &m_matOffsetTop;
-	desc.pMatOffsetBottom	= &m_matOffsetBottom;
-	desc.iBoneIndex			= GetModel()->GetSocketBoneIndex();
-
-	/*desc.matPrePrePreWorld	= m_matPrePrePreWorld;
-	desc.matPrePreWorld		= m_matPrePreWorld;
-	desc.tPrePrePreTweenDesc= m_tPrePrePreTweenDesc;
-	desc.tPrePreTweenDesc	= m_tPrePreTweenDesc;*/
-	
-	static_cast<CSwordTrail*>(m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_SwordTrail"), LAYERTAG::IGNORECOLLISION, &desc));
 }
 
 CMoloch_Sword* CMoloch_Sword::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

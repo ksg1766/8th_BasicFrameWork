@@ -52,8 +52,8 @@ void CLightning_Spark::Tick(const _float& fTimeDelta)
 		tParticleDesc.vSpeedMin = _float3(-3.3f, 7.7f, -3.3f);
 		tParticleDesc.fLifeTimeMax = 1.7f;
 		tParticleDesc.fLifeTimeMin = 1.2f;
-		tParticleDesc.fScaleMin = 0.13f;
-		tParticleDesc.fScaleMax = 0.25f;
+		tParticleDesc.fScaleMin = 0.15f;
+		tParticleDesc.fScaleMax = 0.27f;
 		tParticleDesc.iPass = 2;
 		tParticleDesc.vRange = Vec3(3.5f, 1.f, 3.5f);
 		tParticleDesc.vCenter = GetTransform()->GetPosition();
@@ -62,8 +62,8 @@ void CLightning_Spark::Tick(const _float& fTimeDelta)
 
 		tParticleDesc.vSpeedMax = _float3(3.3f, 7.7f, 3.3f);
 		tParticleDesc.vSpeedMin = _float3(-3.3f, 5.7f, -3.3f);
-		tParticleDesc.fScaleMin = 0.1f;
-		tParticleDesc.fScaleMax = 0.2f;
+		tParticleDesc.fScaleMin = 0.13f;
+		tParticleDesc.fScaleMax = 0.23f;
 
 		tParticleDesc.eType = CParticleController::ParticleType::FLOAT;
 		m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Particle"), LAYERTAG::IGNORECOLLISION, &tParticleDesc);

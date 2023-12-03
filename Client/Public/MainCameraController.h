@@ -9,7 +9,7 @@ class CMainCameraController : public CMonoBehaviour
 {
 	using Super = CMonoBehaviour;
 public:
-	enum class CameraMode { Default = 0, Dagon, DagonToBase, Moloch, MolochToBase, End };
+	enum class CameraMode { Default = 0, Dagon, DagonToBase, GodRay, GodRayToBase, Moloch, MolochToBase, End };
 
 private:
 	CMainCameraController(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -34,8 +34,13 @@ private:
 
 	void	Dagon(const _float& fTimeDelta);
 	void	DagonToBase(const _float& fTimeDelta);
+
+	void	GodRayScene(const _float& fTimeDelta);
+	void	GodRayEnd(const _float& fTimeDelta);
+
 	void	Moloch(const _float& fTimeDelta);
 	void	MolochToBase(const _float& fTimeDelta);
+
 
 private:
 	CTransform*		m_pTransform = nullptr;
@@ -44,6 +49,8 @@ private:
 	Vec3			m_vOffset = Vec3(0.f, 13.f, -15.f);
 	Vec3			m_vBaseOffset = Vec3(0.f, 13.f, -15.f);
 	Vec3			m_vOffsetDagon = Vec3(14.f, 17.f, -14.f);
+	Vec3			m_vOffsetGodRay = Vec3(-12.5f, -5.f, -17.f);
+	Vec3			m_vOffsetGodRayEnd = Vec3(0.f, 4.f, -25.5f);
 	_float			m_fTimer = 0.f;
 
 	CameraMode		m_eCameraMode = CameraMode::End;

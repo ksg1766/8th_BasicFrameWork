@@ -45,7 +45,7 @@ HRESULT CDagon::Initialize(void* pArg)
 	GetTransform()->RotateYAxisFixed(Vec3(0.f, 180.f, 0.f));
 	GetTransform()->Translate(Vec3(-147.f, 28.f, 237.f));
 
-	m_pGameInstance->Get_LightDesc(0)->vDiffuse = _float4(0.3f, 0.3f, 0.3f, 1.f);
+	m_pGameInstance->Get_LightDesc(0)->vDiffuse = _float4(0.5f, 0.5f, 0.5f, 1.f);
 
 	return S_OK;
 }
@@ -56,6 +56,13 @@ void CDagon::Tick(const _float& fTimeDelta)
 	{
 		m_pController->StartRain();
 		m_bRainStarted = true;
+	}
+
+	if (!m_pFlatWave)
+	{
+		m_pFlatWave = m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Ring_Flat_Wave"), LAYERTAG::IGNORECOLLISION);
+		m_pFlatWave->GetTransform()->SetScale(Vec3(5.f, 0.f, 5.f));
+		m_pFlatWave->GetTransform()->Translate(GetTransform()->GetPosition() + 0.5f * Vec3::UnitY);
 	}
 
 	Super::Tick(fTimeDelta);
@@ -295,5 +302,7 @@ CGameObject* CDagon::Clone(void* pArg)
 
 void CDagon::Free()
 {
+	m_pGameInstance->DeleteObject(m_pFlatWave);
+
 	Super::Free();
 }

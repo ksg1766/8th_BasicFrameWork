@@ -22,6 +22,7 @@ private:
 	_bool				IsZeroHP();
 	void				HitOrMiss();
 	_bool				m_bHitOrMiss;
+	CGameObject*		m_pWaterShield = nullptr;
 
 public:
 	static	CDagon_BT_WaveLoop* Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController);

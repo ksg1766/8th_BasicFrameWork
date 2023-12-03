@@ -91,7 +91,8 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 	LightDesc.eLightType = LIGHT_DESC::LIGHT_DIRECTIONAL;
 	//LightDesc.vLightDir = _float4(1.f, -1.5f, 1.f, 0.f);
 	//LightDesc.vLightDir = _float4(-0.53f, -0.43f, -0.72f, 0.f);
-	LightDesc.vLightDir = _float4(-0.745f, -0.445f, 0.45f, 0.f);
+	//LightDesc.vLightDir = _float4(-0.745f, -0.445f, 0.45f, 0.f);
+	LightDesc.vLightDir = _float4(-0.45f, -0.445f, -0.745f, 0.f);
 
 	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
 	LightDesc.vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
@@ -142,7 +143,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Terrain()
 	LAYERTAG	eLayerTag = LAYERTAG::TERRAIN;
 
 	//CWater::WATER_DESC tWaterDesc = { Vec3(0.f, 28.25f, 265.f), Vec2(1280.f, 500.f) };
-	CWater::WATER_DESC tWaterDesc = { Vec3(0.f, -3.f, 265.f), Vec2(1280.f, 500.f) };
+	CWater::WATER_DESC tWaterDesc = { Vec3(0.f, 0.f, 265.f), Vec2(1280.f, 500.f) };
 	pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_Water"), &tWaterDesc);
 	if (nullptr == pGameObject)	return E_FAIL;
 
@@ -359,9 +360,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_UnitGround()
 	}*/
 
 	/*pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_Moloch"));
-	if (nullptr == pGameObject)	return E_FAIL;
+	if (nullptr == pGameObject)	return E_FAIL;*/
 
-	pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_Dagon"));
+	/*pGameObject = m_pGameInstance->Add_GameObject(LEVEL_GAMEPLAY, eLayerTag, TEXT("Prototype_GameObject_Dagon"));
 	if (nullptr == pGameObject)	return E_FAIL;*/
 
 	return S_OK;

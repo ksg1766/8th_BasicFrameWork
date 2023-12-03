@@ -248,7 +248,7 @@ void CMonsterController::Hit(_int iDamage)
 			m_pRigidBody->IsKinematic(false);
 	}
 
-	m_iHitEffectCount = 20;
+	m_iHitEffectCount = 7;
 	m_pGameObject->GetShader()->SetPassIndex(1);
 }
 

@@ -196,10 +196,11 @@ PS_BOLTS_OUT PS_WATERBOLTS_MAIN(PS_BOLTS_IN In)
     
     vColor = 1.f - vColor;
     vColor.rg = 1.f - (0.8f * vColor.b);
-    vColor.b = 1.2f;
-    vColor.rg *= 0.5f;
+    vColor.b = 1.5f;
+    vColor.g *= 0.7f;
+    vColor.r *= 0.3f;
     
-    Out.vDiffuse = float4(vColor, 0.7f);
+    Out.vDiffuse = float4(vColor, 1.f);
     Out.vEmissive = float4(g_fEmissivePower * vColor, 1.f);
     
     return Out;

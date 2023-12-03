@@ -54,10 +54,10 @@ void CTremorCrystal::Tick(const _float& fTimeDelta)
 		m_pGameInstance->DeleteObject(this);
 		m_pGameInstance->DeleteObject(m_pCrack);
 		CParticleController::PARTICLE_DESC tParticleDesc;
-		tParticleDesc.vSpeedMax = _float3(4.f, 10.f, 4.f);
-		tParticleDesc.vSpeedMin = _float3(-4.f, 7.f, -4.f);
-		tParticleDesc.fLifeTimeMin = 1.7f;
-		tParticleDesc.fLifeTimeMax = 2.5f;
+		tParticleDesc.vSpeedMax = _float3(4.f, 8.5f, 4.f);
+		tParticleDesc.vSpeedMin = _float3(-4.f, 5.7f, -4.f);
+		tParticleDesc.fLifeTimeMin = 2.f;
+		tParticleDesc.fLifeTimeMax = 2.7f;
 		tParticleDesc.fScaleMax = 0.3f;
 		tParticleDesc.fScaleMin = 0.15f;
 		tParticleDesc.vCenter = GetTransform()->GetPosition();

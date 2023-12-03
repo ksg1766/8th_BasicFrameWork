@@ -115,12 +115,12 @@ void CMoloch_BT_Geyser1::FirstRun()
 				m_vecCrystal[i]->GetTransform()->Translate(vCreatePosition[i]);
 			}
 			CParticleController::PARTICLE_DESC tParticleDesc;
-			tParticleDesc.vSpeedMax = _float3(4.f, 10.f, 4.f);
-			tParticleDesc.vSpeedMin = _float3(-4.f, 7.f, -4.f);
-			tParticleDesc.fLifeTimeMin = 1.7f;
-			tParticleDesc.fLifeTimeMax = 2.5f;
+			tParticleDesc.vSpeedMax = _float3(4.f, 7.5f, 4.f);
+			tParticleDesc.vSpeedMin = _float3(-4.f, 5.0f, -4.f);
+			tParticleDesc.fLifeTimeMin = 2.f;
+			tParticleDesc.fLifeTimeMax = 2.7f;
 			tParticleDesc.fScaleMax = 0.3f;
-			tParticleDesc.fScaleMin = 0.15f;
+			tParticleDesc.fScaleMin = 0.17f;
 
 			tParticleDesc.eType = CParticleController::ParticleType::RIGIDBODY;
 			for (_int i = 0; i < 7; ++i)
@@ -194,10 +194,12 @@ void CMoloch_BT_Geyser1::SecondRun()
 
 			CParticleController::PARTICLE_DESC tParticleDesc;
 			tParticleDesc.eType = CParticleController::ParticleType::RIGIDBODY;
-			tParticleDesc.vSpeedMax = _float3(4.f, 10.f, 4.f);
-			tParticleDesc.vSpeedMin = _float3(-4.f, 7.f, -4.f);
-			tParticleDesc.fScaleMax = 0.4f;
-			tParticleDesc.fScaleMin = 0.2f;
+			tParticleDesc.vSpeedMax = _float3(4.f, 7.5f, 4.f);
+			tParticleDesc.vSpeedMin = _float3(-4.f, 5.0f, -4.f);
+			tParticleDesc.fLifeTimeMin = 2.f;
+			tParticleDesc.fLifeTimeMax = 2.7f;
+			tParticleDesc.fScaleMax = 0.3f;
+			tParticleDesc.fScaleMin = 0.17f;
 
 			for (_int i = 7; i < 13; ++i)
 			{

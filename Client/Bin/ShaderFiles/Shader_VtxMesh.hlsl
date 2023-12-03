@@ -327,6 +327,51 @@ PS_OUT PS_WATERFALLFOAR_MAIN(PS_IN In)
     return Out;
 }
 
+struct PS_ALPHA_OUT
+{
+    float4 vColor : SV_TARGET0;
+    float4 vDistortion : SV_TARGET1;
+};
+
+PS_ALPHA_OUT PS_FLATWAVE_MAIN(PS_IN In)
+{
+    float2 vNewUV = In.vTexcoord + g_UVoffset;
+    //float2 vNewUV = In.vTexcoord * 0.5f + g_UVoffset;
+    //vNewUV.y *= 0.5f;
+	
+    PS_ALPHA_OUT Out = (PS_ALPHA_OUT) 0;
+
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, 2.f * vNewUV);
+
+    if (vMtrlDiffuse.r < 0.01f)
+        discard;
+    
+    Out.vColor = vMtrlDiffuse;
+    Out.vColor.a = 0.5f;
+    
+    return Out;
+}
+
+PS_ALPHA_OUT PS_WATERSHIELD_MAIN(PS_IN In)
+{
+    float2 vNewUV = In.vTexcoord + g_UVoffset;
+    //float2 vNewUV = In.vTexcoord * 0.5f + g_UVoffset;
+    //vNewUV.y *= 0.5f;
+	
+    PS_ALPHA_OUT Out = (PS_ALPHA_OUT) 0;
+
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, 2.f * vNewUV);
+
+    if (vMtrlDiffuse.r < 0.01f)
+        discard;
+    
+    Out.vColor = vMtrlDiffuse;
+    Out.vColor.a = 0.5f;
+    Out.vDistortion = Out.vColor * 0.01f;
+    
+    return Out;
+}
+
 technique11 DefaultTechnique
 {
 	/* */
@@ -432,6 +477,36 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_WATERFALLFOAR_MAIN();
+        ComputeShader = NULL;
+    }
+
+    pass FlatWave // 7
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		/* 여러 셰이더에 대해서 각각 어떤 버젼으로 빌드하고 어떤 함수를 호출하여 해당 셰이더가 구동되는지를 설정한다. */
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_FLATWAVE_MAIN();
+        ComputeShader = NULL;
+    }
+    
+    pass WaterShield // 8
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+		/* 여러 셰이더에 대해서 각각 어떤 버젼으로 빌드하고 어떤 함수를 호출하여 해당 셰이더가 구동되는지를 설정한다. */
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_WATERSHIELD_MAIN();
         ComputeShader = NULL;
     }
 }

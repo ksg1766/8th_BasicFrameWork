@@ -174,7 +174,7 @@ HRESULT CHellBrute::Ready_Scripts()
 		m_pController = dynamic_cast<CMonsterController*>(m_vecScripts[0]);
 
 		/* Com_MonsterStats */
-		CMonsterStats::MONSTERSTAT stats = { 100, 5 };
+		CMonsterStats::MONSTERSTAT stats = { 150, 5 };
 		if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::Script, TEXT("Prototype_Component_MonsterStats"), &stats)))
 			return E_FAIL;
 
@@ -242,8 +242,8 @@ HRESULT CHellBrute::Ready_Scripts()
 			pBehaviorTree->SetRoot(pRoot);
 
 			BLACKBOARD& hashBlackBoard = pBehaviorTree->GetBlackBoard();
-			hashBlackBoard.emplace(TEXT("Sight"), new tagBlackBoardData<_float>(14.f));
-			hashBlackBoard.emplace(TEXT("MeleeRange"), new tagBlackBoardData<_float>(6.f));
+			hashBlackBoard.emplace(TEXT("Sight"), new tagBlackBoardData<_float>(17.f));
+			hashBlackBoard.emplace(TEXT("MeleeRange"), new tagBlackBoardData<_float>(7.f));
 		}
 	}
 

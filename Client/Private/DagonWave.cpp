@@ -54,7 +54,7 @@ void CDagonWave::LateTick(const _float& fTimeDelta)
 {
 	Super::LateTick(fTimeDelta);
 
-	GetRenderer()->Add_RenderGroup(CRenderer::RG_NONBLEND, this);
+	GetRenderer()->Add_RenderGroup(CRenderer::RG_BLEND, this);
 }
 
 void CDagonWave::DebugRender()

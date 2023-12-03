@@ -32,6 +32,14 @@ CBT_Node::BT_RETURN CHellBrute_BT_Fire::OnUpdate(const _float& fTimeDelta)
 
 	CMonsterController* pController = static_cast<CMonsterController*>(m_pController);
 	pController->Look(vTargetPos);
+	m_pGameObject->GetTransform()->RotateYAxisFixed(Vec3(0.f, -3.f, 0.f));
+
+	m_fFR_Default_Timer -= fTimeDelta;
+	if (m_fFR_Default_Timer < 0.f)
+	{
+		Fire();
+		m_fFR_Default_Timer = m_fFR_Default;
+	}
 	//pController->GetAttackMessage();
 
 	return BT_RUNNING;
@@ -106,19 +114,25 @@ _bool CHellBrute_BT_Fire::IsZeroHP()
 
 void CHellBrute_BT_Fire::Fire()
 {
-	//CGameObject* pAmmo = nullptr;
-	//CStrife_Ammo::AMMOPROPS tProps;
+	CGameObject* pAmmo = nullptr;
+	CStrife_Ammo::AMMOPROPS tProps;
 
-	//Vec3 vFireOffset;
-	//Quaternion qRot = m_pTransform->GetRotationQuaternion();
+	Vec3 vFireOffset;
 
-	//tProps = { eAmmoType, 7, 0, /*10*/50, 70.f * m_pTransform->GetForward(), false, 5.f };
-	//pAmmo = m_pGameInstance->CreateObject(L"Prototype_GameObject_Strife_Ammo_Default", LAYERTAG::IGNORECOLLISION, &tProps);
-	//vFireOffset = m_pTransform->GetPosition() + 2.2f * m_pTransform->GetForward() - (m_bFireLR * 0.35f - 0.175f) * m_pTransform->GetRight() + 1.7f * m_pTransform->GetUp();
-	//m_bFireLR = !m_bFireLR;
+	CTransform* pTransform = m_pGameObject->GetTransform();
+	Quaternion qRot = m_pGameObject->GetTransform()->GetRotationQuaternion();
 
-	//pAmmo->GetTransform()->Rotate(qRot);
-	//pAmmo->GetTransform()->SetPosition(vFireOffset);
+	tProps = { CStrife_Ammo::AmmoType::DEFAULT, 7, 0, 10, 7.5f * pTransform->GetForward(), false, 1.8f };
+	pAmmo = m_pGameInstance->CreateObject(L"Prototype_GameObject_Strife_Ammo_Default", LAYERTAG::UNIT_AIR, &tProps);
+	vFireOffset = pTransform->GetPosition() + 3.f * pTransform->GetForward() + 1.9f * pTransform->GetRight() + 1.5f * pTransform->GetUp();
+
+	CTransform* pAmmoTransform = pAmmo->GetTransform();
+	pAmmoTransform->SetScale(Vec3(0.4f, 3.2f, 1.f));
+	pAmmoTransform->Rotate(qRot);
+	pAmmoTransform->RotateYAxisFixed(Vec3(0.f, 2.5f, 0.f));
+	pAmmoTransform->SetPosition(vFireOffset);
+
+	static_cast<CStrife_Ammo_Default*>(pAmmo)->SetColor(Color(1.f, 0.15f, 0.23f));
 }
 
 CHellBrute_BT_Fire* CHellBrute_BT_Fire::Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController)

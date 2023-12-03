@@ -125,7 +125,7 @@ void CPrefabsView::TapGroups()
 		{
 			const _char* items[] = 
 			{
-				"Cliff_Rock_A", "Desert_Rock_Tall_A", "Obelisk_A", "Pillar_LG", "Pillar_Square_A", "RuinsPillar_4m_A", "RuinsPillar_4m_B",
+				"Cliff_Rock_A", "Desert_Rock_Tall_A", "Obelisk_A", "Pillar_Arch_Merged", "Pillar_LG", "Pillar_Square_A", "RuinsPillar_4m_A", "RuinsPillar_4m_B",
 				"RuinsPillar_5m_A", "RuinsPillar_5m_Arch_A", "RuinsPillar_5m_Arch_DMG",
 				"RuinsPillar_5m_B", "RuinsWall_A", "RuinsWall_B", "RuinWall_CNR_A", "RuinWall_CNR_B",
 				"SM_Fortress_WoodTower_A", "SM_Fortress_WoodTower_B", "SM_Fortress_WoodTower_C", "Main_Waterfall", "Waterfall_Foar", "Water_Hole_A", "Water_Hole_B"

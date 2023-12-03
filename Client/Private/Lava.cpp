@@ -44,7 +44,7 @@ void CLava::Tick(const _float& fTimeDelta)
 	if (m_bRendered)
 		return;
 
-	m_UVoffset = m_UVoffset + _float2(-fTimeDelta * 0.0005f, -fTimeDelta * 0.0005f);
+	m_UVoffset = m_UVoffset + _float2(-fTimeDelta * 0.0008f, -fTimeDelta * 0.0008f);
 
 	if (m_UVoffset.x < 0.f)	m_UVoffset.x += 1.f;
 	if (m_UVoffset.y < 0.f)	m_UVoffset.y += 1.f;

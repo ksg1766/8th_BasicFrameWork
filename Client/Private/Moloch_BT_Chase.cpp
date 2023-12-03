@@ -32,7 +32,7 @@ CBT_Node::BT_RETURN CMoloch_BT_Chase::OnUpdate(const _float& fTimeDelta)
 
 	CMonsterController* pController = static_cast<CMonsterController*>(m_pController);
 	pController->GetMaxSpeedMessage();
-	////pController->GetMoveMessage(vChaseDir);
+	pController->GetMoveMessage(vChaseDir);
 
 	return BT_RUNNING;
 }

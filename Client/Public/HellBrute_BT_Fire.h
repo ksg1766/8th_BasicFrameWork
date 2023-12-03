@@ -21,8 +21,11 @@ private:
 	_bool				IsInRange();
 	_bool				IsInSight();
 	_bool				IsZeroHP();
-
 	void				Fire();
+
+private:
+	_float				m_fFR_Default = 0.3f;
+	_float				m_fFR_Default_Timer = 0.f;
 
 public:
 	static	CHellBrute_BT_Fire* Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController);

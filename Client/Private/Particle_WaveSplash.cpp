@@ -125,7 +125,7 @@ HRESULT CParticle_WaveSplash::Bind_ShaderResources()
 		FAILED(GetShader()->Bind_RawValue("g_vCamPosition", &static_cast<const _float4&>(m_pGameInstance->Get_CamPosition_Float4()), sizeof(_float4))))
 		return E_FAIL;
 
-	Vec3 vEmitPosition = GetTransform()->GetPosition();
+	_float3 vEmitPosition = GetTransform()->GetPosition();
 	if (FAILED(m_pShaderStream->Bind_RawValue("g_vEmitPosition", &vEmitPosition, sizeof(_float3))) ||
 		FAILED(m_pShaderStream->Bind_RawValue("g_vEmitDirection", &m_vEmitDirection, sizeof(_float3))) ||
 		FAILED(m_pShaderStream->Bind_RawValue("g_fGameTime", &m_fLifeTime, sizeof(_float))) ||

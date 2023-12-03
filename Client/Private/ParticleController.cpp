@@ -49,7 +49,7 @@ HRESULT CParticleController::Initialize(void* pArg)
 
 	uniform_real_distribution<_float>	RandomScale(m_tProps.fScaleMin, m_tProps.fScaleMax);
 
-	_float		fScale = RandomScale(RandomNumber);
+	_float		fScale = 2.f * RandomScale(RandomNumber);
 
 	m_vSpeed.x = RandomSpeedX(RandomDevice);
 	m_vSpeed.y = RandomSpeedY(RandomDevice);
@@ -95,6 +95,15 @@ void CParticleController::Tick(const _float& fTimeDelta)
 			//RigidExplode(fTimeDelta);
 			break;
 		}
+
+		const Vec3& vRight = m_pGameObject->GetTransform()->GetRight();
+		const Vec3& vUp = m_pGameObject->GetTransform()->GetUp();
+
+		Vec3 vNewRight = (1.f - 0.7f * fTimeDelta) * vRight;
+		Vec3 vNewUp = (1.f - 0.7f * fTimeDelta) * vUp;
+
+		m_pGameObject->GetTransform()->SetRight(vNewRight);
+		m_pGameObject->GetTransform()->SetUp(vNewUp);
 	}
 	else
 	{

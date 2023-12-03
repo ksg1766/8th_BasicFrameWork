@@ -63,8 +63,8 @@ void COrb::Tick(const _float& fTimeDelta)
 
 	if (m_fFrameTime > 10.f)
 	{
-		GetTransform()->SetScale(Vec3(1.f / 2.5f * (m_fFrameTime - 9.f), 1.f / 2.5f * (m_fFrameTime - 9.f), 1.f / 2.5f * (m_fFrameTime - 9.f)));
-		m_pSphereSwirl->GetTransform()->SetScale(Vec3(1.f / 2.5f * (m_fFrameTime - 9.f), 1.f / 2.5f * (m_fFrameTime - 9.f), 1.f / 2.5f * (m_fFrameTime - 9.f)));
+		GetTransform()->SetScale(GetTransform()->GetLocalScale() * (1.f - fTimeDelta));
+		m_pSphereSwirl->GetTransform()->SetScale(GetTransform()->GetLocalScale() * (1.f - fTimeDelta));
 	}
 
 	if (m_fFrameTime > 12.5f)

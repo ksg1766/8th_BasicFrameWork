@@ -774,7 +774,7 @@ HRESULT CRenderer::Render_Shadow()
 
 	const LIGHT_DESC* pLightDesc = m_pLightManager->Get_LightDesc(0);
 	const _float4& vLightDir = pLightDesc->vLightDir;
-	_vector vLightPosition = XMVectorSet(vPos.x - 120.f * vLightDir.x, vPos.y - 120.f * vLightDir.y, vPos.z - 120.f * vLightDir.z, 1.f);
+	_vector vLightPosition = XMVectorSet(vPos.x - 180.f * vLightDir.x, vPos.y - 180.f * vLightDir.y, vPos.z - 180.f * vLightDir.z, 1.f);
 
 	D3D11_VIEWPORT		ViewportDesc;
 
@@ -967,11 +967,11 @@ HRESULT CRenderer::Render_Water()
 						pGameObject->Render();
 				}
 
-				/*for (auto& pNonBlendObject : m_RenderObjects[RG_NONBLEND])
+				for (auto& pNonBlendObject : m_RenderObjects[RG_NONBLEND])
 				{
 					if (nullptr != pNonBlendObject)
 						pNonBlendObject->Render();
-				}*/
+				}
 
 				map<InstanceID, vector<CGameObject*>> cache;
 
@@ -1073,11 +1073,11 @@ HRESULT CRenderer::Render_Water()
 						pGameObject->Render();
 				}
 
-				/*for (auto& pGameObject : m_RenderObjects[RG_NONBLEND])
+				for (auto& pGameObject : m_RenderObjects[RG_NONBLEND])
 				{
 					if (nullptr != pGameObject)
 						pGameObject->Render();
-				}*/
+				}
 
 				map<InstanceID, vector<CGameObject*>> cache;
 

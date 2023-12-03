@@ -10,7 +10,7 @@ float2      g_ScreenSunPosition;
 Texture2D	g_SceneTarget;
 Texture2D	g_GodRayTarget;
 Texture2D	g_SunOccluderTarget;
-float4      g_LightShaftValue = float4(1.f, 0.97f, 1.f, 2.f);
+float4      g_LightShaftValue = float4(1.f, 0.9733f, 1.f, 2.f);
 // x = Density; y = Decay(각 샘플의 분산되는 영향도); z = Weight(샘플에 대한 전체 강도); w = Exposure(포스트 프로세스 전체 강도);
 
 Texture2D   g_GlowTarget;

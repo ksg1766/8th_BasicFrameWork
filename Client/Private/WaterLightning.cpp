@@ -51,12 +51,12 @@ void CWaterLightning::Tick(const _float& fTimeDelta)
 		tParticleDesc.eType = CParticleController::ParticleType::FLOAT;
 		tParticleDesc.vSpeedMax = _float3(1.f, 0.35f, 1.f);
 		tParticleDesc.vSpeedMin = _float3(-1.f, 0.25f, -1.f);
-		//tParticleDesc.fLifeTimeMin = 1.55f;
-		//tParticleDesc.fLifeTimeMax = 2.55f;
-		tParticleDesc.fScaleMin = 0.17f;
+		tParticleDesc.fLifeTimeMin = 1.5f;
+		tParticleDesc.fLifeTimeMax = 2.5f;
+		tParticleDesc.fScaleMin = 0.19f;
 		tParticleDesc.fScaleMax = 0.29f;
 		tParticleDesc.iPass = 2;
-		tParticleDesc.vRange = Vec3(1.f, 12.f, 1.f);
+		tParticleDesc.vRange = Vec3(1.7f, 13.7f, 1.7f);
 		tParticleDesc.vCenter = GetTransform()->GetPosition();
 		for (_int i = 0; i < 35; ++i)
 			m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Particle"), LAYERTAG::IGNORECOLLISION, &tParticleDesc);
@@ -70,9 +70,9 @@ void CWaterLightning::Tick(const _float& fTimeDelta)
 		tParticleDesc.eType = CParticleController::ParticleType::FLY;
 		tParticleDesc.vSpeedMax = _float3(2.f, 5.3f, 3.5f);
 		tParticleDesc.vSpeedMin = _float3(-5.f, 4.3f, -3.5f);
-		//tParticleDesc.fLifeTimeMin = 1.55f;
-		//tParticleDesc.fLifeTimeMax = 2.55f;
-		tParticleDesc.fScaleMin = 0.17f;
+		tParticleDesc.fLifeTimeMin = 1.8f;
+		tParticleDesc.fLifeTimeMax = 2.7f;
+		tParticleDesc.fScaleMin = 0.19f;
 		tParticleDesc.fScaleMax = 0.29f;
 		tParticleDesc.iPass = 2;
 		//tParticleDesc.vRange = Vec3(2.f, 1.f, 2.f);

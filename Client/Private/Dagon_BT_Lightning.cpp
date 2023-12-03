@@ -62,7 +62,7 @@ CBT_Node::BT_RETURN CDagon_BT_Lightning::OnUpdate(const _float& fTimeDelta)
 			vecBolts[i] = pBolts;
 
 			pBolts->GetTransform()->Rotate(Vec3(rand() % 360, rand() % 360, rand() % 360));
-			pBolts->GetTransform()->SetPosition(m_pGameObject->GetTransform()->GetPosition() + 2.2f * Vec3::UnitY);
+			pBolts->GetTransform()->SetPosition(m_pGameObject->GetTransform()->GetPosition() + 3.2f * Vec3::UnitY);
 		}
 
 		_int iOffset = (rand() % 10) - 5;

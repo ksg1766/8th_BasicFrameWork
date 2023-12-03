@@ -87,6 +87,7 @@ private:
 	_bool			m_bFireLR = true;
 
 	_bool			m_bDagonCreated = false;
+	_int			m_bGodRayScene = -1;
 	_bool			m_bMolochCreated = false;
 	_bool			m_bWaterCreated = false;
 

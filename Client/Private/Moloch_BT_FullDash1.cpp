@@ -69,11 +69,11 @@ CBT_Node::BT_RETURN CMoloch_BT_FullDash1::OnUpdate(const _float& fTimeDelta)
 			}
 
 			CParticleController::PARTICLE_DESC tParticleDesc;
-			tParticleDesc.vSpeedMax = _float3(5.f, 10.f, 5.f);
-			tParticleDesc.vSpeedMin = _float3(-5.f, 7.f, -5.f);
+			tParticleDesc.vSpeedMax = _float3(5.f, 8.5f, 5.f);
+			tParticleDesc.vSpeedMin = _float3(-5.f, 5.7f, -5.f);
 			tParticleDesc.eType = CParticleController::ParticleType::RIGIDBODY;
-			tParticleDesc.fLifeTimeMin = 1.7f;
-			tParticleDesc.fLifeTimeMax = 2.5f;
+			tParticleDesc.fLifeTimeMin = 2.f;
+			tParticleDesc.fLifeTimeMax = 2.7f;
 			tParticleDesc.fScaleMax = 0.3f;
 			tParticleDesc.fScaleMin = 0.15f;
 

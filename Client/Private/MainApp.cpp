@@ -415,6 +415,16 @@ HRESULT CMainApp::Ready_Prototype_Components()
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Lightning_Bolts_Large"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Lightning/Lightning_Bolts_Large%d.png"), 4))))
 		return E_FAIL;
+	
+	/* For.Prototype_Component_Texture_Fire_SubUV*/
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Fire_SubUV"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Fire/Fire_SubUV.png")))))
+		return E_FAIL;
+	
+	/* For.Prototype_Component_Texture_Fire_Stylized*/
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Component_Texture_Fire_Stylized"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Fire/Fire_Stylized.png")))))
+		return E_FAIL;
 
 	/* For.Prototype_Component_Model_Static */
 	{

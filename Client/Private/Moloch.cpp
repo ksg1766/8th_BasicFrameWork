@@ -72,6 +72,11 @@ void CMoloch::Tick(const _float& fTimeDelta)
 void CMoloch::LateTick(const _float& fTimeDelta)
 {
 	Super::LateTick(fTimeDelta);
+
+	if (LEVEL_GAMETOOL == m_pGameInstance->GetCurrentLevelIndex())
+	{
+		AddRenderGroup();
+	}
 }
 
 void CMoloch::DebugRender()

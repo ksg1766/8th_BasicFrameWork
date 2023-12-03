@@ -24,7 +24,18 @@ CBT_Node::BT_RETURN CDagon_BT_WaveLoop::OnUpdate(const _float& fTimeDelta)
 
 	if (m_fTimeSum > m_vecAnimIndexTime[0].second * 0.9f)
 	{
+		if (m_pWaterShield)
+		{
+			m_pGameInstance->DeleteObject(m_pWaterShield);
+			m_pWaterShield = nullptr;
+		}
 		return BT_SUCCESS;
+	}
+
+	if (!m_pWaterShield && m_fTimeSum > m_vecAnimIndexTime[0].second * 0.3f)
+	{
+		m_pWaterShield = m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_WaterShield"), LAYERTAG::IGNORECOLLISION);
+		m_pWaterShield->GetTransform()->Translate(m_pGameObject->GetTransform()->GetPosition());
 	}
 
 	m_fTimeSum += fTimeDelta;

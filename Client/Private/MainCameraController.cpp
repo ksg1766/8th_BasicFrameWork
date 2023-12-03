@@ -55,12 +55,19 @@ void CMainCameraController::Tick(const _float& fTimeDelta)
 	{
 	case CameraMode::Default:
 		//m_vOffset = m_vBaseOffset;
+		//m_fTimer = 0.f;
 		break;
 	case CameraMode::Dagon:
 		Dagon(fTimeDelta);
 		break;
 	case CameraMode::DagonToBase:
 		DagonToBase(fTimeDelta);
+		break;
+	case CameraMode::GodRay:
+		GodRayScene(fTimeDelta);
+		break;
+	case CameraMode::GodRayToBase:
+		GodRayEnd(fTimeDelta);
 		break;
 	case CameraMode::Moloch:
 		//Moloch(fTimeDelta);
@@ -117,31 +124,32 @@ void CMainCameraController::Trace(const _float& fTimeDelta)
 
 void CMainCameraController::Dagon(const _float& fTimeDelta)
 {
-	if (m_fTimer >= 1.f)
+	if (Vec3::DistanceSquared(m_vOffset, m_vOffsetDagon) < 1.f)
 	{
-		m_fTimer = 1.f;
+		m_fTimer = 0.f;
 		m_vOffset = m_vOffsetDagon;
+		m_eCameraMode = CameraMode::Default;
 	}
 	else
 		m_vOffset = Vec3::Lerp(m_vOffset, m_vOffsetDagon, m_fTimer);
 		//m_vOffset = Vec3::Lerp(m_vBaseOffset, m_vOffsetDagon, m_fTimer);
 
-	m_fTimer += 0.01f * fTimeDelta;
+	m_fTimer += 0.003f * fTimeDelta;
 }
 
 void CMainCameraController::DagonToBase(const _float& fTimeDelta)
 {
-	if (m_fTimer <= 0.f)
+	if (Vec3::DistanceSquared(m_vOffset, m_vBaseOffset) < 1.f)
 	{
 		m_fTimer = 0.f;
 		m_vOffset = m_vBaseOffset;
 		m_eCameraMode = CameraMode::Default;
 	}
 	else
-		m_vOffset = Vec3::Lerp(m_vBaseOffset, m_vOffset, m_fTimer);
+		m_vOffset = Vec3::Lerp(m_vOffset, m_vBaseOffset, m_fTimer);
 		//m_vOffset = Vec3::Lerp(m_vBaseOffset, m_vOffsetDagon, m_fTimer);
 
-	m_fTimer -= 0.01f * fTimeDelta;
+	m_fTimer += 0.007f * fTimeDelta;
 }
 
 void CMainCameraController::Moloch(const _float& fTimeDelta)
@@ -150,6 +158,36 @@ void CMainCameraController::Moloch(const _float& fTimeDelta)
 
 void CMainCameraController::MolochToBase(const _float& fTimeDelta)
 {
+}
+
+void CMainCameraController::GodRayScene(const _float& fTimeDelta)
+{
+	if (Vec3::DistanceSquared(m_vOffset, m_vOffsetGodRay) < 1.f)
+	{
+		m_fTimer = 0.f;
+		m_vOffset = m_vOffsetGodRay;
+		m_eCameraMode = CameraMode::Default;
+	}
+	else
+		m_vOffset = Vec3::Lerp(m_vOffset, m_vOffsetGodRay, m_fTimer);
+	//m_vOffset = Vec3::Lerp(m_vBaseOffset, m_vOffsetDagon, m_fTimer);
+
+	m_fTimer += 0.005f * fTimeDelta;
+}
+
+void CMainCameraController::GodRayEnd(const _float& fTimeDelta)
+{
+	if (Vec3::DistanceSquared(m_vOffset, m_vOffsetGodRayEnd) < 1.f)
+	{
+		m_fTimer = 0.f;
+		m_vOffset = m_vOffsetGodRayEnd;
+		m_eCameraMode = CameraMode::Default;
+	}
+	else
+		m_vOffset = Vec3::Lerp(m_vOffset, m_vOffsetGodRayEnd, m_fTimer);
+	//m_vOffset = Vec3::Lerp(m_vBaseOffset, m_vOffsetDagon, m_fTimer);
+
+	m_fTimer += 0.002f * fTimeDelta;
 }
 
 CMainCameraController* CMainCameraController::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

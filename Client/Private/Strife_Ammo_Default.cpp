@@ -112,8 +112,7 @@ HRESULT CStrife_Ammo_Default::Bind_ShaderResources()
 	if (FAILED(Super::Bind_ShaderResources()))
 		return E_FAIL;
 
-	Color color(0.85f, 0.57f, 0.24f, 1.f);
-	if (FAILED(GetShader()->Bind_RawValue("g_Color", &color, sizeof(Color))))
+	if (FAILED(GetShader()->Bind_RawValue("g_Color", &m_vColor, sizeof(Color))))
 		return E_FAIL;
 
 	if (FAILED(GetTexture()->Bind_ShaderResource(GetShader(), "g_Texture", m_tProps.iKeyFrame)))
@@ -132,6 +131,10 @@ void CStrife_Ammo_Default::OnCollisionEnter(CGameObject* pOther)
 
 		// 사이클 때문에 어쩔 수 없이 여기서 Kinematic 꺼줘야 함
 		static_cast<CRigidDynamic*>(GetRigidBody())->IsKinematic(false);
+	}
+	else if (LAYERTAG::PLAYER == eLayerTag)
+	{
+		
 	}
 
 	m_pGameInstance->DeleteObject(this);

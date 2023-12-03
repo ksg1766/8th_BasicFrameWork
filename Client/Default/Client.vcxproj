@@ -286,6 +286,7 @@
     <ClInclude Include="..\Public\P_Strife_State_Impact.h" />
     <ClInclude Include="..\Public\P_Strife_State_Jump.h" />
     <ClInclude Include="..\Public\P_Strife_State_Run.h" />
+    <ClInclude Include="..\Public\Ring_Flat_Wave.h" />
     <ClInclude Include="..\Public\SaveLoadView.h" />
     <ClInclude Include="..\Public\DebugTerrainGrid.h" />
     <ClInclude Include="..\Public\FlyingCameraController.h" />
@@ -333,6 +334,7 @@
     <ClInclude Include="..\Public\Water.h" />
     <ClInclude Include="..\Public\Waterfall_Foar.h" />
     <ClInclude Include="..\Public\WaterLightning.h" />
+    <ClInclude Include="..\Public\WaterShield.h" />
     <ClInclude Include="..\Public\Wave_Ring.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
@@ -438,6 +440,7 @@
     <ClCompile Include="..\Private\P_Strife_State_Impact.cpp" />
     <ClCompile Include="..\Private\P_Strife_State_Jump.cpp" />
     <ClCompile Include="..\Private\P_Strife_State_Run.cpp" />
+    <ClCompile Include="..\Private\Ring_Flat_Wave.cpp" />
     <ClCompile Include="..\Private\SaveLoadView.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>
@@ -489,6 +492,7 @@
     <ClCompile Include="..\Private\Water.cpp" />
     <ClCompile Include="..\Private\Waterfall_Foar.cpp" />
     <ClCompile Include="..\Private\WaterLightning.cpp" />
+    <ClCompile Include="..\Private\WaterShield.cpp" />
     <ClCompile Include="..\Private\Wave_Ring.cpp" />
     <ClCompile Include="..\Public\ImGUI\imgui.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>

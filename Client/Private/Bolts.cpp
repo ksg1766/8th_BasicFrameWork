@@ -39,7 +39,7 @@ void CBolts::Tick(const _float& fTimeDelta)
 	float fScale = 47.f * fTimeDelta;
 
 	m_vScale.x += fScale;
-	m_vScale.y += fScale;
+	m_vScale.y += 3.f * fScale;
 	m_vScale.z += fScale;
 
 	GetTransform()->SetScale(m_vScale);

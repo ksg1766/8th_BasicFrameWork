@@ -15,7 +15,7 @@ constexpr auto EPSILON = 0.001f;
 
 CPlayerController::CPlayerController(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:Super(pDevice, pContext)
-	, m_vLinearSpeed(Vec3(7.f, 7.f, 7.f))
+	, m_vLinearSpeed(Vec3(6.3f, 6.3f, 6.3f))
 	, m_vMaxLinearSpeed(Vec3(20.f, 20.f, 20.f))
 	, m_vAngularSpeed(Vec3(0.f, 360.f, 0.f))
 	, m_vMaxAngularSpeed(Vec3(0.f, 540.f, 0.f))
@@ -110,7 +110,23 @@ void CPlayerController::Tick(const _float& fTimeDelta)
 
 	// TODO: 아래는 시간되면 GameManager 만들어서 옮길 것.
 	const Vec3& vPosition = m_pTransform->GetPosition();
-	if (!m_bDagonCreated && 480 <= m_pNavMeshAgent->GetCurrentIndex() && vPosition.z > 145.f)
+	if (-1 == m_bGodRayScene && 379 <= m_pNavMeshAgent->GetCurrentIndex() && vPosition.z > 42.f)
+	{
+		++m_bGodRayScene;
+
+		CMainCamera* pCamera = static_cast<CMainCamera*>(m_pGameInstance->GetCurrentCamera());
+		CMainCameraController* pController = pCamera->GetController();
+		pController->SetCameraMode(CMainCameraController::CameraMode::GodRay);
+	}
+	else if (0 == m_bGodRayScene && 385 <= m_pNavMeshAgent->GetCurrentIndex() && vPosition.z > 83.f)
+	{
+		++m_bGodRayScene;
+
+		CMainCamera* pCamera = static_cast<CMainCamera*>(m_pGameInstance->GetCurrentCamera());
+		CMainCameraController* pController = pCamera->GetController();
+		pController->SetCameraMode(CMainCameraController::CameraMode::GodRayToBase);
+	}
+	else if (!m_bDagonCreated && 480 <= m_pNavMeshAgent->GetCurrentIndex() && vPosition.z > 145.f)
 	{
 		m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Dagon"), LAYERTAG::UNIT_GROUND);
 		m_bDagonCreated = true;

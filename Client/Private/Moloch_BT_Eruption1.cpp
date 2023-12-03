@@ -74,11 +74,11 @@ CBT_Node::BT_RETURN CMoloch_BT_Eruption1::OnUpdate(const _float& fTimeDelta)
 				m_vecCrystal[i]->GetTransform()->Translate(vCreatePosition[i]);
 
 			CParticleController::PARTICLE_DESC tParticleDesc;
-			tParticleDesc.vSpeedMax = _float3(4.f, 10.f, 4.f);
-			tParticleDesc.vSpeedMin = _float3(-4.f, 7.f, -4.f);
-			tParticleDesc.fLifeTimeMin = 1.7f;
-			tParticleDesc.fLifeTimeMax = 2.5f;
-			tParticleDesc.fScaleMax = 0.3f;
+			tParticleDesc.vSpeedMax = _float3(4.f, 7.5f, 4.f);
+			tParticleDesc.vSpeedMin = _float3(-4.f, 5.0f, -4.f);
+			tParticleDesc.fLifeTimeMin = 2.f;
+			tParticleDesc.fLifeTimeMax = 2.7f;
+			tParticleDesc.fScaleMax = 0.27f;
 			tParticleDesc.fScaleMin = 0.15f;
 
 			tParticleDesc.eType = CParticleController::ParticleType::RIGIDBODY;

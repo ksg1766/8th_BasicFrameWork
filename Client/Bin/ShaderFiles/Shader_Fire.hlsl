@@ -138,7 +138,7 @@ VS_OUT VS_MAIN(VS_IN In)
     //vector vRight = In.matWorld._11_12_13_14;
     //vector vUp = In.matWorld._21_22_23_24;
 
-    In.vPosition = mul(vector(In.vPosition, 1.f), m);
+    In.vPosition = mul(float4(In.vPosition, 1.f), m);
     Out.vPosition = mul(float4(In.vPosition, 1.f), g_WorldMatrix);
     Out.vPSize = float2(In.vPSize.x * length(vRight), In.vPSize.y * length(vUp));
     

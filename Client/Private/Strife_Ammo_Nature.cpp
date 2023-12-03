@@ -33,7 +33,7 @@ HRESULT CStrife_Ammo_Nature::Initialize(void* pArg)
 	static_cast<CRigidDynamic*>(GetRigidBody())->IsKinematic(true);
 	static_cast<CRigidDynamic*>(GetRigidBody())->SetMass(0.5f);
 
-	GetTransform()->SetScale(Vec3(0.24f, 5.5f, 1.f));
+	GetTransform()->SetScale(Vec3(0.33f, 5.5f, 1.f));
 	GetTransform()->Rotate(Vec3(90.f, 0.0f, 0.f));
 
 	GetRigidBody()->GetSphereCollider()->SetRadius(0.5f);
@@ -113,7 +113,7 @@ HRESULT CStrife_Ammo_Nature::Bind_ShaderResources()
 		return E_FAIL;
 
 	//Color color(0.85f, 0.57f, 0.24f, 1.f);
-	Color color(0.22f, 0.671960814f, 0.22f, 1.f);
+	Color color(0.52f, 0.971960814f, 0.52f, 1.f);
 	//Color color(DirectX::Colors::Green);
 	//Color color(DirectX::Colors::GreenYellow);
 	if (FAILED(GetShader()->Bind_RawValue("g_Color", &color, sizeof(Color))))

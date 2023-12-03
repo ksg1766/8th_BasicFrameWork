@@ -269,7 +269,7 @@ PS_OUT PS_WATERSPARK_MAIN(PS_IN In)
     Out.vEmissive = float4(g_fEmissivePower * vColor, 1.f);
     
     return Out;
-}
+} 
 
 technique11 DefaultTechnique
 {
