@@ -17,6 +17,9 @@ void CMoloch_BT_Swing3::OnStart()
 
 	CMonsterController* pController = static_cast<CMonsterController*>(m_pController);
 	pController->Look(vTargetPos);
+
+	if (FAILED(m_pGameInstance->PlaySoundFile(TEXT("en_moloch_atk_full_swing_03.ogg"), CHANNELID::CHANNEL_ENEMY0, 0.7f)))
+		__debugbreak();
 }
 
 CBT_Node::BT_RETURN CMoloch_BT_Swing3::OnUpdate(const _float& fTimeDelta)
@@ -24,7 +27,7 @@ CBT_Node::BT_RETURN CMoloch_BT_Swing3::OnUpdate(const _float& fTimeDelta)
 	if (IsZeroHP())
 		return BT_FAIL;
 
-	if (m_fTimeSum > m_vecAnimIndexTime[0].second * 0.9f)
+	if (m_fTimeSum > m_vecAnimIndexTime[0].second * 0.97f)
 	{
 		return BT_SUCCESS;
 	}

@@ -96,7 +96,7 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 
 	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
 	LightDesc.vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
-	XMStoreFloat4(&LightDesc.vSpecular, 0.8f * XMLoadFloat4(&LightDesc.vDiffuse));
+	XMStoreFloat4(&LightDesc.vSpecular, XMLoadFloat4(&LightDesc.vDiffuse));
 
 	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
 		return E_FAIL;

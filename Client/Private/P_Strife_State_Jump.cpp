@@ -20,10 +20,17 @@ HRESULT CP_Strife_State_Jump::Enter(_int i)
 	m_iCurrAnimation = i;
 	Super::Enter(m_vecAnimIndexTime[i].first);
 	
-	if(i == Anims::JUMP || i == Anims::JUMP_DOUBLE)
+	if (i == Anims::JUMP || i == Anims::JUMP_DOUBLE)
+	{
 		static_cast<CPlayerController*>(m_pController)->GetJumpMessage(true);
+		i == Anims::JUMP ? m_pGameInstance->PlaySoundFile(TEXT("char_strife_jump_01.ogg"), CHANNELID::CHANNEL_MOVE, 0.3f)
+			: m_pGameInstance->PlaySoundFile(TEXT("char_strife_jumpdouble_01.ogg"), CHANNELID::CHANNEL_MOVE, 0.3f);
+	}
 	else if (i == Anims::LAND || i == Anims::JUMP_LAND_HEAVY)
+	{
 		static_cast<CPlayerController*>(m_pController)->GetJumpMessage(false);
+		m_pGameInstance->PlaySoundFile(TEXT("char_strife_land_heavy.ogg"), CHANNELID::CHANNEL_MOVE, 0.3f);
+	}
 
 	return S_OK;
 }

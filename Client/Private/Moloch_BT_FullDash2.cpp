@@ -22,6 +22,9 @@ void CMoloch_BT_FullDash2::OnStart()
 	pController->Look(m_vTargetPos);
 
 	m_iCrystalCounter = 24;
+
+	if (FAILED(m_pGameInstance->PlaySoundFile(TEXT("en_moloch_atk_full_dash_strike_2.ogg"), CHANNELID::CHANNEL_ENEMY1, 0.7f)))
+		__debugbreak();
 }
 
 CBT_Node::BT_RETURN CMoloch_BT_FullDash2::OnUpdate(const _float& fTimeDelta)
@@ -29,7 +32,7 @@ CBT_Node::BT_RETURN CMoloch_BT_FullDash2::OnUpdate(const _float& fTimeDelta)
 	if (IsZeroHP())
 		return BT_FAIL;
 
-	if (m_fTimeSum > m_vecAnimIndexTime[0].second * 0.9f)
+	if (m_fTimeSum > m_vecAnimIndexTime[0].second * 0.97f)
 	{
 		//CBossController* pController = static_cast<CBossController*>(m_pController);
 		//pController->GetAttackMessage(0);

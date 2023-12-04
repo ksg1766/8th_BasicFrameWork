@@ -22,6 +22,12 @@ CBT_Node::BT_RETURN CDagon_BT_WaveLoop::OnUpdate(const _float& fTimeDelta)
 	if (!m_bHitOrMiss)
 		return BT_FAIL;
 
+	if (0.f == m_fTimeSum)
+	{
+		if (FAILED(m_pGameInstance->PlaySoundFile(TEXT("en_waterboss_tidalwave_summon_start.ogg"), CHANNELID::CHANNEL_ENEMY0, 0.7f)))
+			__debugbreak();
+	}
+
 	if (m_fTimeSum > m_vecAnimIndexTime[0].second * 0.9f)
 	{
 		if (m_pWaterShield)

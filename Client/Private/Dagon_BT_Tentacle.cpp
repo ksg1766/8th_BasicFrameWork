@@ -12,6 +12,8 @@ void CDagon_BT_Tentacle::OnStart()
 {
 	Super::OnStart(0);
 	m_bAttacked = false;
+	if (FAILED(m_pGameInstance->PlaySoundFile(TEXT("en_waterboss_tentacle_pummel.ogg"), CHANNELID::CHANNEL_ENEMY0, 0.7f)))
+		__debugbreak();
 }
 
 CBT_Node::BT_RETURN CDagon_BT_Tentacle::OnUpdate(const _float& fTimeDelta)
@@ -26,6 +28,9 @@ CBT_Node::BT_RETURN CDagon_BT_Tentacle::OnUpdate(const _float& fTimeDelta)
 
 	if (!m_bAttacked && m_fTimeSum > m_vecAnimIndexTime[0].second * 0.3f)
 	{
+		if (FAILED(m_pGameInstance->PlaySoundFile(TEXT("en_waterboss_calllightning_start.ogg"), CHANNELID::CHANNEL_ENEMY1, 0.7f)))
+			__debugbreak();
+
 		CGameObject* pLightningSpark = m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Lightning_Spark"), LAYERTAG::IGNORECOLLISION);
 		pLightningSpark->GetTransform()->SetPosition(m_pGameObject->GetTransform()->GetPosition()
 			+ (17.f + (rand() % 10 - 5)) * m_pGameObject->GetTransform()->GetForward() +  (3.5f + ((rand() % 12 - 6))) * m_pGameObject->GetTransform()->GetRight());

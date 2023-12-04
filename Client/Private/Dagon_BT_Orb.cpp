@@ -49,11 +49,17 @@ CBT_Node::BT_RETURN CDagon_BT_Orb::OnUpdate(const _float& fTimeDelta)
 		if (m_isOrbLeft)
 		{
 			iLeftRight = 1;
+
+			if (FAILED(m_pGameInstance->PlaySoundFile(TEXT("en_waterboss_summon_orb_start_01.ogg"), CHANNELID::CHANNEL_ENEMY0, 0.7f)))
+				__debugbreak();
 		}
 		else
 		{
 			iLeftRight = -1;
 			m_isOrbLeft = true;
+
+			if (FAILED(m_pGameInstance->PlaySoundFile(TEXT("en_waterboss_summon_orb_start_02.ogg"), CHANNELID::CHANNEL_ENEMY0, 0.7f)))
+				__debugbreak();
 		}
 
 		CGameObject* pOrb1 = m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Orb"), LAYERTAG::IGNORECOLLISION);

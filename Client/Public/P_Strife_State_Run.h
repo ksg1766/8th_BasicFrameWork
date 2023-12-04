@@ -37,6 +37,8 @@ private:
 	void	Input(const _float& fTimeDelta);
 
 private:
+	_float			m_fDefault = 0.63f;
+	_float			m_fDefault_Timer = 0.f;
 
 public:
 	static	CP_Strife_State_Run* Create(CGameObject* pGameObject, const STATEANIMS& tStateAnim, CMonoBehaviour* pController);

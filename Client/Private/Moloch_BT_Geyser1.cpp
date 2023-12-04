@@ -42,7 +42,7 @@ CBT_Node::BT_RETURN CMoloch_BT_Geyser1::OnUpdate(const _float& fTimeDelta)
 	BLACKBOARD& hashBlackBoard = m_pBehaviorTree->GetBlackBoard();
 	const auto& isSecondRun = hashBlackBoard.find(TEXT("GeyserSecondRun"));
 
-	if (m_fTimeSum > m_vecAnimIndexTime[0].second * 0.85f)
+	if (m_fTimeSum > m_vecAnimIndexTime[0].second * 0.97f)
 	{
 		if (hashBlackBoard.end() == isSecondRun)
 			hashBlackBoard.emplace(TEXT("GeyserSecondRun"), new tagBlackBoardData<_bool>(true));
@@ -90,6 +90,9 @@ void CMoloch_BT_Geyser1::FirstRun()
 
 	if (!m_bAttack)
 	{
+		if (FAILED(m_pGameInstance->PlaySoundFile(TEXT("en_moloch_atk_full_geyser_1.ogg"), CHANNELID::CHANNEL_ENEMY0, 0.7f)))
+			__debugbreak();
+
 		if (m_fTimeSum > m_vecAnimIndexTime[0].second * 0.2f)
 		{
 			Vec3 vCreatePosition[7] = {
@@ -167,6 +170,8 @@ void CMoloch_BT_Geyser1::SecondRun()
 
 	if (!m_bAttack)
 	{
+		if (FAILED(m_pGameInstance->PlaySoundFile(TEXT("en_moloch_atk_full_geyser_2.ogg"), CHANNELID::CHANNEL_ENEMY1, 0.7f)))
+			__debugbreak();
 		if (m_fTimeSum > m_vecAnimIndexTime[0].second * 0.2f)
 		{
 			CTransform* pTargetTransform = GetTarget()->GetTransform();

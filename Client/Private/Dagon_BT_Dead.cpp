@@ -21,7 +21,8 @@ void CDagon_BT_Dead::OnStart()
 	Super::OnStart(0);
 
 	m_pGameObject->SetInstance(false);
-	m_pGameInstance->SwapShader(m_pGameObject, TEXT("Shader_VtxTexFetchAnim"));
+	if (FAILED(m_pGameInstance->PlaySoundFile(TEXT("en_waterboss_stun.ogg"), CHANNELID::CHANNEL_ENEMY0, 0.5f)))
+		__debugbreak();
 }
 
 CBT_Node::BT_RETURN CDagon_BT_Dead::OnUpdate(const _float& fTimeDelta)

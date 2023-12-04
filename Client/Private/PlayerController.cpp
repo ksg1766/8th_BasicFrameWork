@@ -331,6 +331,9 @@ void CPlayerController::Fire(CStrife_Ammo::AmmoType eAmmoType)
 
 		pAmmo->GetTransform()->Rotate(qRot);
 		pAmmo->GetTransform()->SetPosition(vFireOffset);
+
+		m_bFireLR ? m_pGameInstance->PlaySoundFile(TEXT("char_strife_gunfire_01.ogg"), CHANNELID::CHANNEL_GUNFIRE0, 0.3f)
+			: m_pGameInstance->PlaySoundFile(TEXT("char_strife_gunfire_02.ogg"), CHANNELID::CHANNEL_GUNFIRE0, 0.3f);
 	}
 	break;
 	case CStrife_Ammo::AmmoType::BEAM:
@@ -357,6 +360,9 @@ void CPlayerController::Fire(CStrife_Ammo::AmmoType eAmmoType)
 
 			pAmmo->GetTransform()->Rotate(qRotResult);
 			pAmmo->GetTransform()->SetPosition(vFireOffset + 0.35f * pAmmo->GetTransform()->GetUp()); //RUL 방향 회전 돼서 다름.
+
+			m_pGameInstance->PlaySoundFile(TEXT("char_strife_nature_shot_01.ogg"), CHANNELID::CHANNEL_GUNFIRE0, 0.3f);
+			m_pGameInstance->PlaySoundFile(TEXT("char_strife_nature_projectile_01.ogg"), CHANNELID::CHANNEL_GUNFIRE1, 0.3f);
 		}
 	}
 	break;

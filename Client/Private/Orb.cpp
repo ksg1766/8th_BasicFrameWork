@@ -58,6 +58,9 @@ void COrb::Tick(const _float& fTimeDelta)
 			GetTransform()->SetScale(Vec3(4.f, 4.f, 4.f));
 			m_pSphereSwirl->GetTransform()->SetScale(Vec3(4.f, 4.f, 4.f));
 			m_bSpawned = true;
+
+			//m_pGameInstance->PlaySoundFile(TEXT("en_waterboss_orb_projectile_build.ogg"), CHANNELID::CHANNEL_ENEMY0, 0.7f);
+			//m_pGameInstance->PlaySoundFile(TEXT("en_waterboss_orb_projectile.ogg"), CHANNELID::CHANNEL_ENEMY0, 0.7f);
 		}
 	}
 

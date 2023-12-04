@@ -37,7 +37,7 @@ private:
 	void	Input(const _float& fTimeDelta);
 
 private:
-	_float			m_fFR_Default = 0.2f;
+	_float			m_fFR_Default = 0.15f;
 	_float			m_fFR_Default_Timer = 0.f;
 
 public:

@@ -41,6 +41,8 @@ protected:
 	vector<pair<_int, _float>>	m_vecAnimIndexTime;
 	_float						m_fTimeSum = 0.f;
 
+	_bool						m_bSoundOn = false;
+
 public:
 	virtual void Free() override;
 };

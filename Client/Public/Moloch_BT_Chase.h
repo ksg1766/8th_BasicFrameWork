@@ -20,6 +20,10 @@ private:
 	virtual void		ConditionalAbort(const _float& fTimeDelta);
 	_bool				IsInRange();
 
+private:
+	_float			m_fDefault = 0.5f;
+	_float			m_fDefault_Timer = 0.f;
+
 public:
 	static	CMoloch_BT_Chase* Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController);
 	virtual void Free() override;

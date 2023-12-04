@@ -34,6 +34,14 @@ CBT_Node::BT_RETURN CMoloch_BT_Dash::OnUpdate(const _float& fTimeDelta)
 		return BT_SUCCESS;
 	}
 
+	if (!m_bSoundOn && m_fTimeSum > 0.2f)
+	{
+		if (FAILED(m_pGameInstance->PlaySoundFile(TEXT("en_moloch_atk_dash_strike.ogg"), CHANNELID::CHANNEL_ENEMY0, 0.7f)))
+			__debugbreak();
+
+		m_bSoundOn = true;
+	}
+
 	if (!m_bAttack)
 	{
 		if (m_fTimeSum > m_vecAnimIndexTime[0].second * 0.27f)

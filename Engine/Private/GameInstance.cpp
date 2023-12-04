@@ -12,6 +12,7 @@
 #include "ShaderManager.h"
 #include "PoolManager.h"
 #include "LightManager.h"
+#include "SoundManager.h"
 #include "TargetManager.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
@@ -32,6 +33,7 @@ CGameInstance::CGameInstance()
 	, m_pShaderManager(CShaderManager::GetInstance())
 	, m_pPipeLine(CPipeLine::GetInstance())
 	, m_pLightManager(CLightManager::GetInstance())
+	, m_pSoundManager(CSoundManager::GetInstance())
 	, m_pTargetManager(CTargetManager::GetInstance())
 {
 	Safe_AddRef(m_pGraphicDevice);
@@ -49,6 +51,7 @@ CGameInstance::CGameInstance()
 	Safe_AddRef(m_pPoolManager);
 	Safe_AddRef(m_pPipeLine);
 	Safe_AddRef(m_pLightManager);
+	Safe_AddRef(m_pSoundManager);
 	Safe_AddRef(m_pTargetManager);
 }
 
@@ -87,6 +90,10 @@ HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, const GRAPHIC_DESC& G
 	
 	/* 파이프라인의 예약 처리. */
 	if (FAILED(m_pPipeLine->Initialize()))
+		return E_FAIL;
+	
+	/* 사운드 매니저의 예약 처리. */
+	if (FAILED(m_pSoundManager->Reserve_Manager()))
 		return E_FAIL;
 
 	return S_OK;
@@ -427,6 +434,36 @@ HRESULT CGameInstance::Add_Sun(CGameObject* pSun)
 	return m_pLightManager->Add_Sun(pSun);
 }
 
+HRESULT CGameInstance::PlaySoundFile(const wstring& strSoundKey, CHANNELID eCh, _float fVolume)
+{
+	return m_pSoundManager->PlaySoundFile(strSoundKey, eCh, fVolume);
+}
+
+HRESULT CGameInstance::CheckPlaySoundFile(const wstring& strSoundKey, CHANNELID eCh, _float fVolume)
+{
+	return m_pSoundManager->CheckPlaySoundFile(strSoundKey, eCh, fVolume);
+}
+
+HRESULT CGameInstance::PlayBGM(const wstring& strSoundKey, _float fVolume)
+{
+	return m_pSoundManager->PlayBGM(strSoundKey, fVolume);
+}
+
+HRESULT CGameInstance::StopSound(CHANNELID eCh)
+{
+	return m_pSoundManager->StopSound(eCh);
+}
+
+HRESULT CGameInstance::StopSoundAll()
+{
+	return m_pSoundManager->StopSoundAll();
+}
+
+HRESULT CGameInstance::SetChannelVolume(CHANNELID eCh, _float fVolume)
+{
+	return m_pSoundManager->SetChannelVolume(eCh, fVolume);
+}
+
 void CGameInstance::Release_Engine()
 {
 	CLevelManager::GetInstance()->DestroyInstance();
@@ -442,6 +479,7 @@ void CGameInstance::Release_Engine()
 	CShaderManager::GetInstance()->DestroyInstance();
 	CPoolManager::GetInstance()->DestroyInstance();
 	CPipeLine::GetInstance()->DestroyInstance();
+	CSoundManager::GetInstance()->DestroyInstance();
 	CLightManager::GetInstance()->DestroyInstance();
 	CTargetManager::GetInstance()->DestroyInstance();
 	CGameInstance::GetInstance()->DestroyInstance();
@@ -464,4 +502,5 @@ void CGameInstance::Free()
 	Safe_Release(m_pPipeLine);
 	Safe_Release(m_pLightManager);
 	Safe_Release(m_pTargetManager);
+	Safe_Release(m_pSoundManager);
 }

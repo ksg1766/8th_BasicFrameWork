@@ -21,6 +21,14 @@ CBT_Node::BT_RETURN CMoloch_BT_TremorPulse::OnUpdate(const _float& fTimeDelta)
 		return BT_SUCCESS;
 	}
 
+	if (!m_bSoundOn && m_fTimeSum > 0.25f)
+	{
+		if (FAILED(m_pGameInstance->PlaySoundFile(TEXT("en_moloch_atk_full_tremor_pulse.ogg"), CHANNELID::CHANNEL_ENEMY0, 0.7f)))
+			__debugbreak();
+
+		m_bSoundOn = true;
+	}
+
 	m_fTimeSum += fTimeDelta;
 
 	return BT_RUNNING;

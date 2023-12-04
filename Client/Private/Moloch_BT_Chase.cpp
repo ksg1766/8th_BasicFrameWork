@@ -34,6 +34,14 @@ CBT_Node::BT_RETURN CMoloch_BT_Chase::OnUpdate(const _float& fTimeDelta)
 	pController->GetMaxSpeedMessage();
 	pController->GetMoveMessage(vChaseDir);
 
+	m_fDefault_Timer -= fTimeDelta;
+	if (m_fDefault_Timer < 0.f)
+	{
+		if (FAILED(m_pGameInstance->PlaySoundFile(TEXT("en_moloch_foot_01.ogg"), CHANNELID::CHANNEL_ENEMY0, 0.1f)))
+			__debugbreak();
+		m_fDefault_Timer = m_fDefault;
+	}
+
 	return BT_RUNNING;
 }
 

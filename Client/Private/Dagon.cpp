@@ -45,7 +45,7 @@ HRESULT CDagon::Initialize(void* pArg)
 	GetTransform()->RotateYAxisFixed(Vec3(0.f, 180.f, 0.f));
 	GetTransform()->Translate(Vec3(-147.f, 28.f, 237.f));
 
-	m_pGameInstance->Get_LightDesc(0)->vDiffuse = _float4(0.5f, 0.5f, 0.5f, 1.f);
+	m_pGameInstance->Get_LightDesc(0)->vDiffuse = _float4(0.7f, 0.7f, 0.7f, 1.f);
 
 	return S_OK;
 }
@@ -66,6 +66,9 @@ void CDagon::Tick(const _float& fTimeDelta)
 	}
 
 	Super::Tick(fTimeDelta);
+
+	m_pGameInstance->CheckPlaySoundFile(TEXT("amb_eden_rain.ogg"), CHANNELID::CHANNEL_AMBIENT0, 0.23f);
+	m_pGameInstance->CheckPlaySoundFile(TEXT("amb_eden_waterfall_01.ogg"), CHANNELID::CHANNEL_AMBIENT1, 0.23f);
 }
 
 void CDagon::LateTick(const _float& fTimeDelta)

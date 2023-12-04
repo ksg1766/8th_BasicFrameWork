@@ -229,6 +229,12 @@
     <Filter Include="01.Utiltiy\04.Component\05.Buffer\ParticleSystem">
       <UniqueIdentifier>{e0f2570e-850f-4cbe-bfff-561a47893bd3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utiltiy\01.Managers\11.SoundManager">
+      <UniqueIdentifier>{bcba0e35-4e7c-4a58-9bc8-63ae0768a8e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.System\01.Device\02.Sound\FMOD">
+      <UniqueIdentifier>{a31d6a5c-9820-429d-98db-05acf5c33729}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\public\Base.h">
@@ -477,6 +483,33 @@
     <ClInclude Include="..\Public\VIBuffer_ParticleSystem.h">
       <Filter>01.Utiltiy\04.Component\05.Buffer\ParticleSystem</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\SoundManager.h">
+      <Filter>01.Utiltiy\01.Managers\11.SoundManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\FMOD\fmod.h">
+      <Filter>00.System\01.Device\02.Sound\FMOD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\FMOD\fmod.hpp">
+      <Filter>00.System\01.Device\02.Sound\FMOD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\FMOD\fmod_codec.h">
+      <Filter>00.System\01.Device\02.Sound\FMOD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\FMOD\fmod_common.h">
+      <Filter>00.System\01.Device\02.Sound\FMOD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\FMOD\fmod_dsp.h">
+      <Filter>00.System\01.Device\02.Sound\FMOD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\FMOD\fmod_dsp_effects.h">
+      <Filter>00.System\01.Device\02.Sound\FMOD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\FMOD\fmod_errors.h">
+      <Filter>00.System\01.Device\02.Sound\FMOD</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\FMOD\fmod_output.h">
+      <Filter>00.System\01.Device\02.Sound\FMOD</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\private\Base.cpp">
@@ -707,10 +740,22 @@
     <ClCompile Include="..\Private\VIBuffer_ParticleSystem.cpp">
       <Filter>01.Utiltiy\04.Component\05.Buffer\ParticleSystem</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\SoundManager.cpp">
+      <Filter>01.Utiltiy\01.Managers\11.SoundManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Public\SimpleMath.inl">
       <Filter>98.Utils</Filter>
+    </None>
+    <None Include="..\Public\FMOD\fmod.cs">
+      <Filter>00.System\01.Device\02.Sound\FMOD</Filter>
+    </None>
+    <None Include="..\Public\FMOD\fmod_dsp.cs">
+      <Filter>00.System\01.Device\02.Sound\FMOD</Filter>
+    </None>
+    <None Include="..\Public\FMOD\fmod_errors.cs">
+      <Filter>00.System\01.Device\02.Sound\FMOD</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

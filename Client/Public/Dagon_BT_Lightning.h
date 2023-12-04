@@ -24,6 +24,7 @@ private:
 	_bool				m_bHitOrMiss;
 
 	_bool				m_bAttacked = false;
+	_bool				m_bSoundIndex = 0;
 
 public:
 	static	CDagon_BT_Lightning* Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController);

@@ -21,6 +21,8 @@ HRESULT CP_Strife_State_Dash::Enter(_int i)
 	m_iCurrAnimation = i;
 	Super::Enter(m_vecAnimIndexTime[i].first);
 	static_cast<CPlayerController*>(m_pController)->GetDashMessage(true);
+	i == Anims::DASH ? m_pGameInstance->PlaySoundFile(TEXT("char_strife_dash_1_01.ogg"), CHANNELID::CHANNEL_MOVE, 0.3f)
+		: m_pGameInstance->PlaySoundFile(TEXT("char_strife_dash_double_01.ogg"), CHANNELID::CHANNEL_MOVE, 0.3f);
 
 	return S_OK;
 }
@@ -81,6 +83,7 @@ const wstring& CP_Strife_State_Dash::Transition()
 		if (m_fTimeSum > m_vecAnimIndexTime[m_iCurrAnimation].second * 0.4f)
 		{
 			pController->GetDashMessage(false);
+			m_pGameInstance->PlaySoundFile(TEXT("char_strife_dash_end_01.ogg"), CHANNELID::CHANNEL_MOVE, 0.3f);
 			return m_vecTransition[Trans::IDLE];
 		}
 	}

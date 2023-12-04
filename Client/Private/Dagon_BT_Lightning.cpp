@@ -23,6 +23,15 @@ CBT_Node::BT_RETURN CDagon_BT_Lightning::OnUpdate(const _float& fTimeDelta)
 	if (!m_bHitOrMiss)
 		return BT_FAIL;
 
+	if (0 == m_fTimeSum)
+	{
+		_int bResult;
+		m_bSoundIndex ? bResult = m_pGameInstance->PlaySoundFile(TEXT("en_waterboss_calllightning_01.ogg"), CHANNELID::CHANNEL_ENEMY0, 0.7f)
+			: bResult = m_pGameInstance->PlaySoundFile(TEXT("en_waterboss_calllightning_02.ogg"), CHANNELID::CHANNEL_ENEMY0, 0.7f);
+
+		if (FAILED(bResult)) __debugbreak();
+	}
+
 	if (m_fTimeSum > m_vecAnimIndexTime[0].second * 0.9f)
 	{
 		return BT_SUCCESS;

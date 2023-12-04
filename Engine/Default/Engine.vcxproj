@@ -114,7 +114,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d11.lib;dinput8.lib;dxguid.lib;Effects11d.lib;DirectXTKd.lib;assimp-vc143-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;dinput8.lib;dxguid.lib;Effects11d.lib;DirectXTKd.lib;assimp-vc143-mtd.lib;fmod_vc.lib;fmodL_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>../ThirdPartyLib</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
@@ -163,7 +163,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d11.lib;dinput8.lib;dxguid.lib;Effects11.lib;DirectXTK.lib;assimp-vc143-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;dinput8.lib;dxguid.lib;Effects11.lib;DirectXTK.lib;assimp-vc143-mt.lib;fmod_vc.lib;fmodL_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>../ThirdPartyLib/</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
@@ -208,6 +208,14 @@ call Copy.bat</Command>
     <ClInclude Include="..\Public\Engine_Enum.h" />
     <ClInclude Include="..\Public\EventManager.h" />
     <ClInclude Include="..\Public\FileUtils.h" />
+    <ClInclude Include="..\Public\FMOD\fmod.h" />
+    <ClInclude Include="..\Public\FMOD\fmod.hpp" />
+    <ClInclude Include="..\Public\FMOD\fmod_codec.h" />
+    <ClInclude Include="..\Public\FMOD\fmod_common.h" />
+    <ClInclude Include="..\Public\FMOD\fmod_dsp.h" />
+    <ClInclude Include="..\Public\FMOD\fmod_dsp_effects.h" />
+    <ClInclude Include="..\Public\FMOD\fmod_errors.h" />
+    <ClInclude Include="..\Public\FMOD\fmod_output.h" />
     <ClInclude Include="..\Public\Hasher.h" />
     <ClInclude Include="..\Public\InputDevice.h" />
     <ClInclude Include="..\Public\KeyManager.h" />
@@ -222,6 +230,7 @@ call Copy.bat</Command>
     <ClInclude Include="..\Public\PoolManager.h" />
     <ClInclude Include="..\Public\ShaderManager.h" />
     <ClInclude Include="..\Public\Socket.h" />
+    <ClInclude Include="..\Public\SoundManager.h" />
     <ClInclude Include="..\Public\State.h" />
     <ClInclude Include="..\Public\StateMachine.h" />
     <ClInclude Include="..\Public\StructuredBuffer.h" />
@@ -313,6 +322,7 @@ call Copy.bat</Command>
     <ClCompile Include="..\Private\RenderTarget.cpp" />
     <ClCompile Include="..\Private\ShaderManager.cpp" />
     <ClCompile Include="..\Private\Socket.cpp" />
+    <ClCompile Include="..\Private\SoundManager.cpp" />
     <ClCompile Include="..\Private\State.cpp" />
     <ClCompile Include="..\Private\StateMachine.cpp" />
     <ClCompile Include="..\Private\StructuredBuffer.cpp" />
@@ -353,6 +363,9 @@ call Copy.bat</Command>
     <ClCompile Include="..\private\VIBuffer_Rect.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\Public\FMOD\fmod.cs" />
+    <None Include="..\Public\FMOD\fmod_dsp.cs" />
+    <None Include="..\Public\FMOD\fmod_errors.cs" />
     <None Include="..\Public\SimpleMath.inl" />
   </ItemGroup>
   <ItemGroup>

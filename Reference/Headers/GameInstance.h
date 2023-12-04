@@ -83,11 +83,11 @@ public: /* For.InputDevice */
 
 	_bool			Get_AnyKeyDown();
 	
-public:	/* For. KeyManager */
+public:	/* For.KeyManager */
 	KEYSTATE		GetKeyState(KEY _eKey);
 	const POINT&	GetMousePos();
 
-public:	/* For. ShaderManager */
+public:	/* For.ShaderManager */
 	HRESULT			SwapShader(CGameObject* pGameObject, const wstring& strShaderFileName);
 
 public: /* For.PipeLine */
@@ -103,6 +103,14 @@ public: /* For.LightManager */
 	LIGHT_DESC*		Get_LightDesc(_uint iLightIndex);
 	HRESULT			Add_Light(const LIGHT_DESC& LightDesc);
 	HRESULT			Add_Sun(CGameObject* pSun);
+
+public: /* For.SoundManager */
+	HRESULT			PlaySoundFile(const wstring& strSoundKey, CHANNELID eCh, _float fVolume);
+	HRESULT			CheckPlaySoundFile(const wstring& strSoundKey, CHANNELID eCh, _float fVolume);
+	HRESULT			PlayBGM(const wstring& strSoundKey, _float fVolume);
+	HRESULT			StopSound(CHANNELID eCh);
+	HRESULT			StopSoundAll();
+	HRESULT			SetChannelVolume(CHANNELID eCh, _float fVolume);
 
 private:
 	class CTimerManager*			m_pTimerManager = { nullptr };
@@ -121,6 +129,7 @@ private:
 	class CPipeLine*				m_pPipeLine = { nullptr };
 	class CLightManager*			m_pLightManager = { nullptr };
 	class CTargetManager*			m_pTargetManager = { nullptr };
+	class CSoundManager*			m_pSoundManager = { nullptr };
 
 public:
 	static void Release_Engine();

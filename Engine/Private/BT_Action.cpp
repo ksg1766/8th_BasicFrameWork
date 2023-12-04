@@ -32,6 +32,7 @@ void CBT_Action::OnStart(_int iAnimIndex)
 	Super::OnStart();
 	m_pModel->SetNextAnimationIndex(m_vecAnimIndexTime[iAnimIndex].first);
 	m_fTimeSum = 0.f;
+	m_bSoundOn = false;
 }
 
 void CBT_Action::Free()
