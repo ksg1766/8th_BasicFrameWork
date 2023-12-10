@@ -47,7 +47,7 @@ CBT_Node::BT_RETURN CMoloch_BT_FullDash1::OnUpdate(const _float& fTimeDelta)
 
 	if (!m_bAttack)
 	{
-		if (m_fTimeSum > m_vecAnimIndexTime[0].second * 0.5f)
+		if (m_fTimeSum > m_vecAnimIndexTime[0].second * 0.36f)
 		{
 			CTransform* pTransform = m_pGameObject->GetTransform();
 			const Vec3& vPos = pTransform->GetPosition();
@@ -110,16 +110,19 @@ CBT_Node::BT_RETURN CMoloch_BT_FullDash1::OnUpdate(const _float& fTimeDelta)
 	}
 
 	_float fDistance = Vec3::DistanceSquared(m_vTargetPos, m_pGameObject->GetTransform()->GetPosition());
-	if (m_fTimeSum < m_vecAnimIndexTime[0].second * 0.4f)
+	if (m_fTimeSum < m_vecAnimIndexTime[0].second * 0.36f)
 	{
 		if (fDistance > 4.f)
 		{
 			CMonsterController* pController = static_cast<CMonsterController*>(m_pController);
 			pController->GetDashSpeedMessage();
+
+			m_vTargetPos = GetTarget()->GetTransform()->GetPosition();
+			pController->Look(m_vTargetPos);
 			pController->GetTranslateMessage(m_pGameObject->GetTransform()->GetForward());
 		}
 
-		if (4 == m_iFrameCounter++)
+		if (3 == m_iFrameCounter++)
 		{
 			CMoloch_MotionTrail::MOTIONTRAIL_DESC desc{ m_pModel, &m_pModel->GetTweenDesc(), m_pGameObject->GetTransform()->WorldMatrix(), 0.18f };
 			m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Moloch_MotionTrail"), LAYERTAG::IGNORECOLLISION, &desc);

@@ -253,6 +253,8 @@ PS_BEAM_OUT PS_BEAM_MAIN(PS_IN In)
     return Out;
 }
 
+bool g_bFresnel = true;
+
 PS_WATER_OUT PS_WATER_MAIN(PS_WATER_IN In)
 {
     PS_WATER_OUT Out = (PS_WATER_OUT) 0;
@@ -285,12 +287,18 @@ PS_WATER_OUT PS_WATER_MAIN(PS_WATER_IN In)
     vector vLook = In.vProjPos - g_vCamPosition;
     vLook = normalize(vLook);
     
-    fFresnelTerm = 0.02f + 0.97f * pow((1.f - dot(vLook, float4(vNormal, 1.f))), 5.f);
-    float4 vCombinedColor = vRefractionColor * (1 - fFresnelTerm) * vRefractionColor.a * vReflectionColor.a + vReflectionColor * fFresnelTerm * vReflectionColor.a * vRefractionColor.a;
-    Out.vColor = saturate(vCombinedColor * float4(0.95f, 1.00f, 1.05f, 1.0f));
-    //Out.vColor = lerp(vReflectionColor, vRefractionColor, 0.6f) * float4(0.95f, 1.00f, 1.05f, 1.0f);
+    if (true == g_bFresnel)
+    {
+        fFresnelTerm = 0.02f + 0.97f * pow((1.f - dot(vLook, float4(vNormal, 1.f))), 5.f);
+        float4 vCombinedColor = vRefractionColor * (1 - fFresnelTerm) * vRefractionColor.a * vReflectionColor.a + vReflectionColor * fFresnelTerm * vReflectionColor.a * vRefractionColor.a;
+        Out.vColor = saturate(vCombinedColor * float4(0.95f, 1.00f, 1.05f, 1.0f) + float4(0.15f, 0.15f, 0.15f, 0.0f));
+        //Out.vColor = lerp(vReflectionColor, vRefractionColor, 0.6f) * float4(0.95f, 1.00f, 1.05f, 1.0f);
+    }
+    else
+    {
+        Out.vColor = lerp(vReflectionColor, vRefractionColor, 0.5f) * float4(0.90f, 1.00f, 1.10f, 1.0f) + float4(0.35f, 0.35f, 0.35f, 0.0f); //
+    }
     
-    //Out.vColor = lerp(vReflectionColor, vRefractionColor, 0.5f) * float4(0.90f, 1.00f, 1.10f, 1.0f) + float4(0.15f, 0.15f, 0.15f, 0.0f); //
     Out.vNormal = float4(vNormal, 0.f);
     //Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);
@@ -374,7 +382,7 @@ technique11 DefaultTechnique
 
     pass AMMO_DEFAULT
     {
-        SetRasterizerState(RS_Default);
+        SetRasterizerState(RS_Skybox);
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
 		/* 여러 셰이더에 대해서 각각 어떤 버젼으로 빌드하고 어떤 함수를 호출하여 해당 셰이더가 구동되는지를 설정한다. */
@@ -405,7 +413,7 @@ technique11 DefaultTechnique
 		/* 여러 셰이더에 대해서 각각 어떤 버젼으로 빌드하고 어떤 함수를 호출하여 해당 셰이더가 구동되는지를 설정한다. */
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
-        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
 
         VertexShader = compile vs_5_0 VS_WATER_MAIN();
         GeometryShader = NULL;

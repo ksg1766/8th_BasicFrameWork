@@ -39,6 +39,8 @@ private:
 private:
 	_int	m_iFrameCounter = 0;
 
+	_bool	m_bSoundOn = false;
+
 public:
 	static	CP_Strife_State_Dash* Create(CGameObject* pGameObject, const STATEANIMS& tStateAnim, CMonoBehaviour* pController);
 	virtual void Free() override;

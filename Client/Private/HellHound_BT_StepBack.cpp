@@ -36,6 +36,9 @@ CBT_Node::BT_RETURN CHellHound_BT_StepBack::OnUpdate(const _float& fTimeDelta)
 
 		pController->Look(vTargetPos, 10 * fTimeDelta);
 		pController->GetTranslateMessage(-(vTargetPos - vCurPos));
+
+		if (FAILED(m_pGameInstance->PlaySoundFile(TEXT("en_hellhound_evade_01.ogg"), CHANNELID::CHANNEL_ENEMY4, 0.3f)))
+			__debugbreak();
 	}
 	// 
 	m_fTimeSum += fTimeDelta;

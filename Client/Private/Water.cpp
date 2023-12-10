@@ -91,6 +91,7 @@ void CWater::Dagon(const _float& fTimeDelta)
 		m_eMode = WaterLevelMode::End;
 		return;
 	}
+	m_bFresnel = false;
 	m_iCurrentNormalMap = 0;
 	GetTransform()->Translate(2.f * fTimeDelta * Vec3::UnitY);
 }
@@ -105,6 +106,7 @@ void CWater::Desert(const _float& fTimeDelta)
 		GetTransform()->SetPosition(vEndPos);
 		m_eMode = WaterLevelMode::End;
 		m_iCurrentNormalMap = 1;
+		m_bFresnel = true;
 		return;
 	}
 	GetTransform()->Translate(3.f * -fTimeDelta * Vec3::UnitY);
@@ -167,6 +169,9 @@ HRESULT CWater::Bind_ShaderResources()
 	if (FAILED(GetShader()->Bind_RawValue("g_fWaterTranslation", &m_fWaterTranslation, sizeof(_float))))
 		return E_FAIL;
 	if (FAILED(GetShader()->Bind_RawValue("g_fReflectRefractScale", &m_fReflectRefractScale, sizeof(_float))))
+		return E_FAIL;
+
+	if (FAILED(GetShader()->Bind_RawValue("g_bFresnel", &m_bFresnel, sizeof(_bool))))
 		return E_FAIL;
 
 	return S_OK;

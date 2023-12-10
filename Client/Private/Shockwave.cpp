@@ -25,9 +25,6 @@ HRESULT CShockwave::Initialize(void* pArg)
 
 	if (FAILED(Ready_Scripts(pArg)))
 		return E_FAIL;
-	
-	GetTransform()->SetScale(Vec3(10.f, 10.f, 10.f));
-	GetTransform()->Rotate(Vec3(90.f, 0.0f, 0.f));
 
 	return S_OK;
 }
@@ -36,19 +33,27 @@ void CShockwave::Tick(const _float& fTimeDelta)
 {
 	Super::Tick(fTimeDelta);
 
-	map<LAYERTAG, CLayer*>& mapLayers = m_pGameInstance->GetCurrentLevelLayers();
-	map<LAYERTAG, CLayer*>::iterator iter = mapLayers.find(LAYERTAG::PLAYER);
-	
-	CLayer* pLayer = iter->second;
-	CGameObject*& pObject = pLayer->GetGameObjects().front();
-	GetTransform()->SetPosition(pObject->GetTransform()->GetPosition());
+	m_fFrameTime += fTimeDelta;
+	m_fWrapTime -= fTimeDelta;
+
+	if (m_fFrameTime >= 3.f)
+	{
+		m_pGameInstance->DeleteObject(this);
+		return;
+	}
+
+	if (m_fWrapTime <= 0.f)
+		m_fWrapTime = 0.2f;
+
+	_float fScale = 2100.f * m_fWrapTime;
+	GetTransform()->SetScale(Vec3(fScale, fScale, fScale));
 }
 
 void CShockwave::LateTick(const _float& fTimeDelta)
 {
 	Super::LateTick(fTimeDelta);
 
-	GetRenderer()->Add_RenderGroup(CRenderer::RG_DISTORTION, this);
+	GetRenderer()->Add_RenderGroup(CRenderer::RG_BLEND, this);
 }
 
 void CShockwave::DebugRender()
@@ -58,20 +63,17 @@ void CShockwave::DebugRender()
 
 HRESULT CShockwave::Render()
 {
-	if (nullptr == GetBuffer() || nullptr == GetShader())
+	if (nullptr == GetModel() || nullptr == GetShader())
 		return E_FAIL;
 
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
-	if (FAILED(GetShader()->Begin()))
-		return E_FAIL;
-
-	if(FAILED(GetBuffer()->Render()))
+	if (FAILED(GetModel()->Render()))
 		return E_FAIL;
 
 #ifdef _DEBUG
-	DebugRender();
+	Super::DebugRender();
 #endif
 
 	return S_OK;
@@ -80,11 +82,12 @@ HRESULT CShockwave::Render()
 HRESULT CShockwave::Ready_FixedComponents()
 {
 	/* Com_Shader */
-	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Shader, TEXT("Prototype_Component_Shader_Shockwave"))))
+	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Shader, TEXT("Prototype_Component_Shader_Sphere"))))
 		return E_FAIL;
+	GetShader()->SetPassIndex(7);
 
-	/* Com_VIBuffer */
-	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Buffer, TEXT("Prototype_Component_VIBuffer_Rect"))))
+	/* Com_Model */
+	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Model, TEXT("Prototype_Component_Model_Sun"))))
 		return E_FAIL;
 	
 	/* Com_Transform */
@@ -93,10 +96,6 @@ HRESULT CShockwave::Ready_FixedComponents()
 
 	/* Com_Renderer */
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Renderer, TEXT("Prototype_Component_Renderer"))))
-		return E_FAIL;
-
-	/* Com_Texture */
-	if (FAILED(Super::AddComponent(LEVEL_GAMEPLAY, ComponentType::Texture, TEXT("Prototype_Component_Texture_Shockwave"))))
 		return E_FAIL;
 
 	return S_OK;
@@ -113,18 +112,11 @@ HRESULT CShockwave::Ready_Scripts(void* pArg)
 
 HRESULT CShockwave::Bind_ShaderResources()
 {
-	_float4x4		WorldMatrix;
-	XMStoreFloat4x4(&WorldMatrix, XMMatrixIdentity());
-
 	/* 셰이더 전역변수로 던져야 할 값들을 던지자. */
 	if (FAILED(GetTransform()->Bind_ShaderResources(GetShader(), "g_WorldMatrix")) ||
 		FAILED(m_pGameInstance->Bind_TransformToShader(GetShader(), "g_ViewMatrix", CPipeLine::D3DTS_VIEW)) ||
-		FAILED(m_pGameInstance->Bind_TransformToShader(GetShader(), "g_ProjMatrix", CPipeLine::D3DTS_PROJ)))
-	{
-		return E_FAIL;
-	}
-
-	if (FAILED(GetTexture()->Bind_ShaderResource(GetShader(), "g_DistortionTexture", 0)))
+		FAILED(m_pGameInstance->Bind_TransformToShader(GetShader(), "g_ProjMatrix", CPipeLine::D3DTS_PROJ)) ||
+		FAILED(GetShader()->Bind_RawValue("g_vCamPosition", &static_cast<const _float4&>(m_pGameInstance->Get_CamPosition_Float4()), sizeof(_float4))))
 		return E_FAIL;
 
 	return S_OK;

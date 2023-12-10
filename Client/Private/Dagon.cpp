@@ -45,7 +45,11 @@ HRESULT CDagon::Initialize(void* pArg)
 	GetTransform()->RotateYAxisFixed(Vec3(0.f, 180.f, 0.f));
 	GetTransform()->Translate(Vec3(-147.f, 28.f, 237.f));
 
-	m_pGameInstance->Get_LightDesc(0)->vDiffuse = _float4(0.7f, 0.7f, 0.7f, 1.f);
+	m_pGameInstance->Get_LightDesc(0)->vDiffuse = _float4(0.75f, 0.75f, 0.75f, 1.f);
+
+	m_pGameInstance->StopSound(CHANNELID::CHANNEL_BGM);
+	if (FAILED(m_pGameInstance->PlayBGM(TEXT("mus_level14_combat.ogg"), 0.5f)))
+		__debugbreak();
 
 	return S_OK;
 }

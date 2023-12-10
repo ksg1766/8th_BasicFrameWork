@@ -84,7 +84,7 @@ void CTremorCrystal::Tick(const _float& fTimeDelta)
 			pGameObject->GetTransform()->Translate(GetTransform()->GetPosition());
 		}
 
-		m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Bubble"), LAYERTAG::IGNORECOLLISION)
+		m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Bubble"), LAYERTAG::UNIT_AIR)
 			->GetTransform()->Translate(GetTransform()->GetPosition());
 		m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Wave_Ring"), LAYERTAG::IGNORECOLLISION)
 			->GetTransform()->Translate(GetTransform()->GetPosition());

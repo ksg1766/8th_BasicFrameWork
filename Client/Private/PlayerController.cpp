@@ -4,6 +4,9 @@
 #include "GameObject.h"
 #include "Strife_Ammo_Default.h"
 #include "Strife_Ammo_Static.h"
+#include "Particle.h"
+#include "ParticleController.h"
+
 // ÇãÇã...
 #include "MainCamera.h"
 #include "MainCameraController.h"
@@ -64,6 +67,11 @@ void CPlayerController::Tick(const _float& fTimeDelta)
 		Translate(fTimeDelta);
 
 	//////////
+	if (KEY_DOWN(KEY::X))
+	{
+		Hit();
+	}
+
 	if (KEY_PRESSING(KEY::CTRL) && KEY_DOWN(KEY::N))
 	{
 		//m_pTransform->SetPosition(Vec3(82.f, 6.5f, 41.f));
@@ -73,8 +81,12 @@ void CPlayerController::Tick(const _float& fTimeDelta)
 	}
 	if (KEY_PRESSING(KEY::CTRL) && KEY_DOWN(KEY::M))
 	{
-		m_pTransform->SetPosition(Vec3(233.6f, 6.85f, 180.3f));
-		m_pGameObject->GetNavMeshAgent()->SetCurrentIndex(646);
+		// Boss
+		/*m_pTransform->SetPosition(Vec3(233.6f, 6.85f, 180.3f));
+		m_pGameObject->GetNavMeshAgent()->SetCurrentIndex(646);*/
+		//Desert
+		m_pTransform->SetPosition(Vec3(82.f, 6.5f, 41.f));
+		m_pGameObject->GetNavMeshAgent()->SetCurrentIndex(573);
 
 		// WaterLevel
 		map<LAYERTAG, CLayer*>& mapLayers = m_pGameInstance->GetCurrentLevelLayers();
@@ -95,6 +107,10 @@ void CPlayerController::Tick(const _float& fTimeDelta)
 
 		if (nullptr != pWater)
 			pWater->SetMode(CWater::WaterLevelMode::Dessert);
+
+		m_pGameInstance->StopSoundAll();
+		if (FAILED(m_pGameInstance->PlayBGM(TEXT("mus_level17_ambient.ogg"), 0.5f)))
+			__debugbreak();
 	}
 	//////////
 
@@ -116,7 +132,7 @@ void CPlayerController::Tick(const _float& fTimeDelta)
 
 		CMainCamera* pCamera = static_cast<CMainCamera*>(m_pGameInstance->GetCurrentCamera());
 		CMainCameraController* pController = pCamera->GetController();
-		pController->SetCameraMode(CMainCameraController::CameraMode::GodRay);
+		//pController->SetCameraMode(CMainCameraController::CameraMode::GodRay);
 	}
 	else if (0 == m_bGodRayScene && 385 <= m_pNavMeshAgent->GetCurrentIndex() && vPosition.z > 83.f)
 	{
@@ -124,9 +140,9 @@ void CPlayerController::Tick(const _float& fTimeDelta)
 
 		CMainCamera* pCamera = static_cast<CMainCamera*>(m_pGameInstance->GetCurrentCamera());
 		CMainCameraController* pController = pCamera->GetController();
-		pController->SetCameraMode(CMainCameraController::CameraMode::GodRayToBase);
+		//pController->SetCameraMode(CMainCameraController::CameraMode::GodRayToBase);
 	}
-	else if (!m_bDagonCreated && 480 <= m_pNavMeshAgent->GetCurrentIndex() && vPosition.z > 145.f)
+	/*else if (!m_bDagonCreated && 480 <= m_pNavMeshAgent->GetCurrentIndex() && vPosition.z > 145.f)
 	{
 		m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Dagon"), LAYERTAG::UNIT_GROUND);
 		m_bDagonCreated = true;
@@ -147,9 +163,13 @@ void CPlayerController::Tick(const _float& fTimeDelta)
 
 		if (nullptr != pWater)
 			pWater->SetMode(CWater::WaterLevelMode::Dagon);
-	}
+	}*/
 	else if (!m_bMolochCreated && 646 <= m_pNavMeshAgent->GetCurrentIndex() && vPosition.x > 220.f && vPosition.z > 177.f)
 	{
+		m_pGameInstance->StopSoundAll();
+		if (FAILED(m_pGameInstance->PlayBGM(TEXT("mus_level17_combat.ogg"), 0.5f)))
+			__debugbreak();
+
 		m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Moloch"), LAYERTAG::UNIT_GROUND);
 		m_bMolochCreated = true;
 	}
@@ -324,7 +344,7 @@ void CPlayerController::Fire(CStrife_Ammo::AmmoType eAmmoType)
 	{
 	case CStrife_Ammo::AmmoType::DEFAULT:
 	{
-		tProps = { eAmmoType, 7, 0, /*10*/50, 70.f * m_pTransform->GetForward(), false, 5.f };
+		tProps = { eAmmoType, 7, 0, /*10*/20, 70.f * m_pTransform->GetForward(), false, 5.f };
 		pAmmo = m_pGameInstance->CreateObject(L"Prototype_GameObject_Strife_Ammo_Default", LAYERTAG::EQUIPMENT, &tProps);
 		vFireOffset = m_pTransform->GetPosition() + 2.2f * m_pTransform->GetForward() - (m_bFireLR * 0.35f - 0.175f) * m_pTransform->GetRight() + 1.7f * m_pTransform->GetUp();
 		m_bFireLR = !m_bFireLR;
@@ -338,7 +358,7 @@ void CPlayerController::Fire(CStrife_Ammo::AmmoType eAmmoType)
 	break;
 	case CStrife_Ammo::AmmoType::BEAM:
 	{
-		tProps = { eAmmoType, 4, 0, 10, m_pTransform->GetForward(), false, 0.f };
+		tProps = { eAmmoType, 4, 0, 5, m_pTransform->GetForward(), false, 0.f };
 		pAmmo = m_pGameInstance->CreateObject(L"Prototype_GameObject_Strife_Ammo_Beam", LAYERTAG::EQUIPMENT, &tProps);
 		vFireOffset = m_pTransform->GetPosition() + 11.f * m_pTransform->GetForward() + 1.7f * m_pTransform->GetUp();
 
@@ -353,7 +373,7 @@ void CPlayerController::Fire(CStrife_Ammo::AmmoType eAmmoType)
 			Vec3 vVelocity = m_pTransform->GetForward() + tanf((8 - i) * XMConvertToRadians(3.75f)) * m_pTransform->GetRight();
 			vVelocity.y = 0.f;
 			vVelocity.Normalize();
-			CStrife_Ammo::AMMOPROPS tProps{ eAmmoType, 4, 0, 2, 20.f * vVelocity, false, 3.f };
+			CStrife_Ammo::AMMOPROPS tProps{ eAmmoType, 4, 0, 15, 20.f * vVelocity, false, 3.f };
 			Quaternion qRotResult = qRot * Quaternion::CreateFromAxisAngle(Vec3::UnitY, (8 - i) * XMConvertToRadians(3.75f));
 			pAmmo = m_pGameInstance->CreateObject(L"Prototype_GameObject_Strife_Ammo_Nature", LAYERTAG::EQUIPMENT, &tProps);
 			vFireOffset = m_pTransform->GetPosition() + 2.2f * m_pTransform->GetForward() + 1.7f * m_pTransform->GetUp();
@@ -388,6 +408,26 @@ void CPlayerController::Fire(CStrife_Ammo::AmmoType eAmmoType)
 		pAmmo = m_pGameInstance->CreateObject(L"Prototype_GameObject_Strife_Ammo_Lava", LAYERTAG::EQUIPMENT, &tProps);
 		break;*/
 	}
+}
+
+void CPlayerController::Hit()
+{
+	CParticleController::PARTICLE_DESC tParticleDesc;
+	tParticleDesc.eType = CParticleController::ParticleType::EXPLODE;
+	tParticleDesc.fScaleMax = 0.15f;
+	tParticleDesc.fScaleMin = 0.1f;
+	tParticleDesc.vSpeedMax = Vec3(1.8f, 2.5f, 1.8f);
+	tParticleDesc.vSpeedMin = Vec3(-1.8f, 1.8f, -1.8f);
+	tParticleDesc.fLifeTimeMax = 1.2f;
+	tParticleDesc.fLifeTimeMin = 0.8f;
+	tParticleDesc.vCenter = m_pTransform->GetPosition();
+	tParticleDesc.iPass = 1;
+
+	for (_int i = 0; i < 5; ++i)
+		m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Particle"), LAYERTAG::IGNORECOLLISION, &tParticleDesc);
+
+	m_iHitEffectCount = 7;
+	m_pGameObject->GetShader()->SetPassIndex(7);
 }
 
 _bool CPlayerController::Pick(_uint screenX, _uint screenY, Vec3& pickPos, _float& distance)

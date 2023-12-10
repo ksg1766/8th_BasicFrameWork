@@ -57,13 +57,13 @@ void COBBCollider::LateTick(const _float& fTimeDelta)
 void COBBCollider::DebugRender()
 {
 #ifdef _DEBUG
-	Super::DebugRender();
+	//Super::DebugRender();
 
-	m_pBatch->Begin();
+	//m_pBatch->Begin();
 
-	DX::Draw(m_pBatch, m_tBoundingBox, Colors::Lime);
+	//DX::Draw(m_pBatch, m_tBoundingBox, Colors::Lime);
 
-	m_pBatch->End();
+	//m_pBatch->End();
 #endif // DEBUG
 }
 

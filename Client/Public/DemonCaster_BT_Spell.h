@@ -22,6 +22,9 @@ private:
 	_bool				IsInSight();
 	_bool				IsZeroHP();
 
+private:
+	class CWaterShield*	m_pWaterShield = nullptr;
+
 public:
 	static	CDemonCaster_BT_Spell* Create(CGameObject* pGameObject, CBehaviorTree* pBehaviorTree, const BEHAVEANIMS& tBehaveAnim, CMonoBehaviour* pController);
 	virtual void Free() override;

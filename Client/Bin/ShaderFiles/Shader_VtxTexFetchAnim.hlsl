@@ -330,25 +330,58 @@ PS_OUT_SHADOW PS_SHADOW_MAIN(PS_IN In)
     return Out;
 }
 
-PS_ALPHA_OUT PS_WAVE_MAIN(PS_IN In)
+PS_OUT PS_WAVE_MAIN(PS_IN In)
 {
     float2 vNewUV = float2(In.vTexcoord.x/* - g_fFrameTime*/, In.vTexcoord.y + 0.25f * g_fFrameTime);
     float4 vColor = g_DiffuseTexture.Sample(LinearSampler, vNewUV);
     
-    //ComputeNormalMapping(In.vNormal, In.vTangent, In.vTexcoord);
+    ComputeNormalMapping(In.vNormal, In.vTangent, In.vTexcoord);
 	
-    PS_ALPHA_OUT Out = (PS_ALPHA_OUT) 0;
+    PS_OUT Out = (PS_OUT) 0;
 
-    if (vColor.a < 0.001f)
-        discard;
+    //if (vColor.a < 0.001f)
+        //discard;
     
-    Out.vDiffuse = vColor * 1.5f;    
-    Out.vDiffuse.rgb += float3(0.1f, 0.1f, 0.17f);
+    //Out.vDiffuse = vColor * 1.5f;    
+    Out.vDiffuse.rgb = vColor;
     Out.vDiffuse.a = 0.7f;
     
-    //Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
-    //Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);
-    //Out.vSunMask = vector(0.f, 0.f, 0.f, 0.f);
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);
+    Out.vSunMask = vector(0.f, 0.f, 0.f, 0.f);
+    
+    return Out;
+}
+
+PS_OUT PS_PLAYERRIM_MAIN(PS_IN In)
+{
+    ComputeNormalMapping(In.vNormal, In.vTangent, In.vTexcoord);
+	
+    PS_OUT Out = (PS_OUT) 0;
+	
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, In.vTexcoord);
+
+    if (vMtrlDiffuse.a < 0.3f)
+        discard;
+	
+    Out.vDiffuse = vMtrlDiffuse;
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 2000.0f, 0.f, 0.f);
+        
+    // Temp
+    vector vLook = In.vWorldPos - g_vCamPosition;
+     // Rim Light
+    float3 E = normalize(-vLook);
+
+    float value = saturate(dot(E, float3(In.vNormal.xyz)));
+    float fEmissive = 1.0f - value;
+
+	// min, max, x
+    fEmissive = smoothstep(0.0f, 1.0f, fEmissive);
+    fEmissive = pow(fEmissive, 2);
+	//
+    Out.vEmissive = float4(1.f, 0.f, 0.f, 1.f) * fEmissive;
+    Out.vSunMask = vector(0.f, 0.f, 0.f, 0.f);
     
     return Out;
 }
@@ -442,13 +475,29 @@ technique11 DefaultTechnique
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
-        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        //SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
 
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_WAVE_MAIN();
+        ComputeShader = NULL;
+    }
+
+    pass PlayerRim // 7
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        //SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_PLAYERRIM_MAIN();
         ComputeShader = NULL;
     }
 }

@@ -16,6 +16,8 @@ void CDemonCaster_BT_Dead::OnStart()
 	m_pGameObject->GetTransform()->RotateYAxisFixed(Vec3(0.f, 180.f, 0.f));
 	m_pGameObject->SetInstance(false);
 	m_pGameInstance->SwapShader(m_pGameObject, TEXT("Shader_VtxTexFetchAnim"));
+	if (FAILED(m_pGameInstance->PlaySoundFile(TEXT("en_demoncaster_death_vo_03.ogg"), CHANNELID::CHANNEL_ENEMY0, 0.2f)))
+		__debugbreak();
 }
 
 CBT_Node::BT_RETURN CDemonCaster_BT_Dead::OnUpdate(const _float& fTimeDelta)

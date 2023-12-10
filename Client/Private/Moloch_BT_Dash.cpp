@@ -72,11 +72,14 @@ CBT_Node::BT_RETURN CMoloch_BT_Dash::OnUpdate(const _float& fTimeDelta)
 		if (fDistance > 4.f)
 		{
 			CMonsterController* pController = static_cast<CMonsterController*>(m_pController);
-			pController->GetMaxSpeedMessage();
+			pController->GetDashSpeedMessage();
+
+			m_vTargetPos = GetOrAddTarget()->GetTransform()->GetPosition();
+			pController->Look(m_vTargetPos);
 			pController->GetTranslateMessage(m_pGameObject->GetTransform()->GetForward());
 		}
 
-		if (4 == m_iFrameCounter++)
+		if (3 == m_iFrameCounter++)
 		{
 			CMoloch_MotionTrail::MOTIONTRAIL_DESC desc{ m_pModel, &m_pModel->GetTweenDesc(), m_pGameObject->GetTransform()->WorldMatrix(), 0.18f };
 			m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Moloch_MotionTrail"), LAYERTAG::IGNORECOLLISION, &desc);

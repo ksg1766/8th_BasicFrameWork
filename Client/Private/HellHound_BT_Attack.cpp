@@ -37,6 +37,9 @@ CBT_Node::BT_RETURN CHellHound_BT_Attack::OnUpdate(const _float& fTimeDelta)
 		const Vec3& vCurPos = m_pGameObject->GetTransform()->GetPosition();
 
 		pController->GetMoveMessage(vTargetPos - vCurPos);
+
+		if (FAILED(m_pGameInstance->PlaySoundFile(TEXT("en_hellhound_atk_bite_01.ogg"), CHANNELID::CHANNEL_ENEMY3, 0.3f)))
+			__debugbreak();
 	}
 
 	m_fTimeSum += fTimeDelta;

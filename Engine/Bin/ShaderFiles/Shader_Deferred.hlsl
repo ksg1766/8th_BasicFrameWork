@@ -233,11 +233,11 @@ float PCF_ShadowCalculation(float4 fragPosLightSpace/*, float3 lightDir*/)
 	// PCF
     float shadow = 0.0f;
     float2 texelSize = float2(1.f / 1440.f, 1.f / 810.f);
-    texelSize /= 5.f;
+    texelSize /= 8.f;
     
-    for (int x = -2; x <= 2; ++x)
+    for (int x = -1; x <= 1; ++x)
     {
-        for (int y = -2; y <= 2; ++y)
+        for (int y = -1; y <= 1; ++y)
         {
             float pcfDepth = g_ShadowDepthTarget.Sample(Sampler, projCoords.xy + float2(x, y) * texelSize).r;
             //float pcfDepth = g_ShadowDepthTarget.SampleCmpLevelZero(Sampler, projCoords.xy + float2(x, y) * texelSize).r;
@@ -245,7 +245,7 @@ float PCF_ShadowCalculation(float4 fragPosLightSpace/*, float3 lightDir*/)
         }
     }
     //shadow *= 0.04f;
-    shadow /= 25.f;
+    shadow /= 9.f;
     return shadow;
 }
 

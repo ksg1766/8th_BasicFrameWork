@@ -29,8 +29,14 @@ private:
 	HRESULT			Ready_Scripts();
 	HRESULT			Bind_ShaderResources(); /* 셰이더 전역변수에 값 던진다. */
 
+	void			Fire();
+
 private:
 	_float			m_fFrameTime = 0.f;
+
+	_bool			m_bCharged = false;
+	_bool			m_bLaunched = false;
+
 	_bool			m_bSpawned = false;
 	_bool			m_bSpark = false;
 

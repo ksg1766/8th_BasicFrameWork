@@ -35,7 +35,7 @@ void CP_Strife_State_Run::Tick(const _float& fTimeDelta)
 	m_fDefault_Timer -= fTimeDelta;
 	if (m_fDefault_Timer < 0.f)
 	{
-		if (FAILED(m_pGameInstance->PlaySoundFile(TEXT("char_strife_land_heavy.ogg"), CHANNELID::CHANNEL_MOVE, 0.05f)))
+		if (FAILED(m_pGameInstance->PlaySoundFile(TEXT("char_strife_foot_01.ogg"), CHANNELID::CHANNEL_MOVE, 0.2f)))
 			__debugbreak();
 		m_fDefault_Timer = m_fDefault;
 	}

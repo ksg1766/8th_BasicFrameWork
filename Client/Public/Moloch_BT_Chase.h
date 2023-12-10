@@ -21,7 +21,7 @@ private:
 	_bool				IsInRange();
 
 private:
-	_float			m_fDefault = 0.5f;
+	_float			m_fDefault = 0.8f;
 	_float			m_fDefault_Timer = 0.f;
 
 public:

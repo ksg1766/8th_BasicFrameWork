@@ -15,6 +15,9 @@ void CGoblin_BT_Dead::OnStart()
 
 	m_pGameObject->SetInstance(false);
 	m_pGameInstance->SwapShader(m_pGameObject, TEXT("Shader_VtxTexFetchAnim"));
+
+	if (FAILED(m_pGameInstance->PlaySoundFile(TEXT("en_fleamag_scream_short_07.ogg"), CHANNELID::CHANNEL_ENEMY1, 0.2f)))
+		__debugbreak();
 }
 
 CBT_Node::BT_RETURN CGoblin_BT_Dead::OnUpdate(const _float& fTimeDelta)

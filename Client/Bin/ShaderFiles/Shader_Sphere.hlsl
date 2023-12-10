@@ -279,15 +279,9 @@ PS_ORB_OUT PS_WISP_MAIN(PS_IN In)
     return Out;
 }
 
-struct PS_SPHERESWIRL_OUT
+PS_OUT PS_SPHERESWIRL_MAIN(PS_IN In)
 {
-    float4 vColor : SV_TARGET0;
-    float4 vDistortion : SV_TARGET1;
-};
-
-PS_SPHERESWIRL_OUT PS_SPHERESWIRL_MAIN(PS_IN In)
-{
-    PS_SPHERESWIRL_OUT Out = (PS_SPHERESWIRL_OUT) 0;
+    PS_OUT Out = (PS_OUT) 0;
    
     float2 vNewUV = In.vTexcoord + g_fFrameTime;
     
@@ -296,6 +290,33 @@ PS_SPHERESWIRL_OUT PS_SPHERESWIRL_MAIN(PS_IN In)
     Out.vColor = vNoiseSample;
     Out.vDistortion = Out.vColor;
     Out.vColor.a = 0.15f;
+    
+    return Out;
+}
+
+struct PS_ORBCHARGE_OUT
+{
+    float4 vDistortion : SV_TARGET1;
+};
+
+PS_ORBCHARGE_OUT PS_ORBCHARGE_MAIN(PS_IN In)
+{
+    PS_ORBCHARGE_OUT Out = (PS_ORBCHARGE_OUT) 0;
+    
+    ComputeNormalMapping(In.vNormal, In.vTangent, In.vTexcoord);
+    
+    float4 vColor = float4(0.1f, 0.1f, 0.1f, 1.f);
+    
+    vector vLook = In.vWorldPos - g_vCamPosition;
+    float3 E = normalize(-vLook);
+    
+    float value = saturate(dot(E, float3(In.vNormal.xyz)));
+    float fEmissive = 1.0f - value;
+    
+    fEmissive = smoothstep(0.0f, 1.0f, fEmissive);
+    //fEmissive = pow(fEmissive, 2.f);
+    
+    Out.vDistortion = vColor * fEmissive;
     
     return Out;
 }
@@ -398,6 +419,20 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_SPHERESWIRL_MAIN();
+        ComputeShader = NULL;
+    }
+
+    pass OrbCharge // 7
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_ORBCHARGE_MAIN();
         ComputeShader = NULL;
     }
 }

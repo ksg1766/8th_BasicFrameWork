@@ -24,6 +24,8 @@ HRESULT CP_Strife_State_Dash::Enter(_int i)
 	i == Anims::DASH ? m_pGameInstance->PlaySoundFile(TEXT("char_strife_dash_1_01.ogg"), CHANNELID::CHANNEL_MOVE, 0.3f)
 		: m_pGameInstance->PlaySoundFile(TEXT("char_strife_dash_double_01.ogg"), CHANNELID::CHANNEL_MOVE, 0.3f);
 
+	m_bSoundOn = false;
+
 	return S_OK;
 }
 
@@ -31,7 +33,7 @@ void CP_Strife_State_Dash::Tick(const _float& fTimeDelta)
 {
 	CPlayerController* pController = static_cast<CPlayerController*>(m_pController);
 
-	if (5 == m_iFrameCounter++)
+	if (3 == m_iFrameCounter++)
 	{
 		CStrife_MotionTrail::MOTIONTRAIL_DESC desc{ m_pModel, &m_pModel->GetTweenDesc(), m_pGameObject->GetTransform()->WorldMatrix(), 0.18f };
 		m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Strife_MotionTrail"), LAYERTAG::IGNORECOLLISION, &desc);
@@ -80,10 +82,14 @@ const wstring& CP_Strife_State_Dash::Transition()
 	}
 	else if (Anims::DASH_END == m_iCurrAnimation)
 	{
-		if (m_fTimeSum > m_vecAnimIndexTime[m_iCurrAnimation].second * 0.4f)
+		if (!m_bSoundOn && m_fTimeSum > m_vecAnimIndexTime[m_iCurrAnimation].second * 0.3f)
 		{
 			pController->GetDashMessage(false);
 			m_pGameInstance->PlaySoundFile(TEXT("char_strife_dash_end_01.ogg"), CHANNELID::CHANNEL_MOVE, 0.3f);
+			m_bSoundOn = true;
+		}
+		else if (m_fTimeSum > m_vecAnimIndexTime[m_iCurrAnimation].second * 0.4f)
+		{
 			return m_vecTransition[Trans::IDLE];
 		}
 	}

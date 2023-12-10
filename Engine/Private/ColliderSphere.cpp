@@ -56,13 +56,13 @@ void CSphereCollider::LateTick(const _float& fTimeDelta)
 void CSphereCollider::DebugRender()
 {
 #ifdef _DEBUG
-	Super::DebugRender();
+	//Super::DebugRender();
 
-	m_pBatch->Begin();
+	//m_pBatch->Begin();
 
-	DX::Draw(m_pBatch, m_tBoundingSphere, Colors::Green);
+	//DX::Draw(m_pBatch, m_tBoundingSphere, Colors::Green);
 
-	m_pBatch->End();
+	//m_pBatch->End();
 #endif // DEBUG
 }
 _bool CSphereCollider::Intersects(Ray& ray, OUT _float& distance)

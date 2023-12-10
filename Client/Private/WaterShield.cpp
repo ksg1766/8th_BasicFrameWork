@@ -30,28 +30,31 @@ HRESULT CWaterShield::Initialize(void* pArg)
 
 void CWaterShield::Tick(const _float& fTimeDelta)
 {
-	if (m_bRendered)
-		return;
-
 	Super::Tick(fTimeDelta);
 	
 	m_fFrameTime += 0.3f * fTimeDelta;
+	m_fDeleteTime += fTimeDelta;
+
+	if (m_fDeleteTime >= 5.f)
+		m_pGameInstance->DeleteObject(this);
+
 	if (m_fFrameTime > 2.f)
 		m_fFrameTime -= 1.f;
 
 	if (m_fFrameTime <= 1.f)
-		GetTransform()->SetScale(Vec3(5.f * m_fFrameTime, 5.f * m_fFrameTime, 5.f * m_fFrameTime));
+	{
+		if (0.f != m_fScaleRatio)
+			GetTransform()->SetScale(m_fScaleRatio * Vec3(m_fFrameTime, m_fFrameTime, m_fFrameTime));
+		else
+			GetTransform()->SetScale(Vec3(1.3f, 1.3f, 1.3f));
+	}
 }
 
 void CWaterShield::LateTick(const _float& fTimeDelta)
 {
-	if (m_bRendered)
-		return;
-
 	Super::LateTick(fTimeDelta);
 
 	GetRenderer()->Add_RenderGroup(CRenderer::RG_BLEND, this);
-	m_bRendered = true;
 }
 
 void CWaterShield::DebugRender()
@@ -72,8 +75,6 @@ HRESULT CWaterShield::Render()
 	Super::DebugRender();
 #endif
 
-	m_bRendered = false;
-
 	return S_OK;
 }
 
@@ -82,7 +83,7 @@ HRESULT CWaterShield::Ready_FixedComponents()
 	/* Com_Shader */
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Shader, TEXT("Prototype_Component_Shader_VtxMesh"))))
 		return E_FAIL;
-	GetShader()->SetPassIndex(7);
+	GetShader()->SetPassIndex(8);
 	/* Com_Model */
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Model, TEXT("Prototype_Component_Model_") + GetObjectTag())))
 		return E_FAIL;

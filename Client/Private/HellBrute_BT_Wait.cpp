@@ -24,6 +24,14 @@ CBT_Node::BT_RETURN CHellBrute_BT_Wait::OnUpdate(const _float& fTimeDelta)
 		return BT_FAIL;
 	}
 
+	if (!m_bSoundOn && m_fTimeSum > m_vecAnimIndexTime[0].second * 0.2f)
+	{
+		if (FAILED(m_pGameInstance->PlaySoundFile(TEXT("en_hellbrute_powershot_charge.ogg"), CHANNELID::CHANNEL_ENEMY2, 0.3f)))
+			__debugbreak();
+
+		m_bSoundOn = true;
+	}
+
 	if (m_fTimeSum > m_vecAnimIndexTime[0].second * 0.8f)
 	{
 		return BT_SUCCESS;

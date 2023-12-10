@@ -4,6 +4,7 @@
 #include "Layer.h"
 #include "ParticleController.h"
 #include "Particle_Waterfall.h"
+#include "PlayerController.h"
 
 CLightning_Spark::CLightning_Spark(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: Super(pDevice, pContext)
@@ -30,6 +31,9 @@ HRESULT CLightning_Spark::Initialize(void* pArg)
 	
 	GetTransform()->SetScale(Vec3(1.75f, 3.3f, 1.75f));
 	GetTransform()->RotateYAxisFixed(Vec3(0.f, rand(), 0.f));
+
+	GetRigidBody()->GetSphereCollider()->SetRadius(3.5f);
+	GetRigidBody()->GetOBBCollider()->SetExtents(Vec3(2.f, 2.f, 2.f));
 
 	return S_OK;
 }
@@ -151,6 +155,11 @@ HRESULT CLightning_Spark::Ready_FixedComponents()
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Renderer, TEXT("Prototype_Component_Renderer"))))
 		return E_FAIL;
 
+	/* Com_RigidBody */
+	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::RigidBody, TEXT("Prototype_Component_RigidDynamic")))
+		|| FAILED(GetRigidBody()->InitializeCollider()))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -177,6 +186,24 @@ HRESULT CLightning_Spark::Bind_ShaderResources()
 		return E_FAIL;
 
 	return S_OK;
+}
+
+void CLightning_Spark::OnCollisionEnter(CGameObject* pOther)
+{
+	const LAYERTAG& eLayerTag = pOther->GetLayerTag();
+	if (LAYERTAG::PLAYER == eLayerTag)
+	{
+		CPlayerController* pPlayerController = static_cast<CPlayerController*>(pOther->GetScripts()[0]);
+		pPlayerController->GetHitMessage();
+	}
+}
+
+void CLightning_Spark::OnCollisionStay(CGameObject* pOther)
+{
+}
+
+void CLightning_Spark::OnCollisionExit(CGameObject* pOther)
+{
 }
 
 CLightning_Spark* CLightning_Spark::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

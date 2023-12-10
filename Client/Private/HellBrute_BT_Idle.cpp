@@ -13,6 +13,8 @@ void CHellBrute_BT_Idle::OnStart()
 {
 	Super::OnStart(0);
 	StartIdleCoolDown();
+	//if (FAILED(m_pGameInstance->StopSound(CHANNELID::CHANNEL_ENEMY2)))
+	//	__debugbreak();
 }
 
 CBT_Node::BT_RETURN CHellBrute_BT_Idle::OnUpdate(const _float& fTimeDelta)

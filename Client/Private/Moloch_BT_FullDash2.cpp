@@ -22,9 +22,6 @@ void CMoloch_BT_FullDash2::OnStart()
 	pController->Look(m_vTargetPos);
 
 	m_iCrystalCounter = 24;
-
-	if (FAILED(m_pGameInstance->PlaySoundFile(TEXT("en_moloch_atk_full_dash_strike_2.ogg"), CHANNELID::CHANNEL_ENEMY1, 0.7f)))
-		__debugbreak();
 }
 
 CBT_Node::BT_RETURN CMoloch_BT_FullDash2::OnUpdate(const _float& fTimeDelta)
@@ -34,7 +31,7 @@ CBT_Node::BT_RETURN CMoloch_BT_FullDash2::OnUpdate(const _float& fTimeDelta)
 
 	if (m_fTimeSum > m_vecAnimIndexTime[0].second * 0.97f)
 	{
-		//CBossController* pController = static_cast<CBossController*>(m_pController);
+		//CMonsterController* pController = static_cast<CMonsterController*>(m_pController);
 		//pController->GetAttackMessage(0);
 
 		return BT_SUCCESS;
@@ -86,15 +83,26 @@ CBT_Node::BT_RETURN CMoloch_BT_FullDash2::OnUpdate(const _float& fTimeDelta)
 		{
 			CMonsterController* pController = static_cast<CMonsterController*>(m_pController);
 			pController->GetDashSpeedMessage();
+
+			m_vTargetPos = GetTarget()->GetTransform()->GetPosition();
+			pController->Look(m_vTargetPos);
 			pController->GetTranslateMessage(m_pGameObject->GetTransform()->GetForward());
 		}
 
-		if (4 == m_iFrameCounter++)
+		if (3 == m_iFrameCounter++)
 		{
 			CMoloch_MotionTrail::MOTIONTRAIL_DESC desc{ m_pModel, &m_pModel->GetTweenDesc(), m_pGameObject->GetTransform()->WorldMatrix(), 0.18f };
 			m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Moloch_MotionTrail"), LAYERTAG::IGNORECOLLISION, &desc);
 			m_iFrameCounter = 0;
 		}
+	}
+
+	if (!m_bSoundOn && m_fTimeSum < m_vecAnimIndexTime[0].second * 0.1f)
+	{
+		if (FAILED(m_pGameInstance->PlaySoundFile(TEXT("en_moloch_atk_full_dash_strike_2.ogg"), CHANNELID::CHANNEL_ENEMY1, 0.7f)))
+			__debugbreak();
+
+		m_bSoundOn = true;
 	}
 
 	m_fTimeSum += fTimeDelta;

@@ -24,6 +24,9 @@ public:
 	virtual void	DebugRender()						override;
 	virtual HRESULT Render()							override;
 
+public:
+	void			SetScaleRatio(_float fScaleRatio) { m_fScaleRatio = fScaleRatio; }
+
 private:
 	HRESULT			Ready_FixedComponents();
 	HRESULT			Ready_Scripts();
@@ -31,6 +34,8 @@ private:
 
 private:
 	_float			m_fFrameTime = 0.f;
+	_float			m_fDeleteTime = 0.f;
+	_float			m_fScaleRatio = 0.f;
 
 public:
 	static	CWaterShield* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

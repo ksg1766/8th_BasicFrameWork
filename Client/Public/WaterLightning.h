@@ -34,6 +34,11 @@ private:
 	HRESULT			Ready_FixedComponents();
 	HRESULT			Ready_Scripts(void* pArg);
 
+public:
+	virtual	void	OnCollisionEnter(CGameObject* pOther)	override;
+	virtual	void	OnCollisionStay(CGameObject* pOther)	override;
+	virtual	void	OnCollisionExit(CGameObject* pOther)	override;
+
 private:
 	_float		m_fFrameTime = 0.f;
 	_bool		m_LightningDead = false;

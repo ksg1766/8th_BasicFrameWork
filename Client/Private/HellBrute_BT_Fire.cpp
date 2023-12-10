@@ -39,6 +39,9 @@ CBT_Node::BT_RETURN CHellBrute_BT_Fire::OnUpdate(const _float& fTimeDelta)
 	{
 		Fire();
 		m_fFR_Default_Timer = m_fFR_Default;
+
+		if (FAILED(m_pGameInstance->PlaySoundFile(TEXT("en_hellbrute_gatling_gun_loop.ogg"), CHANNELID::CHANNEL_ENEMY2, 0.2f)))
+			__debugbreak();
 	}
 	//pController->GetAttackMessage();
 
@@ -65,7 +68,11 @@ _bool CHellBrute_BT_Fire::IsInRange()
 	Vec3 vDist = vTargetPos - vCurPos;
 
 	if (vDist.Length() < *GET_VALUE(_float, meleeRange))
+	{
+		if (FAILED(m_pGameInstance->StopSound(CHANNELID::CHANNEL_ENEMY2)))
+			__debugbreak();
 		return true;
+	}
 	else
 		return false;
 }
@@ -94,6 +101,8 @@ _bool CHellBrute_BT_Fire::IsInSight()
 	else // 시야에 없다면
 	{
 		BLACKBOARD& hashBlackBoard = m_pBehaviorTree->GetBlackBoard();
+		if (FAILED(m_pGameInstance->StopSound(CHANNELID::CHANNEL_ENEMY2)))
+			__debugbreak();
 
 		if (tTarget != hashBlackBoard.end())	// 근데 키값이 있다면 제거
 		{
@@ -123,7 +132,7 @@ void CHellBrute_BT_Fire::Fire()
 	Quaternion qRot = m_pGameObject->GetTransform()->GetRotationQuaternion();
 
 	tProps = { CStrife_Ammo::AmmoType::DEFAULT, 7, 0, 10, 7.5f * pTransform->GetForward(), false, 1.8f };
-	pAmmo = m_pGameInstance->CreateObject(L"Prototype_GameObject_Strife_Ammo_Default", LAYERTAG::UNIT_AIR, &tProps);
+	pAmmo = m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Strife_Ammo_Default"), LAYERTAG::UNIT_AIR, &tProps);
 	vFireOffset = pTransform->GetPosition() + 3.f * pTransform->GetForward() + 1.9f * pTransform->GetRight() + 1.5f * pTransform->GetUp();
 
 	CTransform* pAmmoTransform = pAmmo->GetTransform();

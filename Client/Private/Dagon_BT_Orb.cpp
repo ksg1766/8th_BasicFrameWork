@@ -29,14 +29,14 @@ CBT_Node::BT_RETURN CDagon_BT_Orb::OnUpdate(const _float& fTimeDelta)
 	if (IsZeroHP())
 		return BT_FAIL;
 
+	if (!m_bHitOrMiss)
+		return BT_FAIL;
+
 	if (-1 == m_iOrbNum)
 	{
 		m_iOrbNum = 0;
 		return BT_FAIL;
 	}
-
-	if (!m_bHitOrMiss)
-		return BT_FAIL;
 
 	if (m_fTimeSum > m_vecAnimIndexTime[0].second * 0.9f)
 	{

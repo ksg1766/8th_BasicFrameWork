@@ -12,7 +12,7 @@ constexpr auto EPSILON = 0.001f;
 CMonsterController::CMonsterController(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:Super(pDevice, pContext)
 	, m_vLinearSpeed(Vec3(3.f, 3.f, 3.f))
-	, m_vMaxLinearSpeed(Vec3(5.f, 5.f, 5.f))
+	, m_vMaxLinearSpeed(Vec3(7.f, 7.f, 7.f))
 	, m_vDashLinearSpeed(Vec3(20.f, 20.f, 20.f))
 	, m_vAngularSpeed(Vec3(0.f, 360.f, 0.f))
 	, m_vMaxAngularSpeed(Vec3(0.f, 540.f, 0.f))
@@ -23,24 +23,25 @@ CMonsterController::CMonsterController(const CMonsterController& rhs)
 	:Super(rhs)
 	, m_vLinearSpeed(rhs.m_vLinearSpeed)
 	, m_vMaxLinearSpeed(rhs.m_vMaxLinearSpeed)
+	, m_vDashLinearSpeed(rhs.m_vDashLinearSpeed)
 	, m_vAngularSpeed(rhs.m_vAngularSpeed)
 	, m_vMaxAngularSpeed(rhs.m_vMaxAngularSpeed)
 	, m_IsZeroHP(rhs.m_IsZeroHP)
 #ifdef _DEBUG
-	, m_pBatch(rhs.m_pBatch)
+	/*, m_pBatch(rhs.m_pBatch)
 	, m_pEffect(rhs.m_pEffect)
-	, m_pInputLayout(rhs.m_pInputLayout)
+	, m_pInputLayout(rhs.m_pInputLayout)*/
 #endif
 {
 #ifdef _DEBUG
-	Safe_AddRef(m_pInputLayout);
+	//Safe_AddRef(m_pInputLayout);
 #endif
 }
 
 HRESULT CMonsterController::Initialize_Prototype()
 {
 #ifdef _DEBUG
-	m_pBatch = new PrimitiveBatch<VertexPositionColor>(m_pContext);
+	/*m_pBatch = new PrimitiveBatch<VertexPositionColor>(m_pContext);
 
 	m_pEffect = new BasicEffect(m_pDevice);
 	m_pEffect->SetVertexColorEnabled(true);
@@ -55,7 +56,7 @@ HRESULT CMonsterController::Initialize_Prototype()
 		Safe_Delete(m_pEffect);
 		Safe_Release(m_pInputLayout);
 		return E_FAIL;
-	}
+	}*/
 #endif
 
 	return S_OK;
@@ -112,7 +113,7 @@ void CMonsterController::LateTick(const _float& fTimeDelta)
 void CMonsterController::DebugRender()
 {
 #ifdef _DEBUG	// Behavior Tree로 옮길 것
-	m_pEffect->SetWorld(XMMatrixIdentity());
+	/*m_pEffect->SetWorld(XMMatrixIdentity());
 
 	m_pEffect->SetView(m_pGameInstance->Get_Transform_Matrix(CPipeLine::D3DTS_VIEW));
 	m_pEffect->SetProjection(m_pGameInstance->Get_Transform_Matrix(CPipeLine::D3DTS_PROJ));
@@ -141,7 +142,7 @@ void CMonsterController::DebugRender()
 	{
 		DX::DrawRing(m_pBatch, GetTransform()->GetPosition(), Vec3(14.f, 0.f, 0.f), Vec3(0.f, 0.f, 14.f), Colors::Blue);
 	}
-	m_pBatch->End();
+	m_pBatch->End();*/
 #endif // DEBUG
 }
 

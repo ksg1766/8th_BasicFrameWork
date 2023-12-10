@@ -15,6 +15,8 @@ void CHellHound_BT_Dead::OnStart()
 
 	m_pGameObject->SetInstance(false);
 	m_pGameInstance->SwapShader(m_pGameObject, TEXT("Shader_VtxTexFetchAnim"));
+	if (FAILED(m_pGameInstance->PlaySoundFile(TEXT("en_hellhound_death_vo_03.ogg"), CHANNELID::CHANNEL_ENEMY3, 0.3f)))
+		__debugbreak();
 }
 
 CBT_Node::BT_RETURN CHellHound_BT_Dead::OnUpdate(const _float& fTimeDelta)

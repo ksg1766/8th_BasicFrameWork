@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "..\Public\Bubble.h"
 #include "GameInstance.h"
+#include "PlayerController.h"
 
 CBubble::CBubble(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: Super(pDevice, pContext)
@@ -24,6 +25,9 @@ HRESULT CBubble::Initialize(void* pArg)
 
 	if (FAILED(Ready_Scripts()))
 		return E_FAIL;
+
+	GetRigidBody()->GetSphereCollider()->SetRadius(5.2f);
+	GetRigidBody()->GetOBBCollider()->SetExtents(Vec3(3.f, 3.f, 3.f));
 
 	return S_OK;
 }
@@ -83,6 +87,11 @@ HRESULT CBubble::Ready_FixedComponents()
 	/* Com_Renderer */
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Renderer, TEXT("Prototype_Component_Renderer"))))
 		return E_FAIL;
+	
+	/* Com_RigidBody */
+	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::RigidBody, TEXT("Prototype_Component_RigidDynamic")))
+		|| FAILED(GetRigidBody()->InitializeCollider()))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -107,6 +116,24 @@ HRESULT CBubble::Bind_ShaderResources()
 		return E_FAIL;
 
 	return S_OK;
+}
+
+void CBubble::OnCollisionEnter(CGameObject* pOther)
+{
+	const LAYERTAG& eLayerTag = pOther->GetLayerTag();
+	if (LAYERTAG::PLAYER == eLayerTag)
+	{
+		CPlayerController* pPlayerController = static_cast<CPlayerController*>(pOther->GetScripts()[0]);
+		pPlayerController->GetHitMessage();
+	}
+}
+
+void CBubble::OnCollisionStay(CGameObject* pOther)
+{
+}
+
+void CBubble::OnCollisionExit(CGameObject* pOther)
+{
 }
 
 CBubble* CBubble::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

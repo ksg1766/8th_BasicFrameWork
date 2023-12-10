@@ -44,6 +44,9 @@ HRESULT CP_Strife::Initialize(void* pArg)
 	//GetRigidBody()->GetOBBCollider()->SetExtents(Vec3(5.f, 5.f, 5.f));
 	//GetTransform()->SetScale(Vec3(2.f, 2.f, 2.f));
 
+	//if (FAILED(m_pGameInstance->PlaySoundFile(TEXT("mus_hell_med_drums.ogg"), CHANNELID::CHANNEL_BGM, 0.5f)))
+	//	__debugbreak();
+
 	return S_OK;
 }
 
@@ -257,7 +260,8 @@ HRESULT CP_Strife::Bind_ShaderResources()
 	/* 셰이더 전역변수로 던져야 할 값들을 던지자. */
 	if (FAILED(GetTransform()->Bind_ShaderResources(GetShader(), "g_WorldMatrix")) ||
 		FAILED(m_pGameInstance->Bind_TransformToShader(GetShader(), "g_ViewMatrix", CPipeLine::D3DTS_VIEW)) ||
-		FAILED(m_pGameInstance->Bind_TransformToShader(GetShader(), "g_ProjMatrix", CPipeLine::D3DTS_PROJ)))
+		FAILED(m_pGameInstance->Bind_TransformToShader(GetShader(), "g_ProjMatrix", CPipeLine::D3DTS_PROJ)) ||
+		FAILED(GetShader()->Bind_RawValue("g_vCamPosition", &static_cast<const _float4&>(m_pGameInstance->Get_CamPosition_Float4()), sizeof(_float4))))
 	{
 		return E_FAIL;
 	}

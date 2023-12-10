@@ -28,6 +28,11 @@ private:
 	HRESULT			Ready_Scripts();
 	HRESULT			Bind_ShaderResources(); /* 셰이더 전역변수에 값 던진다. */
 
+public:
+	virtual	void	OnCollisionEnter(CGameObject* pOther)	override;
+	virtual	void	OnCollisionStay(CGameObject* pOther)	override;
+	virtual	void	OnCollisionExit(CGameObject* pOther)	override;
+
 private:
 	_float			m_fFrameTime = 0.f;
 	_float			m_fEmissivePower = 1.f;

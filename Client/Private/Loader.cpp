@@ -558,7 +558,7 @@ HRESULT CLoader::Loading_GameObjects_For_Level_GamePlay()
 		return E_FAIL;
 	
 	/* For.Prototype_GameObject_WaterShield */
-	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_WaterShield"), CRing_Flat_Wave::Create(m_pDevice, m_pContext))))
+	if (FAILED(pGameInstance->Add_Prototype(TEXT("Prototype_GameObject_WaterShield"), CWaterShield::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_Static */
@@ -622,16 +622,6 @@ HRESULT CLoader::Loading_For_Level_GameTool()
 HRESULT CLoader::Loading_Components_For_Level_GameTool()
 {
 	CGameInstance* pGameInstance = GET_INSTANCE(CGameInstance);
-
-	/* For.Prototype_Component_Texture_Sky */
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMETOOL, TEXT("Prototype_Component_Texture_Sky"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/SkyBox/Sky_%d.dds"), 4))))
-		return E_FAIL;
-
-	/* For.Prototype_Component_Texture_Terrain*/
-	if (FAILED(pGameInstance->Add_Prototype(LEVEL_GAMETOOL, TEXT("Prototype_Component_Texture_Terrain"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Tile0.jpg")))))
-		return E_FAIL;
 
 	RELEASE_INSTANCE(CGameInstance);
 

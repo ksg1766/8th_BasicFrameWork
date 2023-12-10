@@ -15,7 +15,7 @@ void CMoloch_BT_Dead::OnStart()
 
 	m_pGameObject->SetInstance(false);
 	m_pGameInstance->SwapShader(m_pGameObject, TEXT("Shader_VtxTexFetchAnim"));
-	if (FAILED(m_pGameInstance->PlaySoundFile(TEXT("en_moloch_impact_stun.ogg"), CHANNELID::CHANNEL_ENEMY2, 0.2f)))
+	if (FAILED(m_pGameInstance->PlaySoundFile(TEXT("en_moloch_impact_stun.ogg"), CHANNELID::CHANNEL_ENEMY2, 0.5f)))
 		__debugbreak();
 }
 

@@ -24,6 +24,14 @@ CBT_Node::BT_RETURN CHellHound_BT_Wait::OnUpdate(const _float& fTimeDelta)
 		return BT_FAIL;
 	}
 
+	if (!m_bSoundOn && m_fTimeSum > m_vecAnimIndexTime[0].second * 0.1f)
+	{
+		if (FAILED(m_pGameInstance->PlaySoundFile(TEXT("en_hellhound_taunt_vo_01.ogg"), CHANNELID::CHANNEL_ENEMY5, 0.3f)))
+			__debugbreak();
+
+		m_bSoundOn = true;
+	}
+
 	if (m_fTimeSum > m_vecAnimIndexTime[0].second * 0.8f)
 	{
 		return BT_SUCCESS;

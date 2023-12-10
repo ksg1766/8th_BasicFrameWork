@@ -31,7 +31,7 @@ HRESULT CStrife_Ammo_Nature::Initialize(void* pArg)
 
 	static_cast<CRigidDynamic*>(GetRigidBody())->UseGravity(false);
 	static_cast<CRigidDynamic*>(GetRigidBody())->IsKinematic(true);
-	static_cast<CRigidDynamic*>(GetRigidBody())->SetMass(0.5f);
+	static_cast<CRigidDynamic*>(GetRigidBody())->SetMass(0.05f);
 
 	GetTransform()->SetScale(Vec3(0.33f, 5.5f, 1.f));
 	GetTransform()->Rotate(Vec3(90.f, 0.0f, 0.f));

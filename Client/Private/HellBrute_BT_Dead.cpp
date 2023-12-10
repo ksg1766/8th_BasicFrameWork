@@ -15,6 +15,9 @@ void CHellBrute_BT_Dead::OnStart()
 
 	m_pGameObject->SetInstance(false);
 	m_pGameInstance->SwapShader(m_pGameObject, TEXT("Shader_VtxTexFetchAnim"));
+
+	if (FAILED(m_pGameInstance->PlaySoundFile(TEXT("en_hellbrute_death_interactive.ogg"), CHANNELID::CHANNEL_ENEMY2, 0.3f)))
+		__debugbreak();
 }
 
 CBT_Node::BT_RETURN CHellBrute_BT_Dead::OnUpdate(const _float& fTimeDelta)

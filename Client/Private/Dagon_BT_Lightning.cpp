@@ -37,7 +37,7 @@ CBT_Node::BT_RETURN CDagon_BT_Lightning::OnUpdate(const _float& fTimeDelta)
 		return BT_SUCCESS;
 	}
 
-	if (!m_bAttacked && m_fTimeSum > m_vecAnimIndexTime[0].second * 0.3f)
+	if (!m_bAttacked && m_fTimeSum > m_vecAnimIndexTime[0].second * 0.5f)
 	{
 		vector<CGameObject*> vecWaterLightning;
 		vector<CGameObject*> vecBolts;
@@ -45,7 +45,7 @@ CBT_Node::BT_RETURN CDagon_BT_Lightning::OnUpdate(const _float& fTimeDelta)
 		vecBolts.resize(5);
 		for (_int i = 0; i < 5; ++i)
 		{
-			CGameObject* pWaterLightning = m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_WaterLightning"), LAYERTAG::IGNORECOLLISION);
+			CGameObject* pWaterLightning = m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_WaterLightning"), LAYERTAG::UNIT_AIR);
 			vecWaterLightning[i] = pWaterLightning;
 			pWaterLightning->GetTransform()->SetScale(Vec3(3.7f, 1.5f, 3.7f));
 			pWaterLightning->GetTransform()->SetPosition(m_pGameObject->GetTransform()->GetPosition() + 2.2f * Vec3::UnitY);

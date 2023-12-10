@@ -60,6 +60,14 @@ CBT_Node::BT_RETURN CMoloch_BT_Geyser1::OnUpdate(const _float& fTimeDelta)
 		return BT_SUCCESS;
 	}
 
+	if (!m_bSoundOn && m_fTimeSum > m_vecAnimIndexTime[0].second * 0.15f)
+	{
+		if (FAILED(m_pGameInstance->PlaySoundFile(TEXT("en_moloch_atk_full_geyser_1.ogg"), CHANNELID::CHANNEL_ENEMY0, 0.7f)))
+			__debugbreak();
+
+		m_bSoundOn = true;
+	}
+
 	if(hashBlackBoard.end() == isSecondRun)
 		FirstRun();
 	else
@@ -90,9 +98,6 @@ void CMoloch_BT_Geyser1::FirstRun()
 
 	if (!m_bAttack)
 	{
-		if (FAILED(m_pGameInstance->PlaySoundFile(TEXT("en_moloch_atk_full_geyser_1.ogg"), CHANNELID::CHANNEL_ENEMY0, 0.7f)))
-			__debugbreak();
-
 		if (m_fTimeSum > m_vecAnimIndexTime[0].second * 0.2f)
 		{
 			Vec3 vCreatePosition[7] = {
@@ -170,8 +175,6 @@ void CMoloch_BT_Geyser1::SecondRun()
 
 	if (!m_bAttack)
 	{
-		if (FAILED(m_pGameInstance->PlaySoundFile(TEXT("en_moloch_atk_full_geyser_2.ogg"), CHANNELID::CHANNEL_ENEMY1, 0.7f)))
-			__debugbreak();
 		if (m_fTimeSum > m_vecAnimIndexTime[0].second * 0.2f)
 		{
 			CTransform* pTargetTransform = GetTarget()->GetTransform();

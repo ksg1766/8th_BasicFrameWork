@@ -4,6 +4,7 @@
 #include "Layer.h"
 #include "GameObject.h"
 #include "MonsterController.h"
+#include "WaterShield.h"
 
 CDemonCaster_BT_Spell::CDemonCaster_BT_Spell()
 {
@@ -12,13 +13,19 @@ CDemonCaster_BT_Spell::CDemonCaster_BT_Spell()
 void CDemonCaster_BT_Spell::OnStart()
 {
 	Super::OnStart(0);
+
+	if (FAILED(m_pGameInstance->PlaySoundFile(TEXT("en_demoncaster_atk_cast_blizzard.ogg"), CHANNELID::CHANNEL_ENEMY0, 0.3f)))
+		__debugbreak();
 }
 
 CBT_Node::BT_RETURN CDemonCaster_BT_Spell::OnUpdate(const _float& fTimeDelta)
 {
 	ConditionalAbort(fTimeDelta);
 	if (IsZeroHP())
+	{
+		
 		return BT_FAIL;
+	}
 
 	BLACKBOARD& hashBlackBoard = m_pBehaviorTree->GetBlackBoard();
 	const auto& target = hashBlackBoard.find(TEXT("Target"));
@@ -30,9 +37,38 @@ CBT_Node::BT_RETURN CDemonCaster_BT_Spell::OnUpdate(const _float& fTimeDelta)
 
 	if (m_fTimeSum > m_vecAnimIndexTime[0].second * 0.9f)
 	{
-		pController->GetAttackMessage();
+		const Vec3& vPosition = m_pGameObject->GetTransform()->GetPosition();
+		const Vec3& vRight = m_pGameObject->GetTransform()->GetRight();
+		_int iNaveMeshIndex = m_pGameObject->GetNavMeshAgent()->GetCurrentIndex();
+		
+		CGameObject* pMonster = m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_HellHound"), LAYERTAG::UNIT_GROUND);
+		pMonster->GetNavMeshAgent()->SetCurrentIndex(iNaveMeshIndex);
+		pMonster->GetTransform()->SetPosition(vPosition + 0.5f * vRight);
+		
+		pMonster = m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Goblin"), LAYERTAG::UNIT_GROUND);
+		pMonster->GetNavMeshAgent()->SetCurrentIndex(iNaveMeshIndex);
+		pMonster->GetTransform()->SetPosition(vPosition - 0.5f * vRight);
+
+		if (!m_pWaterShield)
+		{
+			if (!m_pWaterShield->IsDead())
+			{
+				m_pGameInstance->DeleteObject(m_pWaterShield);
+				m_pWaterShield = nullptr;
+			}
+		}
+
 		return BT_SUCCESS;
 	}
+
+	if (!m_pWaterShield && m_fTimeSum > m_vecAnimIndexTime[0].second * 0.1f)
+	{
+		m_pWaterShield = static_cast<CWaterShield*>(m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_WaterShield"), LAYERTAG::IGNORECOLLISION));
+		m_pWaterShield->SetScaleRatio(0.3f);
+		m_pWaterShield->GetTransform()->Translate(m_pGameObject->GetTransform()->GetPosition());
+	}
+
+	m_fTimeSum += fTimeDelta;
 
 	return BT_RUNNING;
 }

@@ -2,6 +2,7 @@
 #include "..\Public\Strife_Ammo_Default.h"
 #include "GameInstance.h"
 #include "MonsterController.h"
+#include "PlayerController.h"
 
 CStrife_Ammo_Default::CStrife_Ammo_Default(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: Super(pDevice, pContext)
@@ -31,10 +32,10 @@ HRESULT CStrife_Ammo_Default::Initialize(void* pArg)
 
 	static_cast<CRigidDynamic*>(GetRigidBody())->UseGravity(false);
 	static_cast<CRigidDynamic*>(GetRigidBody())->IsKinematic(true);
-	static_cast<CRigidDynamic*>(GetRigidBody())->SetMass(0.5f);
+	static_cast<CRigidDynamic*>(GetRigidBody())->SetMass(0.1f);
 
 	GetTransform()->SetScale(Vec3(0.33f, 7.f, 1.f));
-	GetTransform()->Rotate(Vec3(90.f, 0.0f, 0.f));
+	GetTransform()->Rotate(Vec3(90.f, 0.f, 0.f));
 
 	GetRigidBody()->GetSphereCollider()->SetRadius(0.37f);
 
@@ -134,7 +135,10 @@ void CStrife_Ammo_Default::OnCollisionEnter(CGameObject* pOther)
 	}
 	else if (LAYERTAG::PLAYER == eLayerTag)
 	{
-		
+		CPlayerController* pPlayerController = static_cast<CPlayerController*>(pOther->GetScripts()[0]);
+		pPlayerController->GetHitMessage();
+
+		static_cast<CRigidDynamic*>(GetRigidBody())->IsKinematic(false);
 	}
 
 	m_pGameInstance->DeleteObject(this);

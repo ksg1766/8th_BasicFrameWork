@@ -56,7 +56,7 @@ private:
 	_int										m_iMaxWaterCaptureCount = 1;
 
 	_float4x4									m_LightView, m_LightProj;
-	_float										m_fShadowTargetSizeRatio = 5.f;
+	_float										m_fShadowTargetSizeRatio = 8.f;
 
 #ifdef _DEBUG
 private:

@@ -62,6 +62,10 @@ CBT_Node::BT_RETURN CDagon_BT_Dead::OnUpdate(const _float& fTimeDelta)
 		if (nullptr != pWater)
 			pWater->SetMode(CWater::WaterLevelMode::Dessert);
 		//return BT_RUNNING;
+
+		if (FAILED(m_pGameInstance->StopSound(CHANNELID::CHANNEL_AMBIENT0)) ||
+			FAILED(m_pGameInstance->StopSound(CHANNELID::CHANNEL_AMBIENT1)))
+			__debugbreak();
 	}
 
 	m_fTimeSum += fTimeDelta;

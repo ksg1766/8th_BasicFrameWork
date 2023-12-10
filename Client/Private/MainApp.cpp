@@ -102,7 +102,7 @@ HRESULT CMainApp::Render()
 #endif
 	m_pRenderer->Draw_RenderObjects();
 
-	m_pGameInstance->DebugRender();
+	//m_pGameInstance->DebugRender();
 	/* 초기화한 장면에 객체들을 그린다. */
 	m_pGameInstance->Present();
 

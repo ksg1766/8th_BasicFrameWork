@@ -3,6 +3,9 @@
 #include "GameInstance.h"
 #include "SphereSwirl.h"
 
+#include "Strife_Ammo_Default.h"
+#include "Layer.h"
+
 COrb::COrb(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: Super(pDevice, pContext)
 {
@@ -58,12 +61,28 @@ void COrb::Tick(const _float& fTimeDelta)
 			GetTransform()->SetScale(Vec3(4.f, 4.f, 4.f));
 			m_pSphereSwirl->GetTransform()->SetScale(Vec3(4.f, 4.f, 4.f));
 			m_bSpawned = true;
-
-			//m_pGameInstance->PlaySoundFile(TEXT("en_waterboss_orb_projectile_build.ogg"), CHANNELID::CHANNEL_ENEMY0, 0.7f);
-			//m_pGameInstance->PlaySoundFile(TEXT("en_waterboss_orb_projectile.ogg"), CHANNELID::CHANNEL_ENEMY0, 0.7f);
 		}
 	}
 
+	if (!m_bCharged &&m_fFrameTime > 6.f)
+	{
+		if (FAILED(m_pGameInstance->PlaySoundFile(TEXT("en_waterboss_orb_projectile_build.ogg"), CHANNELID::CHANNEL_ENEMY2, 0.7f)))
+			__debugbreak();
+
+		CGameObject* pEffect = m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Shockwave"), LAYERTAG::IGNORECOLLISION);
+		pEffect->GetTransform()->SetPosition(GetTransform()->GetPosition());
+
+		m_bCharged = true;
+	}
+	if (!m_bLaunched && m_fFrameTime > 9.f)
+	{
+		Fire();
+		if (FAILED(m_pGameInstance->PlaySoundFile(TEXT("en_waterboss_orb_projectile.ogg"), CHANNELID::CHANNEL_ENEMY2, 0.7f)))
+			__debugbreak();
+
+		m_bLaunched = true;
+	}
+	
 	if (m_fFrameTime > 10.f)
 	{
 		GetTransform()->SetScale(GetTransform()->GetLocalScale() * (1.f - fTimeDelta));
@@ -168,6 +187,54 @@ HRESULT COrb::Bind_ShaderResources()
 		return E_FAIL;
 
 	return S_OK;
+}
+
+void COrb::Fire()
+{
+	CGameObject* pAmmo = nullptr;
+	CStrife_Ammo::AMMOPROPS tProps;
+
+	map<LAYERTAG, CLayer*>& mapLayers = m_pGameInstance->GetCurrentLevelLayers();
+	auto iter = mapLayers.find(LAYERTAG::PLAYER);
+	if (iter == mapLayers.end())
+		return;
+
+	CTransform* pTargetTransform = iter->second->GetGameObjects().front()->GetTransform();
+
+	Vec3 vTargetPosition = pTargetTransform->GetPosition();
+	Vec3 vFireDirection = vTargetPosition - GetTransform()->GetPosition();
+	vFireDirection.Normalize();
+
+	tProps = { CStrife_Ammo::AmmoType::DEFAULT, 7, 0, 50, 30.f * vFireDirection, false, 3.f };
+	pAmmo = m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Strife_Ammo_Default"), LAYERTAG::UNIT_AIR, &tProps);
+
+	CTransform* pAmmoTransform = pAmmo->GetTransform();
+	pAmmoTransform->GetTransform()->Rotate(vFireDirection);
+	pAmmoTransform->GetTransform()->Rotate(Vec3(0.f, 180.f, 0.f));
+	
+	//Matrix& matWorld = pAmmoTransform->WorldMatrix();
+
+	//_float fRight = matWorld.Right().Length();
+	//_float fUp = matWorld.Up().Length();
+	//_float fLook = matWorld.Backward().Length();
+
+	//matWorld.Backward(/*fLook * */vFireDirection);
+	//Vec3 vRight = Vec3::UnitY.Cross(vFireDirection);
+	//vRight.Normalize();
+	//matWorld.Right(/*fRight * */vRight);
+	//Vec3 vUp = vFireDirection.Cross(vRight);
+	//vUp.Normalize();
+	//matWorld.Up(/*fUp * */vUp);
+
+	pAmmoTransform->SetScale(Vec3(2.7f, 5.f, 1.f));/*
+	pAmmoTransform->Rotate(Vec3(90.f, 0.f, 0.f));
+	pAmmoTransform->Rotate(Vec3(0.f, 180.f, 0.f));*/
+
+	//pAmmoTransform->Rotate(qRot);
+	//pAmmoTransform->RotateYAxisFixed(vRotateAmount);
+	pAmmoTransform->SetPosition(GetTransform()->GetPosition());
+
+	static_cast<CStrife_Ammo_Default*>(pAmmo)->SetColor(Color(0.135f, 0.13f, 1.0f));
 }
 
 COrb* COrb::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

@@ -360,14 +360,14 @@ PS_ALPHA_OUT PS_WATERSHIELD_MAIN(PS_IN In)
 	
     PS_ALPHA_OUT Out = (PS_ALPHA_OUT) 0;
 
-    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, 2.f * vNewUV);
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(LinearSampler, 3.f * vNewUV);
 
     if (vMtrlDiffuse.r < 0.01f)
         discard;
     
     Out.vColor = vMtrlDiffuse;
-    Out.vColor.a = 0.5f;
-    Out.vDistortion = Out.vColor * 0.01f;
+    Out.vColor.a = 0.7f;
+    Out.vDistortion = Out.vColor * 0.005f;
     
     return Out;
 }

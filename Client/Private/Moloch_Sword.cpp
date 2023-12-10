@@ -196,7 +196,15 @@ void CMoloch_Sword::Free()
 	Super::Free();
 
 	for (auto& iter : m_vecFires)
-		Safe_Release(iter);
+	{
+		m_pGameInstance->DeleteObject(iter);
+		//Safe_Release(iter);
+	}
+	for (_int i = 0; i < 10; ++i)
+	{
+		m_pGameInstance->DeleteObject(m_pFire[i]);
+		//Safe_Release(m_pFire[i]);
+	}
 
 	m_vecFires.clear();
 }

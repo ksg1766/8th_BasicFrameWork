@@ -100,10 +100,10 @@ private:
 
 
 #ifdef _DEBUG
-private:
-	PrimitiveBatch<VertexPositionColor>* m_pBatch = nullptr;
-	BasicEffect* m_pEffect			= nullptr;
-	ID3D11InputLayout* m_pInputLayout = nullptr;
+//private:
+//	PrimitiveBatch<VertexPositionColor>* m_pBatch = nullptr;
+//	BasicEffect* m_pEffect			= nullptr;
+//	ID3D11InputLayout* m_pInputLayout = nullptr;
 #endif
 
 public:

@@ -42,6 +42,7 @@ public:
 	void	GetJumpMessage(const _bool& IsJump)						{ IsJump ? Jump() : Land();}
 	void	GetDashMessage(const _bool& IsDash)						{ IsDash ? Dash(m_pTransform->GetForward()) : DashEnd(); }
 	void	GetFireMessage(const CStrife_Ammo::AmmoType eAmmoType)	{ Fire(eAmmoType); }
+	void	GetHitMessage()											{ Hit(); }
 
 	void	ForceHeight()											{ m_pNavMeshAgent->ForceHeight(); }
 	_float	GetHeightOffset()			{ return m_pNavMeshAgent->GetHeightOffset(); }
@@ -66,6 +67,7 @@ private:
 	void	Dash(const Vec3& vDir);
 	void	DashEnd();
 	void	Fire(CStrife_Ammo::AmmoType eAmmoType);
+	void	Hit();
 
 	void	LimitAllAxisVelocity();
 
@@ -90,6 +92,8 @@ private:
 	_int			m_bGodRayScene = -1;
 	_bool			m_bMolochCreated = false;
 	_bool			m_bWaterCreated = false;
+
+	_int			m_iHitEffectCount = -1;
 
 public:
 	static	CPlayerController* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

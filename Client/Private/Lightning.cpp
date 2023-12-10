@@ -30,6 +30,9 @@ HRESULT CLightning::Initialize(void* pArg)
 	GetTransform()->Translate(Vec3(0.f, 7.f, 0.f));
 	//GetTransform()->Rotate(Vec3(90.f, 0.0f, 0.f));
 
+	//GetRigidBody()->GetSphereCollider()->SetRadius(3.5f);
+	//GetRigidBody()->GetOBBCollider()->SetExtents(Vec3(2.f, 2.f, 2.f));
+
 	return S_OK;
 }
 

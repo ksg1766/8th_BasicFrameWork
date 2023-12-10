@@ -14,6 +14,9 @@ HRESULT CLevel_Logo::Initialize()
 	if (FAILED(Ready_Layer_BackGround(LAYERTAG::BACKGROUND)))
 		return E_FAIL;
 
+	//if (FAILED(m_pGameInstance->PlayBGM(TEXT("mus_mainmenu.ogg"), 0.3f)))
+	//	__debugbreak();
+
 	return S_OK;
 }
 

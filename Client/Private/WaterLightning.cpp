@@ -4,6 +4,7 @@
 #include "Layer.h"
 #include "ParticleController.h"
 #include "Particle_Waterfall.h"
+#include "PlayerController.h"
 
 CWaterLightning::CWaterLightning(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: Super(pDevice, pContext)
@@ -31,6 +32,9 @@ HRESULT CWaterLightning::Initialize(void* pArg)
 	GetTransform()->SetScale(Vec3(1.3f, 1.5f, 1.3f));
 	GetTransform()->Translate(Vec3(0.f, 5.f, 0.f));
 	//GetTransform()->Rotate(Vec3(90.f, 0.0f, 0.f));
+
+	GetRigidBody()->GetSphereCollider()->SetRadius(3.5f);
+	GetRigidBody()->GetOBBCollider()->SetExtents(Vec3(2.f, 2.f, 2.f));
 
 	return S_OK;
 }
@@ -180,6 +184,11 @@ HRESULT CWaterLightning::Ready_FixedComponents()
 	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::Texture, TEXT("Prototype_Component_Texture_Lightning_Bolts"))))
 		return E_FAIL;
 
+	/* Com_RigidBody */
+	if (FAILED(Super::AddComponent(LEVEL_STATIC, ComponentType::RigidBody, TEXT("Prototype_Component_RigidDynamic")))
+		|| FAILED(GetRigidBody()->InitializeCollider()))
+		return E_FAIL;
+
 	m_pTextureEx1 = static_cast<CTexture*>(m_pGameInstance->Clone_Component(this, LEVEL_STATIC, TEXT("Prototype_Component_Texture_Lightning_Spearhead")));
 	m_pTextureEx2 = static_cast<CTexture*>(m_pGameInstance->Clone_Component(this, LEVEL_STATIC, TEXT("Prototype_Component_Texture_Lightning_Spark")));
 	if (!m_pTextureEx1 || !m_pTextureEx2)
@@ -195,6 +204,24 @@ HRESULT CWaterLightning::Ready_Scripts(void* pArg)
 	}
 
 	return S_OK;
+}
+
+void CWaterLightning::OnCollisionEnter(CGameObject* pOther)
+{
+	const LAYERTAG& eLayerTag = pOther->GetLayerTag();
+	if (LAYERTAG::PLAYER == eLayerTag)
+	{
+		CPlayerController* pPlayerController = static_cast<CPlayerController*>(pOther->GetScripts()[0]);
+		pPlayerController->GetHitMessage();
+	}
+}
+
+void CWaterLightning::OnCollisionStay(CGameObject* pOther)
+{
+}
+
+void CWaterLightning::OnCollisionExit(CGameObject* pOther)
+{
 }
 
 HRESULT CWaterLightning::Bind_ShaderResources()
