@@ -7,13 +7,6 @@
 #include "Particle.h"
 #include "ParticleController.h"
 
-// ÇãÇã...
-#include "MainCamera.h"
-#include "MainCameraController.h"
-#include "Water.h"
-#include "ObjectManager.h"
-#include "Layer.h"
-
 constexpr auto EPSILON = 0.001f;
 
 CPlayerController::CPlayerController(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -66,119 +59,15 @@ void CPlayerController::Tick(const _float& fTimeDelta)
 	else if (m_vNetTrans.Length() > EPSILON)
 		Translate(fTimeDelta);
 
-	//////////
-	if (KEY_DOWN(KEY::X))
-	{
-		Hit();
-	}
-
-	if (KEY_PRESSING(KEY::CTRL) && KEY_DOWN(KEY::N))
-	{
-		//m_pTransform->SetPosition(Vec3(82.f, 6.5f, 41.f));
-		//m_pGameObject->GetNavMeshAgent()->SetCurrentIndex(573);
-		m_pTransform->SetPosition(Vec3(-147.f, 19.4f, 146.65f));
-		m_pGameObject->GetNavMeshAgent()->SetCurrentIndex(480);
-	}
-	if (KEY_PRESSING(KEY::CTRL) && KEY_DOWN(KEY::M))
-	{
-		// Boss
-		/*m_pTransform->SetPosition(Vec3(233.6f, 6.85f, 180.3f));
-		m_pGameObject->GetNavMeshAgent()->SetCurrentIndex(646);*/
-		//Desert
-		m_pTransform->SetPosition(Vec3(82.f, 6.5f, 41.f));
-		m_pGameObject->GetNavMeshAgent()->SetCurrentIndex(573);
-
-		// WaterLevel
-		map<LAYERTAG, CLayer*>& mapLayers = m_pGameInstance->GetCurrentLevelLayers();
-		const auto& pair = mapLayers.find(LAYERTAG::TERRAIN);
-
-		CWater* pWater = nullptr;
-		if (mapLayers.end() == pair)
-		{
-			for (auto& iter : pair->second->GetGameObjects())
-			{
-				if (TEXT("Water") == iter->GetObjectTag())
-				{
-					pWater = static_cast<CWater*>(iter);
-					break;
-				}
-			}
-		}
-
-		if (nullptr != pWater)
-			pWater->SetMode(CWater::WaterLevelMode::Dessert);
-
-		m_pGameInstance->StopSoundAll();
-		if (FAILED(m_pGameInstance->PlayBGM(TEXT("mus_level17_ambient.ogg"), 0.5f)))
-			__debugbreak();
-	}
-	//////////
-
 	if (!m_pNavMeshAgent->Walkable(m_pTransform->GetPosition()))
 	{
 		m_pTransform->SetPosition(m_vPrePos);
-		//½½¶óÀÌµù º¤ÅÍ = ÀÌµ¿ º¤ÅÍ - (ÀÌµ¿ º¤ÅÍ ¡¤ Ãæµ¹ Ç¥¸éÀÇ ³ë¸Ö º¤ÅÍ) * Ãæµ¹ Ç¥¸éÀÇ ³ë¸Ö º¤ÅÍ
+		//ìŠ¬ë¼ì´ë”© ë²¡í„° = ì´ë™ ë²¡í„° - (ì´ë™ ë²¡í„° Â· ì¶©ëŒ í‘œë©´ì˜ ë…¸ë©€ ë²¡í„°) * ì¶©ëŒ í‘œë©´ì˜ ë…¸ë©€ ë²¡í„°
 		/*Vec3 vDir = m_pTransform->GetPosition() - m_vPrePos;
 		Vec3 vPassedLine = m_pNavMeshAgent->GetPassedEdgeNormal(m_pTransform->GetPosition());
 		
 		m_pTransform->SetPosition(m_vPrePos + vDir - vDir.Dot(vPassedLine) * vPassedLine);*/
 	}
-
-	// TODO: ¾Æ·¡´Â ½Ã°£µÇ¸é GameManager ¸¸µé¾î¼­ ¿Å±æ °Í.
-	const Vec3& vPosition = m_pTransform->GetPosition();
-	if (-1 == m_bGodRayScene && 379 <= m_pNavMeshAgent->GetCurrentIndex() && vPosition.z > 42.f)
-	{
-		++m_bGodRayScene;
-
-		CMainCamera* pCamera = static_cast<CMainCamera*>(m_pGameInstance->GetCurrentCamera());
-		CMainCameraController* pController = pCamera->GetController();
-		//pController->SetCameraMode(CMainCameraController::CameraMode::GodRay);
-	}
-	else if (0 == m_bGodRayScene && 385 <= m_pNavMeshAgent->GetCurrentIndex() && vPosition.z > 83.f)
-	{
-		++m_bGodRayScene;
-
-		CMainCamera* pCamera = static_cast<CMainCamera*>(m_pGameInstance->GetCurrentCamera());
-		CMainCameraController* pController = pCamera->GetController();
-		//pController->SetCameraMode(CMainCameraController::CameraMode::GodRayToBase);
-	}
-	/*else if (!m_bDagonCreated && 480 <= m_pNavMeshAgent->GetCurrentIndex() && vPosition.z > 145.f)
-	{
-		m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Dagon"), LAYERTAG::UNIT_GROUND);
-		m_bDagonCreated = true;
-
-		CMainCamera* pCamera = static_cast<CMainCamera*>(m_pGameInstance->GetCurrentCamera());
-		CMainCameraController* pController = pCamera->GetController();
-		pController->SetCameraMode(CMainCameraController::CameraMode::Dagon);
-
-		map<LAYERTAG, class CLayer*>& mapLayers = m_pGameInstance->GetCurrentLevelLayers();
-		const auto& pair = mapLayers.find(LAYERTAG::TERRAIN);
-
-		CWater* pWater = nullptr;
-		for(auto& iter : pair->second->GetGameObjects())
-		{
-			if (TEXT("Water") == iter->GetObjectTag())
-				pWater = static_cast<CWater*>(iter);
-		}
-
-		if (nullptr != pWater)
-			pWater->SetMode(CWater::WaterLevelMode::Dagon);
-	}*/
-	else if (!m_bMolochCreated && 646 <= m_pNavMeshAgent->GetCurrentIndex() && vPosition.x > 220.f && vPosition.z > 177.f)
-	{
-		m_pGameInstance->StopSoundAll();
-		if (FAILED(m_pGameInstance->PlayBGM(TEXT("mus_level17_combat.ogg"), 0.5f)))
-			__debugbreak();
-
-		m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Moloch"), LAYERTAG::UNIT_GROUND);
-		m_bMolochCreated = true;
-	}
-	/*else if (!m_bWaterCreated && 362 <= m_pNavMeshAgent->GetCurrentIndex() && vPosition.z > 12.f && vPosition.x > -149.f)
-	{
-		CWater::WATER_DESC tWaterDesc = tWaterDesc = { Vec3(0.f, -5.f, 265.f), Vec2(1280.f, 500.f) };
-		m_pGameInstance->CreateObject(TEXT("Prototype_GameObject_Water"), LAYERTAG::TERRAIN, &tWaterDesc);
-		m_bMolochCreated = true;
-	}*/
 }
 
 void CPlayerController::LateTick(const _float& fTimeDelta)
@@ -191,8 +80,8 @@ void CPlayerController::DebugRender()
 }
 
 _bool CPlayerController::IsIdle()
-{	// ·çÇÁ ³¡³ª¸é Idle·Î µ¹¾Æ¿Àµµ·Ï ÇØ¾ßÇÔ.
-	// ¾µÀÏ ¾ø´Â ÇÔ¼ö¿©¾ß ÇÔ.
+{	// ë£¨í”„ ëë‚˜ë©´ Idleë¡œ ëŒì•„ì˜¤ë„ë¡ í•´ì•¼í•¨.
+	// ì“¸ì¼ ì—†ëŠ” í•¨ìˆ˜ì—¬ì•¼ í•¨.
 	if(!IsRun() && !IsAim() && !IsJump() && !IsDash())
 		return true;
 }
@@ -379,7 +268,7 @@ void CPlayerController::Fire(CStrife_Ammo::AmmoType eAmmoType)
 			vFireOffset = m_pTransform->GetPosition() + 2.2f * m_pTransform->GetForward() + 1.7f * m_pTransform->GetUp();
 
 			pAmmo->GetTransform()->Rotate(qRotResult);
-			pAmmo->GetTransform()->SetPosition(vFireOffset + 0.35f * pAmmo->GetTransform()->GetUp()); //RUL ¹æÇâ È¸Àü µÅ¼­ ´Ù¸§.
+			pAmmo->GetTransform()->SetPosition(vFireOffset + 0.35f * pAmmo->GetTransform()->GetUp()); //RUL ë°©í–¥ íšŒì „ ë¼ì„œ ë‹¤ë¦„.
 
 			m_pGameInstance->PlaySoundFile(TEXT("char_strife_nature_shot_01.ogg"), CHANNELID::CHANNEL_GUNFIRE0, 0.3f);
 			m_pGameInstance->PlaySoundFile(TEXT("char_strife_nature_projectile_01.ogg"), CHANNELID::CHANNEL_GUNFIRE1, 0.3f);
